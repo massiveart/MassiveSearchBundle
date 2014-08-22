@@ -142,3 +142,22 @@ is passed directly to the search library:
         // retrieve the indexed ID of the document
         $body = $document->getId();
     }
+
+Extending
+---------
+
+You can extend the bundle with custom metadata drivers.
+
+Metadata Drivers
+~~~~~~~~~~~~~~~~
+
+Simply extend the ``Metadata\Driver\DriverInterface`` and add the tag
+``massive_search.metadata.driver`` tag to your implementations service
+definition.
+
+.. code-block:: xml
+
+        <service id="massive_search.metadata.driver.xml" class="%massive_search.metadata.driver.xml.class%">
+            <argument type="service" id="massive_search.metadata.file_locator" />
+            <tag type="massive_search.metadata.driver" />
+        </service>
