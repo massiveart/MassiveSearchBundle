@@ -1,10 +1,54 @@
 MassiveSearchBundle
-================
+===================
 
-The MassiveSearchBundle provides an abstraction for search engine libraries.
+The MassiveSearchBundle provides:
+
+- An abstraction for search engine libraries.
+- A way to map classes which you want to index.
 
 By default it is configured to use the Zend Lucene library, which must be
-installed (see the ``suggests`` and ``require-dev`` sections in `composer.json`
+installed (see the `suggests` and ``require-dev`` sections in ``composer.json``.
+
+Installation
+------------
+
+You can install the MassiveSearchBundle by adding it to `composer.json`:
+
+.. code-block:: javascript
+
+    "require": {
+        ...
+        "massive/search-bundle": "0.1"
+    }
+
+And then include it in your ``AppKernel``:
+
+.. code-block:: php
+
+    class AppKernel
+    {
+        public function registerBundles()
+        {
+            return array(
+                // ...
+                new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
+            );
+        }
+    }
+
+You will also need to include a search library. The search libraries are
+listed in the ``suggests`` section of ``composer.json``, and exact package
+versions can also be found in the ``require-dev`` section (as all the libraries are tested).
+
+For example, to enable the ZendLucene search library:
+
+.. code-block:: javascript
+
+    "require": {
+        ...
+        "zendframework/zend-stdlib": "2.3.1 as 2.0.0rc5",
+        "zendframework/zendsearch": "2.*",
+    }
 
 Mapping
 -------
