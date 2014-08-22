@@ -2,12 +2,18 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
+/**
+ * Interface to be implement by all search library adapters
+ *
+ * @author Daniel Leech <daniel.leech@massiveart.com>
+ */
 interface AdapterInterface
 {
     /**
      * Index the given IndexEntry object
      *
-     * @param IndexEntry $indexEntry
+     * @param Document $document Document to index
+     * @param string $indexName Name of index to store document in
      */
     public function index(Document $document, $indexName);
 

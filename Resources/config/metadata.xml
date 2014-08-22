@@ -13,51 +13,26 @@
 
     <services>
         <!-- Factory -->
-        <service 
-            id="massive_search.metadata.factory"
-            class="%massive_search.metadata.factory.class%"
-            >
-            <argument 
-                type="service" 
-                id="massive_search.metadata.driver.chain"
-                />
+        <service id="massive_search.metadata.factory" class="%massive_search.metadata.factory.class%">
+            <argument type="service" id="massive_search.metadata.driver.chain" />
         </service>
 
         <!-- File Locator !-->
-        <service
-            id="massive_search.metadata.file_locator"
-            class="%massive_search.metadata.file_locator.class%"
-            >
+        <service id="massive_search.metadata.file_locator" class="%massive_search.metadata.file_locator.class%">
             <argument type="collection"/>
         </service>
 
         <!-- Chain Driver !-->
-        <service
-            id="massive_search.metadata.driver.chain"
-            class="%massive_search.metadata.driver.chain.class%"
-            >
+        <service id="massive_search.metadata.driver.chain" class="%massive_search.metadata.driver.chain.class%">
             <argument type="collection">
                 <argument type="service" id="massive_search.metadata.driver.xml"/>
                 <!-- <argument type="service" id="massive_search.metadata.driver.annotation"/> -->
             </argument>
         </service>
 
-        <!-- Annotations Driver
-        <service
-            id="massive_search.metadata.driver.annotation"
-            class=""
-            >
-            <argument type="service" id="annotations.reader"/>
-            <argument type="collection"/>
-        </service>
-        -->
-
         <!-- XML Driver !-->
-        <service
-            id="massive_search.metadata.driver.xml"
-            class="%massive_search.metadata.driver.xml.class%"
-            >
-            <argument type="service" id="massive_search.metadata.file_locator"/>
+        <service id="massive_search.metadata.driver.xml" class="%massive_search.metadata.driver.xml.class%">
+            <argument type="service" id="massive_search.metadata.file_locator" />
         </service>
     </services>
 </container>

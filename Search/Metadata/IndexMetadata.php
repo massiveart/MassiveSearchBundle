@@ -4,6 +4,11 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
 use Metadata\ClassMetadata;
 
+/**
+ * Metadata for searchable objects
+ *
+ * @author Daniel Leech <daniel@massiveart.com>
+ */
 class IndexMetadata extends ClassMetadata
 {
     protected $indexName;
@@ -44,5 +49,4 @@ class IndexMetadata extends ClassMetadata
     {
         $this->idField = $idField;
     }
-    
 }
