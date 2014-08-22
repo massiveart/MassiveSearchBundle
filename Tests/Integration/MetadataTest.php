@@ -14,6 +14,8 @@ class MetadataTest extends BaseTestCase
     public function testMetadataFactory()
     {
         $metadata = $this->metadataFactory->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product');
+
+        $this->assertNotNull($metadata);
         $metadata = $metadata->getOutsideClassMetadata();
 
         $this->assertEquals(array(
