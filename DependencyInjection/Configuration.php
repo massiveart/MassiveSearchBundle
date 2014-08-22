@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Massive CMS.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\DependencyInjection;
+namespace Massive\Bundle\SearchBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -23,9 +23,9 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('sulu_search')
+        $treeBuilder->root('massive_search')
             ->children()
-                ->scalarNode('adapter_id')->defaultValue('sulu_search.adapter.zend_lucene')->end()
+                ->scalarNode('adapter_id')->defaultValue('massive_search.adapter.zend_lucene')->end()
                 ->arrayNode('adapters')
                     ->addDefaultsifNotSet()
                     ->children()

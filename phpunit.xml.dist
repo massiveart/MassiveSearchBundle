@@ -5,7 +5,7 @@
 >
 
     <testsuites>
-        <testsuite name="Sulu Search Bundle">
+        <testsuite name="Massive Search Bundle">
             <directory>./Tests</directory>
         </testsuite>
     </testsuites>

@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the Massive CMS.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\DependencyInjection;
+namespace Massive\Bundle\SearchBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluSearchExtension extends Extension
+class MassiveSearchExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -37,8 +37,8 @@ class SuluSearchExtension extends Extension
 
     protected function loadSearch($config, $loader, $container)
     {
-        $container->setAlias('sulu_search.adapter', $config['adapter_id']);
-        $container->setParameter('sulu_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
+        $container->setAlias('massive_search.adapter', $config['adapter_id']);
+        $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
 
         $loader->load('search.xml');
     }
@@ -60,11 +60,11 @@ class SuluSearchExtension extends Extension
                 }
 
                 $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $metadataPaths[$namespace] = join('/', array($path, 'Resources', 'config', 'sulu-search'));
+                $metadataPaths[$namespace] = join('/', array($path, 'Resources', 'config', 'massive-search'));
             }
         }
 
-        $fileLocator = $container->getDefinition('sulu_search.metadata.file_locator');
+        $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
         $fileLocator->replaceArgument(0, $metadataPaths);
     }
 }

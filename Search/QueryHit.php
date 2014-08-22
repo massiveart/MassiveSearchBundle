@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Search;
+namespace Massive\Bundle\SearchBundle\Search;
 
 class QueryHit
 {

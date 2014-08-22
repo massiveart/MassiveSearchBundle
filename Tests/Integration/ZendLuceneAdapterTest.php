@@ -1,9 +1,9 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Tests\Integration;
+namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Sulu\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
+use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
 
 class ZendLuceneAdapterTest extends AdapterTestCase
 {
@@ -12,7 +12,7 @@ class ZendLuceneAdapterTest extends AdapterTestCase
 
     public function setUp()
     {
-        $this->baseDir = sys_get_temp_dir() . '/sulu-test-zend-lucene';
+        $this->baseDir = sys_get_temp_dir() . '/massive-test-zend-lucene';
         $this->filesystem = new Filesystem();
 
         if (!file_exists($this->baseDir)) {

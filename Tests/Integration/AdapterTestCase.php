@@ -1,10 +1,10 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Tests\Integration;
+namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
-use Sulu\Bundle\SearchBundle\Search\Field;
-use Sulu\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\Document;
 
 abstract class AdapterTestCase extends BaseTestCase
 {

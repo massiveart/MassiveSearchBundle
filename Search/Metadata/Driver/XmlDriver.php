@@ -1,10 +1,10 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Search\Metadata\Driver;
+namespace Massive\Bundle\SearchBundle\Search\Metadata\Driver;
 
 use Metadata\Driver\DriverInterface;
 use Metadata\Driver\AbstractFileDriver;
-use Sulu\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {

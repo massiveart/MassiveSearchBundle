@@ -1,16 +1,16 @@
 <?php
 
-namespace Sulu\Bundle\SuluSearchBundle\Tests\Resources\Entity;
+namespace Massive\Bundle\MassiveSearchBundle\Tests\Resources\Entity;
 
 class Foobar
 {
     /**
-     * @SuluSearch\Field(type="string", hints={"elastica_include_in_all": true})
+     * @MassiveSearch\Field(type="string", hints={"elastica_include_in_all": true})
      */
     protected $title;
 
     /**
-     * @SuluSearch\Field(type="string")
+     * @MassiveSearch\Field(type="string")
      */
     protected $body;
 

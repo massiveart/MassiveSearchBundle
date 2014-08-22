@@ -8,12 +8,12 @@ class MetadataTest extends BaseTestCase
 {
     public function setUp()
     {
-        $this->metadataFactory = $this->getContainer()->get('sulu_search.metadata.factory');
+        $this->metadataFactory = $this->getContainer()->get('massive_search.metadata.factory');
     }
 
     public function testMetadataFactory()
     {
-        $metadata = $this->metadataFactory->getMetadataForClass('Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product');
+        $metadata = $this->metadataFactory->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product');
         $metadata = $metadata->getOutsideClassMetadata();
 
         $this->assertEquals(array(

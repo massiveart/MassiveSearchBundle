@@ -1,16 +1,16 @@
-SuluSearchBundle
+MassiveSearchBundle
 ================
 
-[![](https://travis-ci.org/sulu-cmf/SuluSearchBundle.png)](https://travis-ci.org/sulu-cmf/SuluSearchBundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-cmf/SuluSearchBundle/badges/quality-score.png?s=ae0673b210ff6dd252a80fbb822e8ac789d24f73)](https://scrutinizer-ci.com/g/sulu-cmf/SuluSearchBundle/)
+[![](https://travis-ci.org/massive-cmf/MassiveSearchBundle.png)](https://travis-ci.org/massive-cmf/MassiveSearchBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/massive-cmf/MassiveSearchBundle/badges/quality-score.png?s=ae0673b210ff6dd252a80fbb822e8ac789d24f73)](https://scrutinizer-ci.com/g/massive-cmf/MassiveSearchBundle/)
 
-This bundle is part of the [Sulu Search Management Framework](https://github.com/sulu-cmf/sulu-standard) (CMF) and licensed under the [MIT License](https://github.com/sulu-cmf/SuluSearchBundle/blob/develop/LICENSE).
+This bundle is part of the [Massive Search Management Framework](https://github.com/massive-cmf/massive-standard) (CMF) and licensed under the [MIT License](https://github.com/massive-cmf/MassiveSearchBundle/blob/develop/LICENSE).
 
-The SuluSearchBundle builds on other sulu-cmf bundles. It provides a solution to create/modify search nodes in sulu. It uses the SearchMapper functionality from [sulu-lib](https://github.com/sulu-cmf/sulu).
+The MassiveSearchBundle builds on other massive-cmf bundles. It provides a solution to create/modify search nodes in massive. It uses the SearchMapper functionality from [massive-lib](https://github.com/massive-cmf/massive).
 
 ## Documentation
 
-See [Resources/docs/index.rst](https://github.com/sulu-cmf/SuluSearchBundle/Resources/docs/index.rst)
+See [Resources/docs/index.rst](https://github.com/massive-cmf/MassiveSearchBundle/Resources/docs/index.rst)
 
 ## Features
 
@@ -20,6 +20,6 @@ See [Resources/docs/index.rst](https://github.com/sulu-cmf/SuluSearchBundle/Reso
 ## Requirements
 
 * Symfony: 2.3.*
-* Sulu: dev-master
-* See the require section of [composer.json](https://github.com/sulu-cmf/SuluSearchBundle/blob/develop/composer.json)
+* Massive: dev-master
+* See the require section of [composer.json](https://github.com/massive-cmf/MassiveSearchBundle/blob/develop/composer.json)
 

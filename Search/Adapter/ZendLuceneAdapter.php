@@ -1,12 +1,12 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Search\Adapter;
+namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use ZendSearch\Lucene;
-use Sulu\Bundle\SearchBundle\Search\AdapterInterface;
-use Sulu\Bundle\SearchBundle\Search\Document;
-use Sulu\Bundle\SearchBundle\Search\Field;
-use Sulu\Bundle\SearchBundle\Search\QueryHit;
+use Massive\Bundle\SearchBundle\Search\AdapterInterface;
+use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\QueryHit;
 
 class ZendLuceneAdapter implements AdapterInterface
 {

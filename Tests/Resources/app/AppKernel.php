@@ -13,8 +13,8 @@ class AppKernel extends TestKernel
         ));
 
         $this->addBundles(array(
-            new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
-            new \Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle()
+            new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
+            new \Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle()
         ));
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle;
+namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

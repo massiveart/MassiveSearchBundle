@@ -1,12 +1,12 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Search;
+namespace Massive\Bundle\SearchBundle\Search;
 
-use Sulu\Bundle\SearchBundle\Search\AdapterInterface;
-use Sulu\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\AdapterInterface;
+use Massive\Bundle\SearchBundle\Search\Document;
 use Metadata\MetadataFactory;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Sulu\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\Field;
 
 class SearchManager
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle;
+namespace Massive\Bundle\SearchBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class SuluSearchBundle extends Bundle
+class MassiveSearchBundle extends Bundle
 {
 }

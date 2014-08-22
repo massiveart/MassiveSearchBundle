@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Search\Metadata;
+namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
 use Metadata\ClassMetadata;
 

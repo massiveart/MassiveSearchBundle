@@ -1,7 +1,7 @@
-SuluSearchBundle
+MassiveSearchBundle
 ================
 
-The SuluSearchBundle provides an abstraction for search engine libraries.
+The MassiveSearchBundle provides an abstraction for search engine libraries.
 
 By default it is configured to use the Zend Lucene library, which must be
 installed (see the ``suggests`` and ``require-dev`` sections in `composer.json`
@@ -9,15 +9,15 @@ installed (see the ``suggests`` and ``require-dev`` sections in `composer.json`
 Mapping
 -------
 
-The SuluSearchBundle requires that you define which objects should be indexed
+The MassiveSearchBundle requires that you define which objects should be indexed
 through *mapping*. Currently only **XML mapping** supported:
 
 .. code-block::
 
-    <!-- /path/to/YourBundle/Resources/config/sulu-search/Product.xml -->
-    <sulu-search-mapping xmlns="http://sulu.io/schema/dic/sulu-search-mapping">
+    <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
+    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
 
-        <mapping class="Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <indexName>product</indexName>
             <idField name="id"/>
             <fields>
@@ -26,7 +26,7 @@ through *mapping*. Currently only **XML mapping** supported:
             </fields>
         </mapping>
 
-    </sulu-search-mapping>
+    </massive-search-mapping>
 
 This mapping will cause the fields ``title`` and ``body`` to be indexed into
 an index named ``product`` using the ID obtained from the objects ``id``
@@ -36,7 +36,7 @@ component, so it works on properties and methods alike).
 
 Note:
 
-- This file MUST be located in ``YourBundle/Resources/config/sulu-search``
+- This file MUST be located in ``YourBundle/Resources/config/massive-search``
 - It must be named after the name of your class (without the namespace) e.g.
   ``Product.xml``
 - Your ``Product`` class MUST be located in one of the following folders:
@@ -55,7 +55,7 @@ Indexing
 Once you have created your mapping files you can index your objects, for
 example after saving it.
 
-The bundle provides the ``sulu_search.search_manager`` object which is the
+The bundle provides the ``massive_search.search_manager`` object which is the
 only service which you will need to access.
 
 .. code-block:: php
@@ -64,7 +64,7 @@ only service which you will need to access.
 
     // ... populate the product, persist it, whatever.
 
-    $searchManager = $this->get('sulu_search.search_manager');
+    $searchManager = $this->get('massive_search.search_manager');
     $searchManager->index($product);
 
 The SearchManager will know from the mapping how to index the product, and it
@@ -89,7 +89,7 @@ is passed directly to the search library:
     foreach ($hits as $hit) {
         echo $hit->getScore();
 
-        // @var Sulu\Bundle\SearchBundle\Search\Document
+        // @var Massive\Bundle\SearchBundle\Search\Document
         $document = $hit->getDocument();
 
         // retrieve the indexed documents "body" field

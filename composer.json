@@ -1,6 +1,6 @@
 {
-    "name": "sulu/search-bundle",
-    "description": "Sulu Search Bundle",
+    "name": "massive/search-bundle",
+    "description": "Massive Search Bundle",
     "license": "MIT",
     "authors": [
         {
@@ -25,7 +25,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Sulu\\Bundle\\SearchBundle\\": ""
+            "Massive\\Bundle\\SearchBundle\\": ""
         }
     },
     "minimum-stability": "dev"

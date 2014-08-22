@@ -4,20 +4,20 @@ namespace Unit\Search;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\SearchBundle\Search\SearchManager;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
 
 class SearchManagerTest extends ProphecyTestCase
 { 
     public function setUp()
     {
-        $this->adapter = $this->prophesize('Sulu\Bundle\SearchBundle\Search\AdapterInterface');
+        $this->adapter = $this->prophesize('Massive\Bundle\SearchBundle\Search\AdapterInterface');
         $this->metadataFactory = $this->prophesize('Metadata\MetadataFactory');
-        $this->metadata = $this->prophesize('Sulu\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
+        $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
         $this->searchManager = new SearchManager($this->adapter->reveal(), $this->metadataFactory->reveal());
 
-        $this->product = new \Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product();
+        $this->product = new \Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product();
     }
 
     /**
@@ -35,7 +35,7 @@ class SearchManagerTest extends ProphecyTestCase
     public function testIndexNoMetadata()
     {
         $this->metadataFactory
-            ->getMetadataForClass('Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
+            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
             ->willReturn(null);
 
         $this->searchManager->index($this->product);
@@ -44,7 +44,7 @@ class SearchManagerTest extends ProphecyTestCase
     public function testIndex()
     {
         $this->metadataFactory
-            ->getMetadataForClass('Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
+            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
             ->willReturn($this->classHierachyMetadata);
         $this->metadata->getIdField()->willReturn('id');
         $this->metadata->getFieldMapping()->willReturn(array(
@@ -58,6 +58,6 @@ class SearchManagerTest extends ProphecyTestCase
         $this->metadata->getIndexName()->willReturn('product');
 
         $this->searchManager->index($this->product);
-        $this->adapter->index(Argument::type('Sulu\Bundle\SearchBundle\Search\Document'));
+        $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
     }
 }

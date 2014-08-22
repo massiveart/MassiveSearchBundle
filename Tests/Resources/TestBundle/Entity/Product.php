@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
+namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
 class Product
 {
