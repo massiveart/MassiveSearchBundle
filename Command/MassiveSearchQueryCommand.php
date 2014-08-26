@@ -35,10 +35,10 @@ EOT
         $res = $searchManager->search($query, $index);
 
         $table = new TableHelper();
-        $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url'));
+        $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Class'));
         foreach ($res as $hit) {
             $document = $hit->getDocument();
-            $table->addRow(array($hit->getScore(), $document->getId(), $document->getTitle(), $document->getDescription(), $document->getUrl()));
+            $table->addRow(array($hit->getScore(), $document->getId(), $document->getTitle(), $document->getDescription(), $document->getUrl(), $document->getClass()));
         }
         $table->render($output);
     }

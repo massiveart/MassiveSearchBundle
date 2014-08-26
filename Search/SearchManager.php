@@ -116,6 +116,11 @@ class SearchManager
         foreach ($hits as $hit) {
             $document = $hit->getDocument();
 
+            // only throw events for existing documents
+            if (!class_exists($document->getClass())) {
+                continue;
+            }
+
             // we need a reflection instance of the document in event listeners
             if (!isset($metas[$document->getClass()])) {
                 $reflections[$document->getClass()] = new \ReflectionClass($document->getClass());

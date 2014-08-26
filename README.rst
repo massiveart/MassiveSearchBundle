@@ -143,6 +143,23 @@ is passed directly to the search library:
         $body = $document->getId();
     }
 
+Commands
+--------
+
+The MassiveBuildBundle provides some commands.
+
+massive:search:query
+~~~~~~~~~~~~~~~~~~~~
+
+Perform a query from the command line::
+
+    $ php app/console massive:search:query "Foobar" --index="barfoo"
+    +------------------+--------------------------------------+-----------+-------------+-----------+------------------------+
+    | Score            | ID                                   | Title     | Description | Url       | Class                  |
+    +------------------+--------------------------------------+-----------+-------------+-----------+------------------------+
+    | 0.53148467371593 | ac984681-ca92-4650-a9a6-17bc236f1830 | Structure |             | structure | OverviewStructureCache |
+    +------------------+--------------------------------------+-----------+-------------+-----------+------------------------+
+
 Extending
 ---------
 
@@ -161,3 +178,36 @@ definition.
             <argument type="service" id="massive_search.metadata.file_locator" />
             <tag type="massive_search.metadata.driver" />
         </service>
+
+Hit Listeners
+~~~~~~~~~~~~~
+
+The ``SearchManager`` will fire an event of type ``HitEvent`` in the Symfony EventDispatcher named
+``massive_search.hit``.
+
+The ``HitEvent`` contains the hit object and the reflection class of the
+object which was originally indexed.
+
+For example:
+
+.. code-block:: php
+
+    <?php
+
+    namespace Sulu\Bundle\SearchBundle\EventListener;
+
+    use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+
+    class HitListener
+    {
+        public function onHit(HitEvent $event)
+        {
+            $reflection = $event->getDocumentReflection();
+            if (false === $reflection->isSubclassOf('MyClass')) {
+                return;
+            }
+
+            $document = $event->getDocument();
+            $docuemnt->setUrl('Foo' . $document->getUrl());
+        }
+    }

@@ -29,20 +29,20 @@ class MassiveSearchQueryTest extends BaseTestCase
         $display = $this->tester->getDisplay();
 
         $this->assertSame(<<<EOT
-+------------------+----+----------------------------+------------------------------------------+---------+
-| Score            | ID | Title                      | Description                              | Url     |
-+------------------+----+----------------------------+------------------------------------------+---------+
-| 0.39580179633561 | 9  | Hello this is a product 9  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 8  | Hello this is a product 8  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 7  | Hello this is a product 7  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 6  | Hello this is a product 6  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 5  | Hello this is a product 5  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 4  | Hello this is a product 4  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 3  | Hello this is a product 3  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 2  | Hello this is a product 2  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 1  | Hello this is a product 1  | To be or not to be, that is the question | /foobar |
-| 0.39580179633561 | 10 | Hello this is a product 10 | To be or not to be, that is the question | /foobar |
-+------------------+----+----------------------------+------------------------------------------+---------+
++------------------+----+----------------------------+------------------------------------------+---------+-----------------------------------------------------------------------+
+| Score            | ID | Title                      | Description                              | Url     | Class                                                                 |
++------------------+----+----------------------------+------------------------------------------+---------+-----------------------------------------------------------------------+
+| 0.39580179633561 | 9  | Hello this is a product 9  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 8  | Hello this is a product 8  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 7  | Hello this is a product 7  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 6  | Hello this is a product 6  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 5  | Hello this is a product 5  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 4  | Hello this is a product 4  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 3  | Hello this is a product 3  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 2  | Hello this is a product 2  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 1  | Hello this is a product 1  | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
+| 0.39580179633561 | 10 | Hello this is a product 10 | To be or not to be, that is the question | /foobar | Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product |
++------------------+----+----------------------------+------------------------------------------+---------+-----------------------------------------------------------------------+
 
 EOT
         , $display);
