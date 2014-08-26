@@ -15,7 +15,12 @@ class SearchManagerTest extends ProphecyTestCase
         $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
-        $this->searchManager = new SearchManager($this->adapter->reveal(), $this->metadataFactory->reveal());
+        $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $this->searchManager = new SearchManager(
+            $this->adapter->reveal(),
+            $this->metadataFactory->reveal(),
+            $this->eventDispatcher->reveal()
+        );
 
         $this->product = new \Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product();
     }

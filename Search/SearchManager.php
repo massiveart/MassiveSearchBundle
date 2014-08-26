@@ -4,19 +4,24 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Metadata\MetadataFactory;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Massive\Bundle\SearchBundle\Search\Field;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SearchManager
 {
     protected $adapter;
     protected $metadataFactory;
+    protected $eventDispatcher;
 
-    public function __construct(AdapterInterface $adapter, MetadataFactory $metadataFactory)
+    public function __construct(AdapterInterface $adapter, MetadataFactory $metadataFactory, EventDispatcherInterface $eventDispatcher)
     {
         $this->adapter = $adapter;
         $this->metadataFactory = $metadataFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     protected function getMetadata($object)
@@ -77,6 +82,12 @@ class SearchManager
 
         $indexNames = (array) $indexNames;
 
-        return $this->adapter->search($string, $indexNames);
+        $hits = $this->adapter->search($string, $indexNames);
+
+        foreach ($hits as $hit) {
+            $this->eventDispatcher->dispatch(SearchEvents::HIT, new HitEvent($hit));
+        }
+
+        return $hits;
     }
 }
