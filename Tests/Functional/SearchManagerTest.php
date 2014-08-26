@@ -22,6 +22,7 @@ class SearchManagerTest extends BaseTestCase
             $product->setId($i);
             $product->setTitle('Hello this is a product '.$i);
             $product->setBody('To be or not to be, that is the question');
+            $product->setUrl('/foobar');
 
             $this->getSearchManager()->index($product);
         }
@@ -35,6 +36,20 @@ class SearchManagerTest extends BaseTestCase
         $res = $this->getSearchManager()->search('Hello*', 'product');
 
         $this->assertCount($nbResults, $res);
+
+        $res = $this->getSearchManager()->search('Hello this is a product 1', 'product');
+        $this->assertCount(10, $res);
+
+        // this is a full match with score = 1
+        $this->assertEquals(1, $res[0]->getScore());
+
+        $match = $res[0];
+        $document = $match->getDocument();
+
+        $this->assertEquals(1, $document->getId());
+        $this->assertEquals('Hello this is a product 1', $document->getTitle());
+        $this->assertEquals('To be or not to be, that is the question', $document->getDescription());
+        $this->assertEquals('/foobar', $document->getUrl());
     }
 
     public function testHitEventDispatch()

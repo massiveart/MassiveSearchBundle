@@ -8,6 +8,7 @@ class Product
     protected $title;
     protected $body;
     protected $date;
+    protected $url;
 
     public function getId() 
     {
@@ -48,5 +49,14 @@ class Product
     {
         $this->date = $date;
     }
+
+    public function getUrl() 
+    {
+        return $this->url;
+    }
     
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
 }

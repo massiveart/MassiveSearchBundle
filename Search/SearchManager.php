@@ -54,15 +54,42 @@ class SearchManager
      */
     public function index($object)
     {
+        $accessor = PropertyAccess::createPropertyAccessor();
+
         $metadata = $this->getMetadata($object);
 
         $indexName = $metadata->getIndexName();
+
         $idField = $metadata->getIdField();
+        $urlField = $metadata->getUrlField();
+        $titleField = $metadata->getTitleField();
+        $descriptionField = $metadata->getDescriptionField();
+
         $fields = $metadata->getFieldMapping();
 
         $document = new Document();
-        $accessor = PropertyAccess::createPropertyAccessor();
         $document->setId($accessor->getValue($object, $idField));
+
+        if ($urlField) {
+            $url = $accessor->getValue($object, $urlField);
+            if ($url) {
+                $document->setUrl($accessor->getValue($object, $urlField));
+            }
+        }
+
+        if ($titleField) {
+            $title = $accessor->getValue($object, $titleField);
+            if ($title) {
+                $document->setTitle($accessor->getValue($object, $titleField));
+            }
+        }
+
+        if ($descriptionField) {
+            $description = $accessor->getValue($object, $descriptionField);
+            if ($description) {
+                $document->setDescription($accessor->getValue($object, $descriptionField));
+            }
+        }
 
         foreach ($fields as $fieldName => $fieldMapping) {
             $document->addField(Field::create($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type']));

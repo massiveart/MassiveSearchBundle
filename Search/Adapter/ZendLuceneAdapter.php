@@ -20,6 +20,9 @@ use Massive\Bundle\SearchBundle\Search\QueryHit;
 class ZendLuceneAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
+    const URL_FIELDNAME = '__url';
+    const TITLE_FIELDNAME = '__title';
+    const DESCRIPTION_FIELDNAME = '__description';
 
     protected $basePath;
 
@@ -68,7 +71,11 @@ class ZendLuceneAdapter implements AdapterInterface
             }
         }
 
+        // add meta fields - used internally for showing the search results, etc.
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::ID_FIELDNAME, $document->getId()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::URL_FIELDNAME, $document->getUrl()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::TITLE_FIELDNAME, $document->getTitle()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
 
         $index->addDocument($luceneDocument);
     }
@@ -112,6 +119,14 @@ class ZendLuceneAdapter implements AdapterInterface
             $hit->setScore($luceneHit->score);
 
             $luceneDocument = $luceneHit->getDocument();
+
+            // map meta fields to document
+            $document->setId($luceneDocument->getFieldValue(self::ID_FIELDNAME));
+            $document->setTitle($luceneDocument->getFieldValue(self::TITLE_FIELDNAME));
+            $document->setDescription($luceneDocument->getFieldValue(self::DESCRIPTION_FIELDNAME));
+            $document->setUrl($luceneDocument->getFieldValue(self::URL_FIELDNAME));
+
+            $hit->setId($document->getId());
 
             foreach ($luceneDocument->getFieldNames() as $fieldName) {
                 $document->addField(Field::create($fieldName, $luceneDocument->getFieldValue($fieldName)));

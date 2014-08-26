@@ -48,6 +48,15 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $idField = (string) $mapping->mapping->idField['name'];
         $meta->setIdField((string) $idField);
 
+        $titleField = (string) $mapping->mapping->titleField['name'];
+        $meta->setTitleField((string) $titleField);
+
+        $urlField = (string) $mapping->mapping->urlField['name'];
+        $meta->setUrlField((string) $urlField);
+
+        $descriptionField = (string) $mapping->mapping->descriptionField['name'];
+        $meta->setDescriptionField((string) $descriptionField);
+
         foreach ($mapping->mapping->fields->children() as $field) {
             $fieldName = (string) $field['name'];
             $fieldType = (string) $field['type'];

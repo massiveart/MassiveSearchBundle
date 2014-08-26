@@ -3,6 +3,10 @@
     <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
         <indexName>product</indexName>
         <idField name="id"/>
+        <urlField name="url" />
+        <titleField name="title" />
+        <descriptionField name="body" />
+
         <fields>
             <field name="title" type="string" />
             <field name="body" type="string" />

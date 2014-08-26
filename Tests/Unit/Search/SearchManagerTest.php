@@ -52,6 +52,9 @@ class SearchManagerTest extends ProphecyTestCase
             ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
             ->willReturn($this->classHierachyMetadata);
         $this->metadata->getIdField()->willReturn('id');
+        $this->metadata->getUrlField()->willReturn('url');
+        $this->metadata->getTitleField()->willReturn('title');
+        $this->metadata->getDescriptionField()->willReturn('body');
         $this->metadata->getFieldMapping()->willReturn(array(
             'title' => array(
                 'type' => 'string',

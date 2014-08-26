@@ -14,6 +14,9 @@ class IndexMetadata extends ClassMetadata
     protected $indexName;
     protected $fieldMapping = array();
     protected $idField;
+    protected $urlField;
+    protected $titleField;
+    protected $descriptionField;
 
     public function getIndexName() 
     {
@@ -48,5 +51,35 @@ class IndexMetadata extends ClassMetadata
     public function setIdField($idField)
     {
         $this->idField = $idField;
+    }
+
+    public function getUrlField() 
+    {
+        return $this->urlField;
+    }
+    
+    public function setUrlField($urlField)
+    {
+        $this->urlField = $urlField;
+    }
+
+    public function getTitleField() 
+    {
+        return $this->titleField;
+    }
+    
+    public function setTitleField($titleField)
+    {
+        $this->titleField = $titleField;
+    }
+
+    public function getDescriptionField() 
+    {
+        return $this->descriptionField;
+    }
+    
+    public function setDescriptionField($descriptionField)
+    {
+        $this->descriptionField = $descriptionField;
     }
 }
