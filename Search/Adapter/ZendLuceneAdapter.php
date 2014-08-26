@@ -23,6 +23,7 @@ class ZendLuceneAdapter implements AdapterInterface
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
+    const DOCUMENT_TAG = '__document';
 
     protected $basePath;
 
@@ -76,6 +77,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::TITLE_FIELDNAME, $document->getTitle()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::DOCUMENT_TAG, 'document'));
 
         $index->addDocument($luceneDocument);
     }
