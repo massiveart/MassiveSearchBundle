@@ -69,6 +69,7 @@ class SearchManager
 
         $document = new Document();
         $document->setId($accessor->getValue($object, $idField));
+        $document->setClass($metadata->name);
 
         if ($urlField) {
             $url = $accessor->getValue($object, $urlField);
@@ -111,8 +112,16 @@ class SearchManager
 
         $hits = $this->adapter->search($string, $indexNames);
 
+        $reflections = array();
         foreach ($hits as $hit) {
-            $this->eventDispatcher->dispatch(SearchEvents::HIT, new HitEvent($hit));
+            $document = $hit->getDocument();
+
+            // we need a reflection instance of the document in event listeners
+            if (!isset($metas[$document->getClass()])) {
+                $reflections[$document->getClass()] = new \ReflectionClass($document->getClass());
+            }
+
+            $this->eventDispatcher->dispatch(SearchEvents::HIT, new HitEvent($hit, $reflections[$document->getClass()]));
         }
 
         return $hits;

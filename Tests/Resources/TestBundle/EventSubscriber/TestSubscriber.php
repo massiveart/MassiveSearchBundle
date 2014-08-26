@@ -9,6 +9,7 @@ use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 class TestSubscriber implements EventSubscriberInterface
 {
     public $hitDocument;
+    public $documentReflection;
     public $nbHits = 0;
 
     public static function getSubscribedEvents()
@@ -24,6 +25,7 @@ class TestSubscriber implements EventSubscriberInterface
         $this->hitDocument->setTitle('My title');
         $this->hitDocument->setDescription('My description');
         $this->hitDocument->setUrl('/example');
+        $this->documentReflection = $e->getDocumentReflection();
 
         $this->nbHits++;
     }

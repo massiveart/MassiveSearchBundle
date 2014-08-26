@@ -29,6 +29,7 @@ class SearchManagerTest extends BaseTestCase
         $this->assertEquals('Hello this is a product 1', $document->getTitle());
         $this->assertEquals('To be or not to be, that is the question', $document->getDescription());
         $this->assertEquals('/foobar', $document->getUrl());
+        $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $document->getClass());
     }
 
     public function testHitEventDispatch()
@@ -48,5 +49,7 @@ class SearchManagerTest extends BaseTestCase
         $this->getSearchManager()->search('Hello*', 'product');
 
         $this->assertEquals(20, $testSubscriber->nbHits);
+        $this->assertInstanceOf('ReflectionClass', $testSubscriber->documentReflection);
+        $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $testSubscriber->documentReflection->name);
     }
 }
