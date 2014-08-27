@@ -7,6 +7,7 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Adapter for the ZendSearch library
@@ -138,5 +139,35 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         return $hits;
+    }
+
+    public function getStatus()
+    {
+        $finder = new Finder();
+        $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);
+        $status = array();
+
+        foreach ($indexDirs as $indexDir) {
+            $indexFinder = new Finder();
+            $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
+            $indexName = basename($indexDir);
+
+            $index = Lucene\Lucene::open($this->getIndexPath($indexName));
+
+            $indexStats = array(
+                'size' => 0,
+                'nb_files' => 0,
+                'nb_documents' => $index->count()
+            );
+
+            foreach ($files as $file) {
+                $indexStats['size'] += filesize($file);
+                $indexStats['nb_files']++;
+            }
+
+            $status['idx:' . $indexName] = json_encode($indexStats);
+        }
+
+        return $status;
     }
 }

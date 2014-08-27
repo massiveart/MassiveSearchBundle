@@ -30,10 +30,9 @@ EOT
         return $document;
     }
 
-    public function testIndexer()
+    protected function createIndex()
     {
         $adapter = $this->getAdapter();
-
         $documents = array(
             $this->createDocument('Document One'),
             $this->createDocument('Document Two'),
@@ -42,9 +41,23 @@ EOT
         foreach ($documents as $document) {
             $adapter->index($document, 'foobar');
         }
+    }
+
+    public function testIndexer()
+    {
+        $adapter = $this->getAdapter();
+        $this->createIndex();
 
         $res = $adapter->search('One', array('foobar'));
 
         $this->assertCount(1, $res);
+    }
+
+    public function testGetStatistics()
+    {
+        $this->createIndex();
+        $adapter = $this->getAdapter();
+        $statistics = $adapter->getStatus();
+        $this->assertTrue(is_array($statistics));
     }
 }

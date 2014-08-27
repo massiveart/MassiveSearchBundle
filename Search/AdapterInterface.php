@@ -23,4 +23,12 @@ interface AdapterInterface
      * @param string $queryString
      */
     public function search($queryString, array $indexNames = array());
+
+    /**
+     * Return vendor status information as an associative
+     * array.
+     *
+     * @return array
+     */
+    public function getStatus();
 }

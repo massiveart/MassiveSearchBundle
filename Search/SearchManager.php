@@ -131,4 +131,18 @@ class SearchManager
 
         return $hits;
     }
+
+    /**
+     * Return status information about the current implementation
+     *
+     * @return array
+     */
+    public function getStatus()
+    {
+        $data = array('Adapter' => get_class($this->adapter));
+        $data += $this->adapter->getStatus() ? : array();
+
+        return $data;
+
+    }
 }

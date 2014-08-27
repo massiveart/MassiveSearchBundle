@@ -160,6 +160,19 @@ Perform a query from the command line::
     | 0.53148467371593 | ac984681-ca92-4650-a9a6-17bc236f1830 | Structure |             | structure | OverviewStructureCache |
     +------------------+--------------------------------------+-----------+-------------+-----------+------------------------+
 
+massive:search:status
+~~~~~~~~~~~~~~~~~~~~~
+
+Display status information for the current search implementation::
+
+    $ php app/console massive:search:status
+    +-------------+--------------------------------------------------------------+
+    | Field       | Value                                                        |
+    +-------------+--------------------------------------------------------------+
+    | Adapter     | Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter |
+    | idx:product | {"size":11825,"nb_files":36,"nb_documents":10}               |
+    +-------------+--------------------------------------------------------------+
+
 Extending
 ---------
 
