@@ -2,10 +2,23 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
+/**
+ * Representation of a indexed field
+ * @package Massive\Bundle\SearchBundle\Search
+ */
 class Field
 {
+    /**
+     * @var string
+     */
     protected $name;
+    /**
+     * @var string
+     */
     protected $type;
+    /**
+     * @var string
+     */
     protected $value;
 
     const TYPE_STRING = 'string';

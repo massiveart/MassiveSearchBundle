@@ -2,74 +2,124 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
+/**
+ * Representation of a one indexed document
+ * @package Massive\Bundle\SearchBundle\Search
+ */
 class Document
 {
+    /**
+     * @var Field[]
+     */
     protected $fields = array();
 
+    /**
+     * @var string
+     */
     protected $id;
+    /**
+     * @var string
+     */
     protected $class;
+    /**
+     * @var string
+     */
     protected $title;
+    /**
+     * @var string
+     */
     protected $description;
+    /**
+     * @var string
+     */
     protected $url;
 
-    public function getId() 
-    {
-        return $this->id;
-    }
-    
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-    
+    /**
+     * @param Field $field
+     */
     public function addField(Field $field)
     {
         $this->fields[] = $field;
     }
 
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    public function getUrl() 
-    {
-        return $this->url;
-    }
-    
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-
-    public function getClass() 
+    /**
+     * @return string
+     */
+    public function getClass()
     {
         return $this->class;
     }
-    
+
+    /**
+     * @param string $class
+     */
     public function setClass($class)
     {
         $this->class = $class;
     }
 
-    public function getTitle() 
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
     {
         return $this->title;
     }
-    
+
+    /**
+     * @param string $title
+     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    public function getDescription() 
+    /**
+     * @return string
+     */
+    public function getUrl()
     {
-        return $this->description;
+        return $this->url;
     }
-    
-    public function setDescription($description)
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
     {
-        $this->description = $description;
+        $this->url = $url;
     }
-    
+
 }

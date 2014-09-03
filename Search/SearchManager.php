@@ -5,58 +5,87 @@ namespace Massive\Bundle\SearchBundle\Search;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Metadata\MetadataFactory;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class SearchManager
+class SearchManager implements SearchManagerInterface
 {
+    /**
+     * @var AdapterInterface
+     */
     protected $adapter;
+
+    /**
+     * @var \Metadata\MetadataFactory
+     */
     protected $metadataFactory;
+
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
-    public function __construct(AdapterInterface $adapter, MetadataFactory $metadataFactory, EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        AdapterInterface $adapter,
+        MetadataFactory $metadataFactory,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->adapter = $adapter;
         $this->metadataFactory = $metadataFactory;
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    protected function getMetadata($object)
+    /**
+     * {@inheritdoc}
+     */
+    public function getMetadata($object)
     {
         if (!is_object($object)) {
-            throw new \InvalidArgumentException(sprintf(
-                'You must pass an object to the %s method, you passed: %s',
-                __METHOD__,
-                var_export($object, true)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'You must pass an object to the %s method, you passed: %s',
+                    __METHOD__,
+                    var_export($object, true)
+                )
+            );
         }
 
         $objectClass = get_class($object);
         $metadata = $this->metadataFactory->getMetadataForClass($objectClass);
 
         if (null === $metadata) {
-            throw new \RuntimeException(sprintf(
-                'There is no search mapping for class "%s"',
-                $objectClass
-            ));
+            throw new \RuntimeException(
+                sprintf(
+                    'There is no search mapping for class "%s"',
+                    $objectClass
+                )
+            );
         }
 
         return $metadata->getOutsideClassMetadata();
     }
 
     /**
-     * Attempt to index the given object
-     *
-     * @param object $object
+     * {@inheritdoc}
      */
     public function index($object)
     {
-        $accessor = PropertyAccess::createPropertyAccessor();
-
         $metadata = $this->getMetadata($object);
+
+        $this->indexWithMetadata($object, $metadata);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function indexWithMetadata($object, IndexMetadataInterface $metadata)
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
 
         $indexName = $metadata->getIndexName();
 
@@ -93,14 +122,16 @@ class SearchManager
         }
 
         foreach ($fields as $fieldName => $fieldMapping) {
-            $document->addField(Field::create($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type']));
+            $document->addField(
+                Field::create($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
+            );
         }
 
         $this->adapter->index($document, $indexName);
     }
 
     /**
-     * Search with the given query string
+     * {@inheritdoc}
      */
     public function search($string, $indexNames = null)
     {
@@ -108,11 +139,12 @@ class SearchManager
             throw new \Exception('Not implemented yet');
         }
 
-        $indexNames = (array) $indexNames;
+        $indexNames = (array)$indexNames;
 
         $hits = $this->adapter->search($string, $indexNames);
 
         $reflections = array();
+        /** @var QueryHit $hit */
         foreach ($hits as $hit) {
             $document = $hit->getDocument();
 
@@ -126,16 +158,17 @@ class SearchManager
                 $reflections[$document->getClass()] = new \ReflectionClass($document->getClass());
             }
 
-            $this->eventDispatcher->dispatch(SearchEvents::HIT, new HitEvent($hit, $reflections[$document->getClass()]));
+            $this->eventDispatcher->dispatch(
+                SearchEvents::HIT,
+                new HitEvent($hit, $reflections[$document->getClass()])
+            );
         }
 
         return $hits;
     }
 
     /**
-     * Return status information about the current implementation
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getStatus()
     {
@@ -143,6 +176,5 @@ class SearchManager
         $data += $this->adapter->getStatus() ? : array();
 
         return $data;
-
     }
 }

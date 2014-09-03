@@ -6,10 +6,9 @@ use Metadata\ClassMetadata;
 
 /**
  * Metadata for searchable objects
- *
- * @author Daniel Leech <daniel@massiveart.com>
+ * @package Massive\Bundle\SearchBundle\Search\Metadata
  */
-class IndexMetadata extends ClassMetadata
+class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
 {
     protected $indexName;
     protected $fieldMapping = array();
