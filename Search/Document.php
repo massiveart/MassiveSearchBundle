@@ -122,4 +122,12 @@ class Document
         $this->url = $url;
     }
 
+    /**
+     * @return Field[]
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
 }
