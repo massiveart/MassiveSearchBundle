@@ -98,7 +98,7 @@ class SearchManager implements SearchManagerInterface
 
         $document = new Document();
         $document->setId($accessor->getValue($object, $idField));
-        $document->setClass($metadata->name);
+        $document->setClass($metadata->getName());
 
         if ($urlField) {
             $url = $accessor->getValue($object, $urlField);

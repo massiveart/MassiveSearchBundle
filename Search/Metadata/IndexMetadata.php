@@ -17,21 +17,26 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     protected $titleField;
     protected $descriptionField;
 
-    public function getIndexName() 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getIndexName()
     {
         return $this->indexName;
     }
-    
+
     public function setIndexName($indexName)
     {
         $this->indexName = $indexName;
     }
 
-    public function getFieldMapping() 
+    public function getFieldMapping()
     {
         return $this->fieldMapping;
     }
-    
+
     public function setFieldMapping($fieldMapping)
     {
         $this->fieldMapping = $fieldMapping;
@@ -42,41 +47,41 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
         $this->fieldMapping[$name] = $mapping;
     }
 
-    public function getIdField() 
+    public function getIdField()
     {
         return $this->idField;
     }
-    
+
     public function setIdField($idField)
     {
         $this->idField = $idField;
     }
 
-    public function getUrlField() 
+    public function getUrlField()
     {
         return $this->urlField;
     }
-    
+
     public function setUrlField($urlField)
     {
         $this->urlField = $urlField;
     }
 
-    public function getTitleField() 
+    public function getTitleField()
     {
         return $this->titleField;
     }
-    
+
     public function setTitleField($titleField)
     {
         $this->titleField = $titleField;
     }
 
-    public function getDescriptionField() 
+    public function getDescriptionField()
     {
         return $this->descriptionField;
     }
-    
+
     public function setDescriptionField($descriptionField)
     {
         $this->descriptionField = $descriptionField;

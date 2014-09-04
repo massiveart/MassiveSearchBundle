@@ -18,6 +18,8 @@ use Metadata\PropertyMetadata;
  */
 interface IndexMetadataInterface
 {
+    public function getName();
+
     public function setUrlField($urlField);
 
     public function setDescriptionField($descriptionField);
