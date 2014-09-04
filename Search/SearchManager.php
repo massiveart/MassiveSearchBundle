@@ -4,6 +4,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
@@ -138,6 +139,11 @@ class SearchManager implements SearchManagerInterface
         if (null === $indexNames) {
             throw new \Exception('Not implemented yet');
         }
+
+        $this->eventDispatcher->dispatch(
+            SearchEvents::SEARCH,
+            new SearchEvent($string, $indexNames)
+        );
 
         $indexNames = (array)$indexNames;
 
