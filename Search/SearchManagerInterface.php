@@ -7,18 +7,17 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use string;
 
 interface SearchManagerInterface
 {
     /**
      * @param object $object
      * @return IndexMetadataInterface
-     *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
@@ -33,6 +32,7 @@ interface SearchManagerInterface
 
     /**
      * Search with the given query string
+     *
      * @param string $string
      * @param string[]|string $indexNames
      * @return QueryHit[]

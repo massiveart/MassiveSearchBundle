@@ -4,7 +4,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Representation of a one indexed document
- * @package Massive\Bundle\SearchBundle\Search
  */
 class Document
 {
@@ -17,18 +16,22 @@ class Document
      * @var string
      */
     protected $id;
+
     /**
      * @var string
      */
     protected $class;
+
     /**
      * @var string
      */
     protected $title;
+
     /**
      * @var string
      */
     protected $description;
+
     /**
      * @var string
      */

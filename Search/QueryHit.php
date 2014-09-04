@@ -4,7 +4,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Representation of one search hit
- * @package Massive\Bundle\SearchBundle\Search
  */
 class QueryHit
 {

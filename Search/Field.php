@@ -4,7 +4,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Representation of a indexed field
- * @package Massive\Bundle\SearchBundle\Search
  */
 class Field
 {
@@ -12,10 +11,12 @@ class Field
      * @var string
      */
     protected $name;
+
     /**
      * @var string
      */
     protected $type;
+
     /**
      * @var string
      */
