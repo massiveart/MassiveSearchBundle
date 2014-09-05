@@ -6,7 +6,6 @@ use Metadata\ClassMetadata;
 
 /**
  * Metadata for searchable objects
- * @package Massive\Bundle\SearchBundle\Search\Metadata
  */
 class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
 {

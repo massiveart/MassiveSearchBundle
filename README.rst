@@ -1,6 +1,9 @@
 MassiveSearchBundle
 ===================
 
+.. image:: https://travis-ci.org/massiveart/MassiveSearchBundle.svg?branch=master
+    :target: https://travis-ci.org/massiveart/MassiveSearchBundle
+
 The MassiveSearchBundle provides:
 
 - An abstraction for search engine libraries.
