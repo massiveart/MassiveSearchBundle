@@ -2,12 +2,47 @@
 
 namespace Unit\Search;
 
+use Massive\Bundle\SearchBundle\Search\AdapterInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use Metadata\ClassHierarchyMetadata;
+use Metadata\MetadataFactory;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SearchManagerTest extends ProphecyTestCase
-{ 
+{
+    /**
+     * @var AdapterInterface
+     */
+    private $adapter;
+    /**
+     * @var MetadataFactory
+     */
+    private $metadataFactory;
+    /**
+     * @var IndexMetadataInterface
+     */
+    private $metadata;
+    /**
+     * @var ClassHierarchyMetadata
+     */
+    private $classHierachyMetadata;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+    /**
+     * @var SearchManager
+     */
+    private $searchManager;
+    /**
+     * @var Product
+     */
+    private $product;
+
     public function setUp()
     {
         $this->adapter = $this->prophesize('Massive\Bundle\SearchBundle\Search\AdapterInterface');
@@ -26,7 +61,7 @@ class SearchManagerTest extends ProphecyTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testIndexNonObject()
     {
@@ -34,7 +69,7 @@ class SearchManagerTest extends ProphecyTestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage There is no search mappin
      */
     public function testIndexNoMetadata()
@@ -51,6 +86,8 @@ class SearchManagerTest extends ProphecyTestCase
         $this->metadataFactory
             ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
             ->willReturn($this->classHierachyMetadata);
+
+        $this->metadata->getName()->willReturn('test');
         $this->metadata->getIdField()->willReturn('id');
         $this->metadata->getUrlField()->willReturn('url');
         $this->metadata->getTitleField()->willReturn('title');
@@ -64,8 +101,8 @@ class SearchManagerTest extends ProphecyTestCase
             )
         ));
         $this->metadata->getIndexName()->willReturn('product');
+        $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
 
         $this->searchManager->index($this->product);
-        $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
     }
 }

@@ -3,3 +3,8 @@ Tests/Resources/app/logs
 Tests/Resources/app/data
 composer.lock
 vendor
+
+#intelij
+/.idea
+
+*.iml
