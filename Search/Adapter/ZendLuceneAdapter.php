@@ -2,12 +2,13 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
-use ZendSearch\Lucene;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Symfony\Component\Finder\Finder;
+use ZendSearch\Lucene;
 
 /**
  * Adapter for the ZendSearch library
@@ -27,13 +28,15 @@ class ZendLuceneAdapter implements AdapterInterface
     const CLASS_TAG = '__class';
 
     protected $basePath;
+    protected $factory;
 
     /**
      * @param string $basePath Base filesystem path for the index
      */
-    public function __construct($basePath)
+    public function __construct(Factory $factory, $basePath)
     {
         $this->basePath = $basePath;
+        $this->factory = $factory;
     }
 
     /**
@@ -67,10 +70,16 @@ class ZendLuceneAdapter implements AdapterInterface
         foreach ($document->getFields() as $field) {
             switch ($field->getType()) {
                 case Field::TYPE_STRING:
-                default:
-                    $luceneDocument->addField(Lucene\Document\Field::Text($field->getName(), $field->getValue()));
+                    $luceneField = Lucene\Document\Field::Text($field->getName(), $field->getValue());
                     break;
+                default:
+                    throw new \InvalidArgumentException(sprintf(
+                        'Search field type "%s" is not know. Known types are: %s',
+                        implode(', ', Field::getValidTypes())
+                    ));
             }
+
+            $luceneDocument->addField($luceneField);
         }
 
         // add meta fields - used internally for showing the search results, etc.
@@ -116,8 +125,9 @@ class ZendLuceneAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($luceneHits as $luceneHit) {
-            $hit = new QueryHit();
-            $document = new Document();
+            $hit = $this->factory->makeQueryHit();
+            $document = $this->factory->makeDocument();
+
             $hit->setDocument($document);
             $hit->setScore($luceneHit->score);
 
@@ -133,7 +143,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $hit->setId($document->getId());
 
             foreach ($luceneDocument->getFieldNames() as $fieldName) {
-                $document->addField(Field::create($fieldName, $luceneDocument->getFieldValue($fieldName)));
+                $document->addField($this->factory->makeField($fieldName, $luceneDocument->getFieldValue($fieldName)));
             }
             $hits[] = $hit;
         }

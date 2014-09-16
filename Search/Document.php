@@ -132,5 +132,4 @@ class Document
     {
         return $this->fields;
     }
-
 }

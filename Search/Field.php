@@ -23,15 +23,21 @@ class Field
     protected $value;
 
     const TYPE_STRING = 'string';
+    const TYPE_BINRARY = 'binary';
 
-    public static function create($name, $value, $type = self::TYPE_STRING)
+    public static function getValidTypes()
     {
-        $field = new Field();
-        $field->setName($name);
-        $field->setValue($value);
-        $field->setType($type);
+        return array(
+            self::TYPE_STRING,
+            self::TYPE_BINARY,
+        );
+    }
 
-        return $field;
+    public function __construct($name, $value, $type = self::TYPE_STRING)
+    {
+        $this->name = $name;
+        $this->value = $value;
+        $this->type = $type;
     }
 
     public function getName() 

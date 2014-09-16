@@ -25,6 +25,12 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('massive_search')
             ->children()
+                ->arrayNode('services')
+                    ->addDefaultsifNotSet()
+                    ->children()
+                        ->scalarNode('factory')->defaultValue('massive_search.factory_default')->end()
+                    ->end()
+                ->end()
                 ->scalarNode('adapter_id')->defaultValue('massive_search.adapter.zend_lucene')->end()
                 ->arrayNode('adapters')
                     ->addDefaultsifNotSet()

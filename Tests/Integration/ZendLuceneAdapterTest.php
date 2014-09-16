@@ -12,6 +12,7 @@ class ZendLuceneAdapterTest extends AdapterTestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->baseDir = sys_get_temp_dir() . '/massive-test-zend-lucene';
         $this->filesystem = new Filesystem();
 
@@ -27,6 +28,6 @@ class ZendLuceneAdapterTest extends AdapterTestCase
 
     public function getAdapter()
     {
-        return new ZendLuceneAdapter($this->baseDir);
+        return new ZendLuceneAdapter($this->getFactory(), $this->baseDir);
     }
 }
