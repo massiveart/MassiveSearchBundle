@@ -11,6 +11,7 @@ use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Massive\Bundle\SearchBundle\Search\Factory;
 
 class SearchManagerTest extends ProphecyTestCase
 {
@@ -18,26 +19,32 @@ class SearchManagerTest extends ProphecyTestCase
      * @var AdapterInterface
      */
     private $adapter;
+
     /**
      * @var MetadataFactory
      */
     private $metadataFactory;
+
     /**
      * @var IndexMetadataInterface
      */
     private $metadata;
+
     /**
      * @var ClassHierarchyMetadata
      */
     private $classHierachyMetadata;
+
     /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
     /**
      * @var SearchManager
      */
     private $searchManager;
+
     /**
      * @var Product
      */
@@ -51,7 +58,10 @@ class SearchManagerTest extends ProphecyTestCase
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $this->factory = new Factory();
+
         $this->searchManager = new SearchManager(
+            $this->factory,
             $this->adapter->reveal(),
             $this->metadataFactory->reveal(),
             $this->eventDispatcher->reveal()

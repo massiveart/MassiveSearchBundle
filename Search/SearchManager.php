@@ -13,6 +13,7 @@ use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Metadata\MetadataFactory;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Massive\Bundle\SearchBundle\Search\Factory;
 
 class SearchManager implements SearchManagerInterface
 {
@@ -31,7 +32,13 @@ class SearchManager implements SearchManagerInterface
      */
     protected $eventDispatcher;
 
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
     public function __construct(
+        Factory $factory,
         AdapterInterface $adapter,
         MetadataFactory $metadataFactory,
         EventDispatcherInterface $eventDispatcher
@@ -39,6 +46,7 @@ class SearchManager implements SearchManagerInterface
         $this->adapter = $adapter;
         $this->metadataFactory = $metadataFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->factory = $factory;
     }
 
     /**
@@ -97,7 +105,7 @@ class SearchManager implements SearchManagerInterface
 
         $fields = $metadata->getFieldMapping();
 
-        $document = new Document();
+        $document = $this->factory->makeDocument();
         $document->setId($accessor->getValue($object, $idField));
         $document->setClass($metadata->getName());
 
@@ -124,7 +132,7 @@ class SearchManager implements SearchManagerInterface
 
         foreach ($fields as $fieldName => $fieldMapping) {
             $document->addField(
-                Field::create($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
+                $this->factory->makeField($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
             );
         }
 
