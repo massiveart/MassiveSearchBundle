@@ -12,7 +12,7 @@
     </parameters>
 
     <services>
-        <!-- Factory -->
+        <!-- Metadata Factory -->
         <service id="massive_search.metadata.factory" class="%massive_search.metadata.factory.class%">
             <argument type="service" id="massive_search.metadata.driver.chain" />
         </service>
@@ -27,6 +27,7 @@
 
         <!-- XML Driver !-->
         <service id="massive_search.metadata.driver.xml" class="%massive_search.metadata.driver.xml.class%">
+            <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.metadata.file_locator" />
             <tag name="massive_search.metadata.driver" />
         </service>

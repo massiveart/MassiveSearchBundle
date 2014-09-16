@@ -1,8 +1,13 @@
 CHANGELOG
----------
+=========
 
 dev-master
 ----------
+
+- Added replaceable Factory service to enable better extension possiblities
+
+0.1
+---
 
 - Added `massive:search:status` command to show information about the current implementation
 - Add document ReflectionClass to HitEvent

@@ -179,7 +179,37 @@ Display status information for the current search implementation::
 Extending
 ---------
 
-You can extend the bundle with custom metadata drivers.
+You can extend the bundle by customizing the Factory class and with custom metadata drivers.
+
+Factory
+~~~~~~~
+
+The factory service can be customized, enabling you to instantiate your own
+classes for use in any listeners which you register. For example, you want to
+add a "thumbnail" field to the Document object.
+
+.. code-block:: php
+
+    namespace My\Namespace;
+
+    use Massive\Bundle\SearchBundle\Search\Factory as BaseFactory;
+
+    class MyFactory extends BaseFactory
+    {
+        public function makeDocument()
+        {
+            return MyCustomDocument();
+        }
+    }
+
+You must then register your factory as a service and register the ID of that
+service in your main application configuration:
+
+.. code-block:: yaml
+
+    massive_search:
+        services:
+            factory: my.factory.service
 
 Metadata Drivers
 ~~~~~~~~~~~~~~~~
