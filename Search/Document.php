@@ -42,7 +42,14 @@ class Document
      */
     public function addField(Field $field)
     {
-        $this->fields[] = $field;
+        if ($this->hasField($field->getName())) {
+            throw new \InvalidArgumentException(sprintf(
+                'Field "%s" already exists in search document',
+                $field->getName()
+            ));
+        }
+
+        $this->fields[$field->getName()] = $field;
     }
 
     /**
@@ -131,5 +138,33 @@ class Document
     public function getFields()
     {
         return $this->fields;
+    }
+
+    /**
+     * Return the named field
+     *
+     * @return Field
+     * @throws InvalidArgumentException When it doesn't exist
+     */
+    public function getField($name)
+    {
+        if (!isset($this->fields[$name])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Trying to get undefined field "%s", defined fields are "%s"',
+                $name, implode(', ', array_keys($this->fields))
+            ));
+        }
+
+        return $this->fields[$name];
+    }
+
+    /**
+     * Return true if the field exists
+     *
+     * @return boolean
+     */
+    public function hasField($name)
+    {
+        return isset($this->fields[$name]);
     }
 }
