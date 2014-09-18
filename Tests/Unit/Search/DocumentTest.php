@@ -48,4 +48,10 @@ class DocumentTest extends ProphecyTestCase
         $this->assertTrue($this->document->hasField('field1'));
         $this->assertFalse($this->document->hasField('field2'));
     }
+
+    public function testGetSet()
+    {
+        $this->document->setImageUrl('http://url.com/myimage.jpg');
+        $this->assertEquals('http://url.com/myimage.jpg', $this->document->getImageUrl());
+    }
 }

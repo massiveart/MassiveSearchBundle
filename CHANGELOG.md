@@ -4,6 +4,8 @@ CHANGELOG
 dev-master
 ----------
 
+- Added TestAdapter to enable testing without any dependencies (f.e. when integrating into a third party bundle)
+- Added support for adding image URLs to search "results" (not currently implemented in the XML driver)
 - Added replaceable Factory service to enable better extension possiblities
 
 0.1

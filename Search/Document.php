@@ -38,6 +38,11 @@ class Document
     protected $url;
 
     /**
+     * @var string
+     */
+    protected $imageUrl;
+
+    /**
      * @param Field $field
      */
     public function addField(Field $field)
@@ -66,6 +71,28 @@ class Document
     public function setClass($class)
     {
         $this->class = $class;
+    }
+
+    /**
+     * Return the URL for the image which should be
+     * displayed witht his search result.
+     *
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+
+    /**
+     * Set the URL to the image which should be displayed
+     * with this search result.
+     *
+     * @param string $imageUrl
+     */
+    public function setImageUrl($imageUrl)
+    {
+        $this->imageUrl = $imageUrl;
     }
 
     /**
