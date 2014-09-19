@@ -101,7 +101,9 @@ class SearchManagerTest extends ProphecyTestCase
         $this->metadata->getIdField()->willReturn('id');
         $this->metadata->getUrlField()->willReturn('url');
         $this->metadata->getTitleField()->willReturn('title');
+        $this->metadata->getLocaleField()->willReturn(null);
         $this->metadata->getDescriptionField()->willReturn('body');
+        $this->metadata->getImageUrlField()->willReturn(null);
         $this->metadata->getFieldMapping()->willReturn(array(
             'title' => array(
                 'type' => 'string',

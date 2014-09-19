@@ -2,6 +2,8 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
+
 /**
  * Interface to be implement by all search library adapters
  *
@@ -22,7 +24,7 @@ interface AdapterInterface
      *
      * @param string $queryString
      */
-    public function search($queryString, array $indexNames = array());
+    public function search(SearchQuery $searchQuery);
 
     /**
      * Return vendor status information as an associative

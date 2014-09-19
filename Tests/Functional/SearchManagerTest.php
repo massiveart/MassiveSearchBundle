@@ -12,11 +12,11 @@ class SearchManagerTest extends BaseTestCase
         $nbResults = 10;
 
         $this->generateIndex($nbResults);
-        $res = $this->getSearchManager()->search('Hello*', 'product');
+        $res = $this->getSearchManager()->createSearch('Hello*')->index('product')->go();
 
         $this->assertCount($nbResults, $res);
 
-        $res = $this->getSearchManager()->search('Hello this is a product 1', 'product');
+        $res = $this->getSearchManager()->createSearch('Hello this is a product 1')->index('product')->go();
         $this->assertCount(10, $res);
 
         // this is a full match with score = 1
@@ -41,13 +41,13 @@ class SearchManagerTest extends BaseTestCase
         $this->generateIndex(1);
 
         $this->assertNull($testSubscriber->hitDocument);
-        $this->getSearchManager()->search('Hello*', 'product');
+        $this->getSearchManager()->createSearch('Hello*')->index('product')->go();
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $testSubscriber->hitDocument);
 
         $this->assertEquals(10, $testSubscriber->nbHits);
 
         // test HIT dispatch
-        $this->getSearchManager()->search('Hello*', 'product');
+        $this->getSearchManager()->createSearch('Hello*')->index('product')->go();
         $this->assertEquals(20, $testSubscriber->nbHits);
         $this->assertInstanceOf('ReflectionClass', $testSubscriber->documentReflection);
         $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $testSubscriber->documentReflection->name);

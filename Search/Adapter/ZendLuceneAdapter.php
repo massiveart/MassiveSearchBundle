@@ -9,6 +9,7 @@ use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Symfony\Component\Finder\Finder;
 use ZendSearch\Lucene;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 /**
  * Adapter for the ZendSearch library
@@ -16,6 +17,9 @@ use ZendSearch\Lucene;
  * https://github.com/zendframework/ZendSearch
  * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html 
  *   (docs for 1.2 version apply equally to 2.0)
+ *
+ * Note this adapter implements localization by creating an index for each
+ * locale if a locale is specified.
  *
  * @author Daniel Leech <daniel@massive.com>
  */
@@ -47,9 +51,24 @@ class ZendLuceneAdapter implements AdapterInterface
      * @param string $indexName
      * @return string
      */
-    protected function getIndexPath($indexName)
+    private function getIndexPath($indexName)
     {
         return sprintf('%s/%s', $this->basePath, $indexName);
+    }
+
+    /**
+     * Return the localized index name if the locale
+     * is given.
+     *
+     * @return string
+     */
+    private function getLocalizedIndexName($indexName, $locale = null)
+    {
+        if (null === $locale) {
+            return $indexName;
+        }
+
+        return $indexName . '_' . $locale;
     }
 
     /**
@@ -57,6 +76,8 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
+        $locale = $document->getLocale();
+        $indexName = $this->getLocalizedIndexName($indexName, $locale);
         $indexPath = $this->getIndexPath($indexName);
 
         if (!file_exists($indexPath)) {
@@ -114,12 +135,24 @@ class ZendLuceneAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function search($queryString, array $indexNames = array())
+    public function search(SearchQuery $searchQuery)
     {
+        $indexNames = $searchQuery->getIndexes();
+        $locale = $searchQuery->getLocale();
+        $queryString = $searchQuery->getQueryString();
+
         $searcher = new Lucene\MultiSearcher();
 
         foreach ($indexNames as $indexName) {
-            $searcher->addIndex(Lucene\Lucene::open($this->getIndexPath($indexName)));
+            $indexPath = $this->getIndexPath(
+                $this->getLocalizedIndexName($indexName, $locale)
+            );
+
+            if (!file_exists($indexPath)) {
+                continue;
+            }
+
+            $searcher->addIndex(Lucene\Lucene::open($indexPath));
         }
 
         $query = Lucene\Search\QueryParser::parse($queryString);

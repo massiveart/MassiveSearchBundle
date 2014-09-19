@@ -43,6 +43,11 @@ class Document
     protected $imageUrl;
 
     /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
      * @param Field $field
      */
     public function addField(Field $field)
@@ -158,6 +163,23 @@ class Document
     {
         $this->url = $url;
     }
+
+    /**
+     * @return string
+     */
+    public function getLocale() 
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+    
 
     /**
      * @return Field[]

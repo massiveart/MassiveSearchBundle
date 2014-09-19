@@ -16,6 +16,7 @@ class QueryCommand extends ContainerAwareCommand
         $this->setName('massive:search:query');
         $this->addArgument('query', InputArgument::REQUIRED, 'Search query');
         $this->addOption('index', 'I', InputOption::VALUE_REQUIRED, 'Index to search');
+        $this->addOption('locale', 'l', InputOption::VALUE_REQUIRED, 'Index to search');
         $this->setDescription('Search the using a given query');
         $this->setHelp(<<<EOT
 The %command.name_full% command will search the configured repository and present
@@ -30,16 +31,31 @@ EOT
     {
         $query = $input->getArgument('query');
         $index = $input->getOption('index');
+        $locale = $input->getOption('locale');
 
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
-        $res = $searchManager->search($query, $index);
+        $res = $searchManager->createSearch($query)->index($index)->locale($locale)->go();
 
         $table = new TableHelper();
         $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class'));
         foreach ($res as $hit) {
             $document = $hit->getDocument();
-            $table->addRow(array($hit->getScore(), $document->getId(), $document->getTitle(), $document->getDescription(), $document->getUrl(), $document->getImageUrl(), $document->getClass()));
+            $table->addRow(array(
+                $hit->getScore(), 
+                $document->getId(),
+                $document->getTitle(),
+                $this->truncate($document->getDescription(), 50),
+                $document->getUrl(),
+                $document->getImageUrl(),
+                $document->getClass()
+            ));
         }
         $table->render($output);
+    }
+
+    private function truncate($text, $length, $suffix = '...')
+    {
+        $computedLength = $length - strlen($suffix);
+        return strlen($text) > $computedLength ? substr($text, 0, $computedLength) . $suffix : $text;
     }
 }

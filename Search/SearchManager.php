@@ -15,6 +15,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 
 class SearchManager implements SearchManagerInterface
 {
@@ -86,7 +88,6 @@ class SearchManager implements SearchManagerInterface
     public function index($object)
     {
         $metadata = $this->getMetadata($object);
-
         $this->indexWithMetadata($object, $metadata);
     }
 
@@ -103,7 +104,8 @@ class SearchManager implements SearchManagerInterface
         $urlField = $metadata->getUrlField();
         $titleField = $metadata->getTitleField();
         $descriptionField = $metadata->getDescriptionField();
-        $imageUrlField = $metadata->getDescriptionField();
+        $imageUrlField = $metadata->getImageUrlField();
+        $localeField = $metadata->getLocaleField();
 
         $fields = $metadata->getFieldMapping();
 
@@ -137,6 +139,11 @@ class SearchManager implements SearchManagerInterface
             $document->setImageUrl($imageUrl);
         }
 
+        if ($localeField) {
+            $locale = $accessor->getValue($object, $localeField);
+            $document->setLocale($locale);
+        }
+
         foreach ($fields as $fieldName => $fieldMapping) {
             $document->addField(
                 $this->factory->makeField($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
@@ -152,22 +159,32 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
+     * Create a new search builder
+     *
+     * @return SearchQueryBuilder
+     */
+    public function createSearch($string)
+    {
+        return new SearchQueryBuilder($this, new SearchQuery($string));
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function search($string, $indexNames = null)
+    public function search(SearchQuery $query)
     {
+        $indexNames = $query->getIndexes();
+
         if (null === $indexNames) {
-            throw new \Exception('Not implemented yet');
+            throw new \Exception('Searching all indexes is not yet implemented');
         }
 
         $this->eventDispatcher->dispatch(
             SearchEvents::SEARCH,
-            new SearchEvent($string, $indexNames)
+            new SearchEvent($query)
         );
 
-        $indexNames = (array)$indexNames;
-
-        $hits = $this->adapter->search($string, $indexNames);
+        $hits = $this->adapter->search($query);
 
         $reflections = array();
         /** @var QueryHit $hit */

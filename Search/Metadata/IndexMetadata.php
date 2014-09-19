@@ -9,13 +9,14 @@ use Metadata\ClassMetadata;
  */
 class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
 {
-    protected $indexName;
-    protected $fieldMapping = array();
-    protected $idField;
-    protected $urlField;
-    protected $titleField;
-    protected $descriptionField;
-    protected $imageUrlField;
+    private $indexName;
+    private $fieldMapping = array();
+    private $idField;
+    private $urlField;
+    private $titleField;
+    private $descriptionField;
+    private $imageUrlField;
+    private $localeField;
 
     public function getName()
     {
@@ -95,5 +96,15 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     public function setImageUrlField($imageUrlField)
     {
         $this->imageUrlField = $imageUrlField;
+    }
+
+    public function getLocaleField()
+    {
+        return $this->localeField;
+    }
+
+    public function setLocaleField($localeField)
+    {
+        $this->localeField = $localeField;
     }
 }

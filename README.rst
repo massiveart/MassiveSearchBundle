@@ -131,7 +131,7 @@ is passed directly to the search library:
 
 .. code-block:: php
 
-    $hits = $searchManager->search('My Product');
+    $hits = $searchManager->createSearch('My Product');
 
     foreach ($hits as $hit) {
         echo $hit->getScore();

@@ -6,6 +6,7 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 abstract class AdapterTestCase extends BaseTestCase
 {
@@ -22,7 +23,9 @@ abstract class AdapterTestCase extends BaseTestCase
         $adapter = $this->getAdapter();
         $this->createIndex();
 
-        $res = $adapter->search('One', array('foobar'));
+        $query = new SearchQuery('one');
+        $query->setIndexes(array('foobar'));
+        $res = $adapter->search($query);
 
         $this->assertCount(1, $res);
     }

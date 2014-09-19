@@ -4,7 +4,8 @@ namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
-use Sulu\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\Factory;
 
 /**
  * Test adapter for testing scenarios
@@ -40,7 +41,7 @@ class TestAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function search($queryString, array $indexNames = array())
+    public function search(SearchQuery $searchQuery)
     {
         $hits = array();
 
