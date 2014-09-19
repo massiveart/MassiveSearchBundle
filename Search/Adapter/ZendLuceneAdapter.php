@@ -22,10 +22,13 @@ use ZendSearch\Lucene;
 class ZendLuceneAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
+    const CLASS_TAG = '__class';
+
+    // TODO: This fields should be handled at a higher level
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
-    const CLASS_TAG = '__class';
+    const IMAGE_URL = '__image_url';
 
     protected $basePath;
     protected $factory;
@@ -88,6 +91,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::TITLE_FIELDNAME, $document->getTitle()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::CLASS_TAG, $document->getClass()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::IMAGE_URL, $document->getImageUrl()));
 
         $index->addDocument($luceneDocument);
     }
@@ -139,6 +143,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $document->setDescription($luceneDocument->getFieldValue(self::DESCRIPTION_FIELDNAME));
             $document->setUrl($luceneDocument->getFieldValue(self::URL_FIELDNAME));
             $document->setClass($luceneDocument->getFieldValue(self::CLASS_TAG));
+            $document->setImageUrl($luceneDocument->getFieldValue(self::IMAGE_URL));
 
             $hit->setId($document->getId());
 

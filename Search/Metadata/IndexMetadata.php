@@ -15,6 +15,7 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     protected $urlField;
     protected $titleField;
     protected $descriptionField;
+    protected $imageUrlField;
 
     public function getName()
     {
@@ -84,5 +85,15 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     public function setDescriptionField($descriptionField)
     {
         $this->descriptionField = $descriptionField;
+    }
+
+    public function getImageUrlField() 
+    {
+        return $this->imageUrlField;
+    }
+    
+    public function setImageUrlField($imageUrlField)
+    {
+        $this->imageUrlField = $imageUrlField;
     }
 }

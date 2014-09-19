@@ -30,6 +30,14 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
+     * Return all the "indexed" documents
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function search($queryString, array $indexNames = array())

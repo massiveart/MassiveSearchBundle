@@ -5,6 +5,7 @@ namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\EventSubscriber
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 
 class TestSubscriber implements EventSubscriberInterface
 {
@@ -12,10 +13,14 @@ class TestSubscriber implements EventSubscriberInterface
     public $documentReflection;
     public $nbHits = 0;
 
+    public $preIndexDocument;
+    public $preIndexMetadata;
+
     public static function getSubscribedEvents()
     {
         return array(
             SearchEvents::HIT => 'handleHit',
+            SearchEvents::PRE_INDEX => 'handlePreIndex',
         );
     }
 
@@ -28,5 +33,11 @@ class TestSubscriber implements EventSubscriberInterface
         $this->documentReflection = $e->getDocumentReflection();
 
         $this->nbHits++;
+    }
+
+    public function handlePreIndex(PreIndexEvent $e)
+    {
+        $this->preIndexDocument = $e->getDocument();
+        $this->preIndexMetadata = $e->getMetadata();
     }
 }

@@ -45,4 +45,8 @@ interface IndexMetadataInterface
     public function setIdField($idField);
 
     public function getDescriptionField();
+
+    public function getImageUrlField();
+    
+    public function setImageUrlField($imageUrlField);
 }

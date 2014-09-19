@@ -32,13 +32,13 @@ class SearchManagerTest extends BaseTestCase
         $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $document->getClass());
     }
 
-    public function testHitEventDispatch()
+    public function testEventDispatch()
     {
-        $this->generateIndex(1);
-
         $eventDispatcher = $this->getContainer()->get('event_dispatcher');
         $testSubscriber = new TestSubscriber();
         $eventDispatcher->addSubscriber($testSubscriber);
+
+        $this->generateIndex(1);
 
         $this->assertNull($testSubscriber->hitDocument);
         $this->getSearchManager()->search('Hello*', 'product');
@@ -46,10 +46,13 @@ class SearchManagerTest extends BaseTestCase
 
         $this->assertEquals(10, $testSubscriber->nbHits);
 
+        // test HIT dispatch
         $this->getSearchManager()->search('Hello*', 'product');
-
         $this->assertEquals(20, $testSubscriber->nbHits);
         $this->assertInstanceOf('ReflectionClass', $testSubscriber->documentReflection);
         $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $testSubscriber->documentReflection->name);
+        // test PRE_INDEX dispatch
+        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface', $testSubscriber->preIndexMetadata);
+        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $testSubscriber->preIndexDocument);
     }
 }

@@ -14,6 +14,7 @@ use Metadata\MetadataFactory;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 
 class SearchManager implements SearchManagerInterface
 {
@@ -102,6 +103,7 @@ class SearchManager implements SearchManagerInterface
         $urlField = $metadata->getUrlField();
         $titleField = $metadata->getTitleField();
         $descriptionField = $metadata->getDescriptionField();
+        $imageUrlField = $metadata->getDescriptionField();
 
         $fields = $metadata->getFieldMapping();
 
@@ -130,11 +132,21 @@ class SearchManager implements SearchManagerInterface
             }
         }
 
+        if ($imageUrlField) {
+            $imageUrl = $accessor->getValue($object, $imageUrlField);
+            $document->setImageUrl($imageUrl);
+        }
+
         foreach ($fields as $fieldName => $fieldMapping) {
             $document->addField(
                 $this->factory->makeField($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
             );
         }
+
+        $this->eventDispatcher->dispatch(
+            SearchEvents::PRE_INDEX,
+            new PreIndexEvent($object, $document, $metadata, $indexName)
+        );
 
         $this->adapter->index($document, $indexName);
     }
