@@ -12,12 +12,20 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 interface AdapterInterface
 {
     /**
-     * Index the given IndexEntry object
+     * Index the given Document object
      *
      * @param Document $document Document to index
      * @param string $indexName Name of index to store document in
      */
     public function index(Document $document, $indexName);
+
+    /**
+     * Remove the given Document from the index
+     *
+     * @param Document $document
+     * @param string $indexName
+     */
+    public function deindex(Document $document, $indexName);
 
     /**
      * Search using the given query string

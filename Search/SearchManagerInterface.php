@@ -53,12 +53,4 @@ interface SearchManagerInterface
      * @param object $object
      */
     public function index($object);
-
-    /**
-     * Index the object with given Metadata
-     *
-     * @param object $object
-     * @param IndexMetadataInterface $metadata
-     */
-    public function indexWithMetadata($object, IndexMetadataInterface $metadata);
 }

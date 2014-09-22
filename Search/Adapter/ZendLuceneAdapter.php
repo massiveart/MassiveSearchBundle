@@ -47,47 +47,14 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Determine the index path for a given index name
-     * @param string $indexName
-     * @return string
-     */
-    private function getIndexPath($indexName)
-    {
-        return sprintf('%s/%s', $this->basePath, $indexName);
-    }
-
-    /**
-     * Return the localized index name if the locale
-     * is given.
-     *
-     * @return string
-     */
-    private function getLocalizedIndexName($indexName, $locale = null)
-    {
-        if (null === $locale) {
-            return $indexName;
-        }
-
-        return $indexName . '_' . $locale;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function index(Document $document, $indexName)
     {
-        $locale = $document->getLocale();
-        $indexName = $this->getLocalizedIndexName($indexName, $locale);
-        $indexPath = $this->getIndexPath($indexName);
+        $index = $this->getLuceneIndex($document, $indexName);
 
-        if (!file_exists($indexPath)) {
-            $index = Lucene\Lucene::create($indexPath);
-        } else {
-            $index = Lucene\Lucene::open($indexPath);
-
-            // check to see if the subject already exists
-            $this->removeExisting($index, $document);
-        }
+        // check to see if the subject already exists
+        $this->removeExisting($index, $document);
 
         $luceneDocument = new Lucene\Document();
 
@@ -118,18 +85,12 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Remove the existing entry for the given Document from the index, if it exists.
-     *
-     * @param Lucene\Index $index The Zend Lucene Index
-     * @param Document $document The Massive Search Document
+     * {@inheritDoc}
      */
-    protected function removeExisting(Lucene\Index $index, Document $document)
+    public function deindex(Document $document, $indexName)
     {
-        $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
-
-        foreach ($hits as $hit) {
-            $index->delete($hit->id);
-        }
+        $index = $this->getLuceneIndex($document, $indexName);
+        $this->removeExisting($index, $document);
     }
 
     /**
@@ -217,5 +178,58 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         return $status;
+    }
+
+    private function getLuceneIndex(Document $document, $indexName)
+    {
+        $locale = $document->getLocale();
+        $indexName = $this->getLocalizedIndexName($indexName, $locale);
+        $indexPath = $this->getIndexPath($indexName);
+
+        if (!file_exists($indexPath)) {
+             Lucene\Lucene::create($indexPath);
+        }
+
+        return Lucene\Lucene::open($indexPath);
+    }
+
+    /**
+     * Determine the index path for a given index name
+     * @param string $indexName
+     * @return string
+     */
+    private function getIndexPath($indexName)
+    {
+        return sprintf('%s/%s', $this->basePath, $indexName);
+    }
+
+    /**
+     * Return the localized index name if the locale
+     * is given.
+     *
+     * @return string
+     */
+    private function getLocalizedIndexName($indexName, $locale = null)
+    {
+        if (null === $locale) {
+            return $indexName;
+        }
+
+        return $indexName . '_' . $locale;
+    }
+
+    /**
+     * Remove the existing entry for the given Document from the index, if it exists.
+     *
+     * @param Lucene\Index $index The Zend Lucene Index
+     * @param Document $document The Massive Search Document
+     */
+    private function removeExisting(Lucene\Index $index, Document $document)
+    {
+        $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
+
+        foreach ($hits as $hit) {
+            $index->delete($hit->id);
+        }
     }
 }

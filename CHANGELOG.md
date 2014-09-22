@@ -4,6 +4,7 @@ CHANGELOG
 dev-master
 ----------
 
+- Support for deindex operation
 - ZendAdapter is localization aware
 - Added search builder, `$searchManager->createSearch('my query')->index('foo')->locale('de')->go()`
 - Changed search API. `$searchManager->search` now accepts a `SearchQuery` object

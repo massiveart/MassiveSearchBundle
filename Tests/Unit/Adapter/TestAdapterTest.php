@@ -27,4 +27,13 @@ class TestAdapterTest extends ProphecyTestCase
 
         $this->assertCount(2, $res);
     }
+
+    public function testDeindex()
+    {
+        $this->adapter->index($this->document1, 'foo');
+        $this->adapter->index($this->document2, 'foo');
+
+        $this->adapter->deindex($this->document1, 'foo');
+        $this->assertCount(1, $this->adapter->getDocuments());
+    }
 }

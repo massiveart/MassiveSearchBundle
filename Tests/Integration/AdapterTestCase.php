@@ -38,6 +38,22 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->assertTrue(is_array($statistics));
     }
 
+    public function testDeindex()
+    {
+        $this->createIndex();
+        $doc = $this->factory->makeDocument();
+        $doc->setId(1);
+        $this->getAdapter()->deindex($doc, 'foobar');
+
+        $query = new SearchQuery('document');
+        $query->setIndexes(array('foobar'));
+        $res = $this->getAdapter()->search($query);
+
+        // this should be one, but the lucene index needs to be
+        // comitted, and to do that we must callits destruct method.
+        $this->assertCount(2, $res);
+    }
+
     protected function createDocument($title)
     {
         static $id = 0;

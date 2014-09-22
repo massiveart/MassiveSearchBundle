@@ -82,73 +82,23 @@ class SearchManager implements SearchManagerInterface
         return $metadata->getOutsideClassMetadata();
     }
 
+    public function deindex($object)
+    {
+        $metadata = $this->getMetadata($object);
+        $indexName = $metadata->getIndexName();
+        $document = $this->objectToDocument($metadata, $object);
+
+        $this->adapter->deindex($document, $indexName);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function index($object)
     {
         $metadata = $this->getMetadata($object);
-        $this->indexWithMetadata($object, $metadata);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function indexWithMetadata($object, IndexMetadataInterface $metadata)
-    {
-        $accessor = PropertyAccess::createPropertyAccessor();
-
         $indexName = $metadata->getIndexName();
-
-        $idField = $metadata->getIdField();
-        $urlField = $metadata->getUrlField();
-        $titleField = $metadata->getTitleField();
-        $descriptionField = $metadata->getDescriptionField();
-        $imageUrlField = $metadata->getImageUrlField();
-        $localeField = $metadata->getLocaleField();
-
-        $fields = $metadata->getFieldMapping();
-
-        $document = $this->factory->makeDocument();
-        $document->setId($accessor->getValue($object, $idField));
-        $document->setClass($metadata->getName());
-
-        if ($urlField) {
-            $url = $accessor->getValue($object, $urlField);
-            if ($url) {
-                $document->setUrl($accessor->getValue($object, $urlField));
-            }
-        }
-
-        if ($titleField) {
-            $title = $accessor->getValue($object, $titleField);
-            if ($title) {
-                $document->setTitle($accessor->getValue($object, $titleField));
-            }
-        }
-
-        if ($descriptionField) {
-            $description = $accessor->getValue($object, $descriptionField);
-            if ($description) {
-                $document->setDescription($accessor->getValue($object, $descriptionField));
-            }
-        }
-
-        if ($imageUrlField) {
-            $imageUrl = $accessor->getValue($object, $imageUrlField);
-            $document->setImageUrl($imageUrl);
-        }
-
-        if ($localeField) {
-            $locale = $accessor->getValue($object, $localeField);
-            $document->setLocale($locale);
-        }
-
-        foreach ($fields as $fieldName => $fieldMapping) {
-            $document->addField(
-                $this->factory->makeField($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
-            );
-        }
+        $document = $this->objectToDocument($metadata, $object);
 
         $this->eventDispatcher->dispatch(
             SearchEvents::PRE_INDEX,
@@ -219,5 +169,61 @@ class SearchManager implements SearchManagerInterface
         $data += $this->adapter->getStatus() ? : array();
 
         return $data;
+    }
+
+    private function objectToDocument($metadata, $object)
+    {
+        $idField = $metadata->getIdField();
+        $urlField = $metadata->getUrlField();
+        $titleField = $metadata->getTitleField();
+        $descriptionField = $metadata->getDescriptionField();
+        $imageUrlField = $metadata->getImageUrlField();
+        $localeField = $metadata->getLocaleField();
+        $fields = $metadata->getFieldMapping();
+
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $document = $this->factory->makeDocument();
+        $document->setId($accessor->getValue($object, $idField));
+        $document->setClass($metadata->getName());
+
+        if ($urlField) {
+            $url = $accessor->getValue($object, $urlField);
+            if ($url) {
+                $document->setUrl($accessor->getValue($object, $urlField));
+            }
+        }
+
+        if ($titleField) {
+            $title = $accessor->getValue($object, $titleField);
+            if ($title) {
+                $document->setTitle($accessor->getValue($object, $titleField));
+            }
+        }
+
+        if ($descriptionField) {
+            $description = $accessor->getValue($object, $descriptionField);
+            if ($description) {
+                $document->setDescription($accessor->getValue($object, $descriptionField));
+            }
+        }
+
+        if ($imageUrlField) {
+            $imageUrl = $accessor->getValue($object, $imageUrlField);
+            $document->setImageUrl($imageUrl);
+        }
+
+        if ($localeField) {
+            $locale = $accessor->getValue($object, $localeField);
+            $document->setLocale($locale);
+        }
+
+        foreach ($fields as $fieldName => $fieldMapping) {
+            $document->addField(
+                $this->factory->makeField($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
+            );
+        }
+
+        return $document;
     }
 }
