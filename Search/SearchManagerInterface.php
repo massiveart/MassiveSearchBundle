@@ -24,13 +24,6 @@ interface SearchManagerInterface
     public function getMetadata($object);
 
     /**
-     * Return status information about the current implementation
-     *
-     * @return array
-     */
-    public function getStatus();
-
-    /**
      * Search with the given query string
      *
      * @param SearchQuery
@@ -53,4 +46,20 @@ interface SearchManagerInterface
      * @param object $object
      */
     public function index($object);
+
+    /**
+     * Remove the given mapped objects entry from
+     * its corresponding index
+     *
+     * @param object $object
+     */
+    public function deindex($object);
+
+    /**
+     * Return an array of arbitrary information
+     * about the current state of the adapter
+     *
+     * @return array
+     */
+    public function getStatus();
 }

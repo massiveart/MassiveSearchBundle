@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Search;
 
@@ -18,6 +26,10 @@ use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 
+/**
+ * Search manager is the public API to the search
+ * functionality.
+ */
 class SearchManager implements SearchManagerInterface
 {
     /**
@@ -82,6 +94,9 @@ class SearchManager implements SearchManagerInterface
         return $metadata->getOutsideClassMetadata();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function deindex($object)
     {
         $metadata = $this->getMetadata($object);
@@ -109,9 +124,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * Create a new search builder
-     *
-     * @return SearchQueryBuilder
+     * {@inheritDoc}
      */
     public function createSearch($string)
     {
@@ -171,7 +184,14 @@ class SearchManager implements SearchManagerInterface
         return $data;
     }
 
-    private function objectToDocument($metadata, $object)
+    /**
+     * Map the given object to a new document using the
+     * given metadata.
+     *
+     * @param IndexMetadata
+     * @param object
+     */
+    private function objectToDocument(IndexMetadata $metadata, $object)
     {
         $idField = $metadata->getIdField();
         $urlField = $metadata->getUrlField();

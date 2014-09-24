@@ -19,6 +19,9 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
  */
 class SearchEvent extends Event
 {
+    /**
+     * @var SearchQuery
+     */
     protected $searchQuery;
 
     /**

@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Search;
 
@@ -9,7 +17,14 @@ namespace Massive\Bundle\SearchBundle\Search;
  */
 class SearchQueryBuilder
 {
+    /**
+     * @var SearchManagerInterface
+     */
     private $searchManager;
+
+    /**
+     * @var SearchQuery
+     */
     private $searchQuery;
 
     public function __construct(SearchManagerInterface $searchManager, SearchQuery $searchQuery)
@@ -58,7 +73,7 @@ class SearchQueryBuilder
      *
      * @return array
      */
-    public function go()
+    public function execute()
     {
         return $this->searchManager->search($this->searchQuery);
     }

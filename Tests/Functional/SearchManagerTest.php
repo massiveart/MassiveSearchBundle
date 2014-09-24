@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
@@ -12,11 +20,11 @@ class SearchManagerTest extends BaseTestCase
         $nbResults = 10;
 
         $this->generateIndex($nbResults);
-        $res = $this->getSearchManager()->createSearch('Hello*')->index('product')->go();
+        $res = $this->getSearchManager()->createSearch('Hello*')->index('product')->execute();
 
         $this->assertCount($nbResults, $res);
 
-        $res = $this->getSearchManager()->createSearch('Hello this is a product 1')->index('product')->go();
+        $res = $this->getSearchManager()->createSearch('Hello this is a product 1')->index('product')->execute();
         $this->assertCount(10, $res);
 
         // this is a full match with score = 1
@@ -41,13 +49,13 @@ class SearchManagerTest extends BaseTestCase
         $this->generateIndex(1);
 
         $this->assertNull($testSubscriber->hitDocument);
-        $this->getSearchManager()->createSearch('Hello*')->index('product')->go();
+        $this->getSearchManager()->createSearch('Hello*')->index('product')->execute();
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $testSubscriber->hitDocument);
 
         $this->assertEquals(10, $testSubscriber->nbHits);
 
         // test HIT dispatch
-        $this->getSearchManager()->createSearch('Hello*')->index('product')->go();
+        $this->getSearchManager()->createSearch('Hello*')->index('product')->execute();
         $this->assertEquals(20, $testSubscriber->nbHits);
         $this->assertInstanceOf('ReflectionClass', $testSubscriber->documentReflection);
         $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $testSubscriber->documentReflection->name);
