@@ -19,11 +19,26 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class PreIndexEvent extends Event
 {
+    /**
+     * The object, which has been indexed
+     * @var object
+     */
     protected $subject;
+
+    /**
+     * The search document, which is the result of the indexing
+     * @var Document
+     */
     protected $document;
+
+    /**
+     * The metadata, on which the index process has been based
+     * @var IndexMetadataInterface
+     */
     protected $metadata;
 
     /**
+     * @param $subject
      * @param Document $document
      * @param IndexMetadataInterface $metadata
      */
@@ -35,6 +50,7 @@ class PreIndexEvent extends Event
     }
 
     /**
+     * Returns the indexed subject
      * @return mixed
      */
     public function getSubject() 
@@ -43,6 +59,7 @@ class PreIndexEvent extends Event
     }
 
     /**
+     * Returns the document, which is the result of the indexed object
      * @return Document
      */
     public function getDocument() 
@@ -51,6 +68,7 @@ class PreIndexEvent extends Event
     }
 
     /**
+     * Returns the metadata based on which the indexing was done
      * @return IndexMetadataInterface
      */
     public function getMetadata() 

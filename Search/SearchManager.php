@@ -117,7 +117,7 @@ class SearchManager implements SearchManagerInterface
 
         $this->eventDispatcher->dispatch(
             SearchEvents::PRE_INDEX,
-            new PreIndexEvent($object, $document, $metadata, $indexName)
+            new PreIndexEvent($object, $document, $metadata)
         );
 
         $this->adapter->index($document, $indexName);

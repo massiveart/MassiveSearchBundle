@@ -42,7 +42,15 @@ class ZendLuceneAdapter implements AdapterInterface
     const DESCRIPTION_FIELDNAME = '__description';
     const IMAGE_URL = '__image_url';
 
+    /**
+     * The base directory for the search indexes
+     * @var string
+     */
     protected $basePath;
+
+    /**
+     * @var \Massive\Bundle\SearchBundle\Search\Factory
+     */
     protected $factory;
 
     /**
@@ -188,6 +196,12 @@ class ZendLuceneAdapter implements AdapterInterface
         return $status;
     }
 
+    /**
+     * Returns the lucene index for the locale determined by the document
+     * @param Document $document
+     * @param $indexName
+     * @return Lucene\SearchIndexInterface
+     */
     private function getLuceneIndex(Document $document, $indexName)
     {
         $locale = $document->getLocale();
