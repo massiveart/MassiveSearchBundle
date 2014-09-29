@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Search;
 
@@ -13,7 +21,15 @@ use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Metadata\MetadataFactory;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 
+/**
+ * Search manager is the public API to the search
+ * functionality.
+ */
 class SearchManager implements SearchManagerInterface
 {
     /**
@@ -31,7 +47,13 @@ class SearchManager implements SearchManagerInterface
      */
     protected $eventDispatcher;
 
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
     public function __construct(
+        Factory $factory,
         AdapterInterface $adapter,
         MetadataFactory $metadataFactory,
         EventDispatcherInterface $eventDispatcher
@@ -39,6 +61,7 @@ class SearchManager implements SearchManagerInterface
         $this->adapter = $adapter;
         $this->metadataFactory = $metadataFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->factory = $factory;
     }
 
     /**
@@ -72,82 +95,59 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function deindex($object)
+    {
+        $metadata = $this->getMetadata($object);
+        $indexName = $metadata->getIndexName();
+        $document = $this->objectToDocument($metadata, $object);
+
+        $this->adapter->deindex($document, $indexName);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function index($object)
     {
         $metadata = $this->getMetadata($object);
-
-        $this->indexWithMetadata($object, $metadata);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function indexWithMetadata($object, IndexMetadataInterface $metadata)
-    {
-        $accessor = PropertyAccess::createPropertyAccessor();
-
         $indexName = $metadata->getIndexName();
+        $document = $this->objectToDocument($metadata, $object);
 
-        $idField = $metadata->getIdField();
-        $urlField = $metadata->getUrlField();
-        $titleField = $metadata->getTitleField();
-        $descriptionField = $metadata->getDescriptionField();
-
-        $fields = $metadata->getFieldMapping();
-
-        $document = new Document();
-        $document->setId($accessor->getValue($object, $idField));
-        $document->setClass($metadata->getName());
-
-        if ($urlField) {
-            $url = $accessor->getValue($object, $urlField);
-            if ($url) {
-                $document->setUrl($accessor->getValue($object, $urlField));
-            }
-        }
-
-        if ($titleField) {
-            $title = $accessor->getValue($object, $titleField);
-            if ($title) {
-                $document->setTitle($accessor->getValue($object, $titleField));
-            }
-        }
-
-        if ($descriptionField) {
-            $description = $accessor->getValue($object, $descriptionField);
-            if ($description) {
-                $document->setDescription($accessor->getValue($object, $descriptionField));
-            }
-        }
-
-        foreach ($fields as $fieldName => $fieldMapping) {
-            $document->addField(
-                Field::create($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
-            );
-        }
+        $this->eventDispatcher->dispatch(
+            SearchEvents::PRE_INDEX,
+            new PreIndexEvent($object, $document, $metadata)
+        );
 
         $this->adapter->index($document, $indexName);
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function createSearch($string)
+    {
+        return new SearchQueryBuilder($this, new SearchQuery($string));
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function search($string, $indexNames = null)
+    public function search(SearchQuery $query)
     {
+        $indexNames = $query->getIndexes();
+
         if (null === $indexNames) {
-            throw new \Exception('Not implemented yet');
+            throw new \Exception('Searching all indexes is not yet implemented');
         }
 
         $this->eventDispatcher->dispatch(
             SearchEvents::SEARCH,
-            new SearchEvent($string, $indexNames)
+            new SearchEvent($query)
         );
 
-        $indexNames = (array)$indexNames;
-
-        $hits = $this->adapter->search($string, $indexNames);
+        $hits = $this->adapter->search($query);
 
         $reflections = array();
         /** @var QueryHit $hit */
@@ -182,5 +182,68 @@ class SearchManager implements SearchManagerInterface
         $data += $this->adapter->getStatus() ? : array();
 
         return $data;
+    }
+
+    /**
+     * Map the given object to a new document using the
+     * given metadata.
+     *
+     * @param IndexMetadata
+     * @param object
+     */
+    private function objectToDocument(IndexMetadata $metadata, $object)
+    {
+        $idField = $metadata->getIdField();
+        $urlField = $metadata->getUrlField();
+        $titleField = $metadata->getTitleField();
+        $descriptionField = $metadata->getDescriptionField();
+        $imageUrlField = $metadata->getImageUrlField();
+        $localeField = $metadata->getLocaleField();
+        $fields = $metadata->getFieldMapping();
+
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $document = $this->factory->makeDocument();
+        $document->setId($accessor->getValue($object, $idField));
+        $document->setClass($metadata->getName());
+
+        if ($urlField) {
+            $url = $accessor->getValue($object, $urlField);
+            if ($url) {
+                $document->setUrl($accessor->getValue($object, $urlField));
+            }
+        }
+
+        if ($titleField) {
+            $title = $accessor->getValue($object, $titleField);
+            if ($title) {
+                $document->setTitle($accessor->getValue($object, $titleField));
+            }
+        }
+
+        if ($descriptionField) {
+            $description = $accessor->getValue($object, $descriptionField);
+            if ($description) {
+                $document->setDescription($accessor->getValue($object, $descriptionField));
+            }
+        }
+
+        if ($imageUrlField) {
+            $imageUrl = $accessor->getValue($object, $imageUrlField);
+            $document->setImageUrl($imageUrl);
+        }
+
+        if ($localeField) {
+            $locale = $accessor->getValue($object, $localeField);
+            $document->setLocale($locale);
+        }
+
+        foreach ($fields as $fieldName => $fieldMapping) {
+            $document->addField(
+                $this->factory->makeField($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
+            );
+        }
+
+        return $document;
     }
 }

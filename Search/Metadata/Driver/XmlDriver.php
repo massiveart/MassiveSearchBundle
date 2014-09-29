@@ -1,13 +1,31 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata\Driver;
 
 use Metadata\Driver\DriverInterface;
 use Metadata\Driver\AbstractFileDriver;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Factory;
+use Metadata\Driver\FileLocatorInterface;
 
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
+    protected $factory;
+
+    public function __construct(Factory $factory, FileLocatorInterface $locator)
+    {
+        parent::__construct($locator);
+        $this->factory = $factory;
+    }
+
     public function getExtension()
     {
         return 'xml';
@@ -15,7 +33,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
-        $meta = new IndexMetadata($class->name);
+        $meta = $this->factory->makeIndexMetadata($class->name);
         $xml = simplexml_load_file($file);
 
         if (count($xml->children()) > 1) {

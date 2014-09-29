@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
@@ -12,11 +20,11 @@ class SearchManagerTest extends BaseTestCase
         $nbResults = 10;
 
         $this->generateIndex($nbResults);
-        $res = $this->getSearchManager()->search('Hello*', 'product');
+        $res = $this->getSearchManager()->createSearch('Hello*')->index('product')->execute();
 
         $this->assertCount($nbResults, $res);
 
-        $res = $this->getSearchManager()->search('Hello this is a product 1', 'product');
+        $res = $this->getSearchManager()->createSearch('Hello this is a product 1')->index('product')->execute();
         $this->assertCount(10, $res);
 
         // this is a full match with score = 1
@@ -32,24 +40,27 @@ class SearchManagerTest extends BaseTestCase
         $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $document->getClass());
     }
 
-    public function testHitEventDispatch()
+    public function testEventDispatch()
     {
-        $this->generateIndex(1);
-
         $eventDispatcher = $this->getContainer()->get('event_dispatcher');
         $testSubscriber = new TestSubscriber();
         $eventDispatcher->addSubscriber($testSubscriber);
 
+        $this->generateIndex(1);
+
         $this->assertNull($testSubscriber->hitDocument);
-        $this->getSearchManager()->search('Hello*', 'product');
+        $this->getSearchManager()->createSearch('Hello*')->index('product')->execute();
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $testSubscriber->hitDocument);
 
         $this->assertEquals(10, $testSubscriber->nbHits);
 
-        $this->getSearchManager()->search('Hello*', 'product');
-
+        // test HIT dispatch
+        $this->getSearchManager()->createSearch('Hello*')->index('product')->execute();
         $this->assertEquals(20, $testSubscriber->nbHits);
         $this->assertInstanceOf('ReflectionClass', $testSubscriber->documentReflection);
         $this->assertEquals('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product', $testSubscriber->documentReflection->name);
+        // test PRE_INDEX dispatch
+        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface', $testSubscriber->preIndexMetadata);
+        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $testSubscriber->preIndexDocument);
     }
 }

@@ -2,7 +2,7 @@
     "name": "massive/search-bundle",
     "description": "Massive Search Bundle",
     "license": "MIT",
-    "version": "dev-develop",
+    "version": "0.1.0",
     "authors": [
         {
             "name": "Daniel Leech",

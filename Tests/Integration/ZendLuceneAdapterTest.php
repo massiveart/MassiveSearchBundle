@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
@@ -12,6 +20,7 @@ class ZendLuceneAdapterTest extends AdapterTestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->baseDir = sys_get_temp_dir() . '/massive-test-zend-lucene';
         $this->filesystem = new Filesystem();
 
@@ -27,6 +36,6 @@ class ZendLuceneAdapterTest extends AdapterTestCase
 
     public function getAdapter()
     {
-        return new ZendLuceneAdapter($this->baseDir);
+        return new ZendLuceneAdapter($this->getFactory(), $this->baseDir);
     }
 }

@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Unit\Search;
 
@@ -11,6 +19,7 @@ use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Massive\Bundle\SearchBundle\Search\Factory;
 
 class SearchManagerTest extends ProphecyTestCase
 {
@@ -18,26 +27,32 @@ class SearchManagerTest extends ProphecyTestCase
      * @var AdapterInterface
      */
     private $adapter;
+
     /**
      * @var MetadataFactory
      */
     private $metadataFactory;
+
     /**
      * @var IndexMetadataInterface
      */
     private $metadata;
+
     /**
      * @var ClassHierarchyMetadata
      */
     private $classHierachyMetadata;
+
     /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
     /**
      * @var SearchManager
      */
     private $searchManager;
+
     /**
      * @var Product
      */
@@ -51,7 +66,10 @@ class SearchManagerTest extends ProphecyTestCase
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $this->factory = new Factory();
+
         $this->searchManager = new SearchManager(
+            $this->factory,
             $this->adapter->reveal(),
             $this->metadataFactory->reveal(),
             $this->eventDispatcher->reveal()
@@ -91,7 +109,9 @@ class SearchManagerTest extends ProphecyTestCase
         $this->metadata->getIdField()->willReturn('id');
         $this->metadata->getUrlField()->willReturn('url');
         $this->metadata->getTitleField()->willReturn('title');
+        $this->metadata->getLocaleField()->willReturn(null);
         $this->metadata->getDescriptionField()->willReturn('body');
+        $this->metadata->getImageUrlField()->willReturn(null);
         $this->metadata->getFieldMapping()->willReturn(array(
             'title' => array(
                 'type' => 'string',
