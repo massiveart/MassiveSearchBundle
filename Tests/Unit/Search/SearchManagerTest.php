@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Unit\Search;
 
@@ -101,7 +109,9 @@ class SearchManagerTest extends ProphecyTestCase
         $this->metadata->getIdField()->willReturn('id');
         $this->metadata->getUrlField()->willReturn('url');
         $this->metadata->getTitleField()->willReturn('title');
+        $this->metadata->getLocaleField()->willReturn(null);
         $this->metadata->getDescriptionField()->willReturn('body');
+        $this->metadata->getImageUrlField()->willReturn(null);
         $this->metadata->getFieldMapping()->willReturn(array(
             'title' => array(
                 'type' => 'string',

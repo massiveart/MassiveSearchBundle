@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
@@ -9,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Symfony\Component\Finder\Finder;
 use ZendSearch\Lucene;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 /**
  * Adapter for the ZendSearch library
@@ -17,17 +26,31 @@ use ZendSearch\Lucene;
  * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html 
  *   (docs for 1.2 version apply equally to 2.0)
  *
+ * Note this adapter implements localization by creating an index for each
+ * locale if a locale is specified.
+ *
  * @author Daniel Leech <daniel@massive.com>
  */
 class ZendLuceneAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
+    const CLASS_TAG = '__class';
+
+    // TODO: This fields should be handled at a higher level
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
-    const CLASS_TAG = '__class';
+    const IMAGE_URL = '__image_url';
 
+    /**
+     * The base directory for the search indexes
+     * @var string
+     */
     protected $basePath;
+
+    /**
+     * @var \Massive\Bundle\SearchBundle\Search\Factory
+     */
     protected $factory;
 
     /**
@@ -40,30 +63,14 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Determine the index path for a given index name
-     * @param string $indexName
-     * @return string
-     */
-    protected function getIndexPath($indexName)
-    {
-        return sprintf('%s/%s', $this->basePath, $indexName);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function index(Document $document, $indexName)
     {
-        $indexPath = $this->getIndexPath($indexName);
+        $index = $this->getLuceneIndex($document, $indexName);
 
-        if (!file_exists($indexPath)) {
-            $index = Lucene\Lucene::create($indexPath);
-        } else {
-            $index = Lucene\Lucene::open($indexPath);
-
-            // check to see if the subject already exists
-            $this->removeExisting($index, $document);
-        }
+        // check to see if the subject already exists
+        $this->removeExisting($index, $document);
 
         $luceneDocument = new Lucene\Document();
 
@@ -88,34 +95,41 @@ class ZendLuceneAdapter implements AdapterInterface
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::TITLE_FIELDNAME, $document->getTitle()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::CLASS_TAG, $document->getClass()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::IMAGE_URL, $document->getImageUrl()));
 
         $index->addDocument($luceneDocument);
     }
 
     /**
-     * Remove the existing entry for the given Document from the index, if it exists.
-     *
-     * @param Lucene\Index $index The Zend Lucene Index
-     * @param Document $document The Massive Search Document
+     * {@inheritDoc}
      */
-    protected function removeExisting(Lucene\Index $index, Document $document)
+    public function deindex(Document $document, $indexName)
     {
-        $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
-
-        foreach ($hits as $hit) {
-            $index->delete($hit->id);
-        }
+        $index = $this->getLuceneIndex($document, $indexName);
+        $this->removeExisting($index, $document);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function search($queryString, array $indexNames = array())
+    public function search(SearchQuery $searchQuery)
     {
+        $indexNames = $searchQuery->getIndexes();
+        $locale = $searchQuery->getLocale();
+        $queryString = $searchQuery->getQueryString();
+
         $searcher = new Lucene\MultiSearcher();
 
         foreach ($indexNames as $indexName) {
-            $searcher->addIndex(Lucene\Lucene::open($this->getIndexPath($indexName)));
+            $indexPath = $this->getIndexPath(
+                $this->getLocalizedIndexName($indexName, $locale)
+            );
+
+            if (!file_exists($indexPath)) {
+                continue;
+            }
+
+            $searcher->addIndex(Lucene\Lucene::open($indexPath));
         }
 
         $query = Lucene\Search\QueryParser::parse($queryString);
@@ -139,6 +153,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $document->setDescription($luceneDocument->getFieldValue(self::DESCRIPTION_FIELDNAME));
             $document->setUrl($luceneDocument->getFieldValue(self::URL_FIELDNAME));
             $document->setClass($luceneDocument->getFieldValue(self::CLASS_TAG));
+            $document->setImageUrl($luceneDocument->getFieldValue(self::IMAGE_URL));
 
             $hit->setId($document->getId());
 
@@ -179,5 +194,64 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         return $status;
+    }
+
+    /**
+     * Returns the lucene index for the locale determined by the document
+     * @param Document $document
+     * @param $indexName
+     * @return Lucene\SearchIndexInterface
+     */
+    private function getLuceneIndex(Document $document, $indexName)
+    {
+        $locale = $document->getLocale();
+        $indexName = $this->getLocalizedIndexName($indexName, $locale);
+        $indexPath = $this->getIndexPath($indexName);
+
+        if (!file_exists($indexPath)) {
+             Lucene\Lucene::create($indexPath);
+        }
+
+        return Lucene\Lucene::open($indexPath);
+    }
+
+    /**
+     * Determine the index path for a given index name
+     * @param string $indexName
+     * @return string
+     */
+    private function getIndexPath($indexName)
+    {
+        return sprintf('%s/%s', $this->basePath, $indexName);
+    }
+
+    /**
+     * Return the localized index name if the locale
+     * is given.
+     *
+     * @return string
+     */
+    private function getLocalizedIndexName($indexName, $locale = null)
+    {
+        if (null === $locale) {
+            return $indexName;
+        }
+
+        return $indexName . '_' . $locale;
+    }
+
+    /**
+     * Remove the existing entry for the given Document from the index, if it exists.
+     *
+     * @param Lucene\Index $index The Zend Lucene Index
+     * @param Document $document The Massive Search Document
+     */
+    private function removeExisting(Lucene\Index $index, Document $document)
+    {
+        $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
+
+        foreach ($hits as $hit) {
+            $index->delete($hit->id);
+        }
     }
 }

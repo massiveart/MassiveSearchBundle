@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
@@ -6,6 +14,7 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 abstract class AdapterTestCase extends BaseTestCase
 {
@@ -22,7 +31,9 @@ abstract class AdapterTestCase extends BaseTestCase
         $adapter = $this->getAdapter();
         $this->createIndex();
 
-        $res = $adapter->search('One', array('foobar'));
+        $query = new SearchQuery('one');
+        $query->setIndexes(array('foobar'));
+        $res = $adapter->search($query);
 
         $this->assertCount(1, $res);
     }
@@ -33,6 +44,22 @@ abstract class AdapterTestCase extends BaseTestCase
         $adapter = $this->getAdapter();
         $statistics = $adapter->getStatus();
         $this->assertTrue(is_array($statistics));
+    }
+
+    public function testDeindex()
+    {
+        $this->createIndex();
+        $doc = $this->factory->makeDocument();
+        $doc->setId(1);
+        $this->getAdapter()->deindex($doc, 'foobar');
+
+        $query = new SearchQuery('document');
+        $query->setIndexes(array('foobar'));
+        $res = $this->getAdapter()->search($query);
+
+        // this should be one, but the lucene index needs to be
+        // comitted, and to do that we must callits destruct method.
+        $this->assertCount(2, $res);
     }
 
     protected function createDocument($title)

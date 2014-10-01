@@ -11,6 +11,7 @@
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 /**
  * Provides data for search event
@@ -19,34 +20,23 @@ use Symfony\Component\EventDispatcher\Event;
 class SearchEvent extends Event
 {
     /**
-     * @var string
+     * @var SearchQuery
      */
-    private $query;
+    protected $searchQuery;
 
     /**
-     * @var string[]
+     * @param SearchQuery $searchQuery
      */
-    private $indexNames;
-
-    function __construct($indexNames, $query)
+    public function __construct(SearchQuery $searchQuery)
     {
-        $this->indexNames = $indexNames;
-        $this->query = $query;
-    }
-
-    /**
-     * @return \string[]
-     */
-    public function getIndexNames()
-    {
-        return $this->indexNames;
+        $this->searchQuery = $searchQuery;
     }
 
     /**
      * @return string
      */
-    public function getQuery()
+    public function getSearchQuery()
     {
-        return $this->query;
+        return $this->searchQuery;
     }
 } 

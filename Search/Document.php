@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Massive\Bundle\SearchBundle\Search;
 
@@ -38,11 +46,28 @@ class Document
     protected $url;
 
     /**
+     * @var string
+     */
+    protected $imageUrl;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
      * @param Field $field
      */
     public function addField(Field $field)
     {
-        $this->fields[] = $field;
+        if ($this->hasField($field->getName())) {
+            throw new \InvalidArgumentException(sprintf(
+                'Field "%s" already exists in search document',
+                $field->getName()
+            ));
+        }
+
+        $this->fields[$field->getName()] = $field;
     }
 
     /**
@@ -59,6 +84,28 @@ class Document
     public function setClass($class)
     {
         $this->class = $class;
+    }
+
+    /**
+     * Return the URL for the image which should be
+     * displayed with this search result.
+     *
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+
+    /**
+     * Set the URL to the image which should be displayed
+     * with this search result.
+     *
+     * @param string $imageUrl
+     */
+    public function setImageUrl($imageUrl)
+    {
+        $this->imageUrl = $imageUrl;
     }
 
     /**
@@ -126,10 +173,54 @@ class Document
     }
 
     /**
+     * @return string
+     */
+    public function getLocale() 
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+    
+    /**
      * @return Field[]
      */
     public function getFields()
     {
         return $this->fields;
+    }
+
+    /**
+     * Return the named field
+     *
+     * @return Field
+     * @throws InvalidArgumentException When it doesn't exist
+     */
+    public function getField($name)
+    {
+        if (!isset($this->fields[$name])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Trying to get undefined field "%s", defined fields are "%s"',
+                $name, implode(', ', array_keys($this->fields))
+            ));
+        }
+
+        return $this->fields[$name];
+    }
+
+    /**
+     * Return true if the field exists
+     *
+     * @return boolean
+     */
+    public function hasField($name)
+    {
+        return isset($this->fields[$name]);
     }
 }
