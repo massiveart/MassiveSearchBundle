@@ -25,6 +25,7 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Search manager is the public API to the search
@@ -188,8 +189,9 @@ class SearchManager implements SearchManagerInterface
      * Map the given object to a new document using the
      * given metadata.
      *
-     * @param IndexMetadata
-     * @param object
+     * @param IndexMetadata $metadata
+     * @param object $object
+     * @return Document
      */
     private function objectToDocument(IndexMetadata $metadata, $object)
     {
@@ -249,39 +251,66 @@ class SearchManager implements SearchManagerInterface
      *
      * @param Document $document
      * @param mixed $object
+     * @param PropertyAccessor $accessor
      * @param array $fieldMapping
      * @param string $prefix Prefix the document field name (used when called recursively)
+     * @throws \InvalidArgumentException
      */
     private function populateDocument($document, $object, $accessor, $fieldMapping, $prefix = '')
     {
-        foreach ($fieldMapping as $fieldName => $fieldMapping) {
+        foreach ($fieldMapping as $field => $mapping) {
 
-            if ($fieldMapping['type'] == 'complex') {
+            if ($mapping['type'] == 'complex') {
 
-                if (!isset($fieldMapping['mapping'])) {
-                    throw new \InvalidArgumentException(sprintf(
-                        '"complex" field mappings must have an additional array key "mapping" which contains the mapping for the complex structure in mapping: %s',
-                        print_r($fieldMapping, true)
-                    ));
+                if (!isset($mapping['mapping'])) {
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            '"complex" field mappings must have an additional array key "mapping" ' .
+                            'which contains the mapping for the complex structure in mapping: %s',
+                            print_r($mapping, true)
+                        )
+                    );
                 }
 
-                $childObjects = $accessor->getValue($object, $fieldName);
+                $childObjects = $accessor->getValue($object, $field);
 
                 foreach ($childObjects as $i => $childObject) {
-                    $this->populateDocument($document, $childObject, $accessor, $fieldMapping['mapping']->getFieldMapping(), $prefix . $fieldName . $i);
+                    $this->populateDocument(
+                        $document,
+                        $childObject,
+                        $accessor,
+                        $mapping['mapping']->getFieldMapping(),
+                        $prefix . $field . $i
+                    );
                 }
-
             } else {
                 if (is_array($object)) {
-                    $path = '[' . $fieldName . ']';
+                    $path = '[' . $field . ']';
                 } else {
-                    $path = $fieldName;
+                    $path = $field;
                 }
 
-                $document->addField(
-                    $this->factory->makeField($prefix . $fieldName, $accessor->getValue($object, $path), $fieldMapping['type'])
-                );
+                $value = $accessor->getValue($object, $path);
 
+                if (!is_array($value)) {
+                    $document->addField(
+                        $this->factory->makeField(
+                            $prefix . $field,
+                            $value,
+                            $mapping['type']
+                        )
+                    );
+                } else {
+                    foreach ($value as $key => $itemValue) {
+                        $document->addField(
+                            $this->factory->makeField(
+                                $prefix . $field . $key,
+                                $itemValue,
+                                $mapping['type']
+                            )
+                        );
+                    }
+                }
             }
         }
     }
