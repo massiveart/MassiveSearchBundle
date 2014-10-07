@@ -1,8 +1,13 @@
 CHANGELOG
 =========
 
-dev-master
-----------
+0.3
+---
+
+- Added special "complex" field mapping type to enable the mapping of array / object
+
+0.2
+---
 
 - Support for deindex operation
 - ZendAdapter is localization aware
