@@ -199,7 +199,7 @@ class SearchManager implements SearchManagerInterface
         $descriptionField = $metadata->getDescriptionField();
         $imageUrlField = $metadata->getImageUrlField();
         $localeField = $metadata->getLocaleField();
-        $fields = $metadata->getFieldMapping();
+        $fieldMapping = $metadata->getFieldMapping();
 
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -238,12 +238,51 @@ class SearchManager implements SearchManagerInterface
             $document->setLocale($locale);
         }
 
-        foreach ($fields as $fieldName => $fieldMapping) {
-            $document->addField(
-                $this->factory->makeField($fieldName, $accessor->getValue($object, $fieldName), $fieldMapping['type'])
-            );
-        }
+        $this->populateDocument($document, $object, $accessor, $fieldMapping);
 
         return $document;
+    }
+
+    /**
+     * Populate the Document with the actual values from the object which
+     * is being indexed.
+     *
+     * @param Document $document
+     * @param mixed $object
+     * @param array $fieldMapping
+     * @param string $prefix Prefix the document field name (used when called recursively)
+     */
+    private function populateDocument($document, $object, $accessor, $fieldMapping, $prefix = '')
+    {
+        foreach ($fieldMapping as $fieldName => $fieldMapping) {
+
+            if ($fieldMapping['type'] == 'complex') {
+
+                if (!isset($fieldMapping['mapping'])) {
+                    throw new \InvalidArgumentException(sprintf(
+                        '"complex" field mappings must have an additional array key "mapping" which contains the mapping for the complex structure in mapping: %s',
+                        print_r($fieldMapping, true)
+                    ));
+                }
+
+                $childObjects = $accessor->getValue($object, $fieldName);
+
+                foreach ($childObjects as $i => $childObject) {
+                    $this->populateDocument($document, $childObject, $accessor, $fieldMapping['mapping']->getFieldMapping(), $prefix . $fieldName . $i);
+                }
+
+            } else {
+                if (is_array($object)) {
+                    $path = '[' . $fieldName . ']';
+                } else {
+                    $path = $fieldName;
+                }
+
+                $document->addField(
+                    $this->factory->makeField($prefix . $fieldName, $accessor->getValue($object, $path), $fieldMapping['type'])
+                );
+
+            }
+        }
     }
 }
