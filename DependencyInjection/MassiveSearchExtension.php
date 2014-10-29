@@ -41,6 +41,7 @@ class MassiveSearchExtension extends Extension
         $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
 
         $loader->load('search.xml');
+        $loader->load('elastic-search.xml');
     }
 
     protected function loadMetadata($config, $loader, $container)
