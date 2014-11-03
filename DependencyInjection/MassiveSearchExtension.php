@@ -42,6 +42,7 @@ class MassiveSearchExtension extends Extension
     {
         $container->setAlias('massive_search.adapter', $config['adapter_id']);
         $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
+        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['adapters']['zend_lucene']['hide_index_exception']);
 
         $loader->load('search.xml');
     }

@@ -16,8 +16,9 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Symfony\Component\Finder\Finder;
-use ZendSearch\Lucene;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
+use ZendSearch\Lucene;
 
 /**
  * Adapter for the ZendSearch library
@@ -52,14 +53,16 @@ class ZendLuceneAdapter implements AdapterInterface
      * @var \Massive\Bundle\SearchBundle\Search\Factory
      */
     protected $factory;
+    protected $hideIndexException;
 
     /**
      * @param string $basePath Base filesystem path for the index
      */
-    public function __construct(Factory $factory, $basePath)
+    public function __construct(Factory $factory, $basePath, $hideIndexException = false)
     {
         $this->basePath = $basePath;
         $this->factory = $factory;
+        $this->hideIndexException = $hideIndexException;
     }
 
     /**
@@ -129,7 +132,7 @@ class ZendLuceneAdapter implements AdapterInterface
                 continue;
             }
 
-            $searcher->addIndex(Lucene\Lucene::open($indexPath));
+            $searcher->addIndex($this->getIndex($indexPath, false));
         }
 
         $query = Lucene\Search\QueryParser::parse($queryString);
@@ -177,7 +180,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
             $indexName = basename($indexDir);
 
-            $index = Lucene\Lucene::open($this->getIndexPath($indexName));
+            $index = $this->getIndex($this->getIndexPath($indexName, false));
 
             $indexStats = array(
                 'size' => 0,
@@ -209,10 +212,10 @@ class ZendLuceneAdapter implements AdapterInterface
         $indexPath = $this->getIndexPath($indexName);
 
         if (!file_exists($indexPath)) {
-             Lucene\Lucene::create($indexPath);
+             $this->getIndex($indexPath, true);
         }
 
-        return Lucene\Lucene::open($indexPath);
+        return $this->getIndex($indexPath, false);
     }
 
     /**
@@ -246,12 +249,28 @@ class ZendLuceneAdapter implements AdapterInterface
      * @param Lucene\Index $index The Zend Lucene Index
      * @param Document $document The Massive Search Document
      */
-    private function removeExisting(Lucene\Index $index, Document $document)
+    private function removeExisting(Index $index, Document $document)
     {
         $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
 
         foreach ($hits as $hit) {
             $index->delete($hit->id);
         }
+    }
+
+    /**
+     * Return the index. Note that we override the default ZendSeach index
+     * to allow us to catch the exception thrown during __destruct when running
+     * functional tests.
+     *
+     * @param string $indexPath
+     * @param boolean $create Create an index or open it
+     */
+    private function getIndex($indexPath, $create = false)
+    {
+        $index = new Index($indexPath, $create);
+        $index->setHideException($this->hideIndexException);
+
+        return $index;
     }
 }

@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('zend_lucene')
                         ->addDefaultsifNotSet()
                         ->children()
+                            ->booleanNode('hide_index_exception')->defaultValue(false)->end()
                             ->scalarNode('basepath')->defaultValue('%kernel.root_dir%/data')->end()
                         ->end()
                     ->end()
