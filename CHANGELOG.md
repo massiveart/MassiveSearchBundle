@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.3.1
+-----
+
+- [ZendSeach] Added workaround to avoid Fatal errors after a test suite run caused by
+  the Lucene\Index __destruct() method. You can now configure the adapter to hide Exceptions
+  from the Index class.
+
 0.3
 ---
 

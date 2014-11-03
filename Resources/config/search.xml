@@ -22,6 +22,7 @@
         <service id="massive_search.adapter.zend_lucene" class="%massive_search.search.adapter.zend_lucene.class%">
             <argument type="service" id="massive_search.factory" />
             <argument>%massive_search.adapter.zend_lucene.basepath%</argument>
+            <argument>%massive_search.adapter.zend_lucene.hide_index_exception%</argument>
         </service>
 
         <!-- Search manager -->
