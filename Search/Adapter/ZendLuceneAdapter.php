@@ -70,7 +70,7 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $index = $this->getLuceneIndex($document, $indexName);
+        $index = $this->getLocalizedLuceneIndex($document, $indexName);
 
         // check to see if the subject already exists
         $this->removeExisting($index, $document);
@@ -108,8 +108,9 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function deindex(Document $document, $indexName)
     {
-        $index = $this->getLuceneIndex($document, $indexName);
+        $index = $this->getLocalizedLuceneIndex($document, $indexName);
         $this->removeExisting($index, $document);
+        $index->commit();
     }
 
     /**
@@ -213,10 +214,15 @@ class ZendLuceneAdapter implements AdapterInterface
      * @param $indexName
      * @return Lucene\SearchIndexInterface
      */
-    private function getLuceneIndex(Document $document, $indexName)
+    private function getLocalizedLuceneIndex(Document $document, $indexName)
     {
         $locale = $document->getLocale();
         $indexName = $this->getLocalizedIndexName($indexName, $locale);
+        return $this->getLuceneIndex($indexName);
+    }
+
+    private function getLuceneIndex($indexName)
+    {
         $indexPath = $this->getIndexPath($indexName);
 
         if (!file_exists($indexPath)) {

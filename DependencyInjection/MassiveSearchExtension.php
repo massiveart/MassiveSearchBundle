@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -38,16 +39,35 @@ class MassiveSearchExtension extends Extension
         $this->loadMetadata($config, $loader, $container);
     }
 
-    protected function loadSearch($config, $loader, $container)
+    private function loadSearch($config, $loader, $container)
     {
-        $container->setAlias('massive_search.adapter', $config['adapter_id']);
-        $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
-        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['adapters']['zend_lucene']['hide_index_exception']);
-
+        $container->setAlias('massive_search.adapter', 'massive_search.adapter.' . $config['adapter_id']);
         $loader->load('search.xml');
+
+        switch ($config['adapter_id']) {
+            case 'zend_lucene':
+                $this->loadZendSearch($config['adapters']['zend_lucene'], $loader, $container);
+                break;
+            case 'elastic':
+                $this->loadElasticSearch($config['adapters']['elastic'], $loader, $container);
+                break;
+        }
     }
 
-    protected function loadMetadata($config, $loader, $container)
+    private function loadZendSearch($config, $loader, $container)
+    {
+        $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['basepath']);
+        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['hide_index_exception']);
+        $loader->load('adapter_zendlucene.xml');
+    }
+
+    private function loadElasticSearch($config, $loader, $container)
+    {
+        $container->setParameter('massive_search.adapter.elastic.hosts', $config['hosts']);
+        $loader->load('adapter_elastic.xml');
+    }
+
+    private function loadMetadata($config, $loader, $container)
     {
         $loader->load('metadata.xml');
 

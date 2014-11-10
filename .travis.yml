@@ -1,5 +1,8 @@
 language: php
 
+services:
+  - elasticsearch
+
 php:
   - 5.4
 

@@ -18,23 +18,65 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 abstract class AdapterTestCase extends BaseTestCase
 {
+    const INDEXNAME = 'massive_search_test';
+
     protected $factory;
     protected $adapter;
+    protected $idCounter;
 
     public function setUp()
     {
-        $this->factory = new Factory();
         parent::setUp();
-        $this->adapter = $this->getAdapter();
+        $this->idCounter = 0;
+        $this->factory = new Factory();
+        $this->purgeIndex(self::INDEXNAME);
+        $this->adapter = null;
     }
+
+    final protected function getAdapter()
+    {
+        if ($this->adapter) {
+            return $this->adapter;
+        }
+
+        $this->adapter = $this->doGetAdapter();
+
+        return $this->adapter;
+    }
+
+    /**
+     * Return the testing adapter
+     *
+     * @return Massive\Bundle\SearchBundle\Search\AdapterInterface
+     */
+    protected abstract function doGetAdapter();
+
+    /**
+     * Purge the given index (or everything)
+     */
+    public function purgeIndex($indexName)
+    {
+    }
+
+    /**
+     * Called after indexes are created (a good time to flush
+     * the implementation if it is asyncronous)
+     */
+    public function flush($indexName)
+    {
+    }
+
 
     public function testIndexer()
     {
         $this->createIndex();
 
-        $query = new SearchQuery('one');
-        $query->setIndexes(array('foobar'));
-        $res = $this->adapter->search($query);
+        $query = new SearchQuery('One');
+
+        $query->setIndexes(array(
+            self::INDEXNAME
+        ));
+        $res = $this->getAdapter()->search($query);
 
         $this->assertCount(1, $res);
     }
@@ -46,9 +88,9 @@ abstract class AdapterTestCase extends BaseTestCase
             array('one ', 1),
             array('roomba 870', 0),
             array('870', 0),
-            array('*', 0),
-            array('***', 0),
-            array('???', 0),
+            array('*', 2),
+            array('***', 2),
+            array('???', 2),
         );
     }
 
@@ -60,8 +102,8 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->createIndex();
 
         $query = new SearchQuery($query);
-        $query->setIndexes(array('foobar'));
-        $res = $this->adapter->search($query);
+        $query->setIndexes(array(self::INDEXNAME));
+        $res = $this->getAdapter()->search($query);
 
         $this->assertCount($expectedNbResults, $res);
     }
@@ -69,7 +111,7 @@ abstract class AdapterTestCase extends BaseTestCase
     public function testGetStatistics()
     {
         $this->createIndex();
-        $statistics = $this->adapter->getStatus();
+        $statistics = $this->getAdapter()->getStatus();
         $this->assertTrue(is_array($statistics));
     }
 
@@ -78,24 +120,29 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->createIndex();
         $doc = $this->factory->makeDocument();
         $doc->setId(1);
-        $this->adapter->deindex($doc, 'foobar');
+        $this->getAdapter()->deindex($doc, self::INDEXNAME);
+        $this->flush(self::INDEXNAME);
 
-        $query = new SearchQuery('document');
-        $query->setIndexes(array('foobar'));
-        $res = $this->adapter->search($query);
+        $query = new SearchQuery('One');
+        $query->setIndexes(array(self::INDEXNAME));
+        $res = $this->getAdapter()->search($query);
 
-        // this should be one, but the lucene index needs to be
-        // comitted, and to do that we must callits destruct method.
-        $this->assertCount(2, $res);
+        $this->assertCount(0, $res);
+
+        $query = new SearchQuery('Two');
+        $query->setIndexes(array(self::INDEXNAME));
+        $res = $this->getAdapter()->search($query);
+
+        $this->assertCount(1, $res);
     }
 
     protected function createDocument($title)
     {
-        static $id = 0;
-        $id++;
+        $this->idCounter++;
 
         $document = $this->factory->makeDocument();
-        $document->setId($id);
+        $document->setId($this->idCounter);
+        $document->setTitle($title);
         $document->addField($this->factory->makeField('title', $title, 'string'));
         $text = <<<EOT
 This section is a brief introduction to reStructuredText (reST) concepts and syntax, intended to provide authors with enough information to author documents documentively. Since reST was designed to be a simple, unobtrusive markup language, this will not take too long.
@@ -108,15 +155,16 @@ EOT
 
     protected function createIndex()
     {
-        $this->adapter = $this->getAdapter();
         $documents = array(
             $this->createDocument('Document One'),
             $this->createDocument('Document Two'),
         );
 
         foreach ($documents as $document) {
-            $this->adapter->index($document, 'foobar');
+            $this->getAdapter()->index($document, self::INDEXNAME);
         }
+
+        $this->flush(self::INDEXNAME);
     }
 
     protected function getFactory()
