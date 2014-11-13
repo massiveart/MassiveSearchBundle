@@ -35,7 +35,7 @@ class TestAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $this->documents[] = $document;
+        $this->documents[$document->getId()] = $document;
     }
 
     public function deindex(Document $document, $indexName)
@@ -66,10 +66,22 @@ class TestAdapter implements AdapterInterface
 
         foreach ($this->documents as $document) {
             $hit = $this->factory->makeQueryHit();
-            $hit->setDocument($document);
-            $hit->setScore(-1);
-            $hits[] = $hit;
+
+            $isHit = false;
+            foreach ($document->getFields() as $field) {
+                if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $field->getValue())) {
+                    $isHit = true;
+                    break;
+                }
+            }
+
+            if ($isHit) {
+                $hit->setDocument($document);
+                $hit->setScore(-1);
+                $hits[] = $hit;
+            }
         }
+
 
         return $hits;
     }

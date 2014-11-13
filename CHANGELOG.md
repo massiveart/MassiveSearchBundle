@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+0.4.0
+-----
+
+- [TestAdapter] Test (memory storage) adapter now uses regex when searching
+
 0.3.2
 -----
 
