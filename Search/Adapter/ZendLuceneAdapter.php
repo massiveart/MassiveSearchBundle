@@ -137,7 +137,15 @@ class ZendLuceneAdapter implements AdapterInterface
 
         $query = Lucene\Search\QueryParser::parse($queryString);
 
-        $luceneHits = $searcher->find($query);
+        try {
+            $luceneHits = $searcher->find($query);
+        } catch (\RuntimeException $e) {
+            if (!preg_match('&non-wildcard characters&', $e->getMessage())) {
+                throw $e;
+            }
+
+            $luceneHits = array();
+        }
 
         $hits = array();
 

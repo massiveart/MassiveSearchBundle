@@ -38,6 +38,34 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->assertCount(1, $res);
     }
 
+    public function provideSearch()
+    {
+        return array(
+            array('one', 1),
+            array('one ', 1),
+            array('roomba 870', 0),
+            array('870', 0),
+            array('*', 0),
+            array('***', 0),
+            array('???', 0),
+        );
+    }
+
+    /**
+     * @dataProvider provideSearch
+     */
+    public function testSearch($query, $expectedNbResults)
+    {
+        $adapter = $this->getAdapter();
+        $this->createIndex();
+
+        $query = new SearchQuery($query);
+        $query->setIndexes(array('foobar'));
+        $res = $adapter->search($query);
+
+        $this->assertCount($expectedNbResults, $res);
+    }
+
     public function testGetStatistics()
     {
         $this->createIndex();

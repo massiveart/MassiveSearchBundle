@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+0.3.2
+-----
+
+- [ZendSearch] Catch "non-wildcard characters" exception and return 0 results
+
 0.3.1
 -----
 
