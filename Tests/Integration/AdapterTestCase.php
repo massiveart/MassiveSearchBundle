@@ -19,21 +19,22 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 abstract class AdapterTestCase extends BaseTestCase
 {
     protected $factory;
+    protected $adapter;
 
     public function setUp()
     {
         $this->factory = new Factory();
         parent::setUp();
+        $this->adapter = $this->getAdapter();
     }
 
     public function testIndexer()
     {
-        $adapter = $this->getAdapter();
         $this->createIndex();
 
         $query = new SearchQuery('one');
         $query->setIndexes(array('foobar'));
-        $res = $adapter->search($query);
+        $res = $this->adapter->search($query);
 
         $this->assertCount(1, $res);
     }
@@ -56,12 +57,11 @@ abstract class AdapterTestCase extends BaseTestCase
      */
     public function testSearch($query, $expectedNbResults)
     {
-        $adapter = $this->getAdapter();
         $this->createIndex();
 
         $query = new SearchQuery($query);
         $query->setIndexes(array('foobar'));
-        $res = $adapter->search($query);
+        $res = $this->adapter->search($query);
 
         $this->assertCount($expectedNbResults, $res);
     }
@@ -69,8 +69,7 @@ abstract class AdapterTestCase extends BaseTestCase
     public function testGetStatistics()
     {
         $this->createIndex();
-        $adapter = $this->getAdapter();
-        $statistics = $adapter->getStatus();
+        $statistics = $this->adapter->getStatus();
         $this->assertTrue(is_array($statistics));
     }
 
@@ -79,11 +78,11 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->createIndex();
         $doc = $this->factory->makeDocument();
         $doc->setId(1);
-        $this->getAdapter()->deindex($doc, 'foobar');
+        $this->adapter->deindex($doc, 'foobar');
 
         $query = new SearchQuery('document');
         $query->setIndexes(array('foobar'));
-        $res = $this->getAdapter()->search($query);
+        $res = $this->adapter->search($query);
 
         // this should be one, but the lucene index needs to be
         // comitted, and to do that we must callits destruct method.
@@ -109,14 +108,14 @@ EOT
 
     protected function createIndex()
     {
-        $adapter = $this->getAdapter();
+        $this->adapter = $this->getAdapter();
         $documents = array(
             $this->createDocument('Document One'),
             $this->createDocument('Document Two'),
         );
 
         foreach ($documents as $document) {
-            $adapter->index($document, 'foobar');
+            $this->adapter->index($document, 'foobar');
         }
     }
 

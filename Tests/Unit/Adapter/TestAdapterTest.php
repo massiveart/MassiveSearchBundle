@@ -22,8 +22,13 @@ class TestAdapterTest extends ProphecyTestCase
     {
         $this->factory = new Factory();
         $this->adapter = new TestAdapter($this->factory);
+
         $this->document1 = new Document();
+        $this->document1->setId(1);
+        $this->document1->addField($this->factory->makeField('foo', 'Foo'));
         $this->document2 = new Document();
+        $this->document2->setId(2);
+        $this->document2->addField($this->factory->makeField('foo', 'Foo'));
     }
 
     public function testTestAdapter()
@@ -31,7 +36,7 @@ class TestAdapterTest extends ProphecyTestCase
         $this->adapter->index($this->document1, 'foo');
         $this->adapter->index($this->document2, 'foo');
 
-        $res = $this->adapter->search(new SearchQuery('Anything'));
+        $res = $this->adapter->search(new SearchQuery('Foo'));
 
         $this->assertCount(2, $res);
     }
