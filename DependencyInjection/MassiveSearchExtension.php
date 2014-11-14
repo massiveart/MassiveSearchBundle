@@ -59,10 +59,10 @@ class MassiveSearchExtension extends Extension
 
     private function loadSearch($config, $loader, $container)
     {
-        $container->setAlias('massive_search.adapter', 'massive_search.adapter.' . $config['adapter_id']);
+        $container->setAlias('massive_search.adapter', 'massive_search.adapter.' . $config['adapter']);
         $loader->load('search.xml');
 
-        switch ($config['adapter_id']) {
+        switch ($config['adapter']) {
             case 'zend_lucene':
                 $this->loadZendSearch($config['adapters']['zend_lucene'], $loader, $container);
                 break;

@@ -35,7 +35,7 @@ class Configuration implements ConfigurationInterface
                     ->values(array('noop', 'index'))
                     ->defaultValue('noop')
                 ->end()
-                ->enumNode('adapter_id')
+                ->enumNode('adapter')
                     ->values(array('zend_lucene', 'elastic'))
                     ->defaultValue('zend_lucene')->end()
                 ->arrayNode('adapters')

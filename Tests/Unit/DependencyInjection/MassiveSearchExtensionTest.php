@@ -117,7 +117,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     public function testAdapterConfig($adapterId, $config, $expectedParameters)
     {
         $config = array(
-            'adapter_id' => $adapterId,
+            'adapter' => $adapterId,
             'adapters' => array(
                 $adapterId => $config
             )
