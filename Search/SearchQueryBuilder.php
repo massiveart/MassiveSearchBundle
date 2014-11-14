@@ -53,6 +53,7 @@ class SearchQueryBuilder
     public function locale($locale)
     {
         $this->searchQuery->setLocale($locale);
+
         return $this;
     }
 
@@ -65,6 +66,7 @@ class SearchQueryBuilder
     public function indexes(array $indexes)
     {
         $this->searchQuery->setIndexes($indexes);
+
         return $this;
     }
 
@@ -78,4 +80,3 @@ class SearchQueryBuilder
         return $this->searchManager->search($this->searchQuery);
     }
 }
-

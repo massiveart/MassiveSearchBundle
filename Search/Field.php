@@ -53,7 +53,7 @@ class Field
      *
      * @return string
      */
-    public function getName() 
+    public function getName()
     {
         return $this->name;
     }
@@ -73,14 +73,14 @@ class Field
      *
      * @return string
      */
-    public function getType() 
+    public function getType()
     {
         return $this->type;
     }
 
     /**
      * Set the field type
-     * 
+     *
      * @param string
      */
     public function setType($type)
@@ -93,7 +93,7 @@ class Field
      *
      * @return scalar
      */
-    public function getValue() 
+    public function getValue()
     {
         return $this->value;
     }

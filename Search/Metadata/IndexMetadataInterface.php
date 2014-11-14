@@ -10,9 +10,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
-use Metadata\MethodMetadata;
-use Metadata\PropertyMetadata;
-
 /**
  * Metadata for searchable objects
  * @package Massive\Bundle\SearchBundle\Search\Metadata
@@ -129,7 +126,7 @@ interface IndexMetadataInterface
      * @return string
      */
     public function getImageUrlField();
-    
+
     /**
      * Set the name of the field representing the URL of the image
      *

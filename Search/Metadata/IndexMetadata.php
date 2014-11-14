@@ -172,7 +172,7 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     /**
      * {@inheritDoc}
      */
-    public function getImageUrlField() 
+    public function getImageUrlField()
     {
         return $this->imageUrlField;
     }

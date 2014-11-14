@@ -10,7 +10,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Localization;
 
-use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
@@ -29,4 +28,3 @@ class NoopStrategy implements LocalizationStrategyInterface
         return $indexName;
     }
 }
-

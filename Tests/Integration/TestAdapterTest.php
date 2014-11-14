@@ -10,7 +10,6 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter;
 
 class TestAdapterTest extends AdapterTestCase

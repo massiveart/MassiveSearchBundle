@@ -17,8 +17,6 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 
 /**
  * Test adapter for testing scenarios
- *
- * @author Daniel Leech <daniel@massive.com>
  */
 class TestAdapter implements AdapterInterface
 {

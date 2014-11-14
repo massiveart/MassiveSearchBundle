@@ -14,9 +14,6 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
-use Massive\Bundle\SearchBundle\Search\QueryHit;
-use Symfony\Component\Finder\Finder;
-use ZendSearch\Lucene;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Elasticsearch\Client as ElasticSearchClient;
 use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
@@ -25,8 +22,6 @@ use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
  * ElasticSearch adapter using official client:
  *
  * https://github.com/elasticsearch/elasticsearch-php
- *
- * @author Daniel Leech <daniel@massive.com>
  */
 class ElasticSearchAdapter implements AdapterInterface
 {
@@ -52,6 +47,7 @@ class ElasticSearchAdapter implements AdapterInterface
     /**
      * @var LocalizationStrategyInterface
      */
+    private $localizationStrategy;
 
     /**
      * @param string $basePath Base filesystem path for the index
@@ -83,7 +79,7 @@ class ElasticSearchAdapter implements AdapterInterface
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not know. Known types are: %s',
+                        'Search field type "%s" is not know. Known types nare: %s',
                         implode(', ', Field::getValidTypes())
                     ));
             }
@@ -98,11 +94,22 @@ class ElasticSearchAdapter implements AdapterInterface
         $params = array(
             'id' => $document->getId(),
             'index' => $indexName,
-            'type' => 'string',
+            'type' => $this->documentToType($document),
             'body' => $fields,
         );
 
-        $res = $this->client->index($params);
+        $this->client->index($params);
+    }
+
+    private function documentToType(Document $document)
+    {
+        $class = $document->getClass();
+
+        if (!$class) {
+            return 'massive_undefined';
+        }
+
+        return substr(str_replace('\\', '_', $class), 1);
     }
 
     /**
@@ -114,7 +121,7 @@ class ElasticSearchAdapter implements AdapterInterface
 
         $params = array(
             'index' => $indexName,
-            'type' => 'string',
+            'type' => $this->documentToType($document),
             'id' => $document->getId(),
             'refresh' => true,
         );
@@ -187,4 +194,3 @@ class ElasticSearchAdapter implements AdapterInterface
         return $status;
     }
 }
-

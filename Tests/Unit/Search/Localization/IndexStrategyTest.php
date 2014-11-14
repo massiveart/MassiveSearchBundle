@@ -10,7 +10,6 @@
 
 namespace Massive\MassiveSearchBundle\Tests\Unit\Search;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\Localization\IndexStrategy;
 
 class IndexStrategyTest extends \PHPUnit_Framework_TestCase

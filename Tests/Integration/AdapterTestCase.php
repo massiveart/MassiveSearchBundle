@@ -11,7 +11,6 @@
 namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
-use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
@@ -19,6 +18,7 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 abstract class AdapterTestCase extends BaseTestCase
 {
     const INDEXNAME = 'massive_search_test';
+    const DOCCLASS = '\Some\Test\Class\Name';
 
     protected $factory;
     protected $adapter;
@@ -49,7 +49,7 @@ abstract class AdapterTestCase extends BaseTestCase
      *
      * @return Massive\Bundle\SearchBundle\Search\AdapterInterface
      */
-    protected abstract function doGetAdapter();
+    abstract protected function doGetAdapter();
 
     /**
      * Purge the given index (or everything)
@@ -65,7 +65,6 @@ abstract class AdapterTestCase extends BaseTestCase
     public function flush($indexName)
     {
     }
-
 
     public function testIndexer()
     {
@@ -120,6 +119,7 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->createIndex();
         $doc = $this->factory->makeDocument();
         $doc->setId(1);
+        $doc->setClass(self::DOCCLASS);
         $this->getAdapter()->deindex($doc, self::INDEXNAME);
         $this->flush(self::INDEXNAME);
 
@@ -142,6 +142,7 @@ abstract class AdapterTestCase extends BaseTestCase
 
         $document = $this->factory->makeDocument();
         $document->setId($this->idCounter);
+        $document->setClass(self::DOCCLASS);
         $document->setTitle($title);
         $document->addField($this->factory->makeField('title', $title, 'string'));
         $text = <<<EOT

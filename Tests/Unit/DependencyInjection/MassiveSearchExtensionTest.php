@@ -66,7 +66,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     {
         return array(
             array(
-                'zend_lucene', 
+                'zend_lucene',
                 array(
                     'basepath' => 'foobar',
                     'hide_index_exception' => true
@@ -77,7 +77,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 ),
             ),
             array(
-                'zend_lucene', 
+                'zend_lucene',
                 array(
                 ),
                 array(
@@ -86,7 +86,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 ),
             ),
             array(
-                'elastic', 
+                'elastic',
                 array(
                     'hosts' => array(
                         'localhost:8081',
@@ -101,7 +101,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 )
             ),
             array(
-                'elastic', 
+                'elastic',
                 array(
                 ),
                 array(

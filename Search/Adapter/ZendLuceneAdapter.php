@@ -14,7 +14,6 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
-use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Symfony\Component\Finder\Finder;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
@@ -25,13 +24,11 @@ use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
  * Adapter for the ZendSearch library
  *
  * https://github.com/zendframework/ZendSearch
- * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html 
+ * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html
  *   (docs for 1.2 version apply equally to 2.0)
  *
  * Note this adapter implements localization by creating an index for each
  * locale if a locale is specified.
- *
- * @author Daniel Leech <daniel@massive.com>
  */
 class ZendLuceneAdapter implements AdapterInterface
 {
@@ -233,6 +230,7 @@ class ZendLuceneAdapter implements AdapterInterface
     private function getLocalizedLuceneIndex(Document $document, $indexName)
     {
         $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+
         return $this->getLuceneIndex($indexName);
     }
 

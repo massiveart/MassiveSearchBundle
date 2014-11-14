@@ -11,7 +11,6 @@
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\EventSubscriber\TestSubscriber;
 use Symfony\Component\Console\Tester\CommandTester;
 use Massive\Bundle\SearchBundle\Command\QueryCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -39,4 +38,3 @@ class QueryCommandTest extends BaseTestCase
         $this->assertCount(15, $display);
     }
 }
-

@@ -10,7 +10,6 @@
 
 namespace Massive\MassiveSearchBundle\Tests\Unit\Search;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\Localization\NoopStrategy;
 
 class NoopStrategyTest extends \PHPUnit_Framework_TestCase

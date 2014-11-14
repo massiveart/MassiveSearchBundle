@@ -12,7 +12,6 @@ namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
-use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Localization\NoopStrategy;
 
 class ZendLuceneAdapterTest extends AdapterTestCase
