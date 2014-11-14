@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Tests\Integration;
 use Symfony\Component\Filesystem\Filesystem;
 use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\Localization\NoopStrategy;
 
 class ZendLuceneAdapterTest extends AdapterTestCase
 {
@@ -41,7 +42,7 @@ class ZendLuceneAdapterTest extends AdapterTestCase
 
     public function doGetAdapter()
     {
-        return new ZendLuceneAdapter($this->getFactory(), $this->baseDir, true);
+        return new ZendLuceneAdapter($this->getFactory(), new NoopStrategy(), $this->baseDir, true);
     }
 
     public function provideSearch()

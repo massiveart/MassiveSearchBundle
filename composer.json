@@ -23,7 +23,8 @@
     },
     "suggest": {
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
-        "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch"
+        "zendframework/zend-stdlib": "(dependency of zendsearch)",
+        "elasticsearch/elasticsearch": "To use Elasticsearch"
     },
     "autoload": {
         "psr-4": {

@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+dev-master
+----------
+
+- [Elastic] Elasticsearch adapter
+- [Localization] Localization strategy support
+
 0.4.1
 -----
 

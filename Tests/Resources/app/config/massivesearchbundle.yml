@@ -1,1 +1,2 @@
-massive_search: ~
+massive_search:
+    localization_strategy: index

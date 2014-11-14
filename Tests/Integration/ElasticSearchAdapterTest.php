@@ -12,6 +12,7 @@ namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Massive\Bundle\SearchBundle\Search\Adapter\ElasticSearchAdapter;
+use Massive\Bundle\SearchBundle\Search\Localization\NoopStrategy;
 
 class ElasticSearchAdapterTest extends AdapterTestCase
 {
@@ -40,7 +41,7 @@ class ElasticSearchAdapterTest extends AdapterTestCase
 
     public function doGetAdapter()
     {
-        return new ElasticSearchAdapter($this->getFactory(), $this->client);
+        return new ElasticSearchAdapter($this->getFactory(), new NoopStrategy(), $this->client);
     }
 
 }

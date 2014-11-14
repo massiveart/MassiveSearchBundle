@@ -19,6 +19,7 @@ use Symfony\Component\Finder\Finder;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use ZendSearch\Lucene;
+use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
  * Adapter for the ZendSearch library
@@ -47,22 +48,37 @@ class ZendLuceneAdapter implements AdapterInterface
      * The base directory for the search indexes
      * @var string
      */
-    protected $basePath;
+    private $basePath;
 
     /**
      * @var \Massive\Bundle\SearchBundle\Search\Factory
      */
-    protected $factory;
-    protected $hideIndexException;
+    private $factory;
+
+    /**
+     * @var Boolean
+     */
+    private $hideIndexException;
+
+    /**
+     * @var LocalizationStrategyInterface
+     */
+    private $localizationStrategy;
 
     /**
      * @param string $basePath Base filesystem path for the index
      */
-    public function __construct(Factory $factory, $basePath, $hideIndexException = false)
+    public function __construct(
+        Factory $factory,
+        LocalizationStrategyInterface $localizationStrategy,
+        $basePath,
+        $hideIndexException = false
+    )
     {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
+        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -126,7 +142,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         foreach ($indexNames as $indexName) {
             $indexPath = $this->getIndexPath(
-                $this->getLocalizedIndexName($indexName, $locale)
+                $this->localizationStrategy->localizeIndexName($indexName, $locale)
             );
 
             if (!file_exists($indexPath)) {
@@ -216,8 +232,7 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     private function getLocalizedLuceneIndex(Document $document, $indexName)
     {
-        $locale = $document->getLocale();
-        $indexName = $this->getLocalizedIndexName($indexName, $locale);
+        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
         return $this->getLuceneIndex($indexName);
     }
 
@@ -240,21 +255,6 @@ class ZendLuceneAdapter implements AdapterInterface
     private function getIndexPath($indexName)
     {
         return sprintf('%s/%s', $this->basePath, $indexName);
-    }
-
-    /**
-     * Return the localized index name if the locale
-     * is given.
-     *
-     * @return string
-     */
-    private function getLocalizedIndexName($indexName, $locale = null)
-    {
-        if (null === $locale) {
-            return $indexName;
-        }
-
-        return $indexName . '_' . $locale;
     }
 
     /**

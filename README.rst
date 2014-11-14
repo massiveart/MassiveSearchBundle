@@ -4,10 +4,15 @@ MassiveSearchBundle
 .. image:: https://travis-ci.org/massiveart/MassiveSearchBundle.svg?branch=master
     :target: https://travis-ci.org/massiveart/MassiveSearchBundle
 
-The MassiveSearchBundle provides:
+The purpose of this bundle is to provide flexible **site search** functionality.
 
-- An abstraction for search engine libraries.
-- A way to map classes which you want to index.
+This means it provides a way to index objects (for example Doctrine entities)
+and then to search for them using a query string.
+
+This bundle provides:
+
+  - Choice of search backends (ZendSearch, Elastic Search)
+  - Localization strategies
 
 By default it is configured to use the Zend Lucene library, which must be
 installed (see the `suggests` and ``require-dev`` sections in ``composer.json``.
@@ -21,7 +26,7 @@ You can install the MassiveSearchBundle by adding it to `composer.json`:
 
     "require": {
         ...
-        "massive/search-bundle": "0.1"
+        "massive/search-bundle": "0.*"
     }
 
 And then include it in your ``AppKernel``:
@@ -43,7 +48,17 @@ You will also need to include a search library. The search libraries are
 listed in the ``suggests`` section of ``composer.json``, and exact package
 versions can also be found in the ``require-dev`` section (as all the libraries are tested).
 
-For example, to enable the ZendLucene search library:
+Search Adapters
+---------------
+
+Zend Lucene
+~~~~~~~~~~~
+
+The ZendLucene search is the default implementation. It requires no external
+dependencies. But be aware that the version used here is *unmaintained* and
+is not considered stable.
+
+To enable add the following dependencies to your ``composer.json``:
 
 .. code-block:: javascript
 
@@ -52,6 +67,37 @@ For example, to enable the ZendLucene search library:
         "zendframework/zend-stdlib": "2.3.1 as 2.0.0rc5",
         "zendframework/zendsearch": "2.*",
     }
+
+and select the adapter in your application configuration:
+
+.. code-block:: yaml
+
+    // app/config/config.yml
+    massive_search:
+        adapter: zend_search
+
+Elastic
+~~~~~~~
+
+The elastic search adapter allows you to use the
+[Elasticsearch](http://www.elasticsearch.org/) search engine.
+
+You will need to include the official client in ``composer.json``:
+
+.. code-block:: javascript
+
+    "require": {
+        ...
+        "elasticsearch/elasticsearch": "~1.3",
+    }
+
+and select the adapter in your application configuration:
+
+.. code-block:: yaml
+
+    // app/config/config.yml
+    massive_search:
+        adapter: elastic
 
 Mapping
 -------
@@ -145,6 +191,53 @@ is passed directly to the search library:
         // retrieve the indexed ID of the document
         $body = $document->getId();
     }
+
+You can also search in a specific locale:
+
+.. code-block:: php
+
+    $hits = $searchManager
+      ->createSearch('My Article')
+      ->index('article')
+      ->locale('fr')
+      ->execute();
+
+Localization
+------------
+
+The MassiveSearchBundle allows you to localize indexing and search operations.
+
+To take advantage of this feature you need to choose a localization strategy:
+
+.. code-block:: yaml
+
+    // app/config/config.yml
+    massive_search:
+        localization_strategy: index
+
+The localization strategy decides how the documents are localized in the
+search implementation.
+
+By default the adapter is the so-called ``Noop`` which does nothing and so
+localization is effectively disabled.
+
+Strategies
+~~~~~~~~~~
+
+* ``noop``: The default strategy does nothing.
+* ``index``: Creates an index per locale. For example if you store a document
+  in an index named "foobar" with a locale of "fr" then the backend will use
+  an index named "foobar_fr".
+
+Searching
+~~~~~~~~~
+
+See "searching".
+
+Mapping
+~~~~~~~
+
+TODO: Locale mapping is not currently implemented in the XML Driver.
 
 Commands
 --------

@@ -19,6 +19,7 @@ use Symfony\Component\Finder\Finder;
 use ZendSearch\Lucene;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Elasticsearch\Client as ElasticSearchClient;
+use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
  * ElasticSearch adapter using official client:
@@ -49,12 +50,21 @@ class ElasticSearchAdapter implements AdapterInterface
     private $client;
 
     /**
+     * @var LocalizationStrategyInterface
+     */
+
+    /**
      * @param string $basePath Base filesystem path for the index
      */
-    public function __construct(Factory $factory, ElasticSearchClient $client)
+    public function __construct(
+        Factory $factory,
+        LocalizationStrategyInterface $localizationStrategy,
+        ElasticSearchClient $client
+    )
     {
         $this->factory = $factory;
         $this->client = $client;
+        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -62,6 +72,8 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
+        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+
         $fields = array();
         foreach ($document->getFields() as $massiveField) {
             $fields = array();
@@ -98,6 +110,8 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function deindex(Document $document, $indexName)
     {
+        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+
         $params = array(
             'index' => $indexName,
             'type' => 'string',
@@ -114,8 +128,12 @@ class ElasticSearchAdapter implements AdapterInterface
     public function search(SearchQuery $searchQuery)
     {
         $indexNames = $searchQuery->getIndexes();
-        $queryString = $searchQuery->getQueryString();
 
+        foreach ($indexNames as &$indexName) {
+            $indexName = $this->localizationStrategy->localizeIndexName($indexName, $searchQuery->getLocale());
+        }
+
+        $queryString = $searchQuery->getQueryString();
 
         $params['index'] = implode(',', $indexNames);
         $params['body'] = array(

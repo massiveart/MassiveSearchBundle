@@ -35,8 +35,26 @@ class MassiveSearchExtension extends Extension
 
         $container->setAlias('massive_search.factory', $config['services']['factory']);
 
+        $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
         $this->loadMetadata($config, $loader, $container);
+    }
+
+    private function loadLocalization($config, $loader, $container)
+    {
+        $loader->load('localization.xml');
+        $strategy = $config['localization_strategy'];
+
+        switch ($strategy) {
+            case 'noop':
+                $strategyId = 'massive_search.localization_strategy.noop';
+                break;
+            case 'index':
+                $strategyId = 'massive_search.localization_strategy.index';
+                break;
+        }
+
+        $container->setAlias('massive_search.localization_strategy', $strategyId);
     }
 
     private function loadSearch($config, $loader, $container)
