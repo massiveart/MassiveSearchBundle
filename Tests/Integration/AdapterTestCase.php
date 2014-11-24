@@ -66,6 +66,35 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->assertCount($expectedNbResults, $res);
     }
 
+    public function provideSearchSpecialCases()
+    {
+        return array(
+            array('Foobar', 'Barfoo', 0),
+            array('Foobar', 'Foobar', 1),
+            array('T1000', 'T1000', 1),
+            array('Item 100', 'Item 100', 1),
+            array('Item 100', 'ITEM 100', 1),
+            array('Item 100', '100', 1),
+            array('100', '100', 1),
+        );
+    }
+
+    /**
+     * @dataProvider provideSearchSpecialCases
+     */
+    public function testSearchSpecialCases($documentTitle, $query, $expectedNbResults)
+    {
+        $this->adapter = $this->getAdapter();
+        $document = $this->createDocument($documentTitle);
+        $this->adapter->index($document, 'foobar');
+
+        $query = new SearchQuery($query);
+        $query->setIndexes(array('foobar'));
+        $res = $this->adapter->search($query);
+
+        $this->assertCount($expectedNbResults, $res);
+    }
+
     public function testGetStatistics()
     {
         $this->createIndex();

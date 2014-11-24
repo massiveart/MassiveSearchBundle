@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->booleanNode('hide_index_exception')->defaultValue(false)->end()
                             ->scalarNode('basepath')->defaultValue('%kernel.root_dir%/data')->end()
+                            ->scalarNode('analyzer')->defaultValue('case_insensitive')->end()
                         ->end()
                     ->end()
                 ->end()

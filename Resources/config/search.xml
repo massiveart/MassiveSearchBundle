@@ -8,6 +8,7 @@
         <parameter key="massive_search.search.adapter.zend_lucene.class">Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter</parameter>
         <parameter key="massive_search.search.adapter.test.class">Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter</parameter>
         <parameter key="massive_search.factory_default.class">Massive\Bundle\SearchBundle\Search\Factory</parameter>
+        <parameter key="massive_search.zend_lucene.analyzer.case_insensitive.class">ZendSearch\Lucene\Analysis\Analyzer\Common\TextNum\CaseInsensitive</parameter>
     </parameters>
 
     <services>
@@ -16,13 +17,18 @@
 
         <!-- Adapters -->
         <service id="massive_search.adapter.test" class="%massive_search.search.adapter.test.class%">
-            <argument type="service" id="massive_search.factory" />
+            <argument type="service" id="massive_search.factory"/>
         </service>
 
         <service id="massive_search.adapter.zend_lucene" class="%massive_search.search.adapter.zend_lucene.class%">
             <argument type="service" id="massive_search.factory" />
             <argument>%massive_search.adapter.zend_lucene.basepath%</argument>
+            <argument on-invalid="null" />
             <argument>%massive_search.adapter.zend_lucene.hide_index_exception%</argument>
+        </service>
+
+        <service id="massive_search.zend_lucene.analyzer.case_insensitive" class="%massive_search.zend_lucene.analyzer.case_insensitive.class%">
+            <tag name="massive_search.zend_lucene.analyzer" alias="case_insensitive" />
         </service>
 
         <!-- Search manager -->

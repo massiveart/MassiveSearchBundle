@@ -19,6 +19,9 @@ use Symfony\Component\Finder\Finder;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use ZendSearch\Lucene;
+use ZendSearch\Lucene\Analysis\Analyzer\Analyzer;
+use ZendSearch\Lucene\Analysis\Analyzer\Common\TextNum\CaseInsensitive;
+use ZendSearch\Lucene\Analysis\Analyzer\AnalyzerInterface;
 
 /**
  * Adapter for the ZendSearch library
@@ -36,33 +39,35 @@ class ZendLuceneAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
     const CLASS_TAG = '__class';
-
-    // TODO: This fields should be handled at a higher level
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
     const IMAGE_URL = '__image_url';
 
     /**
-     * The base directory for the search indexes
      * @var string
      */
     protected $basePath;
 
     /**
-     * @var \Massive\Bundle\SearchBundle\Search\Factory
+     * @var Factory
      */
     protected $factory;
-    protected $hideIndexException;
+
+    /**
+     * @var boolean
+     */
+    protected $hideIndexException = false;
 
     /**
      * @param string $basePath Base filesystem path for the index
      */
-    public function __construct(Factory $factory, $basePath, $hideIndexException = false)
+    public function __construct(Factory $factory, $basePath, AnalyzerInterface $analyzer = null, $hideIndexException = false)
     {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
+        Analyzer::setDefault($analyzer ? $analyzer : new CaseInsensitive());
     }
 
     /**

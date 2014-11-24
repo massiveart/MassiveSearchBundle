@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+dev-develop
+-----------
+
+- [ZendLucene] Use TextNum\CaseInsensitive analyzer by default
+- [ZendLucene] Analyzers are injected to the adapter and are tagged
+
 0.4.1
 -----
 
