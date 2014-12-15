@@ -4,6 +4,7 @@ php:
   - 5.4
 
 before_script:
+  - composer require "symfony/symfony" "2.6.*" --no-update
   - composer install --dev
 
 script: phpunit --coverage-text
