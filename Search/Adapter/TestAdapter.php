@@ -41,7 +41,7 @@ class TestAdapter implements AdapterInterface
     public function deindex(Document $document, $indexName)
     {
         foreach ($this->documents as $i => $selfDocument) {
-            if ($document === $selfDocument) {
+            if ($document->getId() === $selfDocument->getId()) {
                 unset($this->documents[$i]);
             }
         }
@@ -81,7 +81,6 @@ class TestAdapter implements AdapterInterface
                 $hits[] = $hit;
             }
         }
-
 
         return $hits;
     }

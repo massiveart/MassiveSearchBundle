@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+0.4.1
+-----
+
+- [TestAdapter] Fixed deindexing
+
 0.4.0
 -----
 
