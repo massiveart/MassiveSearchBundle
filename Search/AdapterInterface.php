@@ -10,8 +10,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-use Massive\Bundle\SearchBundle\Search\SearchQuery;
-
 /**
  * Interface to be implement by all search library adapters
  *

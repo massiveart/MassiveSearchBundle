@@ -39,4 +39,4 @@ class SearchEvent extends Event
     {
         return $this->searchQuery;
     }
-} 
+}

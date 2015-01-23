@@ -10,13 +10,30 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Integration;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter;
 
 class TestAdapterTest extends AdapterTestCase
 {
-    public function getAdapter()
+    public function doGetAdapter()
     {
         return new TestAdapter($this->getFactory());
+    }
+
+    public function purgeIndex($indexName)
+    {
+        // nothing...
+    }
+
+    public function provideSearch()
+    {
+        return array(
+            array('one', 1),
+            array('one ', 1),
+            array('roomba 870', 0),
+            array('870', 0),
+            array('*', 0),
+            array('***', 0),
+            array('???', 0),
+        );
     }
 }

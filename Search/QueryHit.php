@@ -22,7 +22,7 @@ class QueryHit
     /**
      * @return Document
      */
-    public function getDocument() 
+    public function getDocument()
     {
         return $this->document;
     }
@@ -38,7 +38,7 @@ class QueryHit
     /**
      * @return number
      */
-    public function getScore() 
+    public function getScore()
     {
         return $this->score;
     }
@@ -54,7 +54,7 @@ class QueryHit
     /**
      * @return string
      */
-    public function getId() 
+    public function getId()
     {
         return $this->id;
     }

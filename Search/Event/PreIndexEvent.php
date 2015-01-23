@@ -53,7 +53,7 @@ class PreIndexEvent extends Event
      * Returns the indexed subject
      * @return mixed
      */
-    public function getSubject() 
+    public function getSubject()
     {
         return $this->subject;
     }
@@ -62,7 +62,7 @@ class PreIndexEvent extends Event
      * Returns the document, which is the result of the indexed object
      * @return Document
      */
-    public function getDocument() 
+    public function getDocument()
     {
         return $this->document;
     }
@@ -71,7 +71,7 @@ class PreIndexEvent extends Event
      * Returns the metadata based on which the indexing was done
      * @return IndexMetadataInterface
      */
-    public function getMetadata() 
+    public function getMetadata()
     {
         return $this->metadata;
     }

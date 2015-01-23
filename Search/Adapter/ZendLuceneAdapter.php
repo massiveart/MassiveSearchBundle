@@ -14,23 +14,21 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
-use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Symfony\Component\Finder\Finder;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use ZendSearch\Lucene;
+use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
  * Adapter for the ZendSearch library
  *
  * https://github.com/zendframework/ZendSearch
- * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html 
+ * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html
  *   (docs for 1.2 version apply equally to 2.0)
  *
  * Note this adapter implements localization by creating an index for each
  * locale if a locale is specified.
- *
- * @author Daniel Leech <daniel@massive.com>
  */
 class ZendLuceneAdapter implements AdapterInterface
 {
@@ -47,22 +45,37 @@ class ZendLuceneAdapter implements AdapterInterface
      * The base directory for the search indexes
      * @var string
      */
-    protected $basePath;
+    private $basePath;
 
     /**
      * @var \Massive\Bundle\SearchBundle\Search\Factory
      */
-    protected $factory;
-    protected $hideIndexException;
+    private $factory;
+
+    /**
+     * @var Boolean
+     */
+    private $hideIndexException;
+
+    /**
+     * @var LocalizationStrategyInterface
+     */
+    private $localizationStrategy;
 
     /**
      * @param string $basePath Base filesystem path for the index
      */
-    public function __construct(Factory $factory, $basePath, $hideIndexException = false)
+    public function __construct(
+        Factory $factory,
+        LocalizationStrategyInterface $localizationStrategy,
+        $basePath,
+        $hideIndexException = false
+    )
     {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
+        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -70,7 +83,7 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $index = $this->getLuceneIndex($document, $indexName);
+        $index = $this->getLocalizedLuceneIndex($document, $indexName);
 
         // check to see if the subject already exists
         $this->removeExisting($index, $document);
@@ -108,8 +121,9 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function deindex(Document $document, $indexName)
     {
-        $index = $this->getLuceneIndex($document, $indexName);
+        $index = $this->getLocalizedLuceneIndex($document, $indexName);
         $this->removeExisting($index, $document);
+        $index->commit();
     }
 
     /**
@@ -125,7 +139,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         foreach ($indexNames as $indexName) {
             $indexPath = $this->getIndexPath(
-                $this->getLocalizedIndexName($indexName, $locale)
+                $this->localizationStrategy->localizeIndexName($indexName, $locale)
             );
 
             if (!file_exists($indexPath)) {
@@ -213,10 +227,15 @@ class ZendLuceneAdapter implements AdapterInterface
      * @param $indexName
      * @return Lucene\SearchIndexInterface
      */
-    private function getLuceneIndex(Document $document, $indexName)
+    private function getLocalizedLuceneIndex(Document $document, $indexName)
     {
-        $locale = $document->getLocale();
-        $indexName = $this->getLocalizedIndexName($indexName, $locale);
+        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+
+        return $this->getLuceneIndex($indexName);
+    }
+
+    private function getLuceneIndex($indexName)
+    {
         $indexPath = $this->getIndexPath($indexName);
 
         if (!file_exists($indexPath)) {
@@ -234,21 +253,6 @@ class ZendLuceneAdapter implements AdapterInterface
     private function getIndexPath($indexName)
     {
         return sprintf('%s/%s', $this->basePath, $indexName);
-    }
-
-    /**
-     * Return the localized index name if the locale
-     * is given.
-     *
-     * @return string
-     */
-    private function getLocalizedIndexName($indexName, $locale = null)
-    {
-        if (null === $locale) {
-            return $indexName;
-        }
-
-        return $indexName . '_' . $locale;
     }
 
     /**

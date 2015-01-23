@@ -12,7 +12,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Represents a search query with contextual information
- * 
+ *
  * @author Daniel Leech <daniel.leech@massiveart.com>
  */
 class SearchQuery
@@ -42,7 +42,7 @@ class SearchQuery
      *
      * @return string
      */
-    public function getQueryString() 
+    public function getQueryString()
     {
         return $this->queryString;
     }
@@ -52,7 +52,7 @@ class SearchQuery
      *
      * @return string
      */
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }
@@ -72,7 +72,7 @@ class SearchQuery
      *
      * @return array
      */
-    public function getIndexes() 
+    public function getIndexes()
     {
         return $this->indexes;
     }

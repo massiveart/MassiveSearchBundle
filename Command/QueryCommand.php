@@ -60,7 +60,7 @@ EOT
         foreach ($res as $hit) {
             $document = $hit->getDocument();
             $table->addRow(array(
-                $hit->getScore(), 
+                $hit->getScore(),
                 $document->getId(),
                 $document->getTitle(),
                 $this->truncate($document->getDescription(), 50),
@@ -84,6 +84,7 @@ EOT
     private function truncate($text, $length, $suffix = '...')
     {
         $computedLength = $length - strlen($suffix);
+
         return strlen($text) > $computedLength ? substr($text, 0, $computedLength) . $suffix : $text;
     }
 }

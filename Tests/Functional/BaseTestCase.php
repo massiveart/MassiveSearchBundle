@@ -12,14 +12,13 @@ namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\EventSubscriber\TestSubscriber;
 use Symfony\Component\Filesystem\Filesystem;
 
 abstract class BaseTestCase extends SymfonyCmfBaseTestCase
 {
     public function setUp()
     {
-        $fs = new Filesystem;
+        $fs = new Filesystem();
         $fs->remove(__DIR__ . '/../Resources/app/data');
     }
 
@@ -40,6 +39,7 @@ abstract class BaseTestCase extends SymfonyCmfBaseTestCase
     public function getSearchManager()
     {
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
+
         return $searchManager;
     }
 }

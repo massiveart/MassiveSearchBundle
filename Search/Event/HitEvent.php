@@ -11,7 +11,6 @@
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 
 class HitEvent extends Event
@@ -25,14 +24,14 @@ class HitEvent extends Event
         $this->documentReflection = $documentReflection;
     }
 
-    public function getHit() 
+    public function getHit()
     {
         return $this->hit;
     }
 
-    public function getDocumentReflection() 
+    public function getDocumentReflection()
     {
         return $this->documentReflection;
     }
-    
+
 }

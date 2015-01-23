@@ -175,7 +175,7 @@ class Document
     /**
      * @return string
      */
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }
@@ -187,7 +187,7 @@ class Document
     {
         $this->locale = $locale;
     }
-    
+
     /**
      * @return Field[]
      */

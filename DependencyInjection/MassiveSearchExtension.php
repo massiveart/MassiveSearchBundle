@@ -34,20 +34,57 @@ class MassiveSearchExtension extends Extension
 
         $container->setAlias('massive_search.factory', $config['services']['factory']);
 
+        $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
         $this->loadMetadata($config, $loader, $container);
     }
 
-    protected function loadSearch($config, $loader, $container)
+    private function loadLocalization($config, $loader, $container)
     {
-        $container->setAlias('massive_search.adapter', $config['adapter_id']);
-        $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
-        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['adapters']['zend_lucene']['hide_index_exception']);
+        $loader->load('localization.xml');
+        $strategy = $config['localization_strategy'];
 
-        $loader->load('search.xml');
+        switch ($strategy) {
+            case 'noop':
+                $strategyId = 'massive_search.localization_strategy.noop';
+                break;
+            case 'index':
+                $strategyId = 'massive_search.localization_strategy.index';
+                break;
+        }
+
+        $container->setAlias('massive_search.localization_strategy', $strategyId);
     }
 
-    protected function loadMetadata($config, $loader, $container)
+    private function loadSearch($config, $loader, $container)
+    {
+        $container->setAlias('massive_search.adapter', 'massive_search.adapter.' . $config['adapter']);
+        $loader->load('search.xml');
+
+        switch ($config['adapter']) {
+            case 'zend_lucene':
+                $this->loadZendSearch($config['adapters']['zend_lucene'], $loader, $container);
+                break;
+            case 'elastic':
+                $this->loadElasticSearch($config['adapters']['elastic'], $loader, $container);
+                break;
+        }
+    }
+
+    private function loadZendSearch($config, $loader, $container)
+    {
+        $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['basepath']);
+        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['hide_index_exception']);
+        $loader->load('adapter_zendlucene.xml');
+    }
+
+    private function loadElasticSearch($config, $loader, $container)
+    {
+        $container->setParameter('massive_search.adapter.elastic.hosts', $config['hosts']);
+        $loader->load('adapter_elastic.xml');
+    }
+
+    private function loadMetadata($config, $loader, $container)
     {
         $loader->load('metadata.xml');
 

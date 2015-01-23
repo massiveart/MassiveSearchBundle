@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+dev-master
+----------
+
+- [Elastic] Elasticsearch adapter
+- [Localization] Localization strategy support
+- [Config] Renamed `adapter_id` to `adapter` in configuration. See UPGRADE.md
+
 0.4.1
 -----
 
