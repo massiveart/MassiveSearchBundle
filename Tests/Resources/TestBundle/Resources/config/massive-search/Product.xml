@@ -5,6 +5,7 @@
         <idField name="id"/>
         <urlField name="url" />
         <titleField name="title" />
+        <localeField name="locale" />
         <descriptionField name="body" />
 
         <fields>

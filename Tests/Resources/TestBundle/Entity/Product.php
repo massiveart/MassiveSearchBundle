@@ -9,6 +9,7 @@ class Product
     protected $body;
     protected $date;
     protected $url;
+    protected $locale;
 
     public function getId()
     {
@@ -59,4 +60,15 @@ class Product
     {
         $this->url = $url;
     }
+
+    public function getLocale() 
+    {
+        return $this->locale;
+    }
+    
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+    
 }
