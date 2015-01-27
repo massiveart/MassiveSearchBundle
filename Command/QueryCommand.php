@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\TableHelper;
+use Symfony\Component\Console\Helper\Table;
 
 /**
  * Command to execute a query on the configured search engine
@@ -55,7 +55,7 @@ EOT
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
         $res = $searchManager->createSearch($query)->index($index)->locale($locale)->execute();
 
-        $table = new TableHelper();
+        $table = new Table($output);
         $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class'));
         foreach ($res as $hit) {
             $document = $hit->getDocument();
@@ -69,7 +69,7 @@ EOT
                 $document->getClass()
             ));
         }
-        $table->render($output);
+        $table->render();
     }
 
     /**

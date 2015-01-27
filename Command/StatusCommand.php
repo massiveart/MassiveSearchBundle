@@ -11,10 +11,10 @@
 namespace Massive\Bundle\SearchBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
 
 class StatusCommand extends ContainerAwareCommand
 {
@@ -33,13 +33,13 @@ EOT
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
         $status = $searchManager->getStatus();
 
-        $table = new TableHelper();
+        $table = new Table($output);
         $table->setHeaders(array('Field', 'Value'));
 
         foreach ($status as $field => $value) {
             $table->addRow(array($field, $value));
         }
 
-        $table->render($output);
+        $table->render();
     }
 }
