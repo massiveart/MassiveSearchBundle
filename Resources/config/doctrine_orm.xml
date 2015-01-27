@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="massive_search.search.event_subscriber.doctrine_orm.class">Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber</parameter>
+    </parameters>
+
+    <services>
+        <service id="massive_search.search.event_subscriber.doctrine_orm" class="%massive_search.search.event_subscriber.doctrine_orm.class%">
+            <argument type="service" id="massive_search.search_manager" />
+        </service>
+    </services>
+</container>
+

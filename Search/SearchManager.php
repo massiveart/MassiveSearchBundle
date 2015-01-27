@@ -18,6 +18,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 /**
  * Search manager is the public API to the search
@@ -76,7 +77,7 @@ class SearchManager implements SearchManagerInterface
         $metadata = $this->metadataFactory->getMetadataForClass($objectClass);
 
         if (null === $metadata) {
-            throw new \RuntimeException(
+            throw new MetadataNotFoundException(
                 sprintf(
                     'There is no search mapping for class "%s"',
                     $objectClass

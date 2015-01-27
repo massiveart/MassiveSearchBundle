@@ -8,6 +8,7 @@
         <parameter key="massive_search.search.adapter.zend_lucene.class">Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter</parameter>
         <parameter key="massive_search.search.adapter.test.class">Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter</parameter>
         <parameter key="massive_search.factory_default.class">Massive\Bundle\SearchBundle\Search\Factory</parameter>
+        <parameter key="massive_search.controller.rest.class">Massive\Bundle\SearchBundle\Controller\RestController</parameter>
     </parameters>
 
     <services>
@@ -25,6 +26,11 @@
             <argument type="service" id="massive_search.adapter" />
             <argument type="service" id="massive_search.metadata.factory" />
             <argument type="service" id="event_dispatcher" />
+        </service>
+
+        <!-- Controller -->
+        <service id="massive_search.controller.rest" class="%massive_search.controller.rest.class%">
+            <argument type="service" id="massive_search.search_manager" />
         </service>
 
     </services>

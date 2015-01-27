@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 class SearchManagerTest extends ProphecyTestCase
 {
@@ -87,7 +88,7 @@ class SearchManagerTest extends ProphecyTestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException
      * @expectedExceptionMessage There is no search mappin
      */
     public function testIndexNoMetadata()

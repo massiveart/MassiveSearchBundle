@@ -65,6 +65,9 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $idField = (string) $mapping->mapping->idField['name'];
         $meta->setIdField((string) $idField);
 
+        $localeField = (string) $mapping->mapping->localeField['name'];
+        $meta->setLocaleField((string) $localeField);
+
         $titleField = (string) $mapping->mapping->titleField['name'];
         $meta->setTitleField((string) $titleField);
 

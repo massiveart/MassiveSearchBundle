@@ -13,7 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 /**
  * Representation of a one indexed document
  */
-class Document
+class Document implements \JsonSerializable
 {
     /**
      * @var Field[]
@@ -222,5 +222,21 @@ class Document
     public function hasField($name)
     {
         return isset($this->fields[$name]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'class' => $this->class,
+            'url' => $this->url,
+            'image_url' => $this->imageUrl,
+            'locale' => $this->locale,
+        );
     }
 }

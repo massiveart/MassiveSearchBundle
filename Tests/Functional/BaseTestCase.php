@@ -31,6 +31,7 @@ abstract class BaseTestCase extends SymfonyCmfBaseTestCase
             $product->setTitle('Hello this is a product '.$i);
             $product->setBody('To be or not to be, that is the question');
             $product->setUrl('/foobar');
+            $product->setLocale('fr');
 
             $this->getSearchManager()->index($product);
         }

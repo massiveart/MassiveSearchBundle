@@ -37,6 +37,18 @@ class MassiveSearchExtension extends Extension
         $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
         $this->loadMetadata($config, $loader, $container);
+        $this->loadPersistence($config['persistence'], $loader, $container);
+    }
+
+    private function loadPersistence($config, Loader\XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        foreach ($config as $persistenceName => $config) {
+            if (false === $config['enabled']) {
+                return;
+            }
+
+            $loader->load($persistenceName . '.xml');
+        }
     }
 
     private function loadLocalization($config, $loader, $container)

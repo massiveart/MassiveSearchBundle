@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Unit\Adapter;
+namespace Massive\Bundle\SearchBundle\Unit\Search\Adapter;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\Factory;
