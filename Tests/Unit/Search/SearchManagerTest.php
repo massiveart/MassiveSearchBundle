@@ -69,10 +69,8 @@ class SearchManagerTest extends ProphecyTestCase
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
         $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
-        $this->factory = new Factory();
 
         $this->searchManager = new SearchManager(
-            $this->factory,
             $this->adapter->reveal(),
             $this->metadataFactory->reveal(),
             $this->converter->reveal(),

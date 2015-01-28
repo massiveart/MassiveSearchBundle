@@ -36,6 +36,6 @@ class MetadataTest extends BaseTestCase
         ), $metadata->getFieldMapping());
 
         $this->assertEquals('product', $metadata->getIndexName());
-        $this->assertEquals('id', $metadata->getIdField());
+        $this->assertEquals('id', $metadata->getIdField()->getProperty());
     }
 }

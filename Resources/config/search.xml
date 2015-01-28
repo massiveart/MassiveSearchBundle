@@ -24,7 +24,6 @@
 
         <!-- Search manager -->
         <service id="massive_search.search_manager" class="%massive_search.search_manager.class%">
-            <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.adapter" />
             <argument type="service" id="massive_search.metadata.factory" />
             <argument type="service" id="massive_search.object_to_document_converter" />
@@ -33,6 +32,7 @@
 
         <!-- Object to document converter -->
         <service id="massive_search.object_to_document_converter" class="%massive_search.object_to_document_converter.class%">
+            <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.expression_language" />
         </service>
 

@@ -61,31 +61,31 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             ));
         }
 
-        $indexName = (string) $mapping->mapping->indexName['name'];
+        $indexName = (string) $mapping->mapping->index['name'];
         $meta->setIndexName($indexName);
 
         $idField = $this->getMapping($mapping, 'id');
-        $meta->setIdField((string) $idField);
+        $meta->setIdField($idField);
 
         $localeField = (string) $mapping->mapping->localeField['name'];
         $localeField = $this->getMapping($mapping, 'locale');
-        $meta->setLocaleField((string) $localeField);
+        $meta->setLocaleField($localeField);
 
         $titleField = $this->getMapping($mapping, 'title');
-        $meta->setTitleField((string) $titleField);
+        $meta->setTitleField($titleField);
 
         $urlField = $this->getMapping($mapping, 'url');
-        $meta->setUrlField((string) $urlField);
+        $meta->setUrlField($urlField);
 
         $descriptionField = $this->getMapping($mapping, 'description');
-        $meta->setDescriptionField((string) $descriptionField);
+        $meta->setDescriptionField($descriptionField);
 
         foreach ($mapping->mapping->fields->children() as $field) {
-            $fieldName = (string) $field['name'];
-            $fieldType = (string) $field['type'];
+            $fieldName = $field['name'];
+            $fieldType = $field['type'];
 
-            $meta->addFieldMapping($fieldName, array(
-                'type' => $fieldType
+            $meta->addFieldMapping((string) $fieldName, array(
+                'type' => (string) $fieldType
             ));
         }
 
@@ -110,11 +110,11 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         if (isset($field['expr'])) {
-            return new Expression($field['expr']);
+            return new Expression((string) $field['expr']);
         }
 
         if (isset($field['property'])) {
-            return new Property($field['property']);
+            return new Property((string) $field['property']);
         }
 
         throw new \InvalidArgumentException(sprintf(
