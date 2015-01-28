@@ -1,12 +1,13 @@
 <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
 
     <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
-        <indexName>product</indexName>
-        <idField name="id"/>
-        <urlField name="url" />
-        <titleField name="title" />
-        <localeField name="locale" />
-        <descriptionField name="body" />
+        <index name="product"/>
+        <id property="id"/>
+        <url property="url" />
+        <title property="title" />
+        <locale property="locale" />
+        <description property="body" />
+        <image property="image" />
 
         <fields>
             <field name="title" type="string" />

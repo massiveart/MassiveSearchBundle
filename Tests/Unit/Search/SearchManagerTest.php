@@ -67,12 +67,15 @@ class SearchManagerTest extends ProphecyTestCase
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
+        $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
         $this->factory = new Factory();
 
         $this->searchManager = new SearchManager(
             $this->factory,
             $this->adapter->reveal(),
             $this->metadataFactory->reveal(),
+            $this->converter->reveal(),
             $this->eventDispatcher->reveal()
         );
 
@@ -122,6 +125,7 @@ class SearchManagerTest extends ProphecyTestCase
             )
         ));
         $this->metadata->getIndexName()->willReturn('product');
+        $this->converter->objectToDocument($this->metadata, $this->product)->willReturn($this->document);
         $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
 
         $this->searchManager->index($this->product);

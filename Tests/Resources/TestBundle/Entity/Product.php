@@ -4,12 +4,13 @@ namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
 class Product
 {
-    protected $id;
-    protected $title;
-    protected $body;
-    protected $date;
-    protected $url;
-    protected $locale;
+    public $id;
+    public $title;
+    public $body;
+    public $date;
+    public $url;
+    public $locale;
+    public $image;
 
     public function getId()
     {
@@ -70,5 +71,14 @@ class Product
     {
         $this->locale = $locale;
     }
+
+    public function getImage() 
+    {
+        return $this->image;
+    }
     
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
 }
