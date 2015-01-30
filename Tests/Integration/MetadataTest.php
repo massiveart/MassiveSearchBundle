@@ -19,7 +19,7 @@ class MetadataTest extends BaseTestCase
         $this->metadataFactory = $this->getContainer()->get('massive_search.metadata.factory');
     }
 
-    public function testMetadataFactory()
+    public function testProductMetadata()
     {
         $metadata = $this->metadataFactory->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product');
 
@@ -37,5 +37,24 @@ class MetadataTest extends BaseTestCase
 
         $this->assertEquals('product', $metadata->getIndexName());
         $this->assertEquals('id', $metadata->getIdField()->getProperty());
+    }
+
+    public function testCarMetadata()
+    {
+        $metadata = $this->metadataFactory->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car');
+        $this->assertNotNull($metadata);
+        $metadata = $metadata->getOutsideClassMetadata();
+
+        $this->assertEquals('car', $metadata->getIndexName());
+        $this->assertInstanceOf(
+            'Massive\Bundle\SearchBundle\Search\Metadata\Expression',
+            $metadata->getUrlField()
+        );
+
+        // ensure that the context if overridden
+        $this->assertEquals(
+            '\'/admin/#cars/edit:\' ~ object.id',
+            $metadata->getUrlField()->getExpression()
+        );
     }
 }

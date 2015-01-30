@@ -34,13 +34,25 @@ class MassiveSearchExtension extends Extension
 
         $container->setAlias('massive_search.factory', $config['services']['factory']);
 
+        $this->configureContext($container, $config);
         $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
-        $this->loadMetadata($config, $loader, $container);
-        $this->loadPersistence($config['persistence'], $loader, $container);
+        $this->loadMetadata($loader, $container);
+        $this->loadPersistence($config['persistence'], $loader);
     }
 
-    private function loadPersistence($config, Loader\XmlFileLoader $loader, ContainerBuilder $container)
+    private function configureContext(ContainerBuilder $container, $config)
+    {
+        $context = null;
+
+        if (isset($config['context'])) {
+            $context = $config['context'];
+        }
+
+        $container->setParameter('massive_search.context', $context);
+    }
+
+    private function loadPersistence($config, Loader\XmlFileLoader $loader)
     {
         foreach ($config as $persistenceName => $config) {
             if (false === $config['enabled']) {
@@ -96,7 +108,7 @@ class MassiveSearchExtension extends Extension
         $loader->load('adapter_elastic.xml');
     }
 
-    private function loadMetadata($config, $loader, $container)
+    private function loadMetadata($loader, $container)
     {
         $loader->load('metadata.xml');
 

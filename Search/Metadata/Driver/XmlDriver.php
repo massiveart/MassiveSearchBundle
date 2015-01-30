@@ -19,19 +19,40 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Expression;
 
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
-    protected $factory;
+    /**
+     * @var Factory
+     */
+    private $factory;
 
-    public function __construct(Factory $factory, FileLocatorInterface $locator)
+    /**
+     * @var string
+     */
+    private $context;
+
+    /**
+     * @param Factory $factory
+     * @param FileLocatorInterface $locator
+     * @param mixed $context Context name. e.g. backend, frontend
+     */
+    public function __construct(Factory $factory, FileLocatorInterface $locator, $context = null)
     {
         parent::__construct($locator);
         $this->factory = $factory;
+        $this->context = $context;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     public function getExtension()
     {
         return 'xml';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
         $meta = $this->factory->makeIndexMetadata($class->name);
@@ -48,9 +69,9 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             throw new \InvalidArgumentException(sprintf('No mapping in file "%s"', $file));
         }
 
-        $mapping = $xml->children();
+        $mapping = $xml->children()->mapping;
 
-        $mappedClassName = (string) $mapping->mapping['class'];
+        $mappedClassName = (string) $mapping['class'];
 
         if ($class->getName() !== $mappedClassName) {
             throw new \InvalidArgumentException(sprintf(
@@ -61,13 +82,15 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             ));
         }
 
-        $indexName = (string) $mapping->mapping->index['name'];
+        $this->applyContextMapping($mapping);
+
+        $indexName = (string) $mapping->index['name'];
         $meta->setIndexName($indexName);
 
         $idField = $this->getMapping($mapping, 'id');
         $meta->setIdField($idField);
 
-        $localeField = (string) $mapping->mapping->localeField['name'];
+        $localeField = (string) $mapping->localeField['name'];
         $localeField = $this->getMapping($mapping, 'locale');
         $meta->setLocaleField($localeField);
 
@@ -80,7 +103,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $descriptionField = $this->getMapping($mapping, 'description');
         $meta->setDescriptionField($descriptionField);
 
-        foreach ($mapping->mapping->fields->children() as $field) {
+        foreach ($mapping->fields->children() as $field) {
             $fieldName = $field['name'];
             $fieldType = $field['type'];
 
@@ -100,7 +123,15 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     private function getMapping(\SimpleXmlElement $mapping, $field)
     {
-        $field = $mapping->mapping->$field;
+        if (!isset($mapping->$field)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Mapping for class "%s" does not have field "%s"',
+                $mapping['class'],
+                $field
+            ));
+        }
+
+        $field = $mapping->$field;
 
         if (isset($field['expr']) && isset($field['property'])) {
             throw new \InvalidArgumentException(sprintf(
@@ -121,5 +152,38 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             'Mapping for "%s" must have one of either the "expr" or "property" attributes.',
             $field
         ));
+    }
+
+    /**
+     * Overwrite the default mapping if there exists a <context> section
+     * which matches the context given in the constructor of this class.
+     *
+     * @param \SimpleXmlElement $mapping
+     */
+    private function applyContextMapping(\SimpleXmlElement $mapping)
+    {
+        foreach ($mapping->context as $context) {
+            if (!isset($context['name'])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'No name given to context in XML mapping file for "%s"',
+                    $mapping['class']
+                ));
+            }
+
+            if (!(string) $context['name'] === $this->context) {
+                continue;
+            }
+
+            foreach ($context as $name => $element) {
+                if (isset($mapping->$name)) {
+                    unset($mapping->$name);
+                }
+                $newElement = $mapping->addChild($name);
+
+                foreach ($element->attributes() as $attrName => $attrValue) {
+                    $newElement[$attrName] = $attrValue;
+                }
+            }
+        }
     }
 }

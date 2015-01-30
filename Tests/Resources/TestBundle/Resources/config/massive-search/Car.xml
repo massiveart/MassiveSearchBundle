@@ -1,0 +1,29 @@
+<massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+
+    <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
+        <index name="car"/>
+        <id property="id"/>
+        <url property="should-be-overridden" />
+        <title property="title" />
+        <description property="body" />
+        <image property="image" />
+        <locale property="locale" />
+
+        <fields>
+            <field name="title" type="string" />
+            <field name="body" type="string" />
+            <field name="numberOfWheels" type="string" />
+        </fields>
+
+            <context name="admin">
+                <url expr="'/admin/#cars/edit:' ~ object.id" />
+                <title expr="'This is car'" />
+            </context>
+
+            <context name="website">
+                <url expr="'/admin/#cars/edit:' ~ object.id" />
+                <title expr="'This is car'" />
+            </context>
+    </mapping>
+
+</massive-search-mapping>

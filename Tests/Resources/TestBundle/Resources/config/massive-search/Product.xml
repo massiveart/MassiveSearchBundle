@@ -3,7 +3,7 @@
     <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
         <index name="product"/>
         <id property="id"/>
-        <url property="url" />
+        <url expr="url" />
         <title property="title" />
         <locale property="locale" />
         <description property="body" />

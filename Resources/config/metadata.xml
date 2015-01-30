@@ -9,6 +9,7 @@
         <parameter key="massive_search.metadata.driver.chain.class">Metadata\Driver\DriverChain</parameter>
         <parameter key="massive_search.metadata.file_locator.class">Metadata\Driver\FileLocator</parameter>
         <parameter key="massive_search.metadata.factory.class">Metadata\MetadataFactory</parameter>
+        <parameter key="massive_search.metadata.factory.class">Metadata\MetadataFactory</parameter>
     </parameters>
 
     <services>
@@ -29,6 +30,7 @@
         <service id="massive_search.metadata.driver.xml" class="%massive_search.metadata.driver.xml.class%">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.metadata.file_locator" />
+            <argument>%massive_search.context%</argument>
             <tag name="massive_search.metadata.driver" />
         </service>
     </services>
