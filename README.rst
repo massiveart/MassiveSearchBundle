@@ -103,16 +103,17 @@ Mapping
 -------
 
 The MassiveSearchBundle requires that you define which objects should be indexed
-through *mapping*. Currently only **XML mapping** supported:
+through *mapping*. Currently only **XML mapping** is natively supported:
 
-.. code-block::
+.. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
     <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
-            <indexName>product</indexName>
-            <idField name="id"/>
+            <index name="product" />
+            <id property="id" />
+            <locale property="locale" />
             <fields>
                 <field name="title" type="string" />
                 <field name="body" type="string" />
@@ -122,10 +123,98 @@ through *mapping*. Currently only **XML mapping** supported:
     </massive-search-mapping>
 
 This mapping will cause the fields ``title`` and ``body`` to be indexed into
-an index named ``product`` using the ID obtained from the objects ``id``
-field. (We use the Symfony `PropertyAccess
-<http://symfony.com/doc/current/components/property_access/index.html>`_
-component, so it works on properties and methods alike).
+an index named ``product`` using the ``locale`` determined from the locale
+field and the ID obtained from the objects ``id``
+field.
+
+Mapping elements
+~~~~~~~~~~~~~~~~
+
+The possible mappings are:
+
+- ``index``: Name of the index in which to insert the record
+- ``title``: Title to use in search results
+- ``description``: A description for the search result
+- ``url``: The URL to which the search resolt should link to
+- ``image``: An image to associate with the search result
+- ``fields``: List of ``<field />`` elements detailing which fields should be
+  indexed (i.e. used when finding search results).
+
+Each mapping can use either a ``property`` attribute or an ``expr`` attribute.
+These attributes determine how the value is retrieved. ``property`` will use
+the Symfony `PropertyAccess`_ component, and ``expr`` will use
+`ExpressionLanguage`_.
+
+PropertyAccess allows you to access properties of an object by path, e.g.
+``title``, or ``parent.title``. The expression allows you to build expressions
+which can be evaluated, e.g. ``'/this/is/' ~ object.id ~ '/a/path'``.
+
+Contexts
+~~~~~~~~
+
+Sometimes you will require different mappings based on the context of the web
+application. For example, an Article may have one URL in the front office, and
+another in the backoffice (i.e. for viewing and editing respectively).
+
+MassiveSearchBundle solves this with ``contexts``. A ``context`` allows you
+to override mappings, for example:
+
+.. code-block:: xml
+
+    <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
+    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+
+        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+            <index name="product" />
+            <id property="id" />
+            <url expr="'/path/to/' ~ article.title'" />
+            <fields>
+                <field name="title" type="string" />
+                <field name="body" type="string" />
+            </fields>
+
+            <context name="admin">
+                <url exp="'/admin/edit/article/' ~ object.id" />
+            </context>
+        </mapping>
+
+    </massive-search-mapping>
+
+The context used is defined in the massive search configuration:
+
+.. code-block:: yaml
+
+    massive_search:
+        context: admin
+
+Full example
+~~~~~~~~~~~~
+
+The following example uses all the mapping options:
+
+.. code-block:: xml
+
+    <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
+    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+
+        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+            <index name="product" />
+            <id property="id" />
+            <locale property="locale" />
+            <title property="title" />
+            <url expr="'/path/to/' ~ object.id" />
+            <description property="body" />
+            <fields>
+                <field name="title" type="string" />
+                <field name="body" type="string" />
+            </fields>
+
+            <context name="admin">
+                <url exp="'/admin/edit/article/' ~ object.id" />
+            </context>
+        </mapping>
+
+    </massive-search-mapping>
 
 Note:
 
@@ -350,3 +439,6 @@ For example:
             $docuemnt->setUrl('Foo' . $document->getUrl());
         }
     }
+
+.. _`PropertyAccess`: http://symfony.com/doc/current/components/property_access/index.html
+.. _`ExpressionLanguage`: http://symfony.com/doc/current/components/expression_language/index.html
