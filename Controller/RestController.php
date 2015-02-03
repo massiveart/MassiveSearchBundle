@@ -13,6 +13,11 @@ namespace Massive\Bundle\SearchBundle\Controller;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * REST API for search
+ *
+ * @author Daniel Leech <daniel@dantleech.com>
+ */
 class RestController
 {
     /**

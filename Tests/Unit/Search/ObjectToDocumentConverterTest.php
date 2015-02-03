@@ -21,7 +21,30 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class ObjectToDocumentConverterTest extends ProphecyTestCase
 {
-    protected $indexMetadata;
+    /**
+     * @var IndexMetadata
+     */
+    private $indexMetadata;
+
+    /**
+     * @var ExpressionLanguage
+     */
+    private $expressionLanguage;
+
+    /**
+     * @var Factory
+     */
+    private $factory;
+
+    /**
+     * @var Product
+     */
+    private $product;
+
+    /**
+     * @var ObjectToDocumentConverter
+     */
+    private $converter;
 
     public function setUp()
     {

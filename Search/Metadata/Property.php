@@ -17,16 +17,26 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
  */
 class Property
 {
+    /**
+     * @var string
+     */
     private $property;
 
+    /**
+     * @param mixed $property
+     */
     public function __construct($property)
     {
         $this->property = $property;
     }
 
+    /**
+     * Return the name of the referenced propery
+     *
+     * @return string
+     */
     public function getProperty()
     {
         return $this->property;
     }
 }
-

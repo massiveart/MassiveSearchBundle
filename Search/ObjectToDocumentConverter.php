@@ -14,7 +14,9 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Expression;
 
 /**
  * Convert mapped objects to search documents
@@ -132,9 +134,9 @@ class ObjectToDocumentConverter
      * Evaluate a property (using PropertyAccess)
      *
      * @param mixed $object
-     * @param mixed $field
+     * @param Property $field
      */
-    private function getPropertyValue($object, $field)
+    private function getPropertyValue($object, Property $field)
     {
         return $this->accessor->getValue($object, $field->getProperty());
     }
@@ -148,7 +150,7 @@ class ObjectToDocumentConverter
      * @param mixed $object
      * @param Field $field
      */
-    private function getFieldValue($object, $field)
+    private function getFieldValue($object, Field $field)
     {
         if (is_array($object)) {
             $path = '[' . $field->getName(). ']';
@@ -164,9 +166,9 @@ class ObjectToDocumentConverter
      * Evaluate an expression (ExpressionLanguage)
      *
      * @param mixed $object
-     * @param mixed $field
+     * @param Expression $field
      */
-    private function getExpressionValue($object, $field)
+    private function getExpressionValue($object, Expression $field)
     {
         return $this->expressionLanguage->evaluate($field->getExpression(), array(
             'object' => $object

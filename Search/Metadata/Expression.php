@@ -17,13 +17,24 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
  */
 class Expression
 {
+    /**
+     * @var string
+     */
     private $expression;
 
+    /**
+     * @param string $expression
+     */
     public function __construct($expression)
     {
         $this->expression = $expression;
     }
 
+    /**
+     * Return the expression 
+     *
+     * @return string
+     */
     public function getExpression()
     {
         return $this->expression;

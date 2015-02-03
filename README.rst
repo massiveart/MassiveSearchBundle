@@ -149,6 +149,34 @@ PropertyAccess allows you to access properties of an object by path, e.g.
 ``title``, or ``parent.title``. The expression allows you to build expressions
 which can be evaluated, e.g. ``'/this/is/' ~ object.id ~ '/a/path'``.
 
+Fields
+~~~~~~
+
+Fields dictate which fields are indexed in the underlying search engine.
+
+Mapping:
+
+- ``name``: Field name
+- ``property``: Object property to map the field
+- ``expr``: Mutually exclusive with ``property``
+
+Types:
+
+- ``string``: Store as a string
+
+Expression Language
+~~~~~~~~~~~~~~~~~~~
+
+The MassiveSearchBundle includes its own flavor of the Symfony expression
+language.
+
+Functions:
+
+- ``join``: Maps to the ``implode`` function in PHP. e.g. ``join(',', ["one",
+  "two"])`` equals ``"one,two"``
+- ``map``: Maps to the ``array_map`` function in PHP. e.g. ``map([1, 2, 3],
+  'el + 1')`` equals ``array(2, 3, 4)``.
+
 Contexts
 ~~~~~~~~
 

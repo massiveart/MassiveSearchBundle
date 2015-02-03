@@ -26,13 +26,24 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
  */
 class Field
 {
+    /**
+     * @var string
+     */
     private $name;
 
+    /**
+     * @param string $name
+     */
     public function __construct($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * Return the name of the field
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
