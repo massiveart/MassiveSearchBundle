@@ -88,5 +88,4 @@ class DoctrineOrmSubscriber implements EventSubscriber
             return;
         }
     }
-
 }

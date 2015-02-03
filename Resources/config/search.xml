@@ -6,7 +6,7 @@
     <parameters>
         <parameter key="massive_search.search_manager.class">Massive\Bundle\SearchBundle\Search\SearchManager</parameter>
         <parameter key="massive_search.object_to_document_converter.class">Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter</parameter>
-        <parameter key="massive_search.expression_language.class">Symfony\Component\ExpressionLanguage\ExpressionLanguage</parameter>
+        <parameter key="massive_search.expression_language.class">Massive\Bundle\SearchBundle\Search\ExpressionLanguage\MassiveSearchExpressionLanguage</parameter>
         <parameter key="massive_search.search.adapter.zend_lucene.class">Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter</parameter>
         <parameter key="massive_search.search.adapter.test.class">Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter</parameter>
         <parameter key="massive_search.factory_default.class">Massive\Bundle\SearchBundle\Search\Factory</parameter>
