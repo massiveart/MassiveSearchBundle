@@ -7,10 +7,9 @@
         <title property="title" />
         <description property="body" />
         <image property="image" />
-        <locale property="locale" />
 
         <fields>
-            <field name="title" type="string" />
+            <field name="title" expr="object.title" type="string" />
             <field name="body" type="string" />
             <field name="numberOfWheels" type="string" />
         </fields>

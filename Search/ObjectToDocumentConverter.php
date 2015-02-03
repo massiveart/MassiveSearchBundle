@@ -14,6 +14,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\Field;
 
 /**
  * Convert mapped objects to search documents
@@ -28,13 +29,17 @@ class ObjectToDocumentConverter
     /**
      * @var PropertyAccess
      */
-    private $accesor;
+    private $accessor;
 
     /**
      * @var Factory
      */
     private $factory;
 
+    /**
+     * @param Factory $factory
+     * @param ExpressionLanguage $expressionLanguage
+     */
     public function __construct(Factory $factory, ExpressionLanguage $expressionLanguage)
     {
         $this->expressionLanguage = $expressionLanguage;
@@ -113,7 +118,8 @@ class ObjectToDocumentConverter
                 return $this->getPropertyValue($object, $field);
             case 'Massive\Bundle\SearchBundle\Search\Metadata\Expression':
                 return $this->getExpressionValue($object, $field);
-
+            case 'Massive\Bundle\SearchBundle\Search\Metadata\Field':
+                return $this->getFieldValue($object, $field);
         }
 
         throw new \RuntimeException(sprintf(
@@ -132,6 +138,27 @@ class ObjectToDocumentConverter
     {
         return $this->accessor->getValue($object, $field->getProperty());
     }
+
+    /**
+     * Return a value determined from the name of the field
+     * rather than an explicit property.
+     *
+     * If the object is an array, then force the array syntax.
+     *
+     * @param mixed $object
+     * @param Field $field
+     */
+    private function getFieldValue($object, $field)
+    {
+        if (is_array($object)) {
+            $path = '[' . $field->getName(). ']';
+        } else {
+            $path = $field->getName();
+        }
+
+        return $this->accessor->getValue($object, $path);
+    }
+
 
     /**
      * Evaluate an expression (ExpressionLanguage)
@@ -158,8 +185,7 @@ class ObjectToDocumentConverter
      */
     private function populateDocument($document, $object, $fieldMapping, $prefix = '')
     {
-        foreach ($fieldMapping as $field => $mapping) {
-
+        foreach ($fieldMapping as $fieldName => $mapping) {
             if ($mapping['type'] == 'complex') {
 
                 if (!isset($mapping['mapping'])) {
@@ -172,44 +198,42 @@ class ObjectToDocumentConverter
                     );
                 }
 
-                $childObjects = $this->accessor->getValue($object, $field);
+                $childObjects = $this->accessor->getValue($object, $fieldName);
 
                 foreach ($childObjects as $i => $childObject) {
                     $this->populateDocument(
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix . $field . $i
+                        $prefix . $fieldName . $i
                     );
                 }
-            } else {
-                if (is_array($object)) {
-                    $path = '[' . $field . ']';
-                } else {
-                    $path = $field;
-                }
 
-                $value = $this->accessor->getValue($object, $path);
+                continue;
+            }
 
-                if (!is_array($value)) {
-                    $document->addField(
-                        $this->factory->makeField(
-                            $prefix . $field,
-                            $value,
-                            $mapping['type']
-                        )
-                    );
-                } else {
-                    foreach ($value as $key => $itemValue) {
-                        $document->addField(
-                            $this->factory->makeField(
-                                $prefix . $field . $key,
-                                $itemValue,
-                                $mapping['type']
-                            )
-                        );
-                    }
-                }
+            $value = $this->getValue($object, $mapping['field']);
+
+            if (!is_array($value)) {
+                $document->addField(
+                    $this->factory->makeField(
+                        $prefix . $fieldName,
+                        $value,
+                        $mapping['type']
+                    )
+                );
+
+                continue;
+            }
+
+            foreach ($value as $key => $itemValue) {
+                $document->addField(
+                    $this->factory->makeField(
+                        $prefix . $fieldName . $key,
+                        $itemValue,
+                        $mapping['type']
+                    )
+                );
             }
         }
     }

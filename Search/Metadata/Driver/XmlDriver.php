@@ -16,6 +16,7 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Metadata\Driver\FileLocatorInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field;
 
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
@@ -91,7 +92,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $meta->setIdField($idField);
 
         $localeField = (string) $mapping->localeField['name'];
-        $localeField = $this->getMapping($mapping, 'locale');
+        $localeField = $this->getMapping($mapping, 'locale', false);
         $meta->setLocaleField($localeField);
 
         $titleField = $this->getMapping($mapping, 'title');
@@ -103,12 +104,15 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $descriptionField = $this->getMapping($mapping, 'description');
         $meta->setDescriptionField($descriptionField);
 
-        foreach ($mapping->fields->children() as $field) {
+
+        $fields = $mapping->fields->children();
+        foreach ($fields as $field) {
             $fieldName = $field['name'];
             $fieldType = $field['type'];
 
             $meta->addFieldMapping((string) $fieldName, array(
-                'type' => (string) $fieldType
+                'type' => (string) $fieldType,
+                'field' => $this->getField($field, $fieldName)
             ));
         }
 
@@ -121,23 +125,37 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \SimpleXmlElement $mapping
      * @param mixed $field
      */
-    private function getMapping(\SimpleXmlElement $mapping, $field)
+    private function getMapping(\SimpleXmlElement $mapping, $field, $required = true)
     {
         if (!isset($mapping->$field)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Mapping for class "%s" does not have field "%s"',
-                $mapping['class'],
-                $field
-            ));
+            if ($required) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Mapping for class "%s" does not have field "%s"',
+                    $mapping['class'],
+                    $field
+                ));
+            }
+
+            return null;
         }
 
         $field = $mapping->$field;
 
+        return $this->getField($field);
+    }
+
+    private function getField(\SimpleXmlElement $field)
+    {
         if (isset($field['expr']) && isset($field['property'])) {
             throw new \InvalidArgumentException(sprintf(
                 '"expr" and "proprty" attributes are mutually exclusive in mapping for "%s"',
                 $field
             ));
+        }
+
+        // if not property or expression given, try using the "name"
+        if (isset($field['name']) && !isset($field['expr']) && !isset($field['property'])) {
+            return new Field((string) $field['name']);
         }
 
         if (isset($field['expr'])) {
