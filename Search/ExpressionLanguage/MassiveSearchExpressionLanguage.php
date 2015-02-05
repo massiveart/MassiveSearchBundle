@@ -69,11 +69,20 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
             },
             function (array $values, $elements, $expression) {
                 $expressionLanguage = $this;
-                return array_map(function ($element) use ($expressionLanguage, $expression) {
-                    return $expressionLanguage->evaluate($expression, array(
+
+                if (count($elements) === 0) {
+                    return array();
+                }
+                
+                $result = array();
+
+                foreach ($elements as $element) {
+                    $result[] = $expressionLanguage->evaluate($expression, array(
                         'el' => $element
                     ));
-                }, $elements);
+                }
+
+                return $result;
             }
         );
     }

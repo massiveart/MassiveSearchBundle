@@ -10,6 +10,7 @@
     <services>
         <service id="massive_search.search.event_subscriber.doctrine_orm" class="%massive_search.search.event_subscriber.doctrine_orm.class%">
             <argument type="service" id="massive_search.search_manager" />
+            <tag name="doctrine.event_subscriber" />
         </service>
     </services>
 </container>

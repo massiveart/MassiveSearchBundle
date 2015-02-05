@@ -14,6 +14,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 /**
  * Index mapped doctrine ORM documents
