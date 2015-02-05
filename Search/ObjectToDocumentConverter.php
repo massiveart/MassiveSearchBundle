@@ -115,6 +115,13 @@ class ObjectToDocumentConverter
      */
     private function getValue($object, $field)
     {
+        if (!is_object($field)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Expected object for field mapping, but got "%s"',
+                is_scalar($field) ? $field : gettype($field)
+            ));
+        }
+
         switch (get_class($field)) {
             case 'Massive\Bundle\SearchBundle\Search\Metadata\Property':
                 return $this->getPropertyValue($object, $field);
@@ -188,6 +195,21 @@ class ObjectToDocumentConverter
     private function populateDocument($document, $object, $fieldMapping, $prefix = '')
     {
         foreach ($fieldMapping as $fieldName => $mapping) {
+
+            if (!isset($mapping['field'])) {
+                throw new \RuntimeException(sprintf(
+                    'Mapping for "%s" does not have "field" key',
+                    $fieldName
+                ));
+            }
+
+            if (!isset($mapping['type'])) {
+                throw new \RuntimeException(sprintf(
+                    'Mapping for "%s" does not have "type" key',
+                    $fieldName
+                ));
+            }
+
             if ($mapping['type'] == 'complex') {
 
                 if (!isset($mapping['mapping'])) {
