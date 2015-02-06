@@ -18,6 +18,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         $this->container->setParameter('kernel.bundles', array('Massive\Bundle\SearchBundle\MassiveSearchBundle'));
+        $this->container->setParameter('kernel.root_dir', __DIR__ . '/../../Resources/app');
 
         return array(
             new MassiveSearchExtension()
@@ -114,12 +115,12 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     /**
      * @dataProvider provideAdapterConfig
      */
-    public function testAdapterConfig($adapterId, $config, $expectedParameters)
+    public function testAdapterConfig($adapter, $config, $expectedParameters)
     {
         $config = array(
-            'adapter' => $adapterId,
+            'adapter' => $adapter,
             'adapters' => array(
-                $adapterId => $config
+                $adapter => $config
             )
         );
 
@@ -131,5 +132,8 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 $this->container->getParameter($expectedKey)
             );
         }
+
+        $serviceId = 'massive_search.adapter.' . $adapter;
+        $this->container->get($serviceId);
     }
 }
