@@ -11,6 +11,9 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field as MetadataField;
 
 /**
  * Factory class for all new Search objects
@@ -57,5 +60,21 @@ class Factory
     public function makeIndexMetadata($class)
     {
         return new IndexMetadata($class);
+    }
+
+    public function makeMetadataField($name)
+    {
+        return new MetadataField($name);
+    }
+
+    public function makeMetadataProperty($path)
+    {
+        return new Property($path);
+    }
+
+
+    public function makeMetadataExpression($expression)
+    {
+        return new Expression($expression);
     }
 }

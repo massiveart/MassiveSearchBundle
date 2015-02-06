@@ -155,15 +155,15 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         // if not property or expression given, try using the "name"
         if (isset($field['name']) && !isset($field['expr']) && !isset($field['property'])) {
-            return new Field((string) $field['name']);
+            return $this->factory->makeMetadataField((string) $field['name']);
         }
 
         if (isset($field['expr'])) {
-            return new Expression((string) $field['expr']);
+            return $this->factory->makeMetadataExpression((string) $field['expr']);
         }
 
         if (isset($field['property'])) {
-            return new Property((string) $field['property']);
+            return $this->factory->makeMetadataProperty((string) $field['property']);
         }
 
         throw new \InvalidArgumentException(sprintf(

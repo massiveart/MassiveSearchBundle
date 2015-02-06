@@ -69,6 +69,7 @@ class SearchManagerTest extends ProphecyTestCase
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
         $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
+        $this->fieldEvaluator = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator');
 
         $this->searchManager = new SearchManager(
             $this->adapter->reveal(),
@@ -124,6 +125,7 @@ class SearchManagerTest extends ProphecyTestCase
         ));
         $this->metadata->getIndexName()->willReturn('product');
         $this->converter->objectToDocument($this->metadata, $this->product)->willReturn($this->document);
+        $this->converter->getFieldEvaluator()->willReturn($this->fieldEvaluator->reveal());
         $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
 
         $this->searchManager->index($this->product);

@@ -42,6 +42,16 @@ class ObjectToDocumentConverter
     }
 
     /**
+     * Return the field evaluator
+     *
+     * @return FieldEvaluator
+     */
+    public function getFieldEvaluator()
+    {
+        return $this->fieldEvaluator;
+    }
+
+    /**
      * Map the given object to a new document using the
      * given metadata.
      *
