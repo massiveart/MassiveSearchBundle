@@ -12,6 +12,7 @@ namespace Massive\Bundle\SearchBundle\Controller;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * REST API for search
@@ -40,8 +41,12 @@ class RestController
      * @param array $indexes (optional) list of indexes
      * @param mixed $locale (optional) locale to search in
      */
-    public function searchAction($query, $indexes = array(), $locale = null)
+    public function searchAction(Request $request)
     {
+        $query = $request->query->get('q');
+        $indexes = $request->query->get('indexes') ? : array();
+        $locale = $request->query->get('locale') ? : null;
+
         $hits = $this->searchManager
             ->createSearch($query)
             ->locale($locale)

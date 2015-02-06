@@ -1,0 +1,4 @@
+massive_search:
+    pattern: /
+    defaults:
+        _controller: "massive_search.controller.rest:searchAction"
