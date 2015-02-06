@@ -8,14 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\Metadata;
+namespace Massive\Bundle\SearchBundle\Search\Metadata\Field;
+
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 
 /**
  * Simple value object for representing propertys
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class Property
+class Property implements FieldInterface
 {
     /**
      * @var string

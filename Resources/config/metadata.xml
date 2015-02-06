@@ -9,7 +9,7 @@
         <parameter key="massive_search.metadata.driver.chain.class">Metadata\Driver\DriverChain</parameter>
         <parameter key="massive_search.metadata.file_locator.class">Metadata\Driver\FileLocator</parameter>
         <parameter key="massive_search.metadata.factory.class">Metadata\MetadataFactory</parameter>
-        <parameter key="massive_search.metadata.factory.class">Metadata\MetadataFactory</parameter>
+        <parameter key="massive_search.metadata.field_evaluator.class">Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator</parameter>
     </parameters>
 
     <services>
@@ -22,6 +22,12 @@
         <service id="massive_search.metadata.file_locator" class="%massive_search.metadata.file_locator.class%">
             <argument type="collection"/>
         </service>
+
+        <!-- Field evaluator -->
+        <service id="massive_search.metadata.field_evaluator" class="%massive_search.metadata.field_evaluator.class%">
+            <argument type="service" id="massive_search.expression_language" />
+        </service>
+
 
         <!-- Chain Driver !-->
         <service id="massive_search.metadata.driver.chain" class="%massive_search.metadata.driver.chain.class%" />

@@ -33,7 +33,7 @@
         <!-- Object to document converter -->
         <service id="massive_search.object_to_document_converter" class="%massive_search.object_to_document_converter.class%">
             <argument type="service" id="massive_search.factory" />
-            <argument type="service" id="massive_search.expression_language" />
+            <argument type="service" id="massive_search.metadata.field_evaluator" />
         </service>
 
         <!-- Expression language -->

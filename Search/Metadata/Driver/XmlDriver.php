@@ -14,9 +14,9 @@ use Metadata\Driver\DriverInterface;
 use Metadata\Driver\AbstractFileDriver;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Metadata\Driver\FileLocatorInterface;
-use Massive\Bundle\SearchBundle\Search\Metadata\Property;
-use Massive\Bundle\SearchBundle\Search\Metadata\Expression;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {

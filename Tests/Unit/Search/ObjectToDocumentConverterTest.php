@@ -13,11 +13,13 @@ namespace Unit\Search;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Prophecy\PhpUnit\ProphecyTestCase;
-use Massive\Bundle\SearchBundle\Search\Metadata\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Metadata\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 
 class ObjectToDocumentConverterTest extends ProphecyTestCase
 {
@@ -27,9 +29,9 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
     private $indexMetadata;
 
     /**
-     * @var ExpressionLanguage
+     * @var FieldEvaluator
      */
-    private $expressionLanguage;
+    private $fieldEvaluator;
 
     /**
      * @var Factory
@@ -49,14 +51,14 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->expressionLanguage = new ExpressionLanguage();
         $this->factory = new Factory();
+        $this->fieldEvaluator = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator');
         $this->indexMetadata = new IndexMetadata('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product');
         $this->product = new Product();
 
         $this->converter = new ObjectToDocumentConverter(
             $this->factory,
-            $this->expressionLanguage
+            $this->fieldEvaluator->reveal()
         );
     }
 
@@ -65,13 +67,12 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
         return array(
             array(
                 array(
-                    'setIndexName' => 'foo',
-                    'setIdField' => new Property('id'),
-                    'setTitleField' => new Expression('object.title'),
-                    'setDescriptionField' => new Property('body'),
-                    'setUrlField' => new Expression('\'/admin/contacts/url/\' ~ object.id'),
-                    'setImageUrlField' => new Property('image'),
-                    'setLocaleField' => new Property('locale'),
+                    'setIdField' => 'id',
+                    'setTitleField' => 'title',
+                    'setDescriptionField' => 'body',
+                    'setUrlField' => 'url',
+                    'setImageUrlField' => 'image',
+                    'setLocaleField' => 'locale',
                 ), array(
                     'id' => '66',
                     'title' => 'My product',
@@ -85,7 +86,7 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
                     'getDescription' => 'Description of this',
                     'getId' => '66',
                     'getTitle' => 'My product',
-                    'getUrl' => '/admin/contacts/url/66',
+                    'getUrl' => '/path/to',
                     'getLocale' => 'fr',
                 ),
             ),
@@ -102,7 +103,9 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
         }
 
         foreach ($metadata as $methodName => $value) {
-            $this->indexMetadata->{$methodName}($value);
+            $field = new Field($value);
+            $this->indexMetadata->{$methodName}($field);
+            $this->fieldEvaluator->getValue($this->product, $field)->willReturn($data[$value]);
         }
 
         $document = $this->converter->objectToDocument($this->indexMetadata, $this->product);

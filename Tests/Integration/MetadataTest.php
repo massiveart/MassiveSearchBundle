@@ -11,7 +11,7 @@
 namespace Integration;
 
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 
 class MetadataTest extends BaseTestCase
 {
@@ -50,7 +50,7 @@ class MetadataTest extends BaseTestCase
 
         $this->assertEquals('car', $metadata->getIndexName());
         $this->assertInstanceOf(
-            'Massive\Bundle\SearchBundle\Search\Metadata\Expression',
+            'Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression',
             $metadata->getUrlField()
         );
 
@@ -63,7 +63,7 @@ class MetadataTest extends BaseTestCase
         $mappings = $metadata->getFieldMapping();
         $this->assertCount(3, $mappings);
         $this->assertArrayHasKey('title', $mappings);
-        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\Expression', $mappings['title']['field']);
+        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression', $mappings['title']['field']);
         $this->assertEquals('object.title', $mappings['title']['field']->getExpression());
     }
 }
