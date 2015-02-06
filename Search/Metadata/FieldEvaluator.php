@@ -50,13 +50,20 @@ class FieldEvaluator
      */
     public function getValue($object, FieldInterface $field)
     {
-        switch (get_class($field)) {
-            case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Property':
-                return $this->getPropertyValue($object, $field);
-            case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression':
-                return $this->getExpressionValue($object, $field);
-            case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Field':
-                return $this->getFieldValue($object, $field);
+        try {
+            switch (get_class($field)) {
+                case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Property':
+                    return $this->getPropertyValue($object, $field);
+                case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression':
+                    return $this->getExpressionValue($object, $field);
+                case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Field':
+                    return $this->getFieldValue($object, $field);
+            }
+        } catch (\Exception $e) {
+            throw new \Exception(sprintf(
+                'Error encountered when trying to determine value from object "%s"',
+                get_class($object)
+            ), null, $e);
         }
 
         throw new \RuntimeException(sprintf(
@@ -106,8 +113,15 @@ class FieldEvaluator
      */
     private function getExpressionValue($object, Expression $field)
     {
-        return $this->expressionLanguage->evaluate($field->getExpression(), array(
-            'object' => $object
-        ));
+        try {
+            return $this->expressionLanguage->evaluate($field->getExpression(), array(
+                'object' => $object
+            ));
+        } catch (\Exception $e) {
+            throw new \RuntimeException(sprintf(
+                'Error encountered when evaluating expression "%s"',
+                $field->getExpression()
+            ), null, $e);
+        }
     }
 }

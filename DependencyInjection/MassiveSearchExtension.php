@@ -106,6 +106,12 @@ class MassiveSearchExtension extends Extension
     {
         $container->setParameter('massive_search.adapter.elastic.hosts', $config['hosts']);
         $loader->load('adapter_elastic.xml');
+
+        if (!class_exists($container->getParameter('massive_search.search.adapter.elastic.client.class'))) {
+            throw new \RuntimeException(
+                'Cannot find elastic search client class -- have you installed the elasticsearch/elasticsearch package?'
+            );
+        }
     }
 
     private function loadMetadata($loader, $container)
