@@ -188,7 +188,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
                 ));
             }
 
-            if (!(string) $context['name'] === $this->context) {
+            if ((string) $context['name'] != $this->context) {
                 continue;
             }
 

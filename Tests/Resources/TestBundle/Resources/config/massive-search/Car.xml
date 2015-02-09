@@ -14,15 +14,17 @@
             <field name="numberOfWheels" type="string" />
         </fields>
 
-            <context name="admin">
-                <url expr="'/admin/#cars/edit:' ~ object.id" />
-                <title expr="'This is car'" />
-            </context>
+        <context name="admin">
+            <index name="car_admin"/>
+            <url expr="'/admin/#cars/edit:' ~ object.id" />
+            <title expr="'This is car'" />
+        </context>
 
-            <context name="website">
-                <url expr="'/admin/#cars/edit:' ~ object.id" />
-                <title expr="'This is car'" />
-            </context>
+        <context name="website">
+            <index name="car_website"/>
+            <url expr="'/admin/#cars/edit:' ~ object.id" />
+            <title expr="'This is car'" />
+        </context>
     </mapping>
 
 </massive-search-mapping>

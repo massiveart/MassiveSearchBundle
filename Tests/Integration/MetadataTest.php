@@ -48,7 +48,7 @@ class MetadataTest extends BaseTestCase
         $this->assertNotNull($metadata);
         $metadata = $metadata->getOutsideClassMetadata();
 
-        $this->assertEquals('car', $metadata->getIndexName());
+        $this->assertEquals('car_admin', $metadata->getIndexName());
         $this->assertInstanceOf(
             'Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression',
             $metadata->getUrlField()

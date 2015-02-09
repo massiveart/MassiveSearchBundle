@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Tests\Functional\Search;
 use Massive\Bundle\SearchBundle\Controller\RestController;
 use Massive\Bundle\SearchBundle\Tests\Functional\BaseTestCase;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use Symfony\Component\HttpFoundation\Request;
 
 class RestControllerTest extends BaseTestCase
 {
@@ -73,7 +74,13 @@ class RestControllerTest extends BaseTestCase
      */
     public function testSearch($query, $indexes = null, $locale = null, $expectedResult)
     {
-        $response = $this->controller->searchAction($query, $indexes, $locale);
+        $request = new Request(array(
+            'q' => $query,
+            'indexes' => $indexes,
+            'locale' => $locale
+        ));
+
+        $response = $this->controller->searchAction($request);
         $result = json_decode($response->getContent(), true);
 
         $this->assertEquals($expectedResult, $result);
