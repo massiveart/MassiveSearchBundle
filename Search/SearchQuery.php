@@ -32,6 +32,11 @@ class SearchQuery
      */
     private $locale;
 
+    /**
+     * @var array
+     */
+    private $indexes = array();
+
     public function __construct($queryString)
     {
         $this->queryString = $queryString;

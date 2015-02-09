@@ -35,8 +35,10 @@ class TestAdapterTest extends ProphecyTestCase
     {
         $this->adapter->index($this->document1, 'foo');
         $this->adapter->index($this->document2, 'foo');
+        $query = new SearchQuery('Foo');
+        $query->setIndexes(array('foo'));
 
-        $res = $this->adapter->search(new SearchQuery('Foo'));
+        $res = $this->adapter->search($query);
 
         $this->assertCount(2, $res);
     }

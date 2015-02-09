@@ -1,3 +1,7 @@
+framework:
+    router:
+        resource: %kernel.root_dir%/config/routing.yml
+
 massive_search:
     # set the context to admin, the Car entity will use different mapping
     context: admin

@@ -27,11 +27,13 @@ class RestControllerTest extends BaseTestCase
      */
     private $searchManager;
 
+    private $client;
+
     public function setUp()
     {
         parent::setUp();
-        $this->searchManager = $this->getSearchManager();
-        $this->controller = new RestController($this->searchManager);
+        $this->client = $this->createClient();
+        $this->searchManager = $this->client->getContainer()->get('massive_search.search_manager');
 
         $product = new Product();
         $product->setId(6);
@@ -40,7 +42,7 @@ class RestControllerTest extends BaseTestCase
         $product->setUrl('/foobar');
         $product->setLocale('fr');
 
-        $this->getSearchManager()->index($product);
+        $this->searchManager->index($product);
     }
 
     public function provideSearch()
@@ -74,13 +76,13 @@ class RestControllerTest extends BaseTestCase
      */
     public function testSearch($query, $indexes = null, $locale = null, $expectedResult)
     {
-        $request = new Request(array(
+        $this->client->request('GET', '/api/search', array(
             'q' => $query,
             'indexes' => $indexes,
             'locale' => $locale
         ));
 
-        $response = $this->controller->searchAction($request);
+        $response = $this->client->getResponse();
         $result = json_decode($response->getContent(), true);
 
         $this->assertEquals($expectedResult, $result);

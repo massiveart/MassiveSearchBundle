@@ -12,8 +12,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field;
-use Massive\Bundle\SearchBundle\Search\Metadata\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 
 /**

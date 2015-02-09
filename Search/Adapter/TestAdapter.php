@@ -33,18 +33,22 @@ class TestAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $this->documents[$document->getId()] = $document;
+        $this->documents[$indexName][$document->getId()] = $document;
     }
 
     public function deindex(Document $document, $indexName)
     {
-        foreach ($this->documents as $i => $selfDocument) {
+        if (!$indexName) {
+            return;
+        }
+
+        foreach ($this->documents[$indexName] as $i => $selfDocument) {
             if ($document->getId() === $selfDocument->getId()) {
-                unset($this->documents[$i]);
+                unset($this->documents[$indexName][$i]);
             }
         }
 
-        $this->documents = array_values($this->documents);
+        $this->documents[$indexName] = array_values($this->documents[$indexName]);
     }
 
     /**
@@ -62,21 +66,31 @@ class TestAdapter implements AdapterInterface
     {
         $hits = array();
 
-        foreach ($this->documents as $document) {
-            $hit = $this->factory->makeQueryHit();
-
-            $isHit = false;
-            foreach ($document->getFields() as $field) {
-                if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $field->getValue())) {
-                    $isHit = true;
-                    break;
-                }
+        foreach ($searchQuery->getIndexes() as $index) {
+            if (!isset($this->documents[$index])) {
+                continue;
             }
 
-            if ($isHit) {
-                $hit->setDocument($document);
-                $hit->setScore(-1);
-                $hits[] = $hit;
+            foreach ($this->documents[$index] as $document) {
+                $hit = $this->factory->makeQueryHit();
+
+                $isHit = false;
+
+                if (!$document instanceof \Massive\Bundle\SearchBundle\Search\Document) {
+                    var_dump($document);die();;
+                }
+                foreach ($document->getFields() as $field) {
+                    if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $field->getValue())) {
+                        $isHit = true;
+                        break;
+                    }
+                }
+
+                if ($isHit) {
+                    $hit->setDocument($document);
+                    $hit->setScore(-1);
+                    $hits[] = $hit;
+                }
             }
         }
 

@@ -4,6 +4,7 @@ CHANGELOG
 dev-master
 ----------
 
+- [TestAdapter] Supports indexes
 - [Mapping] Expression language
 - [REST] REST API
 - [Persistence] Doctrine ORM event subscriber
