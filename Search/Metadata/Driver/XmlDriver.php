@@ -98,7 +98,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $titleField = $this->getMapping($mapping, 'title');
         $meta->setTitleField($titleField);
 
-        $urlField = $this->getMapping($mapping, 'url');
+        $urlField = $this->getMapping($mapping, 'url', false);
         $meta->setUrlField($urlField);
 
         $descriptionField = $this->getMapping($mapping, 'description', false);
