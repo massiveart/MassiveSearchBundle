@@ -34,6 +34,9 @@ class ElasticSearchAdapter implements AdapterInterface
     const DESCRIPTION_FIELDNAME = '__description';
     const IMAGE_URL = '__image_url';
 
+    const LOCALIZED_INDEX_NAME = 'massive_search_localized_index';
+    const LOCALIZED_INDEX_TYPE = 'massive_search_localized_index_type';
+
     /**
      * @var \Massive\Bundle\SearchBundle\Search\Factory
      */
@@ -55,7 +58,8 @@ class ElasticSearchAdapter implements AdapterInterface
     public function __construct(
         Factory $factory,
         LocalizationStrategyInterface $localizationStrategy,
-        ElasticSearchClient $client
+        ElasticSearchClient $client,
+        $locales = array()
     )
     {
         $this->factory = $factory;
@@ -68,7 +72,8 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+        $localizedIndexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+        $this->registerLocalizedIndex($indexName, $localizedIndexName);
 
         $fields = array();
         foreach ($document->getFields() as $massiveField) {
@@ -93,7 +98,7 @@ class ElasticSearchAdapter implements AdapterInterface
 
         $params = array(
             'id' => $document->getId(),
-            'index' => $indexName,
+            'index' => $localizedIndexName,
             'type' => $this->documentToType($document),
             'body' => $fields,
         );
@@ -192,5 +197,62 @@ class ElasticSearchAdapter implements AdapterInterface
         }
 
         return $status;
+    }
+
+    public function purge($indexName)
+    {
+        $indexes = $this->getLocalizedIndexes($indexName);
+        $indexes[] = $indexName;
+
+        foreach ($indexes as $index) {
+            try {
+                $this->client->indices()->delete(array('index' => $indexName));
+            } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+            }
+
+            $this->client->indices()->create(array('index' => $indexName));
+        }
+    }
+
+    private function registerLocalizedIndex($indexName, $localizedIndex)
+    {
+        $localizedIndexes = $this->getLocalizedIndexes($indexName);
+
+        if (in_array($localizedIndex, $localizedIndexes)) {
+            return;
+        }
+
+        $localizedIndexes[] = $localizedIndex;
+
+        $params = array(
+            'id' => $indexName,
+            'index' => self::LOCALIZED_INDEX_NAME,
+            'type' => self::LOCALIZED_INDEX_TYPE,
+            'body' => array(
+                'localized_indexes' => $localizedIndexes
+            ),
+        );
+
+        $this->client->index($params);
+    }
+
+    private function getLocalizedIndexes($indexName)
+    {
+        $localizedIndexes = array();
+
+        try {
+            $res = $this->client->get(array(
+                'type' => self::LOCALIZED_INDEX_TYPE,
+                'index' => self::LOCALIZED_INDEX_NAME,
+                'id' => $indexName,
+            ));
+
+            if (isset($res['_source']['localized_indexes'])) {
+                $localizedIndexes = (array) $res['_source']['localized_indexes'];
+            }
+        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+        }
+
+        return $localizedIndexes;
     }
 }

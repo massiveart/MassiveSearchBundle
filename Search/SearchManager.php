@@ -181,4 +181,12 @@ class SearchManager implements SearchManagerInterface
 
         return $data;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function purge($indexName)
+    {
+        $this->adapter->purge($indexName);
+    }
 }

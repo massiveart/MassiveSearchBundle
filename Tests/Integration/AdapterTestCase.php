@@ -56,6 +56,31 @@ abstract class AdapterTestCase extends BaseTestCase
      */
     public function purgeIndex($indexName)
     {
+        $this->getAdapter()->purge($indexName);
+    }
+
+    public function testPurge()
+    {
+        $adapter = $this->getAdapter();
+        $this->createIndex();
+        $query = new SearchQuery('One');
+        $query->setIndexes(array(
+            self::INDEXNAME
+        ));
+        $res = $adapter->search($query);
+        $this->assertCount(1, $res);
+
+        $adapter->purge(self::INDEXNAME);
+        $this->flush(self::INDEXNAME);
+
+        $adapter = $this->getAdapter();
+        $query = new SearchQuery('One');
+        $query->setIndexes(array(
+            self::INDEXNAME
+        ));
+        $res = $adapter->search($query);
+
+        $this->assertCount(0, $res);
     }
 
     /**

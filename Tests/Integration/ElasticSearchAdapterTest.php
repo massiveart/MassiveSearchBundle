@@ -23,16 +23,6 @@ class ElasticSearchAdapterTest extends AdapterTestCase
         parent::setUp();
     }
 
-    public function purgeIndex($indexName)
-    {
-        try {
-            $this->client->indices()->delete(array('index' => $indexName));
-        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
-        }
-
-        $this->client->indices()->create(array('index' => $indexName));
-    }
-
     public function flush($indexName)
     {
         $this->client->indices()->flush(array('index' => $indexName));

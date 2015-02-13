@@ -285,4 +285,8 @@ class ZendLuceneAdapter implements AdapterInterface
 
         return $index;
     }
+
+    public function purge($indexName)
+    {
+    }
 }

@@ -34,6 +34,12 @@ interface AdapterInterface
     public function deindex(Document $document, $indexName);
 
     /**
+     * Purge the given index with the given locale
+     *
+     */
+    public function purge($indexName);
+
+    /**
      * Search using the given query string
      *
      * @param string $queryString

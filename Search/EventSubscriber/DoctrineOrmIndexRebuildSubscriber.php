@@ -112,6 +112,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
             }
 
             $output->writeln('Purging index [' . $indexName . ']');
+            $this->searchManager->purge($indexName);
             $this->purged[$indexName] = true;
         }
     }
