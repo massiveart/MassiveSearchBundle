@@ -26,20 +26,14 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     private $factory;
 
     /**
-     * @var string
-     */
-    private $context;
-
-    /**
      * @param Factory $factory
      * @param FileLocatorInterface $locator
      * @param mixed $context Context name. e.g. backend, frontend
      */
-    public function __construct(Factory $factory, FileLocatorInterface $locator, $context = null)
+    public function __construct(Factory $factory, FileLocatorInterface $locator)
     {
         parent::__construct($locator);
         $this->factory = $factory;
-        $this->context = $context;
     }
 
 
@@ -84,7 +78,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         $indexMapping = $this->getIndexMapping($mapping);
-        $this->validateMapping($indexMapping);
+        $this->validateMapping($indexMapping, $file);
 
         // note that fields cannot be overridden in contexts
         $fields = $mapping->fields->children();
@@ -122,7 +116,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $classMetadata->addIndexMetadata($contextName, $indexMetadata);
         }
 
-
         return $classMetadata;
     }
 
@@ -151,13 +144,14 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         return $indexMapping;
     }
 
-    private function validateMapping($indexMapping)
+    private function validateMapping($indexMapping, $file)
     {
         foreach (array('index', 'id', 'title') as $required) {
             if (!$indexMapping[$required]) {
                 throw new \InvalidArgumentException(sprintf(
-                    'Required field for mapping is not present "%s"',
-                    $required
+                    'Required field for mapping is not present "%s" in "%s"',
+                    $required,
+                    $file
                 ));
             }
         }

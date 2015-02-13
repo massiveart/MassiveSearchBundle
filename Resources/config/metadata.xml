@@ -36,7 +36,6 @@
         <service id="massive_search.metadata.driver.xml" class="%massive_search.metadata.driver.xml.class%">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.metadata.file_locator" />
-            <argument>%massive_search.context%</argument>
             <tag name="massive_search.metadata.driver" />
         </service>
     </services>

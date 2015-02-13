@@ -25,9 +25,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('massive_search')
             ->children()
-                ->scalarNode('context')
-                    ->info('Optional context to override mappings in different application contexts')
-                ->end()
                 ->arrayNode('services')
                     ->addDefaultsifNotSet()
                     ->children()

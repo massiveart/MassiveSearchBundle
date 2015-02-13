@@ -185,7 +185,7 @@ application. For example, an Article may have one URL in the front office, and
 another in the backoffice (i.e. for viewing and editing respectively).
 
 MassiveSearchBundle solves this with ``contexts``. A ``context`` allows you
-to override mappings, for example:
+to map additional indexes:
 
 .. code-block:: xml
 
@@ -203,17 +203,14 @@ to override mappings, for example:
 
             <context name="admin">
                 <url exp="'/admin/edit/article/' ~ object.id" />
+                <index name="product_foo" />
             </context>
         </mapping>
 
     </massive-search-mapping>
 
-The context used is defined in the massive search configuration:
-
-.. code-block:: yaml
-
-    massive_search:
-        context: admin
+The above would create two mappings for the ``Product``. The second would use
+the index name ``product_foo`` and override the ``url`` field.
 
 Full example
 ~~~~~~~~~~~~

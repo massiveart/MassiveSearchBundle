@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Metadata\ClassMetadata as SearchMetadata;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
 {
@@ -91,25 +92,28 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $searchMeta = $searchMeta->getOutsideClassMetadata();
+            $classMetadata = $searchMeta->getOutsideClassMetadata();
 
             if ($purge) {
-                $this->doPurge($output, $searchMeta, $class);
+                $this->doPurge($output, $classMetadata, $class);
             }
 
             $this->rebuildClass($output, $class);
         }
     }
 
-    private function doPurge(OutputInterface $output, IndexMetadata $searchMeta, OrmMetadata $ormMetadata)
+    private function doPurge(OutputInterface $output, ClassMetadata $classMetadata, OrmMetadata $ormMetadata)
     {
-        $indexName = $searchMeta->getIndexName();
-        if (isset($this->purged[$indexName])) {
-            return;
-        }
+        foreach ($classMetadata->getIndexMetadatas() as $indexMetadata) {
+            $indexName = $indexMetadata->getIndexName();
 
-        $output->writeln('Purging index [' . $indexName . ']');
-        $this->purged[$indexName] = true;
+            if (isset($this->purged[$indexName])) {
+                return;
+            }
+
+            $output->writeln('Purging index [' . $indexName . ']');
+            $this->purged[$indexName] = true;
+        }
     }
 
     private function rebuildClass(OutputInterface $output, OrmMetadata $ormMetadata)

@@ -35,6 +35,7 @@ class ClassMetadata extends BaseClassMetadata
         }
 
         $indexMetadata->setName($this->name);
+        $indexMetadata->setClassMetadata($this);
         $this->indexMetadatas[$contextName] = $indexMetadata;
     }
 
