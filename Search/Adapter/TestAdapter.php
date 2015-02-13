@@ -51,6 +51,11 @@ class TestAdapter implements AdapterInterface
         $this->documents[$indexName] = array_values($this->documents[$indexName]);
     }
 
+    public function purge($indexName)
+    {
+        unset($this->documents[$indexName]);
+    }
+
     /**
      * Return all the "indexed" documents
      */
