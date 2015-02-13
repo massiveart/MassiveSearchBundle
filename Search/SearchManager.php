@@ -105,17 +105,20 @@ class SearchManager implements SearchManagerInterface
      */
     public function index($object)
     {
-        $metadata = $this->getMetadata($object);
-        $indexName = $metadata->getIndexName();
-        $document = $this->converter->objectToDocument($metadata, $object);
-        $evaluator = $this->converter->getFieldEvaluator();
+        $indexMetadatas = $this->getMetadata($object);
 
-        $this->eventDispatcher->dispatch(
-            SearchEvents::PRE_INDEX,
-            new PreIndexEvent($object, $document, $metadata, $evaluator)
-        );
+        foreach ($indexMetadatas->getIndexMetadatas() as $indexMetadata) {
+            $indexName = $indexMetadata->getIndexName();
+            $document = $this->converter->objectToDocument($indexMetadata, $object);
+            $evaluator = $this->converter->getFieldEvaluator();
 
-        $this->adapter->index($document, $indexName);
+            $this->eventDispatcher->dispatch(
+                SearchEvents::PRE_INDEX,
+                new PreIndexEvent($object, $document, $indexMetadata, $evaluator)
+            );
+
+            $this->adapter->index($document, $indexName);
+        }
     }
 
     /**

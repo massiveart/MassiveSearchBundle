@@ -56,7 +56,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
-        $meta = $this->factory->makeIndexMetadata($class->name);
+        $classMetadata = $this->factory->makeClassMetadata($class->name);
         $xml = simplexml_load_file($file);
 
         if (count($xml->children()) > 1) {
@@ -83,40 +83,84 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             ));
         }
 
-        $this->applyContextMapping($mapping);
+        $indexMapping = $this->getIndexMapping($mapping);
+        $this->validateMapping($indexMapping);
 
-        $indexName = (string) $mapping->index['name'];
-        $meta->setIndexName($indexName);
-
-        $idField = $this->getMapping($mapping, 'id');
-        $meta->setIdField($idField);
-
-        $localeField = (string) $mapping->localeField['name'];
-        $localeField = $this->getMapping($mapping, 'locale', false);
-        $meta->setLocaleField($localeField);
-
-        $titleField = $this->getMapping($mapping, 'title');
-        $meta->setTitleField($titleField);
-
-        $urlField = $this->getMapping($mapping, 'url', false);
-        $meta->setUrlField($urlField);
-
-        $descriptionField = $this->getMapping($mapping, 'description', false);
-        $meta->setDescriptionField($descriptionField);
-
-
+        // note that fields cannot be overridden in contexts
         $fields = $mapping->fields->children();
+        $indexMapping['fields'] = array();
         foreach ($fields as $field) {
-            $fieldName = $field['name'];
+            $fieldName = (string) $field['name'];
             $fieldType = $field['type'];
 
-            $meta->addFieldMapping((string) $fieldName, array(
+            $indexMapping['fields'][$fieldName] = array(
                 'type' => (string) $fieldType,
-                'field' => $this->getField($field, $fieldName)
-            ));
+                'field' => $this->getField($field, $fieldName),
+            );
         }
 
-        return $meta;
+        $indexMappings = array_merge(
+            array(
+                '_default' => $indexMapping,
+            ),
+            $this->extractContextMappings($mapping, $indexMapping)
+        );
+
+        foreach ($indexMappings as $contextName => $mapping) {
+            $indexMetadata = $this->factory->makeIndexMetadata();
+            $indexMetadata->setIndexName($mapping['index']);
+            $indexMetadata->setIdField($mapping['id']);
+            $indexMetadata->setLocaleField($mapping['locale']);
+            $indexMetadata->setTitleField($mapping['title']);
+            $indexMetadata->setUrlField($mapping['url']);
+            $indexMetadata->setDescriptionField($mapping['description']);
+
+            foreach ($mapping['fields'] as $fieldName => $fieldData) {
+                $indexMetadata->addFieldMapping($fieldName, $fieldData);
+            }
+
+            $classMetadata->addIndexMetadata($contextName, $indexMetadata);
+        }
+
+
+        return $classMetadata;
+    }
+
+    private function getIndexMapping(\SimpleXmlElement $mapping)
+    {
+        $indexMapping = array();
+
+        $indexName = (string) $mapping->index['name'];
+        $indexMapping['index'] = $indexName;
+
+        $idField = $this->getMapping($mapping, 'id');
+        $indexMapping['id'] = $idField;
+
+        $localeField = $this->getMapping($mapping, 'locale');
+        $indexMapping['locale'] = $localeField;
+
+        $titleField = $this->getMapping($mapping, 'title');
+        $indexMapping['title'] = $titleField;
+
+        $urlField = $this->getMapping($mapping, 'url');
+        $indexMapping['url'] = $urlField;
+
+        $descriptionField = $this->getMapping($mapping, 'description');
+        $indexMapping['description'] = $descriptionField;
+
+        return $indexMapping;
+    }
+
+    private function validateMapping($indexMapping)
+    {
+        foreach (array('index', 'id', 'title') as $required) {
+            if (!$indexMapping[$required]) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Required field for mapping is not present "%s"',
+                    $required
+                ));
+            }
+        }
     }
 
     /**
@@ -125,21 +169,13 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \SimpleXmlElement $mapping
      * @param mixed $field
      */
-    private function getMapping(\SimpleXmlElement $mapping, $field, $required = true)
+    private function getMapping(\SimpleXmlElement $mapping, $field)
     {
-        if (!isset($mapping->$field)) {
-            if ($required) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Mapping for class "%s" does not have field "%s"',
-                    $mapping['class'],
-                    $field
-                ));
-            }
+        $field = $mapping->$field;
 
+        if (!$field->getName()) {
             return null;
         }
-
-        $field = $mapping->$field;
 
         return $this->getField($field);
     }
@@ -149,7 +185,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         if (isset($field['expr']) && isset($field['property'])) {
             throw new \InvalidArgumentException(sprintf(
                 '"expr" and "proprty" attributes are mutually exclusive in mapping for "%s"',
-                $field
+                ($field)
             ));
         }
 
@@ -178,8 +214,9 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      *
      * @param \SimpleXmlElement $mapping
      */
-    private function applyContextMapping(\SimpleXmlElement $mapping)
+    private function extractContextMappings(\SimpleXmlElement $mapping, $indexMapping)
     {
+        $contextMappings = array();
         foreach ($mapping->context as $context) {
             if (!isset($context['name'])) {
                 throw new \InvalidArgumentException(sprintf(
@@ -188,20 +225,15 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
                 ));
             }
 
-            if ((string) $context['name'] != $this->context) {
-                continue;
-            }
+            $contextName = (string) $context['name'];
 
-            foreach ($context as $name => $element) {
-                if (isset($mapping->$name)) {
-                    unset($mapping->$name);
-                }
-                $newElement = $mapping->addChild($name);
-
-                foreach ($element->attributes() as $attrName => $attrValue) {
-                    $newElement[$attrName] = $attrValue;
-                }
-            }
+            $contextMapping = $this->getIndexMapping($context);
+            $contextMappings[$contextName] = array_merge(
+                $indexMapping,
+                $contextMapping
+            );
         }
+
+        return $contextMappings;
     }
 }

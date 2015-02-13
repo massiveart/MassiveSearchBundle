@@ -26,6 +26,8 @@ class MetadataTest extends BaseTestCase
 
         $this->assertNotNull($metadata);
         $metadata = $metadata->getOutsideClassMetadata();
+        $indexMetadatas = $metadata->getIndexMetadatas();
+        $indexMetadata = reset($indexMetadatas);
 
         $this->assertEquals(array(
             'title' => array(
@@ -36,10 +38,10 @@ class MetadataTest extends BaseTestCase
                 'type' => 'string',
                 'field' => new Field('body'),
             ),
-        ), $metadata->getFieldMapping());
+        ), $indexMetadata->getFieldMapping());
 
-        $this->assertEquals('product', $metadata->getIndexName());
-        $this->assertEquals('id', $metadata->getIdField()->getProperty());
+        $this->assertEquals('product', $indexMetadata->getIndexName());
+        $this->assertEquals('id', $indexMetadata->getIdField()->getProperty());
     }
 
     public function testCarMetadata()
@@ -47,20 +49,24 @@ class MetadataTest extends BaseTestCase
         $metadata = $this->metadataFactory->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car');
         $this->assertNotNull($metadata);
         $metadata = $metadata->getOutsideClassMetadata();
+        $indexMetadatas = $metadata->getIndexMetadatas();
+        $this->assertArrayHasKey('admin', $indexMetadatas);
 
-        $this->assertEquals('car_admin', $metadata->getIndexName());
+        $indexMetadata = $indexMetadatas['admin'];
+
+        $this->assertEquals('car_admin', $indexMetadata->getIndexName());
         $this->assertInstanceOf(
             'Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression',
-            $metadata->getUrlField()
+            $indexMetadata->getUrlField()
         );
 
         // ensure that the context if overridden
         $this->assertEquals(
             '\'/admin/#cars/edit:\' ~ object.id',
-            $metadata->getUrlField()->getExpression()
+            $indexMetadata->getUrlField()->getExpression()
         );
 
-        $mappings = $metadata->getFieldMapping();
+        $mappings = $indexMetadata->getFieldMapping();
         $this->assertCount(3, $mappings);
         $this->assertArrayHasKey('title', $mappings);
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression', $mappings['title']['field']);

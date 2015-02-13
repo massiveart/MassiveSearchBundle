@@ -53,7 +53,7 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
         parent::setUp();
         $this->factory = new Factory();
         $this->fieldEvaluator = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator');
-        $this->indexMetadata = new IndexMetadata('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product');
+        $this->indexMetadata = new IndexMetadata();
         $this->product = new Product();
 
         $this->converter = new ObjectToDocumentConverter(
@@ -81,7 +81,6 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
                     'image' => '/path/to/image',
                     'locale' => 'fr',
                 ), array(
-                    'getClass' => 'Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product',
                     'getImageUrl' => '/path/to/image',
                     'getDescription' => 'Description of this',
                     'getId' => '66',

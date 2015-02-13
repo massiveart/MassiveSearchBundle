@@ -63,9 +63,15 @@ class SearchManagerTest extends ProphecyTestCase
     {
         $this->adapter = $this->prophesize('Massive\Bundle\SearchBundle\Search\AdapterInterface');
         $this->metadataFactory = $this->prophesize('Metadata\MetadataFactory');
-        $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
+        $this->indexMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
+        $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
+        $this->metadata->getIndexMetadatas()->willReturn(array(
+            $this->indexMetadata->reveal()
+        ));
+
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
+
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
         $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
@@ -108,14 +114,14 @@ class SearchManagerTest extends ProphecyTestCase
             ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
             ->willReturn($this->classHierachyMetadata);
 
-        $this->metadata->getName()->willReturn('test');
-        $this->metadata->getIdField()->willReturn('id');
-        $this->metadata->getUrlField()->willReturn('url');
-        $this->metadata->getTitleField()->willReturn('title');
-        $this->metadata->getLocaleField()->willReturn(null);
-        $this->metadata->getDescriptionField()->willReturn('body');
-        $this->metadata->getImageUrlField()->willReturn(null);
-        $this->metadata->getFieldMapping()->willReturn(array(
+        $this->indexMetadata->getName()->willReturn('test');
+        $this->indexMetadata->getIdField()->willReturn('id');
+        $this->indexMetadata->getUrlField()->willReturn('url');
+        $this->indexMetadata->getTitleField()->willReturn('title');
+        $this->indexMetadata->getLocaleField()->willReturn(null);
+        $this->indexMetadata->getDescriptionField()->willReturn('body');
+        $this->indexMetadata->getImageUrlField()->willReturn(null);
+        $this->indexMetadata->getFieldMapping()->willReturn(array(
             'title' => array(
                 'type' => 'string',
             ),
@@ -123,8 +129,8 @@ class SearchManagerTest extends ProphecyTestCase
                 'type' => 'string',
             )
         ));
-        $this->metadata->getIndexName()->willReturn('product');
-        $this->converter->objectToDocument($this->metadata, $this->product)->willReturn($this->document);
+        $this->indexMetadata->getIndexName()->willReturn('product');
+        $this->converter->objectToDocument($this->indexMetadata, $this->product)->willReturn($this->document);
         $this->converter->getFieldEvaluator()->willReturn($this->fieldEvaluator->reveal());
         $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
 

@@ -48,21 +48,5 @@ class IndexRebuildCommand extends ContainerAwareCommand
         $event = new IndexRebuildEvent($filter, $purge, $output);
         $eventDispatcher->dispatch(SearchEvents::INDEX_REBUILD, $event);
     }
-
-    /**
-     * Truncate the given string
-     *
-     * See: https://github.com/symfony/symfony/issues/11977
-     *
-     * @param string Text to truncate
-     * @param integer Length
-     * @param string Suffix to append
-     */
-    private function truncate($text, $length, $suffix = '...')
-    {
-        $computedLength = $length - strlen($suffix);
-
-        return strlen($text) > $computedLength ? substr($text, 0, $computedLength) . $suffix : $text;
-    }
 }
 

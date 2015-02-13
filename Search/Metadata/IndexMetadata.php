@@ -10,13 +10,16 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
-use Metadata\ClassMetadata;
-
 /**
  * Metadata for searchable objects
  */
-class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
+class IndexMetadata implements IndexMetadataInterface
 {
+    /**
+     * @var string
+     */
+    private $name;
+
     /**
      * @var string
      */
@@ -63,6 +66,14 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**
