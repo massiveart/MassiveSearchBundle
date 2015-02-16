@@ -3,6 +3,8 @@ language: php
 services:
   - elasticsearch
 
+sudo: false
+
 php:
   - 5.4
 
