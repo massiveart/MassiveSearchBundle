@@ -95,7 +95,6 @@ class SearchManager implements SearchManagerInterface
     {
         $metadata = $this->getMetadata($object);
 
-            die('asd');
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
             $indexName = $indexMetadata->getIndexName();
             $document = $this->converter->objectToDocument($indexMetadata, $object);

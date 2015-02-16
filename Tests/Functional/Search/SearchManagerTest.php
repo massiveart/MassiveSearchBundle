@@ -16,7 +16,7 @@ use Massive\Bundle\SearchBundle\Tests\Functional\BaseTestCase;
 
 class SearchManagerTest extends BaseTestCase
 {
-    public function testSearchManager()
+    public function testSearch()
     {
         $nbResults = 10;
 
@@ -63,5 +63,24 @@ class SearchManagerTest extends BaseTestCase
         // test PRE_INDEX dispatch
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface', $testSubscriber->preIndexMetadata);
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $testSubscriber->preIndexDocument);
+    }
+
+    public function testDeindex()
+    {
+        $product = new Product();
+        $product->setId(7);
+        $product->setTitle('Hello this is a product 7');
+        $product->setBody('To be or not to be, that is the question');
+        $product->setUrl('/foobar');
+        $product->setLocale('fr');
+
+        $this->getSearchManager()->index($product);
+        $res = $this->getSearchManager()->createSearch('Hello')->index('product')->execute();
+        $this->assertCount(1, $res);
+
+        $this->getSearchManager()->deindex($product);
+
+        $res = $this->getSearchManager()->createSearch('Hello')->index('product')->execute();
+        $this->assertCount(0, $res);
     }
 }
