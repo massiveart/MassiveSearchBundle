@@ -27,4 +27,9 @@ class NoopStrategy implements LocalizationStrategyInterface
     {
         return $indexName;
     }
+
+    public function isLocalizedIndexNameOf($baseIndexName, $candidateIndexName)
+    {
+        return true;
+    }
 }

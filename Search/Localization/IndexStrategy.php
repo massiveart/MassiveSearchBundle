@@ -28,6 +28,17 @@ class IndexStrategy implements LocalizationStrategyInterface
             return $indexName;
         }
 
-        return $indexName . '_' . $locale;
+        return $indexName . '_' . $locale . '_i18n';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isLocalizedIndexNameOf($baseIndexName, $candidateIndexName)
+    {
+        return (boolean) preg_match(sprintf(
+            '{^%s_[a-zA-Z_]+_i18n$}', 
+            $baseIndexName
+        ), $candidateIndexName);
     }
 }

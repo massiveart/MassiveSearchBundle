@@ -57,6 +57,7 @@ abstract class AdapterTestCase extends BaseTestCase
     public function purgeIndex($indexName)
     {
         $this->getAdapter()->purge($indexName);
+        usleep(1000);
     }
 
     public function testPurge()

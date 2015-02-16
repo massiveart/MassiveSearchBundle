@@ -82,7 +82,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         $metadata = $metadataFactory->getAllMetadata();
 
         foreach ($metadata as $class) {
-            if ($filter && !preg_match('{' . $filter .'}', $class->name)) {
+            if ($filter && !preg_match('{' . $filter . '}', $class->name)) {
                 continue;
             }
 

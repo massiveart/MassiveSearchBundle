@@ -25,7 +25,14 @@ class ElasticSearchAdapterTest extends AdapterTestCase
 
     public function flush($indexName)
     {
-        $this->client->indices()->flush(array('index' => $indexName));
+        $this->client->indices()->flush(array(
+            'index' => $indexName,
+            'full' => true,
+        ));
+
+        // there is a timing issue, we need to pause for a while
+        // after flusing for subsequent requests to not fail.
+        usleep(50000);
     }
 
     public function doGetAdapter()

@@ -19,6 +19,7 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use ZendSearch\Lucene;
 use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Adapter for the ZendSearch library
@@ -202,6 +203,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
             $indexName = basename($indexDir);
 
+
             $index = $this->getIndex($this->getIndexPath($indexName, false));
 
             $indexStats = array(
@@ -288,5 +290,32 @@ class ZendLuceneAdapter implements AdapterInterface
 
     public function purge($indexName)
     {
+        $indexPath = $this->getIndexPath($indexName);
+        $indexes= $this->listIndexes();
+
+        foreach ($indexes as $index) {
+            $fs = new Filesystem();
+            $isLocalizedVersion = $this->localizationStrategy->isLocalizedIndexNameOf($indexName, $index);
+
+            if (!$isLocalizedVersion) {
+                continue;
+            }
+
+            $indexPath = $this->basePath . '/' . $index;
+            $fs->remove($indexPath);
+        }
+    }
+
+    private function listIndexes()
+    {
+        $finder = new Finder();
+        $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);
+        $names = array();
+
+        foreach ($indexDirs as $file) {
+            $names[] = $file->getBasename();
+        }
+
+        return $names;
     }
 }
