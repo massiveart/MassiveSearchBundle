@@ -82,7 +82,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         $metadata = $metadataFactory->getAllMetadata();
 
         foreach ($metadata as $class) {
-            if ($filter && !preg_match('{' . $filter .'}', $class)) {
+            if ($filter && !preg_match('{' . $filter .'}', $class->name)) {
                 continue;
             }
 
@@ -111,7 +111,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
                 return;
             }
 
-            $output->writeln('Purging index [' . $indexName . ']');
+            $output->writeln('<info>Purging index</info>: ' . $indexName);
             $this->searchManager->purge($indexName);
             $this->purged[$indexName] = true;
         }
@@ -119,6 +119,18 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
 
     private function rebuildClass(OutputInterface $output, OrmMetadata $ormMetadata)
     {
-        $output->writeln('Rebuilding: ' . $ormMetadata->getName());
+        $output->write('<comment>Rebuilding</comment>: ' . $ormMetadata->getName());
+
+        $objects = $this->objectManager->getRepository($ormMetadata->name)->findAll();
+
+        $count = 0;
+        foreach ($objects as $object) {
+            $this->searchManager->index($object);
+            $count++;
+        }
+        $output->writeln(sprintf(
+            ' <info>[OK]</info> %s entities indexed',
+            $count
+        ));
     }
 }
