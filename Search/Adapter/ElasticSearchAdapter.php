@@ -191,9 +191,13 @@ class ElasticSearchAdapter implements AdapterInterface
     public function getStatus()
     {
         $indices = $this->client->indices()->status(array('index' => '_all'));
+        $indices = $indices['indices'];
+
 
         foreach ($indices as $indexName => $index) {
-            $status['idx:' . $indexName] = json_encode($index);
+            foreach ($index as $field => $value) {
+                $status['idx:' . $indexName . '.' . $field] = substr(trim(json_encode($value)), 0, 100);
+            }
         }
 
         return $status;
