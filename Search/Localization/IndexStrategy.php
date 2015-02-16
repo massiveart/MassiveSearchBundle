@@ -34,11 +34,15 @@ class IndexStrategy implements LocalizationStrategyInterface
     /**
      * {@inheritDoc}
      */
-    public function isLocalizedIndexNameOf($baseIndexName, $candidateIndexName)
+    public function isIndexVariantOf($indexName, $variantName)
     {
+        if ($indexName === $variantName) {
+            return true;
+        }
+
         return (boolean) preg_match(sprintf(
             '{^%s_[a-zA-Z_]+_i18n$}', 
-            $baseIndexName
-        ), $candidateIndexName);
+            $indexName
+        ), $variantName);
     }
 }

@@ -33,7 +33,7 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $res);
     }
 
-    public function provideIsLocalizedIndexOf()
+    public function provideisIndexVariantOf()
     {
         return array(
             array(
@@ -60,12 +60,12 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideIsLocalizedIndexOf
+     * @dataProvider provideisIndexVariantOf
      */
-    public function testIsLocalizedIndexOf($candidateIndexName, $realIndexName, $isLocalized)
+    public function testisIndexVariantOf($variantName, $indexName, $isVariant)
     {
         $strategy = new IndexStrategy();
-        $result = $strategy->isLocalizedIndexNameOf($realIndexName, $candidateIndexName);
-        $this->assertEquals($isLocalized, $result);
+        $result = $strategy->isIndexVariantOf($indexName, $variantName);
+        $this->assertEquals($isVariant, $result);
     }
 }

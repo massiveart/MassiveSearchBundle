@@ -23,13 +23,14 @@ interface LocalizationStrategyInterface
     public function localizeIndexName($indexName, $locale);
 
     /**
-     * Check to see if the candidate index name is a localized version of the
-     * base index name. This is used when purging indexes.
+     * Check to see if a given variant name is a variant of the
+     * given indexName. This is used to determine which indexes can
+     * be grouped together (e.g. when purging an index)
      *
      * @param string $baseIndexName
      * @param string $candidateIndexName
      *
      * @return boolean
      */
-    public function isLocalizedIndexNameOf($baseIndexName, $candidateIndexName);
+    public function isIndexVariantOf($indexName, $variantName);
 }

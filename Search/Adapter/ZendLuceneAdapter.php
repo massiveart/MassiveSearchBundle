@@ -295,7 +295,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         foreach ($indexes as $index) {
             $fs = new Filesystem();
-            $isLocalizedVersion = $this->localizationStrategy->isLocalizedIndexNameOf($indexName, $index);
+            $isLocalizedVersion = $this->localizationStrategy->isIndexVariantOf($indexName, $index);
 
             if (!$isLocalizedVersion) {
                 continue;

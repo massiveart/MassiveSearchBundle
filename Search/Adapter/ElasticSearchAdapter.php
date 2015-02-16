@@ -202,7 +202,7 @@ class ElasticSearchAdapter implements AdapterInterface
         $indexes = $this->listIndexes();
 
         foreach (array_keys($indexes) as $realIndexName) {
-            $isLocalizedVersion = $this->localizationStrategy->isLocalizedIndexNameOf($indexName, $realIndexName);
+            $isLocalizedVersion = $this->localizationStrategy->isIndexVariantOf($indexName, $realIndexName);
 
             if (!$isLocalizedVersion) {
                 continue;
