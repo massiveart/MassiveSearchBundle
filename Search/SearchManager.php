@@ -94,8 +94,12 @@ class SearchManager implements SearchManagerInterface
     public function deindex($object)
     {
         $metadata = $this->getMetadata($object);
-        $indexName = $metadata->getIndexName();
-        $document = $this->converter->objectToDocument($metadata, $object);
+
+            die('asd');
+        foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
+            $indexName = $indexMetadata->getIndexName();
+            $document = $this->converter->objectToDocument($indexMetadata, $object);
+        }
 
         $this->adapter->deindex($document, $indexName);
     }
