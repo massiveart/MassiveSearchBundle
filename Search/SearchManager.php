@@ -137,10 +137,8 @@ class SearchManager implements SearchManagerInterface
      */
     public function search(SearchQuery $query)
     {
-        $indexNames = $query->getIndexes();
-
-        if (null === $indexNames) {
-            throw new \Exception('Searching all indexes is not yet implemented');
+        if (!$query->getIndexes()) {
+            $query->setIndexes($this->getIndexNames());
         }
 
         $this->eventDispatcher->dispatch(
@@ -151,6 +149,7 @@ class SearchManager implements SearchManagerInterface
         $hits = $this->adapter->search($query);
 
         $reflections = array();
+
         /** @var QueryHit $hit */
         foreach ($hits as $hit) {
             $document = $hit->getDocument();
@@ -161,7 +160,7 @@ class SearchManager implements SearchManagerInterface
             }
 
             // we need a reflection instance of the document in event listeners
-            if (!isset($metas[$document->getClass()])) {
+            if (!isset($reflections[$document->getClass()])) {
                 $reflections[$document->getClass()] = new \ReflectionClass($document->getClass());
             }
 
@@ -191,5 +190,28 @@ class SearchManager implements SearchManagerInterface
     public function purge($indexName)
     {
         $this->adapter->purge($indexName);
+    }
+
+    public function getIndexNames()
+    {
+        $classNames = $this->metadataFactory->getAllClassNames();
+        $indexNames = array();
+
+        foreach ($classNames as $className) {
+            $metadata = $this->metadataFactory->getMetadataForClass($className);
+
+            if (null === $metadata) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Cannot get metadata for class "%s"', $className
+                ));
+            }
+            
+            $metadata = $metadata->getOutsideClassMetadata();
+            foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
+                $indexNames[$indexMetadata->getIndexName()] = $indexMetadata->getIndexName();
+            }
+        }
+
+        return array_values($indexNames);
     }
 }
