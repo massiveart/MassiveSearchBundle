@@ -46,16 +46,23 @@ class SearchManager implements SearchManagerInterface
      */
     protected $converter;
 
+    /**
+     * @var LocalizationStrategyInterface
+     */
+    protected $localizationStrategy;
+
     public function __construct(
         AdapterInterface $adapter,
         MetadataFactory $metadataFactory,
         ObjectToDocumentConverter $converter,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        LocalizationStrategyInterface $localizationStrategy
     ) {
         $this->adapter = $adapter;
         $this->metadataFactory = $metadataFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->converter = $converter;
+        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -96,11 +103,13 @@ class SearchManager implements SearchManagerInterface
         $metadata = $this->getMetadata($object);
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-            $indexName = $indexMetadata->getIndexName();
-            $document = $this->converter->objectToDocument($indexMetadata, $object);
-        }
+            $indexNames = $this->getLocalizedIndexNamesFor($indexMetadata->getIndexName());
 
-        $this->adapter->deindex($document, $indexName);
+            foreach ($indexNames as $indexName) {
+                $document = $this->converter->objectToDocument($indexMetadata, $object);
+                $this->adapter->deindex($document, $indexName);
+            }
+        }
     }
 
     /**
@@ -111,7 +120,14 @@ class SearchManager implements SearchManagerInterface
         $indexMetadatas = $this->getMetadata($object);
 
         foreach ($indexMetadatas->getIndexMetadatas() as $indexMetadata) {
+
             $indexName = $indexMetadata->getIndexName();
+
+            // if the index is locale aware, localize the index name
+            if ($indexMetadata->getLocaleField()) {
+                $indexName = $this->localizationStrategy->localizeIndexName($indexName);
+            }
+
             $document = $this->converter->objectToDocument($indexMetadata, $object);
             $evaluator = $this->converter->getFieldEvaluator();
 
@@ -138,7 +154,7 @@ class SearchManager implements SearchManagerInterface
     public function search(SearchQuery $query)
     {
         if (!$query->getIndexes()) {
-            $query->setIndexes($this->getIndexNames());
+            $query->setIndexes($this->getIndexNames($query->getLocale()));
         }
 
         $this->eventDispatcher->dispatch(
@@ -192,7 +208,7 @@ class SearchManager implements SearchManagerInterface
         $this->adapter->purge($indexName);
     }
 
-    public function getIndexNames()
+    public function getIndexNames($locale = null)
     {
         $classNames = $this->metadataFactory->getAllClassNames();
         $indexNames = array();
@@ -207,11 +223,42 @@ class SearchManager implements SearchManagerInterface
             }
             
             $metadata = $metadata->getOutsideClassMetadata();
+
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-                $indexNames[$indexMetadata->getIndexName()] = $indexMetadata->getIndexName();
+                $indexName = $indexMetadata->getIndexName();
+                $isLocalized = (boolean) $indexMetadata->getLocaleField();
+
+                // handle localization
+                if ($isLocalized && $locale) {
+                    $indexName = $this->localizationStrategy->localizeIndexName($indexName, $locale);
+
+                } elseif ($isLocalized) {
+
+                    foreach ($this->getLocalizedIndexNamesFor($indexName) as $localizedIndexName) {
+                        $indexNames[$indexName] = $localizedIndexName;
+                    }
+                    continue;
+                }
+
+                $indexNames[$indexName] = $indexName;
             }
         }
 
         return array_values($indexNames);
+    }
+
+    private function getLocalizedIndexNamesFor($indexName)
+    {
+        $adapterIndexNames = $this->adapter->listIndexes();
+
+        $indexNames[] = $indexName;
+
+        foreach ($adapterIndexNames as $adapterIndexName) {
+            if ($this->localizationStrategy->isIndexVariantOf($indexName, $adapterIndexName)) {
+                $indexNames[] = $adapterIndexName;
+            }
+        }
+
+        return $indexNames;
     }
 }

@@ -37,6 +37,6 @@ class ElasticSearchAdapterTest extends AdapterTestCase
 
     public function doGetAdapter()
     {
-        return new ElasticSearchAdapter($this->getFactory(), new NoopStrategy(), $this->client);
+        return new ElasticSearchAdapter($this->getFactory(), $this->client);
     }
 }

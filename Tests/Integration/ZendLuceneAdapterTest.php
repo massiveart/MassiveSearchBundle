@@ -41,7 +41,7 @@ class ZendLuceneAdapterTest extends AdapterTestCase
 
     public function doGetAdapter()
     {
-        return new ZendLuceneAdapter($this->getFactory(), new NoopStrategy(), $this->baseDir, true);
+        return new ZendLuceneAdapter($this->getFactory(), $this->baseDir, true);
     }
 
     public function provideSearch()

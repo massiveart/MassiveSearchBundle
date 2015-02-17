@@ -17,8 +17,7 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 abstract class AdapterTestCase extends BaseTestCase
 {
-    const INDEXNAME1 = 'massive_search_test1';
-    const INDEXNAME2 = 'massive_search_test2';
+    const INDEXNAME = 'massive_search_test';
     const DOCCLASS = '\Some\Test\Class\Name';
 
     protected $factory;
@@ -30,7 +29,7 @@ abstract class AdapterTestCase extends BaseTestCase
         parent::setUp();
         $this->idCounter = 0;
         $this->factory = new Factory();
-        $this->purgeIndex(self::INDEXNAME1);
+        $this->purgeIndex(self::INDEXNAME);
         $this->adapter = null;
     }
 
@@ -67,18 +66,18 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->createIndex();
         $query = new SearchQuery('One');
         $query->setIndexes(array(
-            self::INDEXNAME1
+            self::INDEXNAME
         ));
         $res = $adapter->search($query);
         $this->assertCount(1, $res);
 
-        $adapter->purge(self::INDEXNAME1);
-        $this->flush(self::INDEXNAME1);
+        $adapter->purge(self::INDEXNAME);
+        $this->flush(self::INDEXNAME);
 
         $adapter = $this->getAdapter();
         $query = new SearchQuery('One');
         $query->setIndexes(array(
-            self::INDEXNAME1
+            self::INDEXNAME
         ));
         $res = $adapter->search($query);
 
@@ -100,7 +99,7 @@ abstract class AdapterTestCase extends BaseTestCase
         $query = new SearchQuery('One');
 
         $query->setIndexes(array(
-            self::INDEXNAME1
+            self::INDEXNAME
         ));
         $res = $this->getAdapter()->search($query);
 
@@ -128,7 +127,7 @@ abstract class AdapterTestCase extends BaseTestCase
         $this->createIndex();
 
         $query = new SearchQuery($query);
-        $query->setIndexes(array(self::INDEXNAME1));
+        $query->setIndexes(array(self::INDEXNAME));
         $res = $this->getAdapter()->search($query);
 
         $this->assertCount($expectedNbResults, $res);
@@ -147,23 +146,23 @@ abstract class AdapterTestCase extends BaseTestCase
         $doc = $this->factory->makeDocument();
         $doc->setId(1);
         $doc->setClass(self::DOCCLASS);
-        $this->getAdapter()->deindex($doc, self::INDEXNAME1);
-        $this->flush(self::INDEXNAME1);
+        $this->getAdapter()->deindex($doc, self::INDEXNAME);
+        $this->flush(self::INDEXNAME);
 
         $query = new SearchQuery('One');
-        $query->setIndexes(array(self::INDEXNAME1));
+        $query->setIndexes(array(self::INDEXNAME));
         $res = $this->getAdapter()->search($query);
 
         $this->assertCount(0, $res);
 
         $query = new SearchQuery('Two');
-        $query->setIndexes(array(self::INDEXNAME1));
+        $query->setIndexes(array(self::INDEXNAME));
         $res = $this->getAdapter()->search($query);
 
         $this->assertCount(1, $res);
     }
 
-    protected function createDocument($title, $locale = null)
+    protected function createDocument($title)
     {
         $this->idCounter++;
 
@@ -171,7 +170,6 @@ abstract class AdapterTestCase extends BaseTestCase
         $document->setId($this->idCounter);
         $document->setClass(self::DOCCLASS);
         $document->setTitle($title);
-        $document->setLocale($locale);
         $document->addField($this->factory->makeField('title', $title, 'string'));
         $text = <<<EOT
 This section is a brief introduction to reStructuredText (reST) concepts and syntax, intended to provide authors with enough information to author documents documentively. Since reST was designed to be a simple, unobtrusive markup language, this will not take too long.
@@ -182,13 +180,13 @@ EOT
         return $document;
     }
 
-    protected function createIndex($index = null, $locale = null)
+    protected function createIndex()
     {
-        $index = $index ? : self::INDEXNAME1;
+        $index = self::INDEXNAME;
 
         $documents = array(
-            $this->createDocument('Document One', $locale),
-            $this->createDocument('Document Two', $locale),
+            $this->createDocument('Document One'),
+            $this->createDocument('Document Two'),
         );
 
         foreach ($documents as $document) {

@@ -16,7 +16,6 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Elasticsearch\Client as ElasticSearchClient;
-use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
  * ElasticSearch adapter using official client:
@@ -45,23 +44,25 @@ class ElasticSearchAdapter implements AdapterInterface
     private $client;
 
     /**
-     * @var LocalizationStrategyInterface
+     * @var boolean
      */
-    private $localizationStrategy;
+    private $indexListLoaded;
+
+    /*
+     * @var array
+     */
+    private $indexList;
 
     /**
      * @param string $basePath Base filesystem path for the index
      */
     public function __construct(
         Factory $factory,
-        LocalizationStrategyInterface $localizationStrategy,
-        ElasticSearchClient $client,
-        $locales = array()
+        ElasticSearchClient $client
     )
     {
         $this->factory = $factory;
         $this->client = $client;
-        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -69,8 +70,6 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $localizedIndexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
-
         $fields = array();
         foreach ($document->getFields() as $massiveField) {
             $fields = array();
@@ -92,9 +91,12 @@ class ElasticSearchAdapter implements AdapterInterface
         $fields[self::CLASS_TAG] = $document->getClass();
         $fields[self::IMAGE_URL] = $document->getImageUrl();
 
+        // ensure that the new index name is listed
+        $this->indexList[$indexName] = $indexName;
+
         $params = array(
             'id' => $document->getId(),
-            'index' => $localizedIndexName,
+            'index' => $indexName,
             'type' => $this->documentToType($document),
             'body' => $fields,
         );
@@ -118,8 +120,6 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function deindex(Document $document, $indexName)
     {
-        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
-
         $params = array(
             'index' => $indexName,
             'type' => $this->documentToType($document),
@@ -136,10 +136,6 @@ class ElasticSearchAdapter implements AdapterInterface
     public function search(SearchQuery $searchQuery)
     {
         $indexNames = $searchQuery->getIndexes();
-
-        foreach ($indexNames as &$indexName) {
-            $indexName = $this->localizationStrategy->localizeIndexName($indexName, $searchQuery->getLocale());
-        }
 
         $queryString = $searchQuery->getQueryString();
 
@@ -199,29 +195,25 @@ class ElasticSearchAdapter implements AdapterInterface
 
     public function purge($indexName)
     {
-        $indexes = $this->listIndexes();
-
-        foreach (array_keys($indexes) as $realIndexName) {
-            $isLocalizedVersion = $this->localizationStrategy->isIndexVariantOf($indexName, $realIndexName);
-
-            if (!$isLocalizedVersion) {
-                continue;
-            }
-
-            try {
-                $this->client->indices()->delete(array('index' => $realIndexName));
-            } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
-            }
-
-            $this->client->indices()->create(array('index' => $realIndexName));
+        try {
+            $this->client->indices()->delete(array('index' => $indexName));
+        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
         }
+
+        $this->client->indices()->create(array('index' => $indexName));
     }
 
-    private function listIndexes()
+    public function listIndexes()
     {
-        $indices = $this->client->indices()->status(array('index' => '_all'));
-        $indexes = $indices['indices'];
+        if (!$this->indexListLoaded) {
+            $indices = $this->client->indices()->status(array('index' => '_all'));
+            $indexes = $indices['indices'];
+            $this->indexList = array_combine(
+                array_keys($indexes),
+                $indexes
+            );
+        }
 
-        return $indexes;
+        return $this->indexList;
     }
 }

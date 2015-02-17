@@ -27,9 +27,6 @@ use Symfony\Component\Filesystem\Filesystem;
  * https://github.com/zendframework/ZendSearch
  * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html
  *   (docs for 1.2 version apply equally to 2.0)
- *
- * Note this adapter implements localization by creating an index for each
- * locale if a locale is specified.
  */
 class ZendLuceneAdapter implements AdapterInterface
 {
@@ -59,16 +56,10 @@ class ZendLuceneAdapter implements AdapterInterface
     private $hideIndexException;
 
     /**
-     * @var LocalizationStrategyInterface
-     */
-    private $localizationStrategy;
-
-    /**
      * @param string $basePath Base filesystem path for the index
      */
     public function __construct(
         Factory $factory,
-        LocalizationStrategyInterface $localizationStrategy,
         $basePath,
         $hideIndexException = false
     )
@@ -76,7 +67,6 @@ class ZendLuceneAdapter implements AdapterInterface
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
-        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -84,7 +74,7 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $index = $this->getLocalizedLuceneIndex($document, $indexName);
+        $index = $this->getLuceneIndex($indexName);
 
         // check to see if the subject already exists
         $this->removeExisting($index, $document);
@@ -122,7 +112,7 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function deindex(Document $document, $indexName)
     {
-        $index = $this->getLocalizedLuceneIndex($document, $indexName);
+        $index = $this->getLuceneIndex($indexName);
         $this->removeExisting($index, $document);
         $index->commit();
     }
@@ -133,16 +123,12 @@ class ZendLuceneAdapter implements AdapterInterface
     public function search(SearchQuery $searchQuery)
     {
         $indexNames = $searchQuery->getIndexes();
-        $locale = $searchQuery->getLocale();
         $queryString = $searchQuery->getQueryString();
 
         $searcher = new Lucene\MultiSearcher();
 
         foreach ($indexNames as $indexName) {
-            $indexPath = $this->getIndexPath(
-                $this->localizationStrategy->localizeIndexName($indexName, $locale)
-            );
-
+            $indexPath = $this->getIndexPath($indexName);
             if (!file_exists($indexPath)) {
                 continue;
             }
@@ -223,19 +209,6 @@ class ZendLuceneAdapter implements AdapterInterface
         return $status;
     }
 
-    /**
-     * Returns the lucene index for the locale determined by the document
-     * @param Document $document
-     * @param $indexName
-     * @return Lucene\SearchIndexInterface
-     */
-    private function getLocalizedLuceneIndex(Document $document, $indexName)
-    {
-        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
-
-        return $this->getLuceneIndex($indexName);
-    }
-
     private function getLuceneIndex($indexName)
     {
         $indexPath = $this->getIndexPath($indexName);
@@ -295,18 +268,12 @@ class ZendLuceneAdapter implements AdapterInterface
 
         foreach ($indexes as $index) {
             $fs = new Filesystem();
-            $isLocalizedVersion = $this->localizationStrategy->isIndexVariantOf($indexName, $index);
-
-            if (!$isLocalizedVersion) {
-                continue;
-            }
-
             $indexPath = $this->basePath . '/' . $index;
             $fs->remove($indexPath);
         }
     }
 
-    private function listIndexes()
+    public function listIndexes()
     {
         $finder = new Finder();
         $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);

@@ -14,7 +14,6 @@
         </service>
         <service id="massive_search.adapter.elastic" class="%massive_search.search.adapter.elastic.class%">
             <argument type="service" id="massive_search.factory" />
-            <argument type="service" id="massive_search.localization_strategy" />
             <argument type="service" id="massive_search.adapter.elastic.client" />
         </service>
     </services>
