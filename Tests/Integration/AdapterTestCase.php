@@ -64,6 +64,7 @@ abstract class AdapterTestCase extends BaseTestCase
     {
         $adapter = $this->getAdapter();
         $this->createIndex();
+
         $query = new SearchQuery('One');
         $query->setIndexes(array(
             self::INDEXNAME
@@ -192,6 +193,8 @@ EOT
         foreach ($documents as $document) {
             $this->getAdapter()->index($document, $index);
         }
+
+        $this->flush(self::INDEXNAME);
     }
 
     protected function getFactory()

@@ -102,6 +102,11 @@ class TestAdapter implements AdapterInterface
         return $hits;
     }
 
+    public function listIndexes()
+    {
+        return array_keys($this->documents);
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -76,12 +76,14 @@ class SearchManagerTest extends ProphecyTestCase
         $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
         $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
         $this->fieldEvaluator = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator');
+        $this->localizationStrategy = $this->prophesize('Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface');
 
         $this->searchManager = new SearchManager(
             $this->adapter->reveal(),
             $this->metadataFactory->reveal(),
             $this->converter->reveal(),
-            $this->eventDispatcher->reveal()
+            $this->eventDispatcher->reveal(),
+            $this->localizationStrategy->reveal()
         );
 
         $this->product = new \Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product();

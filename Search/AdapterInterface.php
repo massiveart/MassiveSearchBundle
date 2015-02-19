@@ -55,4 +55,11 @@ interface AdapterInterface
      * @return array
      */
     public function getStatus();
+
+    /**
+     * List all index names in the search implementation
+     *
+     * @return array
+     */
+    public function listIndexes();
 }

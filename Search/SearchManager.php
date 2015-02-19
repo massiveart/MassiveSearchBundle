@@ -103,7 +103,7 @@ class SearchManager implements SearchManagerInterface
         $metadata = $this->getMetadata($object);
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-            $indexNames = $this->getLocalizedIndexNamesFor($indexMetadata->getIndexName());
+            $indexNames = $this->getExpandedIndexNamesFor($indexMetadata->getIndexName());
 
             foreach ($indexNames as $indexName) {
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
@@ -123,13 +123,13 @@ class SearchManager implements SearchManagerInterface
 
             $indexName = $indexMetadata->getIndexName();
 
-            // if the index is locale aware, localize the index name
-            if ($indexMetadata->getLocaleField()) {
-                $indexName = $this->localizationStrategy->localizeIndexName($indexName);
-            }
-
             $document = $this->converter->objectToDocument($indexMetadata, $object);
             $evaluator = $this->converter->getFieldEvaluator();
+
+            // if the index is locale aware, localize the index name
+            if ($indexMetadata->getLocaleField()) {
+                $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+            }
 
             $this->eventDispatcher->dispatch(
                 SearchEvents::PRE_INDEX,
@@ -153,9 +153,7 @@ class SearchManager implements SearchManagerInterface
      */
     public function search(SearchQuery $query)
     {
-        if (!$query->getIndexes()) {
-            $query->setIndexes($this->getIndexNames($query->getLocale()));
-        }
+        $this->expandQueryIndexes($query);
 
         $this->eventDispatcher->dispatch(
             SearchEvents::SEARCH,
@@ -208,6 +206,12 @@ class SearchManager implements SearchManagerInterface
         $this->adapter->purge($indexName);
     }
 
+    /**
+     * List all of the expanded index names in the search implementation
+     * optionally only in the given locale.
+     *
+     * @param string $locale
+     */
     public function getIndexNames($locale = null)
     {
         $classNames = $this->metadataFactory->getAllClassNames();
@@ -226,39 +230,47 @@ class SearchManager implements SearchManagerInterface
 
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
                 $indexName = $indexMetadata->getIndexName();
-                $isLocalized = (boolean) $indexMetadata->getLocaleField();
 
-                // handle localization
-                if ($isLocalized && $locale) {
-                    $indexName = $this->localizationStrategy->localizeIndexName($indexName, $locale);
-
-                } elseif ($isLocalized) {
-
-                    foreach ($this->getLocalizedIndexNamesFor($indexName) as $localizedIndexName) {
-                        $indexNames[$indexName] = $localizedIndexName;
-                    }
-                    continue;
+                foreach ($this->getExpandedIndexNamesFor($indexName, $locale) as $localizedIndexName) {
+                    $indexNames[$localizedIndexName] = $localizedIndexName;
                 }
-
-                $indexNames[$indexName] = $indexName;
             }
         }
 
         return array_values($indexNames);
     }
 
-    private function getLocalizedIndexNamesFor($indexName)
+    private function getExpandedIndexNamesFor($indexName, $locale = null)
     {
         $adapterIndexNames = $this->adapter->listIndexes();
-
-        $indexNames[] = $indexName;
+        $indexNames = array();
 
         foreach ($adapterIndexNames as $adapterIndexName) {
-            if ($this->localizationStrategy->isIndexVariantOf($indexName, $adapterIndexName)) {
+            if ($this->localizationStrategy->isIndexVariantOf($indexName, $adapterIndexName, $locale)) {
                 $indexNames[] = $adapterIndexName;
             }
         }
 
         return $indexNames;
+    }
+
+    private function expandQueryIndexes(SearchQuery $query)
+    {
+        if (!$query->getIndexes()) {
+            $indexNames = $this->getIndexNames($query->getLocale());
+            $query->setIndexes($indexNames);
+            return;
+        }
+
+        $expandedIndexes = array();
+
+        foreach ($query->getIndexes() as $index) {
+            foreach ($this->getExpandedIndexNamesFor($index) as $expandedIndex) {
+                $expandedIndexes[$expandedIndex] = $expandedIndex;
+            }
+        }
+
+        $query->setIndexes($expandedIndexes);
+
     }
 }
