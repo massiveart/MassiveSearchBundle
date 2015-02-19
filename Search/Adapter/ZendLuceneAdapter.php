@@ -264,13 +264,8 @@ class ZendLuceneAdapter implements AdapterInterface
     public function purge($indexName)
     {
         $indexPath = $this->getIndexPath($indexName);
-        $indexes= $this->listIndexes();
-
-        foreach ($indexes as $index) {
-            $fs = new Filesystem();
-            $indexPath = $this->basePath . '/' . $index;
-            $fs->remove($indexPath);
-        }
+        $fs = new Filesystem();
+        $fs->remove($indexPath);
     }
 
     public function listIndexes()

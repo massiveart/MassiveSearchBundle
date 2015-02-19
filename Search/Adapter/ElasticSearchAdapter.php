@@ -210,7 +210,7 @@ class ElasticSearchAdapter implements AdapterInterface
             $indexes = $indices['indices'];
             $this->indexList = array_combine(
                 array_keys($indexes),
-                $indexes
+                array_keys($indexes)
             );
         }
 
