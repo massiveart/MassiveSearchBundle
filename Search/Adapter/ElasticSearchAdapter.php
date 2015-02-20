@@ -186,6 +186,7 @@ class ElasticSearchAdapter implements AdapterInterface
 
         $indices = $this->client->indices()->status(array('index' => '_all'));
         $indexes = $indices['indices'];
+        $status = array();
 
         foreach ($indexes as $indexName => $index) {
             foreach ($index as $field => $value) {

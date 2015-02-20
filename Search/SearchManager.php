@@ -211,7 +211,10 @@ class SearchManager implements SearchManagerInterface
     public function purge($indexName)
     {
         $this->indexesToFlush[$indexName] = true;
-        $this->adapter->purge($indexName);
+        $indexes = $this->getExpandedIndexNamesFor($indexName);
+        foreach ($indexes as $indexName) {
+            $this->adapter->purge($indexName);
+        }
     }
 
     /**
