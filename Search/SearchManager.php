@@ -51,6 +51,11 @@ class SearchManager implements SearchManagerInterface
      */
     protected $localizationStrategy;
 
+    /**
+     * @var array
+     */
+    protected $indexesToFlush = array();
+
     public function __construct(
         AdapterInterface $adapter,
         MetadataFactory $metadataFactory,
@@ -103,6 +108,7 @@ class SearchManager implements SearchManagerInterface
         $metadata = $this->getMetadata($object);
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
+            $this->indexesToFlush[$indexMetadata->getIndexName()] = true;
             $indexNames = $this->getExpandedIndexNamesFor($indexMetadata->getIndexName());
 
             foreach ($indexNames as $indexName) {
@@ -120,6 +126,7 @@ class SearchManager implements SearchManagerInterface
         $indexMetadatas = $this->getMetadata($object);
 
         foreach ($indexMetadatas->getIndexMetadatas() as $indexMetadata) {
+            $this->indexesToFlush[$indexMetadata->getIndexName()] = true;
 
             $indexName = $indexMetadata->getIndexName();
 
@@ -203,6 +210,7 @@ class SearchManager implements SearchManagerInterface
      */
     public function purge($indexName)
     {
+        $this->indexesToFlush[$indexName] = true;
         $this->adapter->purge($indexName);
     }
 
@@ -238,6 +246,15 @@ class SearchManager implements SearchManagerInterface
         }
 
         return array_values($indexNames);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush()
+    {
+        $this->adapter->flush(array_keys($this->indexesToFlush));
+        $this->indexesToFlush = array();
     }
 
     private function getExpandedIndexNamesFor($indexName, $locale = null)

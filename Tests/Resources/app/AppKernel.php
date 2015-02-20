@@ -37,7 +37,18 @@ class AppKernel extends TestKernel
         }
         $fs->mkdir(self::getEntityDir());
 
+        if (file_exists(self::getTempConfig())) {
+            $fs->remove(self::getTempConfig());
+        }
+
         $fs->remove(__DIR__ . '/../Resources/app/data');
+    }
+
+    public static function clearData()
+    {
+        $fs = new Filesystem();
+        $fs->remove(__DIR__ . '/cache/data');
+        $fs->mkdir(__DIR__ . '/cache/data');
     }
 
     public static function installDistEnvironment()
@@ -63,13 +74,8 @@ class AppKernel extends TestKernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__ . '/config/config.php');
-
-        if ($this->getEnvironment() === 'integration') {
-            if (file_exists(self::getTempConfig())) {
-                $loader->load(self::getTempConfig());
-            }
-        } else {
-            $loader->load(__DIR__ . '/config/massivesearchbundle.yml');
-        }
+        $loader->load(__DIR__ . '/config/massivesearchbundle.yml');
+        $loader->load(__DIR__ . '/../../../Resources/config/adapter_elastic.xml');
+        $loader->load(__DIR__ . '/../../../Resources/config/adapter_zendlucene.xml');
     }
 }

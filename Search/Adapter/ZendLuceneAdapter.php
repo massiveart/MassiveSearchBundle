@@ -280,4 +280,12 @@ class ZendLuceneAdapter implements AdapterInterface
 
         return $names;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush(array $indexNames)
+    {
+    }
+
 }

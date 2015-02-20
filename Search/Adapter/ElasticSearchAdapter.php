@@ -184,6 +184,9 @@ class ElasticSearchAdapter implements AdapterInterface
     {
         $indexes = $this->listIndexes();
 
+        $indices = $this->client->indices()->status(array('index' => '_all'));
+        $indexes = $indices['indices'];
+
         foreach ($indexes as $indexName => $index) {
             foreach ($index as $field => $value) {
                 $status['idx:' . $indexName . '.' . $field] = substr(trim(json_encode($value)), 0, 100);
@@ -197,10 +200,9 @@ class ElasticSearchAdapter implements AdapterInterface
     {
         try {
             $this->client->indices()->delete(array('index' => $indexName));
+            $this->indexListLoaded = false;
         } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
         }
-
-        $this->client->indices()->create(array('index' => $indexName));
     }
 
     public function listIndexes()
@@ -212,8 +214,20 @@ class ElasticSearchAdapter implements AdapterInterface
                 array_keys($indexes),
                 array_keys($indexes)
             );
+            $this->indexListLoaded = true;
         }
 
         return $this->indexList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush(array $indexNames)
+    {
+        $this->client->indices()->flush(array(
+            'index' => implode(', ', $indexNames),
+            'full' => true,
+        ));
     }
 }

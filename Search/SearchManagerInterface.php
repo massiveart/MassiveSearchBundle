@@ -61,4 +61,11 @@ interface SearchManagerInterface
      * @return array
      */
     public function getStatus();
+
+    /**
+     * Flush the adapter.
+     *
+     * The manager should keep track of the indexes that need flushing.
+     */
+    public function flush();
 }

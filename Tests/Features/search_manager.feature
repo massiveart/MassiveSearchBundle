@@ -4,13 +4,7 @@ Feature: Search Manager
     I should be able to use the search manager API
 
     Background:
-        Given I have the following configuration:
-        """
-        massive_search:
-            adapter: %massive_test_adapter%
-            localization_strategy: noop
-        """
-        And the entity "Car" exists:
+         Given the entity "Car" exists:
         """
         <?php
 
@@ -27,6 +21,7 @@ Feature: Search Manager
             public $image;
         }
         """
+        And I purge the index "car"
         And that the following mapping for "Car" exists:
         """
         <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
