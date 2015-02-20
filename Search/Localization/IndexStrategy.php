@@ -28,7 +28,9 @@ class IndexStrategy implements LocalizationStrategyInterface
             return $indexName;
         }
 
-        return $indexName . '_' . $locale . '_i18n';
+        $indexName = str_replace('-', '_', $indexName);
+
+        return $indexName . '-' . $locale . '-i18n';
     }
 
     /**
@@ -41,7 +43,7 @@ class IndexStrategy implements LocalizationStrategyInterface
         }
 
         return (boolean) preg_match(sprintf(
-            '{^%s_%s_i18n$}', 
+            '{^%s-%s-i18n$}', 
             $indexName,
             $locale ? : '[a-zA-Z_]+'
         ), $variantName);

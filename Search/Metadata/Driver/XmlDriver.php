@@ -222,6 +222,13 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $contextName = (string) $context['name'];
 
             $contextMapping = $this->getIndexMapping($context);
+            $contextMapping = array_filter($contextMapping, function ($value) {
+                if (null === $value) {
+                    return false;
+                }
+
+                return true;
+            });
             $contextMappings[$contextName] = array_merge(
                 $indexMapping,
                 $contextMapping
