@@ -18,6 +18,7 @@ class StatusCommandTest extends BaseTestCase
 {
     public function setUp()
     {
+        parent::setUp();
         $command = new StatusCommand();
         $application = new Application($this->getContainer()->get('kernel'));
         $command->setApplication($application);

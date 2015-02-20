@@ -13,13 +13,24 @@ namespace Massive\Bundle\SearchBundle\Tests\Functional;
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Symfony\Component\Filesystem\Filesystem;
+use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
 
 abstract class BaseTestCase extends SymfonyCmfBaseTestCase
 {
     public function setUp()
     {
-        $fs = new Filesystem();
-        $fs->remove(__DIR__ . '/../Resources/app/data');
+        AppKernel::resetEnvironment();
+        AppKernel::installDistEnvironment();
+    }
+
+    public function tearDown()
+    {
+        AppKernel::resetEnvironment();
+    }
+
+    protected static function getKernelClass()
+    {
+        return 'Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel';
     }
 
     protected function generateIndex($nbResults)

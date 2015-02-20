@@ -19,6 +19,7 @@ class QueryCommandTest extends BaseTestCase
 {
     public function setUp()
     {
+        parent::setUp();
         $command = new QueryCommand();
         $application = new Application($this->getContainer()->get('kernel'));
         $command->setApplication($application);

@@ -70,8 +70,9 @@ class TestAdapter implements AdapterInterface
     public function search(SearchQuery $searchQuery)
     {
         $hits = array();
+        $indexes = $searchQuery->getIndexes() ? : array_keys($this->documents);
 
-        foreach ($searchQuery->getIndexes() as $index) {
+        foreach ($indexes as $index) {
             if (!isset($this->documents[$index])) {
                 continue;
             }
@@ -81,9 +82,6 @@ class TestAdapter implements AdapterInterface
 
                 $isHit = false;
 
-                if (!$document instanceof \Massive\Bundle\SearchBundle\Search\Document) {
-                    var_dump($document);die();;
-                }
                 foreach ($document->getFields() as $field) {
                     if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $field->getValue())) {
                         $isHit = true;

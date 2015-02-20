@@ -106,8 +106,13 @@ class MassiveSearchExtension extends Extension
     {
         $loader->load('metadata.xml');
 
-        $bundles = $container->getParameter('kernel.bundles');
+        $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'));
+        $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
+        $fileLocator->replaceArgument(0, $metadataPaths);
+    }
 
+    private function getBundleMappingPaths($bundles)
+    {
         $metadataPaths = array();
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
@@ -128,7 +133,6 @@ class MassiveSearchExtension extends Extension
             }
         }
 
-        $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
-        $fileLocator->replaceArgument(0, $metadataPaths);
+        return $metadataPaths;
     }
 }

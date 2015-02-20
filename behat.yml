@@ -1,0 +1,17 @@
+default:
+    suites:
+        default:
+            type: symfony_bundle
+            contexts:
+                - Massive\Bundle\SearchBundle\Behat\SearchContext
+            bundle: MassiveSearchBundle
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                path: Tests/Resources/app/AppKernel.php
+                class: Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel
+                bootstrap: vendor/symfony-cmf/testing/bootstrap/bootstrap.php
+            context:
+                path_suffix: Tests/Features
+        Behat\WebApiExtension:
+            base_url: http://localhost:8000/
