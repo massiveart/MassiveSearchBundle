@@ -17,9 +17,9 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
     public function provideStrategy()
     {
         return array(
-            array('hello', 'fr', 'hello_fr_i18n'),
+            array('hello', 'fr', 'hello-fr-i18n'),
             array('hello', null, 'hello'),
-            array('', 'fr', '_fr_i18n'),
+            array('', 'fr', '-fr-i18n'),
         );
     }
 
@@ -42,17 +42,22 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
                 false,
             ),
             array(
-                'my_index_fr_i18n',
+                'my_index-fr-i18n',
                 'my_index',
+                true
+            ),
+            array(
+                'foo_bar_index-de_at-i18n',
+                'foo_bar_index',
                 true
             ),
             array(
                 'foo_bar_index_de_at_i18n',
                 'foo_bar_index',
-                true
+                false
             ),
             array(
-                'foo_bar_foo_index_de_at_i18n',
+                'foo_bar_foo_index_de-at-i18n',
                 'foo_bar_index',
                 false
             ),
