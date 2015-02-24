@@ -11,7 +11,6 @@
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -20,7 +19,7 @@ class IndexRebuildEvent extends Event
     /**
      * @param mixed $filter Regex filter for the object class
      * @param mixed $purge If the indexes should be purged
-     * @param OutputInterface $output 
+     * @param OutputInterface $output
      */
     public function __construct($filter, $purge, OutputInterface $output = null)
     {
@@ -34,14 +33,13 @@ class IndexRebuildEvent extends Event
         return $this->filter;
     }
 
-    public function getPurge() 
+    public function getPurge()
     {
         return $this->purge;
     }
 
-    public function getOutput() 
+    public function getOutput()
     {
         return $this->output;
     }
 }
-

@@ -43,7 +43,7 @@ class IndexStrategy implements LocalizationStrategyInterface
         }
 
         return (boolean) preg_match(sprintf(
-            '{^%s-%s-i18n$}', 
+            '{^%s-%s-i18n$}',
             $indexName,
             $locale ? : '[a-zA-Z_]+'
         ), $variantName);

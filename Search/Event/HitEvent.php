@@ -33,5 +33,4 @@ class HitEvent extends Event
     {
         return $this->documentReflection;
     }
-
 }

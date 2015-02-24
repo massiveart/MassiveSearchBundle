@@ -14,4 +14,3 @@ massive_search:
 parameters:
     massive_search.adapter.zend_lucene.basepath: %kernel.root_dir%/cache/data
     massive_search.adapter.zend_lucene.hide_index_exception: true
-

@@ -59,8 +59,7 @@ class ElasticSearchAdapter implements AdapterInterface
     public function __construct(
         Factory $factory,
         ElasticSearchClient $client
-    )
-    {
+    ) {
         $this->factory = $factory;
         $this->client = $client;
     }
@@ -144,8 +143,8 @@ class ElasticSearchAdapter implements AdapterInterface
             'query' => array(
                 'query_string' => array(
                     'query' => $queryString,
-                )
-            )
+                ),
+            ),
         );
 
         $res = $this->client->search($params);

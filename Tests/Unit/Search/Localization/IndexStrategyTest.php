@@ -44,22 +44,22 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
             array(
                 'my_index-fr-i18n',
                 'my_index',
-                true
+                true,
             ),
             array(
                 'foo_bar_index-de_at-i18n',
                 'foo_bar_index',
-                true
+                true,
             ),
             array(
                 'foo_bar_index_de_at_i18n',
                 'foo_bar_index',
-                false
+                false,
             ),
             array(
                 'foo_bar_foo_index_de-at-i18n',
                 'foo_bar_index',
-                false
+                false,
             ),
         );
     }

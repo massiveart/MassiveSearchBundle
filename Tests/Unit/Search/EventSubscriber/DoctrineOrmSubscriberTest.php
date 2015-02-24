@@ -40,7 +40,7 @@ class DoctrineOrmSubscriberTest extends ProphecyTestCase
     public function setUp()
     {
         $this->searchManager = $this->prophesize('Massive\Bundle\SearchBundle\Search\SearchManager');
-        $this->entity = new \stdClass;
+        $this->entity = new \stdClass();
         $this->event = $this->prophesize('Doctrine\ORM\Event\LifecycleEventArgs');
         $this->event->getEntity()->willReturn($this->entity);
 

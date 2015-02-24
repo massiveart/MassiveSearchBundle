@@ -2,11 +2,10 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
-class Product
+class Contact
 {
     public $id;
     public $title;
     public $emails;
     public $addresses;
 }
-

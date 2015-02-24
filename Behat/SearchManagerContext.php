@@ -10,13 +10,9 @@
 
 namespace Massive\Bundle\SearchBundle\Behat;
 
-use Behat\Behat\Tester\Exception\PendingException;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Symfony\Component\Filesystem\Filesystem;
 use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
 use Symfony\Component\HttpKernel\KernelInterface;
 use PHPUnit_Framework_Assert as Assert;
@@ -107,7 +103,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         Assert::assertNotNull($objectsData);
 
         foreach ($objectsData as $objectData) {
-            $object = new $this->entityClasses[$className];
+            $object = new $this->entityClasses[$className]();
             foreach ($objectData as $key => $value) {
                 $object->$key = $value;
             }

@@ -49,10 +49,10 @@ class RestControllerTest extends BaseTestCase
     {
         return array(
             array(
-                'Product', 
+                'Product',
                 array('product'),
                 'fr',
-                array (
+                array(
                     array(
                         'id' => null,
                         'document' => array(
@@ -79,7 +79,7 @@ class RestControllerTest extends BaseTestCase
         $this->client->request('GET', '/api/search', array(
             'q' => $query,
             'indexes' => $indexes,
-            'locale' => $locale
+            'locale' => $locale,
         ));
 
         $response = $this->client->getResponse();

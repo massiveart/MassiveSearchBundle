@@ -11,11 +11,9 @@
 namespace Massive\Bundle\SearchBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\TableHelper;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 
@@ -49,4 +47,3 @@ class IndexRebuildCommand extends ContainerAwareCommand
         $eventDispatcher->dispatch(SearchEvents::INDEX_REBUILD, $event);
     }
 }
-

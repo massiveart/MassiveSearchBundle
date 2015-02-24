@@ -44,7 +44,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
         return array(
             Events::postRemove,
             Events::postUpdate,
-            Events::postPersist
+            Events::postPersist,
         );
     }
 

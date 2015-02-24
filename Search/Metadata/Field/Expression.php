@@ -33,7 +33,7 @@ class Expression implements FieldInterface
     }
 
     /**
-     * Return the expression 
+     * Return the expression
      *
      * @return string
      */

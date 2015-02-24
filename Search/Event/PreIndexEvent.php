@@ -55,8 +55,7 @@ class PreIndexEvent extends Event
         Document $document,
         IndexMetadataInterface $metadata,
         FieldEvaluator $fieldEvaluator
-    )
-    {
+    ) {
         $this->subject = $subject;
         $this->document = $document;
         $this->metadata = $metadata;

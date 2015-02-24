@@ -62,21 +62,21 @@ class Product
         $this->url = $url;
     }
 
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }
-    
+
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-    public function getImage() 
+    public function getImage()
     {
         return $this->image;
     }
-    
+
     public function setImage($image)
     {
         $this->image = $image;

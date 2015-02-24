@@ -19,7 +19,6 @@ use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 class SearchManagerTest extends ProphecyTestCase
@@ -66,7 +65,7 @@ class SearchManagerTest extends ProphecyTestCase
         $this->indexMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
         $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
         $this->metadata->getIndexMetadatas()->willReturn(array(
-            $this->indexMetadata->reveal()
+            $this->indexMetadata->reveal(),
         ));
 
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
@@ -129,7 +128,7 @@ class SearchManagerTest extends ProphecyTestCase
             ),
             'body' => array(
                 'type' => 'string',
-            )
+            ),
         ));
         $this->indexMetadata->getIndexName()->willReturn('product');
         $this->converter->objectToDocument($this->indexMetadata, $this->product)->willReturn($this->document);

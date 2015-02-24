@@ -19,7 +19,6 @@ use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Metadata\MetadataFactory;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\Console\Output\OutputInterface;
-use Metadata\ClassMetadata as SearchMetadata;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
@@ -55,8 +54,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         ObjectManager $objectManager,
         MetadataFactory $searchMetadataFactory,
         SearchManager $searchManager
-    )
-    {
+    ) {
         $this->objectManager = $objectManager;
         $this->searchMetadataFactory = $searchMetadataFactory;
         $this->searchManager = $searchManager;
@@ -68,7 +66,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            SearchEvents::INDEX_REBUILD => 'rebuildIndex'
+            SearchEvents::INDEX_REBUILD => 'rebuildIndex',
         );
     }
 

@@ -13,7 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
 use Metadata\ClassMetadata as BaseClassMetadata;
 
 /**
- * Represents the 
+ * Represents the
  */
 class ClassMetadata extends BaseClassMetadata
 {
@@ -49,4 +49,3 @@ class ClassMetadata extends BaseClassMetadata
         return $thus->name;
     }
 }
-

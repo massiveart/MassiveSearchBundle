@@ -10,7 +10,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
-use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 /**
  * Metadata for searchable objects
@@ -219,11 +218,11 @@ class IndexMetadata implements IndexMetadataInterface
         $this->localeField = $localeField;
     }
 
-    public function getClassMetadata() 
+    public function getClassMetadata()
     {
         return $this->classMetadata;
     }
-    
+
     public function setClassMetadata(ClassMetadata $classMetadata)
     {
         $this->classMetadata = $classMetadata;

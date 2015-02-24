@@ -14,10 +14,8 @@ use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Metadata\MetadataFactory;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 /**
@@ -236,7 +234,7 @@ class SearchManager implements SearchManagerInterface
                     'Cannot get metadata for class "%s"', $className
                 ));
             }
-            
+
             $metadata = $metadata->getOutsideClassMetadata();
 
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
@@ -279,6 +277,7 @@ class SearchManager implements SearchManagerInterface
         if (!$query->getIndexes()) {
             $indexNames = $this->getIndexNames($query->getLocale());
             $query->setIndexes($indexNames);
+
             return;
         }
 
@@ -291,6 +290,5 @@ class SearchManager implements SearchManagerInterface
         }
 
         $query->setIndexes($expandedIndexes);
-
     }
 }

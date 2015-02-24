@@ -51,4 +51,3 @@ class Field implements FieldInterface
         return $this->name;
     }
 }
-

@@ -13,11 +13,8 @@ namespace Unit\Search;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Prophecy\PhpUnit\ProphecyTestCase;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 
@@ -114,4 +111,3 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
         }
     }
 }
-

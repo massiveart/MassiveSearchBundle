@@ -10,7 +10,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
-use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
@@ -104,7 +103,6 @@ class FieldEvaluator
         return $this->accessor->getValue($object, $path);
     }
 
-
     /**
      * Evaluate an expression (ExpressionLanguage)
      *
@@ -115,7 +113,7 @@ class FieldEvaluator
     {
         try {
             return $this->expressionLanguage->evaluate($field->getExpression(), array(
-                'object' => $object
+                'object' => $object,
             ));
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf(

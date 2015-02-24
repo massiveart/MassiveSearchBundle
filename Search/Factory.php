@@ -82,7 +82,6 @@ class Factory
         return new Property($path);
     }
 
-
     public function makeMetadataExpression($expression)
     {
         return new Expression($expression);

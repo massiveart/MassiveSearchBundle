@@ -36,7 +36,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $this->factory = $factory;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -168,7 +167,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $field = $mapping->$field;
 
         if (!$field->getName()) {
-            return null;
+            return;
         }
 
         return $this->getField($field);

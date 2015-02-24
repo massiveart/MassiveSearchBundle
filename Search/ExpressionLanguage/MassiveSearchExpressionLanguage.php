@@ -44,7 +44,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 return sprintf('join(%s, %s)', $glue, $elements);
             },
             function (array $values, $glue, $elements) {
-                return join($glue, $elements);
+                return implode($glue, $elements);
             }
         );
     }
@@ -73,12 +73,12 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 if (count($elements) === 0) {
                     return array();
                 }
-                
+
                 $result = array();
 
                 foreach ($elements as $element) {
                     $result[] = $expressionLanguage->evaluate($expression, array(
-                        'el' => $element
+                        'el' => $element,
                     ));
                 }
 

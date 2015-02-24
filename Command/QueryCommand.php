@@ -66,7 +66,7 @@ EOT
                 $this->truncate($document->getDescription(), 50),
                 $document->getUrl(),
                 $document->getImageUrl(),
-                $document->getClass()
+                $document->getClass(),
             ));
         }
         $table->render();

@@ -18,7 +18,6 @@ use Symfony\Component\Finder\Finder;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use ZendSearch\Lucene;
-use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -62,8 +61,7 @@ class ZendLuceneAdapter implements AdapterInterface
         Factory $factory,
         $basePath,
         $hideIndexException = false
-    )
-    {
+    ) {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
@@ -189,13 +187,12 @@ class ZendLuceneAdapter implements AdapterInterface
             $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
             $indexName = basename($indexDir);
 
-
             $index = $this->getIndex($this->getIndexPath($indexName, false));
 
             $indexStats = array(
                 'size' => 0,
                 'nb_files' => 0,
-                'nb_documents' => $index->count()
+                'nb_documents' => $index->count(),
             );
 
             foreach ($files as $file) {
@@ -214,7 +211,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $indexPath = $this->getIndexPath($indexName);
 
         if (!file_exists($indexPath)) {
-             $this->getIndex($indexPath, true);
+            $this->getIndex($indexPath, true);
         }
 
         return $this->getIndex($indexPath, false);
@@ -287,5 +284,4 @@ class ZendLuceneAdapter implements AdapterInterface
     public function flush(array $indexNames)
     {
     }
-
 }

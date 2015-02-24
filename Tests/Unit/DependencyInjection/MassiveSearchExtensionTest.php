@@ -29,7 +29,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->container->setParameter('kernel.root_dir', __DIR__ . '/../../Resources/app');
 
         return array(
-            new MassiveSearchExtension()
+            new MassiveSearchExtension(),
         );
     }
 
@@ -78,7 +78,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 'zend_lucene',
                 array(
                     'basepath' => 'foobar',
-                    'hide_index_exception' => true
+                    'hide_index_exception' => true,
                 ),
                 array(
                     'massive_search.adapter.zend_lucene.basepath' => 'foobar',
@@ -106,8 +106,8 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                     'massive_search.adapter.elastic.hosts' => array(
                         'localhost:8081',
                         'http://www.example.com:9091',
-                    )
-                )
+                    ),
+                ),
             ),
             array(
                 'elastic',
@@ -115,7 +115,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 ),
                 array(
                     'massive_search.adapter.elastic.hosts' => array('localhost:9200'),
-                )
+                ),
             ),
         );
     }
@@ -128,8 +128,8 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $config = array(
             'adapter' => $adapter,
             'adapters' => array(
-                $adapter => $config
-            )
+                $adapter => $config,
+            ),
         );
 
         $this->load($config);

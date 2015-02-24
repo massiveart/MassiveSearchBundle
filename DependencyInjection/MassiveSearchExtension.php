@@ -124,7 +124,7 @@ class MassiveSearchExtension extends Extension
                 }
 
                 $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $finalPath = join('/', array($path, 'Resources', 'config', 'massive-search'));
+                $finalPath = implode('/', array($path, 'Resources', 'config', 'massive-search'));
                 if (!file_exists($finalPath)) {
                     continue;
                 }

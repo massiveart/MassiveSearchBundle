@@ -39,4 +39,3 @@ class MassiveSearchExpressionLanguageTest extends ProphecyTestCase
         $this->assertEquals($expectedResult, $result);
     }
 }
-
