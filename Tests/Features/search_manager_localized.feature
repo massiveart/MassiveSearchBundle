@@ -45,7 +45,7 @@ Feature: Search Manager
         And I purge the index "product"
 
     Scenario Outline: Searching in locale
-        Given I index the following "Product" objects
+        Given the following "Product" objects have been persisted
         """
         [
             { "id": 1, "title": "Giraffe", "body": "Long neck", "date": "2015-01-01", "url": "http://foo", "locale": "fr", "image": "foo.png" },
@@ -54,7 +54,7 @@ Feature: Search Manager
             { "id": 6, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" }
         ]
         """
-        And I search for "<animal>" in locale "<locale>"
+        When I search for "<animal>" in locale "<locale>"
         Then there should be "<nbResults>" results
 
         Examples:
@@ -65,12 +65,12 @@ Feature: Search Manager
             | Hyena | de | 1 |
 
     Scenario: Search with no locale
-        Given I index the following "Product" objects
+        Given the following "Product" objects have been persisted
         """
         [
             { "id": 3, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" },
             { "id": 4, "title": "French Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "fr", "image": "foo.png" }
         ]
         """
-        And I search for "Hyena"
+        When I search for "Hyena"
         Then there should be "2" results

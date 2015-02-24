@@ -106,7 +106,7 @@ class SearchManager implements SearchManagerInterface
         $metadata = $this->getMetadata($object);
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-            $this->indexesToFlush[$indexMetadata->getIndexName()] = true;
+            $this->markIndexToFlush($indexMetadata->getIndexName());
             $indexNames = $this->getExpandedIndexNamesFor($indexMetadata->getIndexName());
 
             foreach ($indexNames as $indexName) {
@@ -124,7 +124,7 @@ class SearchManager implements SearchManagerInterface
         $indexMetadatas = $this->getMetadata($object);
 
         foreach ($indexMetadatas->getIndexMetadatas() as $indexMetadata) {
-            $this->indexesToFlush[$indexMetadata->getIndexName()] = true;
+            $this->markIndexToFlush($indexMetadata->getIndexName());
 
             $indexName = $indexMetadata->getIndexName();
 
@@ -208,7 +208,7 @@ class SearchManager implements SearchManagerInterface
      */
     public function purge($indexName)
     {
-        $this->indexesToFlush[$indexName] = true;
+        $this->markIndexToFlush($indexName);
         $indexes = $this->getExpandedIndexNamesFor($indexName);
         foreach ($indexes as $indexName) {
             $this->adapter->purge($indexName);
@@ -258,6 +258,15 @@ class SearchManager implements SearchManagerInterface
         $this->indexesToFlush = array();
     }
 
+    /**
+     * Retrieve all the index names including localized names (i.e. variants)
+     * for the given index name, optionally limiting to the given locale.
+     *
+     * @param string $indexName
+     * @param string $locale
+     *
+     * @return string[]
+     */
     private function getExpandedIndexNamesFor($indexName, $locale = null)
     {
         $adapterIndexNames = $this->adapter->listIndexes();
@@ -272,6 +281,15 @@ class SearchManager implements SearchManagerInterface
         return $indexNames;
     }
 
+    /**
+     * Add additional indexes to the Query object.
+     *
+     * If the query object has no indexes, then add all indexes (including
+     * variants), otherwise expand the indexes the query does have to include
+     * all of their variants.
+     *
+     * @param SearchQuery $query
+     */
     private function expandQueryIndexes(SearchQuery $query)
     {
         if (!$query->getIndexes()) {
@@ -290,5 +308,13 @@ class SearchManager implements SearchManagerInterface
         }
 
         $query->setIndexes($expandedIndexes);
+    }
+
+    /**
+     * Mark an index to be flushed when "flush" is called.
+     */
+    private function markIndexToFlush($indexName)
+    {
+        $this->indexesToFlush[$indexName] = true;
     }
 }

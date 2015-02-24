@@ -50,14 +50,14 @@ Feature: Contexts
         And I purge the index "animal_website"
 
     Scenario Outline: Searching in locale with context index
-        Given I index the following "Product" objects
+        Given the following "Product" objects have been persisted
         """
         [
             { "id": 1, "title": "Giraffe", "body": "Long neck", "date": "2015-01-01", "url": "http://foo", "locale": "fr", "image": "foo.png" },
             { "id": 2, "title": "Lion", "body": "Big mane", "date": "2015-01-01", "url": "http://lion.com", "locale": "fr", "image": "foo.png" }
         ]
         """
-        And I search for "<animal>" in locale "<locale>" with index "<index>"
+        When I search for "<animal>" in locale "<locale>" with index "<index>"
         Then there should be "<nbResults>" results
 
         Examples:
@@ -66,12 +66,12 @@ Feature: Contexts
             | Giraffe | fr | 1 | animal |
 
     Scenario: Search with no index
-        Given I index the following "Product" objects
+        Given the following "Product" objects have been persisted
         """
         [
             { "id": 3, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" },
             { "id": 4, "title": "French Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "fr", "image": "foo.png" }
         ]
         """
-        And I search for "Hyena"
+        When I search for "Hyena"
         Then there should be "4" results

@@ -13,7 +13,8 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 
 /**
- * Simple value object for representing expressions
+ * Simple value object for representing expressions which
+ * can be evaluated using the ExpressionLanguage
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */

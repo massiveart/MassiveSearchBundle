@@ -32,7 +32,6 @@ class ZendLuceneAdapter implements AdapterInterface
     const ID_FIELDNAME = '__id';
     const CLASS_TAG = '__class';
 
-    // TODO: This fields should be handled at a higher level
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
@@ -176,6 +175,9 @@ class ZendLuceneAdapter implements AdapterInterface
         return $hits;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getStatus()
     {
         $finder = new Finder();
@@ -206,6 +208,46 @@ class ZendLuceneAdapter implements AdapterInterface
         return $status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function purge($indexName)
+    {
+        $indexPath = $this->getIndexPath($indexName);
+        $fs = new Filesystem();
+        $fs->remove($indexPath);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function listIndexes()
+    {
+        $finder = new Finder();
+        $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);
+        $names = array();
+
+        foreach ($indexDirs as $file) {
+            $names[] = $file->getBasename();
+        }
+
+        return $names;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush(array $indexNames)
+    {
+    }
+
+    /**
+     * Return (or create) a Lucene index for the given name
+     *
+     * @param string $indexName
+     *
+     * @return Index
+     */
     private function getLuceneIndex($indexName)
     {
         $indexPath = $this->getIndexPath($indexName);
@@ -256,32 +298,5 @@ class ZendLuceneAdapter implements AdapterInterface
         $index->setHideException($this->hideIndexException);
 
         return $index;
-    }
-
-    public function purge($indexName)
-    {
-        $indexPath = $this->getIndexPath($indexName);
-        $fs = new Filesystem();
-        $fs->remove($indexPath);
-    }
-
-    public function listIndexes()
-    {
-        $finder = new Finder();
-        $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);
-        $names = array();
-
-        foreach ($indexDirs as $file) {
-            $names[] = $file->getBasename();
-        }
-
-        return $names;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function flush(array $indexNames)
-    {
     }
 }

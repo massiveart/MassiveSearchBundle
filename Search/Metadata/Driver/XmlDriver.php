@@ -177,7 +177,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     {
         if (isset($field['expr']) && isset($field['property'])) {
             throw new \InvalidArgumentException(sprintf(
-                '"expr" and "proprty" attributes are mutually exclusive in mapping for "%s"',
+                '"expr" and "property" attributes are mutually exclusive in mapping for "%s"',
                 ($field)
             ));
         }

@@ -45,38 +45,38 @@ Feature: Search Manager
         """
 
     Scenario: Get the index names, nothing indexed
-        Given I get the index names
+        When I get the index names
         Then the result should be the following array:
         """
         [ ]
         """
 
     Scenario: Get the index names
-        Given I index the following "Car" objects
+        Given the following "Car" objects have been persisted
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
         ]
         """
-        And I get the index names
+        When I get the index names
         Then the result should be the following array:
         """
         [ "car" ]
         """
 
     Scenario: Basic indexing
-        Given I index the following "Car" objects
+        Given the following "Car" objects have been persisted
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
             { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
         ]
         """
-        And I search for "My car"
+        When I search for "My car"
         Then there should be 2 results
 
     Scenario: Purging
-        Given I index the following "Car" objects
+        Given the following "Car" objects have been persisted
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
@@ -88,26 +88,26 @@ Feature: Search Manager
         Then there should be 0 results
 
     Scenario: Deindex
-        Given I index the following "Car" objects
+        Given the following "Car" objects have been persisted
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
             { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
         ]
         """
-        And I deindex the object with id "321"
+        When I deindex the object with id "321"
         And I search for "My car"
         Then there should be 1 results
 
     Scenario Outline: Searching
-        Given I index the following "Car" objects
+        Given the following "Car" objects have been persisted
         """
         [
             { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg"},
             { "id": 321, "url": "/url/to", "title": "Car two", "body": "Hello", "image": "foo.jpg"}
         ]
         """
-        And I search for "<search>"
+        When I search for "<search>"
         Then there should be <nbResults> results
 
         Examples:
@@ -117,5 +117,5 @@ Feature: Search Manager
             | Car | 2 |
 
     Scenario: Return the status
-        Given I get the status
+        When I get the status
         Then the result should be an array

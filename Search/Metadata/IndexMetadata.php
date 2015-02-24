@@ -218,11 +218,17 @@ class IndexMetadata implements IndexMetadataInterface
         $this->localeField = $localeField;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getClassMetadata()
     {
         return $this->classMetadata;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setClassMetadata(ClassMetadata $classMetadata)
     {
         $this->classMetadata = $classMetadata;

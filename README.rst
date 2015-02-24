@@ -235,6 +235,7 @@ The following example uses all the mapping options:
             </fields>
 
             <context name="admin">
+                <index name="product_website" />
                 <url exp="'/admin/edit/article/' ~ object.id" />
             </context>
         </mapping>

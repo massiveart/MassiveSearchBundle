@@ -37,9 +37,7 @@ class RestController
     /**
      * Perform a search and return a JSON response
      *
-     * @param mixed $query Search query
-     * @param array $indexes (optional) list of indexes
-     * @param mixed $locale (optional) locale to search in
+     * @param Request $request
      */
     public function searchAction(Request $request)
     {

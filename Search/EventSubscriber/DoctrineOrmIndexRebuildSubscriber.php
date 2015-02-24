@@ -70,6 +70,11 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         );
     }
 
+    /**
+     * Rebuild the index
+     *
+     * @param IndexRebuildEvent $event
+     */
     public function rebuildIndex(IndexRebuildEvent $event)
     {
         $output = $event->getOutput();
@@ -100,6 +105,15 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Purge the index for the given class metadata.
+     *
+     * Note that only one purge will be performed per session.
+     *
+     * @param OutputInterface $output
+     * @param ClassMetadata $classMetadata
+     * @param OrmMetadata $ormMetadata
+     */
     private function doPurge(OutputInterface $output, ClassMetadata $classMetadata, OrmMetadata $ormMetadata)
     {
         foreach ($classMetadata->getIndexMetadatas() as $indexMetadata) {
@@ -115,6 +129,13 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Retrieve and rebuild the index for all the Entities for the given
+     * metadata.
+     *
+     * @param OutputInterface $output
+     * @param OrmMetadata $ormMetadata
+     */
     private function rebuildClass(OutputInterface $output, OrmMetadata $ormMetadata)
     {
         $output->write('<comment>Rebuilding</comment>: ' . $ormMetadata->getName());

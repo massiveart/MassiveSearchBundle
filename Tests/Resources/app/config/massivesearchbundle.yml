@@ -2,9 +2,7 @@ framework:
     router:
         resource: %kernel.root_dir%/config/routing.yml
 
-
 massive_search:
-
     # use the test search adapter
     adapter: test
 

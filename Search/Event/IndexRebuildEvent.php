@@ -28,16 +28,33 @@ class IndexRebuildEvent extends Event
         $this->output = $output ? : new NullOutput();
     }
 
+    /**
+     * Return the regex filter to apply to the
+     * class names of the indexed documents in order
+     * to determine which classes get rebuilt.
+     *
+     * @return string
+     */
     public function getFilter()
     {
         return $this->filter;
     }
 
+    /**
+     * If each affected index should be purged before rebuilding
+     *
+     * @return boolean
+     */
     public function getPurge()
     {
         return $this->purge;
     }
 
+    /**
+     * Return the console Output class
+     *
+     * @return OutputInterface
+     */
     public function getOutput()
     {
         return $this->output;

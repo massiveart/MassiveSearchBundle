@@ -13,7 +13,8 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
 use Metadata\ClassMetadata as BaseClassMetadata;
 
 /**
- * Represents the
+ * Metadata for a mapped search object. A single class
+ * may have several different search mappings.
  */
 class ClassMetadata extends BaseClassMetadata
 {
@@ -39,13 +40,11 @@ class ClassMetadata extends BaseClassMetadata
         $this->indexMetadatas[$contextName] = $indexMetadata;
     }
 
+    /**
+     * Return the IndexMetadata metadata instances
+     */
     public function getIndexMetadatas()
     {
         return $this->indexMetadatas;
-    }
-
-    public function getName()
-    {
-        return $thus->name;
     }
 }

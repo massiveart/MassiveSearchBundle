@@ -28,7 +28,6 @@
             <argument type="service" id="massive_search.expression_language" />
         </service>
 
-
         <!-- Chain Driver !-->
         <service id="massive_search.metadata.driver.chain" class="%massive_search.metadata.driver.chain.class%" />
 

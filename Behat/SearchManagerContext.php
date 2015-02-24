@@ -18,14 +18,39 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use PHPUnit_Framework_Assert as Assert;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 
+/**
+ * Behat context for search manager features
+ */
 class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContext
 {
+    /**
+     * @var string
+     */
     private $adapterId;
+
+    /**
+     * @var AppKernel
+     */
     private $kernel;
+
+    /**
+     * @var mixed
+     */
     private $lastResult;
+
+    /**
+     * @var string[]
+     */
     private $entityClasses;
+
+    /**
+     * @var object[]
+     */
     private $entities = array();
 
+    /**
+     * @param string $adapterId
+     */
     public function __construct($adapterId)
     {
         $this->adapterId = $adapterId;
@@ -94,7 +119,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * @Given I index the following :className objects
+     * @Given the following ":className" objects have been persisted
      */
     public function iIndexTheFollowingObjects($className, PyStringNode $string)
     {
@@ -184,6 +209,9 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         Assert::assertInternalType('array', $this->lastResult);
     }
 
+    /**
+     * Return the search manager using the configured adapter ID
+     */
     protected function getSearchManager()
     {
         return new SearchManager(
@@ -195,10 +223,12 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         );
     }
 
+    /**
+     * There is a timing issue, we need to pause for a while
+     * after flusing for subsequent requests to be consistent.
+     */
     protected function pause()
     {
-        // there is a timing issue, we need to pause for a while
-        // after flusing for subsequent requests to not fail.
         usleep(50000);
     }
 }

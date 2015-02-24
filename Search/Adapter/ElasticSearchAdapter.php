@@ -27,7 +27,6 @@ class ElasticSearchAdapter implements AdapterInterface
     const ID_FIELDNAME = '__id';
     const CLASS_TAG = '__class';
 
-    // TODO: This fields should be handled at a higher level
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
@@ -78,7 +77,7 @@ class ElasticSearchAdapter implements AdapterInterface
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not know. Known types nare: %s',
+                        'Search field type "%s" is not know. Known types are: %s',
                         implode(', ', Field::getValidTypes())
                     ));
             }
@@ -90,7 +89,7 @@ class ElasticSearchAdapter implements AdapterInterface
         $fields[self::CLASS_TAG] = $document->getClass();
         $fields[self::IMAGE_URL] = $document->getImageUrl();
 
-        // ensure that the new index name is listed
+        // ensure that any new index name is listed when calling listIndexes
         $this->indexList[$indexName] = $indexName;
 
         $params = array(
@@ -101,17 +100,6 @@ class ElasticSearchAdapter implements AdapterInterface
         );
 
         $this->client->index($params);
-    }
-
-    private function documentToType(Document $document)
-    {
-        $class = $document->getClass();
-
-        if (!$class) {
-            return 'massive_undefined';
-        }
-
-        return substr(str_replace('\\', '_', $class), 1);
     }
 
     /**
@@ -179,6 +167,9 @@ class ElasticSearchAdapter implements AdapterInterface
         return $hits;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getStatus()
     {
         $indexes = $this->listIndexes();
@@ -196,6 +187,9 @@ class ElasticSearchAdapter implements AdapterInterface
         return $status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function purge($indexName)
     {
         try {
@@ -205,6 +199,9 @@ class ElasticSearchAdapter implements AdapterInterface
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function listIndexes()
     {
         if (!$this->indexListLoaded) {
@@ -229,5 +226,24 @@ class ElasticSearchAdapter implements AdapterInterface
             'index' => implode(', ', $indexNames),
             'full' => true,
         ));
+    }
+
+    /**
+     * Convert FQCN to a snake-case string to use as an
+     * elastic search type.
+     *
+     * @param Document $document
+     *
+     * @return string
+     */
+    private function documentToType(Document $document)
+    {
+        $class = $document->getClass();
+
+        if (!$class) {
+            return 'massive_undefined';
+        }
+
+        return substr(str_replace('\\', '_', $class), 1);
     }
 }

@@ -14,6 +14,7 @@ use Massive\Bundle\SearchBundle\Controller\RestController;
 use Massive\Bundle\SearchBundle\Tests\Functional\BaseTestCase;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\BrowserKit\Client;
 
 class RestControllerTest extends BaseTestCase
 {
@@ -27,6 +28,9 @@ class RestControllerTest extends BaseTestCase
      */
     private $searchManager;
 
+    /**
+     * @var Client
+     */
     private $client;
 
     public function setUp()

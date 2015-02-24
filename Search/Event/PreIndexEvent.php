@@ -46,9 +46,10 @@ class PreIndexEvent extends Event
     private $fieldEvaluator;
 
     /**
-     * @param $subject
+     * @param mixed $subject
      * @param Document $document
      * @param IndexMetadataInterface $metadata
+     * @param FieldEvaluator $fieldEvaluator
      */
     public function __construct(
         $subject,

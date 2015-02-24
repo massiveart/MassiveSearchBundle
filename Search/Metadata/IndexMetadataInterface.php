@@ -155,4 +155,18 @@ interface IndexMetadataInterface
      * @param string
      */
     public function setLocaleField($field);
+
+    /**
+     * Get the class metadata to which this index metadata applies
+     *
+     * @return ClassMetadata
+     */
+    public function getClassMetadata();
+
+    /**
+     * Set the class metadata to which this index applies
+     *
+     * @param ClassMetadata $classMetadata
+     */
+    public function setClassMetadata(ClassMetadata $classMetadata);
 }

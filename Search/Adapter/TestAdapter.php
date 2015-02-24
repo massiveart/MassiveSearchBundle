@@ -36,6 +36,9 @@ class TestAdapter implements AdapterInterface
         $this->documents[$indexName][$document->getId()] = $document;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function deindex(Document $document, $indexName)
     {
         if (!$indexName) {
@@ -51,6 +54,9 @@ class TestAdapter implements AdapterInterface
         $this->documents[$indexName] = array_values($this->documents[$indexName]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function purge($indexName)
     {
         unset($this->documents[$indexName]);
@@ -58,6 +64,10 @@ class TestAdapter implements AdapterInterface
 
     /**
      * Return all the "indexed" documents
+     *
+     * NOTE: Not part of the API
+     *
+     * @return Document[]
      */
     public function getDocuments()
     {
