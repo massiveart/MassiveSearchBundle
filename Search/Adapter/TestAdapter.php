@@ -63,7 +63,7 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * Return all the "indexed" documents
+     * Return all the indexed documents
      *
      * NOTE: Not part of the API
      *
@@ -71,7 +71,14 @@ class TestAdapter implements AdapterInterface
      */
     public function getDocuments()
     {
-        return $this->documents;
+        $documents = array();
+        foreach ($this->documents as $localizedDocuments) {
+            foreach ($localizedDocuments as $document) {
+                $documents[] = $document;
+            }
+        }
+
+        return $documents;
     }
 
     /**
