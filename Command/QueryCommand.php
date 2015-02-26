@@ -31,7 +31,7 @@ class QueryCommand extends ContainerAwareCommand
     {
         $this->setName('massive:search:query');
         $this->addArgument('query', InputArgument::REQUIRED, 'Search query');
-        $this->addOption('index', 'I', InputOption::VALUE_REQUIRED, 'Index to search');
+        $this->addOption('index', 'I', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Index to search');
         $this->addOption('locale', 'l', InputOption::VALUE_REQUIRED, 'Index to search');
         $this->setDescription('Search the using a given query');
         $this->setHelp(<<<EOT
@@ -53,11 +53,12 @@ EOT
         $locale = $input->getOption('locale');
 
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
-        $res = $searchManager->createSearch($query)->index($index)->locale($locale)->execute();
+        $res = $searchManager->createSearch($query)->indexes($index)->locale($locale)->execute();
 
         $table = new Table($output);
         $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class'));
         foreach ($res as $hit) {
+            var_dump(json_encode($hit, JSON_PRETTY_PRINT));die();;
             $document = $hit->getDocument();
             $table->addRow(array(
                 $hit->getScore(),
