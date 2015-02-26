@@ -29,7 +29,7 @@ follows:
     |        |
     +--------+
 
-Just to be clear: it is not designed for anything else.
+Just to be clear: it is not *designed* for anything else.
 
 Quick example
 -------------
@@ -42,7 +42,6 @@ Doctrine ORM.
     The bundle is in no way coupled to the Doctrine ORM, and it is possible to
     use it with any persistence system.
 
-
 Enable the Doctrine ORM support in your main configuration:
 
 .. code-block:: yaml
@@ -51,21 +50,52 @@ Enable the Doctrine ORM support in your main configuration:
         persistence:
             doctrine_orm:
                 enabled: true
+
+And enable one of the :doc:`search_adapters`
         
-Then create your model in ``<YourBundle>/Entity/Product``:
+Create your model in ``<YourBundle>/Entity/Product.php``:
 
 .. code-block:: php
 
     <?php
 
+    // <YourBundle>/Entity/Product.php
+
     namespace Acme\YourBundle\Entity\Product;
 
+    use Doctrine\ORM\Mapping as ORM;
+
+    /**
+     * @ORM\Entity
+     * @ORM\Table(name="product")
+     */
     class Product
     {
+        /**
+         * @ORM\Column(type="integer")
+         * @ORM\Id
+         * @ORM\GeneratedValue(strategy="AUTO")
+         */
+        protected $id;
+
+        /**
+         * @ORM\Column(type="string", length=100)
+         */
+        protected $name;
+
+        /**
+         * @ORM\Column(type="decimal", scale=2)
+         */
+        protected $price;
+
+        /**
+         * @ORM\Column(type="text")
+         */
+        protected $description;
     }
 
-First place the following mapping file in the
-``Resources/config/massive-search/``
+Place the following mapping file in the
+``Resources/config/massive-search/Product.xml``
 
 .. code-block:: xml
 
@@ -75,8 +105,7 @@ First place the following mapping file in the
         <mapping class="Model\Product">
             <index name="product" />
             <id property="id" />
-            <locale property="locale" />
-            <title property="title" />
+            <title property="name" />
             <url expr="'/path/to/' ~ object.id" />
             <description property="body" />
             <image expr="'/assets/images/' ~ object.type" />
@@ -88,4 +117,5 @@ First place the following mapping file in the
 
     </massive-search-mapping>
 
-
+Now, when you persist your ``Product`` with Doctrine ORM it should be
+automatically indexed by the configured search adapter.

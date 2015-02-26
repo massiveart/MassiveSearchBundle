@@ -12,7 +12,6 @@ through *mapping*. Currently only **XML mapping** is natively supported:
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <index name="product" />
             <id property="id" />
-            <locale property="locale" />
             <fields>
                 <field name="title" type="string" />
                 <field name="body" type="string" />
@@ -22,8 +21,7 @@ through *mapping*. Currently only **XML mapping** is natively supported:
     </massive-search-mapping>
 
 This mapping will cause the fields ``title`` and ``body`` to be indexed into
-an index named ``product`` using the ``locale`` determined from the locale
-field and the ID obtained from the objects ``id`` field.
+an index named ``product`` and the ID obtained from the objects ``id`` field.
 
 Mapping elements
 ----------------
@@ -61,12 +59,34 @@ Mapping:
 Types:
 
 - ``string``: Store as a string
+- ``complex``: Apply mapping to an array of values
+
+Complex mapping
+~~~~~~~~~~~~~~~
+
+Complex mapping provides a way to map a nested data structure within the
+subject object.
+
+.. note::
+
+    This feature is not currently supported by the XML driver and is therefore
+    not available unless used in a custom driver.
 
 Expression Language
 ~~~~~~~~~~~~~~~~~~~
 
 The MassiveSearchBundle includes its own flavor of the Symfony expression
 language.
+
+.. code-block:: xml
+
+    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+            <!-- ... -->
+            <url expr="'/path/to/' ~ article.title'" />
+            <!-- ... -->
+        </mapping>
+    </massive-search-mapping>
 
 Functions:
 
@@ -110,8 +130,33 @@ to map additional indexes:
 The above would create two mappings for the ``Product``. The second would use
 the index name ``product_foo`` and override the ``url`` field.
 
+Localization
+------------
+
+You can add a ``locale`` mapping which will cause the object to be stored in a
+localized index (if configured, see :doc:`localization`).
+
+.. code-block:: xml
+
+    <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
+    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+
+        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+            <!-- ... -->
+            <locale property="locale" />
+            <!-- ... -->
+        </mapping>
+
+    </massive-search-mapping>
+
+This assumes that the object has a property ``$locale`` which contiains the
+objects current localization code.
+
+If you do not map the ``locale`` or the ``locale`` is reosolved as ``NULL``
+then it will be assumed that the object is not localized.
+
 Full example
-~~~~~~~~~~~~
+------------
 
 The following example uses all the mapping options:
 
@@ -140,7 +185,7 @@ The following example uses all the mapping options:
 
     </massive-search-mapping>
 
-NOte:
+Note:
 
 - This file **MUST** be located in ``YourBundle/Resources/config/massive-search``
 - It must be named after the name of your class (without the namespace) e.g.
@@ -154,214 +199,10 @@ NOte:
 
     It will be possible in the future to specify paths for mapping files.
 
-Indexing
---------
+.. note:: 
 
-Once you have created your mapping files you can index your objects, for
-example after saving it.
-
-The bundle provides the ``massive_search.search_manager`` object which is the
-only service which you will need to access.
-
-.. code-block:: php
-
-    $product = new Product();
-
-    // ... populate the product, persist it, whatever.
-
-    $searchManager = $this->get('massive_search.search_manager');
-    $searchManager->index($product);
-
-The SearchManager will know from the mapping how to index the product, and it
-will be indexed using the configured search library adapter.
-
-.. note:: The bundle automatically removes existing documents with the same
-          ID. The ID mapping is mandatory.
-
-Searching
----------
-
-As with the indexing, searching for results is also done with the
-SearchManager.
-
-Currently only supported by query string is supported. The query string
-is passed directly to the search library:
-
-.. code-block:: php
-
-    $hits = $searchManager->createSearch('My Product')->index('product')->execute();
-
-    foreach ($hits as $hit) {
-        echo $hit->getScore();
-
-        // @var Massive\Bundle\SearchBundle\Search\Document
-        $document = $hit->getDocument();
-
-        // retrieve the indexed documents "body" field
-        $body = $document->getField('body');
-
-        // retrieve the indexed ID of the document
-        $body = $document->getId();
-    }
-
-You can also search in a specific locale:
-
-.. code-block:: php
-
-    $hits = $searchManager
-      ->createSearch('My Article')
-      ->index('article')
-      ->locale('fr')
-      ->execute();
-
-Localization
-------------
-
-The MassiveSearchBundle allows you to localize indexing and search operations.
-
-To take advantage of this feature you need to choose a localization strategy:
-
-.. code-block:: yaml
-
-    // app/config/config.yml
-    massive_search:
-        localization_strategy: index
-
-The localization strategy decides how the documents are localized in the
-search implementation.
-
-By default the adapter is the so-called ``Noop`` which does nothing and so
-localization is effectively disabled.
-
-Strategies
-~~~~~~~~~~
-
-* ``noop``: The default strategy does nothing.
-* ``index``: Creates an index per locale. For example if you store a document
-  in an index named "foobar" with a locale of "fr" then the backend will use
-  an index named "foobar_fr".
-
-Searching
-~~~~~~~~~
-
-See "searching".
-
-Mapping
-~~~~~~~
-
-TODO: Locale mapping is not currently implemented in the XML Driver.
-
-Commands
---------
-
-The MassiveBuildBundle provides some commands.
-
-massive:search:query
-~~~~~~~~~~~~~~~~~~~~
-
-Perform a query from the command line::
-
-    $ php app/console massive:search:query "Foobar" --index="barfoo"
-    +------------------+--------------------------------------+-----------+-------------+-----------+------------------------+
-    | Score            | ID                                   | Title     | Description | Url       | Class                  |
-    +------------------+--------------------------------------+-----------+-------------+-----------+------------------------+
-    | 0.53148467371593 | ac984681-ca92-4650-a9a6-17bc236f1830 | Structure |             | structure | OverviewStructureCache |
-    +------------------+--------------------------------------+-----------+-------------+-----------+------------------------+
-
-massive:search:status
-~~~~~~~~~~~~~~~~~~~~~
-
-Display status information for the current search implementation::
-
-    $ php app/console massive:search:status
-    +-------------+--------------------------------------------------------------+
-    | Field       | Value                                                        |
-    +-------------+--------------------------------------------------------------+
-    | Adapter     | Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter |
-    | idx:product | {"size":11825,"nb_files":36,"nb_documents":10}               |
-    +-------------+--------------------------------------------------------------+
-
-Extending
----------
-
-You can extend the bundle by customizing the Factory class and with custom metadata drivers.
-
-Factory
-~~~~~~~
-
-The factory service can be customized, enabling you to instantiate your own
-classes for use in any listeners which you register. For example, you want to
-add a "thumbnail" field to the Document object.
-
-.. code-block:: php
-
-    namespace My\Namespace;
-
-    use Massive\Bundle\SearchBundle\Search\Factory as BaseFactory;
-
-    class MyFactory extends BaseFactory
-    {
-        public function makeDocument()
-        {
-            return MyCustomDocument();
-        }
-    }
-
-You must then register your factory as a service and register the ID of that
-service in your main application configuration:
-
-.. code-block:: yaml
-
-    massive_search:
-        services:
-            factory: my.factory.service
-
-Metadata Drivers
-~~~~~~~~~~~~~~~~
-
-Simply extend the ``Metadata\Driver\DriverInterface`` and add the tag
-``massive_search.metadata.driver`` tag to your implementations service
-definition.
-
-.. code-block:: xml
-
-        <service id="massive_search.metadata.driver.xml" class="%massive_search.metadata.driver.xml.class%">
-            <argument type="service" id="massive_search.metadata.file_locator" />
-            <tag type="massive_search.metadata.driver" />
-        </service>
-
-Hit Listeners
-~~~~~~~~~~~~~
-
-The ``SearchManager`` will fire an event of type ``HitEvent`` in the Symfony EventDispatcher named
-``massive_search.hit``.
-
-The ``HitEvent`` contains the hit object and the reflection class of the
-object which was originally indexed.
-
-For example:
-
-.. code-block:: php
-
-    <?php
-
-    namespace Sulu\Bundle\SearchBundle\EventListener;
-
-    use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
-
-    class HitListener
-    {
-        public function onHit(HitEvent $event)
-        {
-            $reflection = $event->getDocumentReflection();
-            if (false === $reflection->isSubclassOf('MyClass')) {
-                return;
-            }
-
-            $document = $event->getDocument();
-            $docuemnt->setUrl('Foo' . $document->getUrl());
-        }
-    }
+    The bundle automatically removes existing documents with the same
+    ID. The ID mapping is mandatory.
 
 .. _`PropertyAccess`: http://symfony.com/doc/current/components/property_access/index.html
 .. _`ExpressionLanguage`: http://symfony.com/doc/current/components/expression_language/index.html
