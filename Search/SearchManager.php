@@ -216,12 +216,21 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function flush()
+    {
+        $this->adapter->flush(array_keys($this->indexesToFlush));
+        $this->indexesToFlush = array();
+    }
+
+    /**
      * List all of the expanded index names in the search implementation
      * optionally only in the given locale.
      *
      * @param string $locale
      */
-    public function getIndexNames($locale = null)
+    private function getIndexNames($locale = null)
     {
         $classNames = $this->metadataFactory->getAllClassNames();
         $indexNames = array();
@@ -249,14 +258,6 @@ class SearchManager implements SearchManagerInterface
         return array_values($indexNames);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function flush()
-    {
-        $this->adapter->flush(array_keys($this->indexesToFlush));
-        $this->indexesToFlush = array();
-    }
 
     /**
      * Retrieve all the index names including localized names (i.e. variants)

@@ -44,26 +44,6 @@ Feature: Search Manager
         </massive-search-mapping>
         """
 
-    Scenario: Get the index names, nothing indexed
-        When I get the index names
-        Then the result should be the following array:
-        """
-        [ ]
-        """
-
-    Scenario: Get the index names
-        Given the following "Car" objects have been persisted
-        """
-        [
-            { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
-        ]
-        """
-        When I get the index names
-        Then the result should be the following array:
-        """
-        [ "car" ]
-        """
-
     Scenario: Basic indexing
         Given the following "Car" objects have been persisted
         """
