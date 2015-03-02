@@ -31,7 +31,7 @@ class QueryCommandTest extends BaseTestCase
     {
         $this->tester->execute(array(
             'query' => 'Hello',
-            '--index' => 'product',
+            '--index' => array('product'),
         ));
 
         $display = $this->tester->getDisplay();

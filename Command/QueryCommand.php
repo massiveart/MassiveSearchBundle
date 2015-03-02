@@ -58,7 +58,6 @@ EOT
         $table = new Table($output);
         $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class'));
         foreach ($res as $hit) {
-            var_dump(json_encode($hit, JSON_PRETTY_PRINT));die();;
             $document = $hit->getDocument();
             $table->addRow(array(
                 $hit->getScore(),
