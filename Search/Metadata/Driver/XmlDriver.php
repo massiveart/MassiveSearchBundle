@@ -110,6 +110,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $indexMetadata->setTitleField($mapping['title']);
             $indexMetadata->setUrlField($mapping['url']);
             $indexMetadata->setDescriptionField($mapping['description']);
+            $indexMetadata->setCategoryName($mapping['category']);
 
             foreach ($mapping['fields'] as $fieldName => $fieldData) {
                 $indexMetadata->addFieldMapping($fieldName, $fieldData);
@@ -142,6 +143,17 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         $descriptionField = $this->getMapping($mapping, 'description');
         $indexMapping['description'] = $descriptionField;
+
+        $indexMapping['category'] = null;
+        $category = $mapping->category;
+        if ($category) {
+            if (!isset($category['name'])) {
+                throw new \InvalidArgumentException(
+                    'Category must have name attribute'
+                );
+            }
+            $indexMapping['category'] = (string) $category['name'];
+        }
 
         return $indexMapping;
     }

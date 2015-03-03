@@ -119,6 +119,19 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @Then I should have the following documents:
+     */
+    public function iShouldHaveTheFollowingDocuments(PyStringNode $string)
+    {
+        $expected = json_decode($string->getRaw(), true);
+        $documents = array();
+        foreach ($this->lastResult as $hit) {
+            $documents[] = $hit->getDocument()->jsonSerialize();
+        }
+        Assert::assertEquals($expected, $documents);
+    }
+
+    /**
      * @Given the following ":className" objects have been persisted
      */
     public function iIndexTheFollowingObjects($className, PyStringNode $string)

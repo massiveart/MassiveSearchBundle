@@ -67,6 +67,11 @@ class IndexMetadata implements IndexMetadataInterface
     private $classMetadata;
 
     /**
+     * @var string
+     */
+    private $categoryName;
+
+    /**
      * {@inheritDoc}
      */
     public function getName()
@@ -232,5 +237,21 @@ class IndexMetadata implements IndexMetadataInterface
     public function setClassMetadata(ClassMetadata $classMetadata)
     {
         $this->classMetadata = $classMetadata;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCategoryName() 
+    {
+        return $this->categoryName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCategoryName($category)
+    {
+        $this->categoryName = $category;
     }
 }

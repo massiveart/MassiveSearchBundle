@@ -156,7 +156,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
             $luceneDocument = $luceneHit->getDocument();
 
-            // map meta fields to document
+            // map meta fields to document "product"
             $document->setId($luceneDocument->getFieldValue(self::ID_FIELDNAME));
             $document->setTitle($luceneDocument->getFieldValue(self::TITLE_FIELDNAME));
             $document->setDescription($luceneDocument->getFieldValue(self::DESCRIPTION_FIELDNAME));

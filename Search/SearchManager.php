@@ -83,19 +83,7 @@ class SearchManager implements SearchManagerInterface
             );
         }
 
-        $objectClass = get_class($object);
-        $metadata = $this->metadataFactory->getMetadataForClass($objectClass);
-
-        if (null === $metadata) {
-            throw new MetadataNotFoundException(
-                sprintf(
-                    'There is no search mapping for class "%s"',
-                    $objectClass
-                )
-            );
-        }
-
-        return $metadata->getOutsideClassMetadata();
+        return $this->getMetadataFor(get_class($object));
     }
 
     /**
@@ -167,8 +155,6 @@ class SearchManager implements SearchManagerInterface
 
         $hits = $this->adapter->search($query);
 
-        $reflections = array();
-
         /** @var QueryHit $hit */
         foreach ($hits as $hit) {
             $document = $hit->getDocument();
@@ -178,14 +164,13 @@ class SearchManager implements SearchManagerInterface
                 continue;
             }
 
-            // we need a reflection instance of the document in event listeners
-            if (!isset($reflections[$document->getClass()])) {
-                $reflections[$document->getClass()] = new \ReflectionClass($document->getClass());
-            }
+            $metadata = $this->getMetadataFor($document->getClass());
+            $indexMetadata = $metadata->getIndexMetadata('_default');
+            $document->setCategory($indexMetadata->getCategoryName());
 
             $this->eventDispatcher->dispatch(
                 SearchEvents::HIT,
-                new HitEvent($hit, $reflections[$document->getClass()])
+                new HitEvent($hit, $metadata->reflection)
             );
         }
 
@@ -236,15 +221,7 @@ class SearchManager implements SearchManagerInterface
         $indexNames = array();
 
         foreach ($classNames as $className) {
-            $metadata = $this->metadataFactory->getMetadataForClass($className);
-
-            if (null === $metadata) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Cannot get metadata for class "%s"', $className
-                ));
-            }
-
-            $metadata = $metadata->getOutsideClassMetadata();
+            $metadata = $this->getMetadataFor($className);
 
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
                 $indexName = $indexMetadata->getIndexName();
@@ -317,5 +294,21 @@ class SearchManager implements SearchManagerInterface
     private function markIndexToFlush($indexName)
     {
         $this->indexesToFlush[$indexName] = true;
+    }
+
+    private function getMetadataFor($className)
+    {
+        $metadata = $this->metadataFactory->getMetadataForClass($className);
+
+        if (null === $metadata) {
+            throw new MetadataNotFoundException(
+                sprintf(
+                    'There is no search mapping for class "%s"',
+                    $className
+                )
+            );
+        }
+
+        return $metadata->getOutsideClassMetadata();
     }
 }

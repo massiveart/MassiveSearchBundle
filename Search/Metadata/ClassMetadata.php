@@ -24,7 +24,10 @@ class ClassMetadata extends BaseClassMetadata
     private $indexMetadatas = array();
 
     /**
-     * Add some field mapping
+     * Add an index metadata for the given context name
+     *
+     * @param mixed $contextName
+     * @param IndexMetadata $indexMetadata
      */
     public function addIndexMetadata($contextName, IndexMetadata $indexMetadata)
     {
@@ -42,9 +45,30 @@ class ClassMetadata extends BaseClassMetadata
 
     /**
      * Return the IndexMetadata metadata instances
+     *
+     * @return IndexMetadata[]
      */
     public function getIndexMetadatas()
     {
         return $this->indexMetadatas;
+    }
+
+    /**
+     * Return the indexmetadata for the given context
+     *
+     * @param string $contextName
+     *
+     * @return IndexMetadata
+     */
+    public function getIndexMetadata($contextName)
+    {
+        if (!isset($this->indexMetadatas[$contextName])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Context name "%s" not known, known contexts: "%s"',
+                $contextName, implode('", "', array_keys($this->indexMetadatas))
+            ));
+        }
+
+        return $this->indexMetadatas[$contextName];
     }
 }

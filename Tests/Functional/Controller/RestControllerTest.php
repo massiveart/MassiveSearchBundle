@@ -67,6 +67,7 @@ class SearchControllerTest extends BaseTestCase
                             'url' => '/foobar',
                             'image_url' => null,
                             'locale' => 'fr',
+                            'category' => 'product',
                         ),
                         'score' => -1,
                     ),

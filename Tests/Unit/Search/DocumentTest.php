@@ -61,5 +61,8 @@ class DocumentTest extends ProphecyTestCase
     {
         $this->document->setImageUrl('http://url.com/myimage.jpg');
         $this->assertEquals('http://url.com/myimage.jpg', $this->document->getImageUrl());
+
+        $this->document->setCategory('cat_1');
+        $this->assertEquals('cat_1', $this->document->getCategory());
     }
 }

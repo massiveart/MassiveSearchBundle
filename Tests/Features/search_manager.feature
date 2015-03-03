@@ -33,6 +33,7 @@ Feature: Search Manager
                 <title property="title" />
                 <description property="body" />
                 <image property="image" />
+                <category name="Cars" />
 
                 <fields>
                     <field name="title" expr="object.title" type="string" />
@@ -95,6 +96,31 @@ Feature: Search Manager
             | one    | 1         |
             | roomba 870 | 0 |
             | Car | 2 |
+
+    Scenario: Search category
+        Given the following "Car" objects have been persisted
+        """
+        [
+            { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg"}
+        ]
+        """
+        When I search for "Car"
+        Then I should have the following documents:
+        """
+        [
+            {
+                "id": "123",
+                "title": "Car one",
+                "description": "Hello",
+                "class": "Massive\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Car",
+                "url": "foobar",
+                "image_url": "",
+                "locale": null,
+                "category": "Cars"
+            }
+        ]
+        """
+
 
     Scenario: Return the status
         When I get the status
