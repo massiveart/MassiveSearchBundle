@@ -1,8 +1,7 @@
-FOSHttpCacheBundle
+MassiveSearchBundle
 ==================
 
 This is the documentation for the `MassiveSearchBundle <https://github.com/massiveart/MassiveSearchBundle>`_.
-Use the FOSHttpCacheBundle to:
 
 Contents
 --------

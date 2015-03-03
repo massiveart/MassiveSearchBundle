@@ -7,7 +7,7 @@ through *mapping*. Currently only **XML mapping** is natively supported:
 .. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <index name="product" />
@@ -28,17 +28,19 @@ Mapping elements
 
 The possible mappings are:
 
-- ``index``: Name of the index in which to insert the record
-- ``title``: Title to use in search results
-- ``description``: A description for the search result
-- ``url``: The URL to which the search resolt should link to
-- ``image``: An image to associate with the search result
-- ``fields``: List of ``<field />`` elements detailing which fields should be
+- **index**: Name of the index in which to insert the record
+- **title**: Title to use in search results
+- **description**: A description for the search result
+- **url**: The URL to which the search resolt should link to
+- **image**: An image to associate with the search result
+- **category**: Name of a category string to include in search results
+- **fields**: List of ``<field />`` elements detailing which fields should be
   indexed (i.e. used when finding search results).
 
-Each mapping can use either a ``property`` attribute or an ``expr`` attribute.
-These attributes determine how the value is retrieved. ``property`` will use
-the Symfony `PropertyAccess`_ component, and ``expr`` will use
+Each mapping (except **index** and **category** which are literal values) can
+use either a ``property`` attribute or an ``expr`` attribute.  These
+attributes determine how the value is retrieved. ``property`` will use the
+Symfony `PropertyAccess`_ component, and ``expr`` will use
 `ExpressionLanguage`_.
 
 PropertyAccess allows you to access properties of an object by path, e.g.
@@ -80,7 +82,7 @@ language.
 
 .. code-block:: xml
 
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <!-- ... -->
             <url expr="'/path/to/' ~ article.title'" />
@@ -108,7 +110,7 @@ to map additional indexes:
 .. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <index name="product" />
@@ -139,7 +141,7 @@ localized index (if configured, see :doc:`localization`).
 .. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <!-- ... -->
@@ -155,6 +157,19 @@ objects current localization code.
 If you do not map the ``locale`` or the ``locale`` is reosolved as ``NULL``
 then it will be assumed that the object is not localized.
 
+.. code-block:: xml
+
+    <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
+
+        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+            <!-- ... -->
+            <category name="Massive Products" />
+            <!-- ... -->
+        </mapping>
+
+    </massive-search-mapping>
+
 Full example
 ------------
 
@@ -163,7 +178,7 @@ The following example uses all the mapping options:
 .. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <index name="product" />
@@ -173,6 +188,7 @@ The following example uses all the mapping options:
             <url expr="'/path/to/' ~ object.id" />
             <description property="body" />
             <image expr="'/assets/images/' ~ object.type" />
+            <category name="My Category" />
             <fields>
                 <field name="title" type="string" />
                 <field name="body" type="string" />
