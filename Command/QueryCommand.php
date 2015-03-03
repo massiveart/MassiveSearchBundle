@@ -19,8 +19,6 @@ use Symfony\Component\Console\Helper\Table;
 
 /**
  * Command to execute a query on the configured search engine
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class QueryCommand extends ContainerAwareCommand
 {

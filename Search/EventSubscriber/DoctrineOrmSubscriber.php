@@ -18,8 +18,6 @@ use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 /**
  * Index mapped doctrine ORM documents
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class DoctrineOrmSubscriber implements EventSubscriber
 {

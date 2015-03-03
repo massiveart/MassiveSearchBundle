@@ -14,8 +14,6 @@ namespace Massive\Bundle\SearchBundle\Search;
  * Interface to be implement by all search library adapters.
  *
  * Note that adapters are not aware of localization
- *
- * @author Daniel Leech <daniel.leech@massiveart.com>
  */
 interface AdapterInterface
 {

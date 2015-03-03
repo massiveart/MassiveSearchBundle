@@ -15,8 +15,6 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 /**
  * Simple value object for representing properties which
  * should be accesible using the PropertyAccessor
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class Property implements FieldInterface
 {

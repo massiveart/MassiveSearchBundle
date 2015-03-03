@@ -23,8 +23,6 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
  *
  *     <field name="foobar" /> <!-- yields a Field -->
  *     <field name="foobar" property="foo" /> <!-- yields a Property -->
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class Field implements FieldInterface
 {

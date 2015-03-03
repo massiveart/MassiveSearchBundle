@@ -12,8 +12,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Class used to fluently build a search query context
- *
- * @author Daniel Leech <daniel.leech@massiveart.com>
  */
 class SearchQueryBuilder
 {

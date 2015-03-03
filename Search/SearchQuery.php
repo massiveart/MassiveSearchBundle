@@ -12,8 +12,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Represents a search query with contextual information
- *
- * @author Daniel Leech <daniel.leech@massiveart.com>
  */
 class SearchQuery
 {

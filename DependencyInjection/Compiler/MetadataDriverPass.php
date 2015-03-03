@@ -16,8 +16,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Compiler pass to register metadata drivers
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class MetadataDriverPass implements CompilerPassInterface
 {

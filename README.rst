@@ -108,7 +108,7 @@ through *mapping*. Currently only **XML mapping** is natively supported:
 .. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <index name="product" />
@@ -190,7 +190,7 @@ to map additional indexes:
 .. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <index name="product" />
@@ -220,7 +220,7 @@ The following example uses all the mapping options:
 .. code-block:: xml
 
     <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <index name="product" />

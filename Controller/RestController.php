@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * REST API for search
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class RestController
 {

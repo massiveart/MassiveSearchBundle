@@ -19,8 +19,6 @@ use Massive\Bundle\SearchBundle\Search\SearchEvents;
 
 /**
  * Comand to build (or rebuild) the search index
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class IndexRebuildCommand extends ContainerAwareCommand
 {
