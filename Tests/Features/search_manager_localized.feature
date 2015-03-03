@@ -23,7 +23,7 @@ Feature: Search Manager
         """
         And that the following mapping for "Product" exists:
         """
-        <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+        <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
             <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
                 <index name="product"/>
