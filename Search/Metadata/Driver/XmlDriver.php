@@ -18,6 +18,9 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 
+/**
+ * Loads MassiveSearch metadata from XML files
+ */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
     /**

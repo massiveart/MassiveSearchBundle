@@ -10,16 +10,16 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional\Search;
 
-use Massive\Bundle\SearchBundle\Controller\RestController;
+use Massive\Bundle\SearchBundle\Controller\SearchController;
 use Massive\Bundle\SearchBundle\Tests\Functional\BaseTestCase;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\BrowserKit\Client;
 
-class RestControllerTest extends BaseTestCase
+class SearchControllerTest extends BaseTestCase
 {
     /**
-     * @var RestController
+     * @var SearchController
      */
     private $controller;
 

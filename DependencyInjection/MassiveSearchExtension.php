@@ -44,7 +44,7 @@ class MassiveSearchExtension extends Extension
     {
         foreach ($config as $persistenceName => $config) {
             if (false === $config['enabled']) {
-                return;
+                continue;
             }
 
             $loader->load($persistenceName . '.xml');

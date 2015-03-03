@@ -15,6 +15,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
 
+/**
+ * This command returns some vendor specific information about
+ * the currently configured search implementation
+ */
 class StatusCommand extends ContainerAwareCommand
 {
     public function configure()

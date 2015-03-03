@@ -23,6 +23,9 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
+/**
+ * Rebuilds the indexes which relate to Doctrine ORM entities.
+ */
 class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
 {
     /**

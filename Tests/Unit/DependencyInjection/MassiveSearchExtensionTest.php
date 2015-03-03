@@ -177,7 +177,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         }
     }
 
-    public function testRestController()
+    public function testSearchController()
     {
         $this->load(array());
         $this->compile();

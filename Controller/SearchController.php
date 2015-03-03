@@ -15,9 +15,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * REST API for search
+ * API controller for search
  */
-class RestController
+class SearchController
 {
     /**
      * @var SearchManagerInterface

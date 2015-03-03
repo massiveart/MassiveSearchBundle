@@ -124,8 +124,7 @@ through *mapping*. Currently only **XML mapping** is natively supported:
 
 This mapping will cause the fields ``title`` and ``body`` to be indexed into
 an index named ``product`` using the ``locale`` determined from the locale
-field and the ID obtained from the objects ``id``
-field.
+field and the ID obtained from the objects ``id`` field.
 
 Mapping elements
 ~~~~~~~~~~~~~~~~

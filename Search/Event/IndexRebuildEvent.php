@@ -14,6 +14,10 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\NullOutput;
 
+/**
+ * This event is dispatched when the rebuild index command
+ * is executed.
+ */
 class IndexRebuildEvent extends Event
 {
     /**

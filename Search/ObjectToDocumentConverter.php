@@ -31,7 +31,7 @@ class ObjectToDocumentConverter
     private $factory;
 
     /**
-     * @param Factory            $factory
+     * @param Factory $factory
      * @param ExpressionLanguage $expressionLanguage
      */
     public function __construct(Factory $factory, FieldEvaluator $fieldEvaluator)
@@ -54,8 +54,8 @@ class ObjectToDocumentConverter
      * Map the given object to a new document using the
      * given metadata.
      *
-     * @param  IndexMetadata $metadata
-     * @param  object        $object
+     * @param IndexMetadata $metadata
+     * @param object $object
      * @return Document
      */
     public function objectToDocument(IndexMetadata $metadata, $object)
@@ -112,10 +112,11 @@ class ObjectToDocumentConverter
      * Populate the Document with the actual values from the object which
      * is being indexed.
      *
-     * @param  Document                  $document
-     * @param  mixed                     $object
-     * @param  array                     $fieldMapping
-     * @param  string                    $prefix       Prefix the document field name (used when called recursively)
+     * @param Document $document
+     * @param mixed $object
+     * @param array $fieldMapping
+     * @param string $prefix Prefix the document field name (used when called recursively)
+     *
      * @throws \InvalidArgumentException
      */
     private function populateDocument($document, $object, $fieldMapping, $prefix = '')
@@ -153,7 +154,7 @@ class ObjectToDocumentConverter
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix.$fieldName.$i
+                        $prefix . $fieldName . $i
                     );
                 }
 
@@ -165,7 +166,7 @@ class ObjectToDocumentConverter
             if (!is_array($value)) {
                 $document->addField(
                     $this->factory->makeField(
-                        $prefix.$fieldName,
+                        $prefix . $fieldName,
                         $value,
                         $mapping['type']
                     )
@@ -177,7 +178,7 @@ class ObjectToDocumentConverter
             foreach ($value as $key => $itemValue) {
                 $document->addField(
                     $this->factory->makeField(
-                        $prefix.$fieldName.$key,
+                        $prefix . $fieldName . $key,
                         $itemValue,
                         $mapping['type']
                     )

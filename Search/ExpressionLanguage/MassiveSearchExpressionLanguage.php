@@ -50,7 +50,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
     }
 
     /**
-     * Join is an analogue for array_map. The callback
+     * Map is an analogue for array_map. The callback
      * in the form of an expression. The nested expression has
      * one variable, "el".
      *
@@ -68,8 +68,6 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 throw new \Exception('Map function does not support compilation');
             },
             function (array $values, $elements, $expression) {
-                $expressionLanguage = $this;
-
                 if (count($elements) === 0) {
                     return array();
                 }
@@ -77,7 +75,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 $result = array();
 
                 foreach ($elements as $element) {
-                    $result[] = $expressionLanguage->evaluate($expression, array(
+                    $result[] = $this->evaluate($expression, array(
                         'el' => $element,
                     ));
                 }

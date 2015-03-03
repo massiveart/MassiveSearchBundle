@@ -53,8 +53,8 @@ class Factory
     }
 
     /**
-     * Make a new metadata object repesenting a mapped
-     * searchanle class
+     * Make a new metadata object representing a mapped
+     * searchable class
      */
     public function makeClassMetadata($class)
     {
