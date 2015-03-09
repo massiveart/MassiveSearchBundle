@@ -10,9 +10,7 @@ Feature: Search Manager
 
         namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
-        class Car
-        {
-            public $id;
+        class Car { public $id;
             public $title;
             public $body;
             public $numberOfWheels;
@@ -97,6 +95,16 @@ Feature: Search Manager
             | roomba 870 | 0 |
             | Car | 2 |
 
+    Scenario: Search for unknown index
+        Given the following "Car" objects have been persisted
+        """
+        [
+            { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg"}
+        ]
+        """
+        When I search for "foo" in index "barbarbar"
+        Then an exception with message 'Search indexes "barbarbar" not known. Known indexes: "car"' should be thrown
+
     Scenario: Search category
         Given the following "Car" objects have been persisted
         """
@@ -120,7 +128,6 @@ Feature: Search Manager
             }
         ]
         """
-
 
     Scenario: Return the status
         When I get the status

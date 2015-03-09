@@ -53,6 +53,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
         $classMetadata = $this->factory->makeClassMetadata($class->name);
+
         $xml = simplexml_load_file($file);
 
         if (count($xml->children()) > 1) {

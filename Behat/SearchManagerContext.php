@@ -49,6 +49,11 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     private $entities = array();
 
     /**
+     * @var Exception
+     */
+    private $lastException = null;
+
+    /**
      * @param string $adapterId
      */
     public function __construct($adapterId)
@@ -167,6 +172,27 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function iSearchForInLocale($query, $locale)
     {
         $this->lastResult = $this->getSearchManager()->createSearch($query)->locale($locale)->execute();
+    }
+
+    /**
+     * @Given I search for :query in index :index
+     */
+    public function iSearchForInIndex($query, $index)
+    {
+        try {
+            $this->lastResult = $this->getSearchManager()->createSearch($query)->index($index)->execute();
+        } catch (\Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then an exception with message :message should be thrown
+     */
+    public function thenAnExceptionWithMessageShouldBeThrown($message)
+    {
+        Assert::assertNotNull($this->lastException, 'An exception has been thrown');
+        Assert::assertEquals($message, $this->lastException->getMessage());
     }
 
     /**
