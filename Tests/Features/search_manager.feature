@@ -17,6 +17,7 @@ Feature: Search Manager
             public $cost;
             public $date;
             public $image;
+            public $locale;
         }
         """
         And I purge the index "car"
@@ -32,6 +33,7 @@ Feature: Search Manager
                 <description property="body" />
                 <category name="Car" />
                 <image property="image" />
+                <locale property="locale" />
 
                 <fields>
                     <field name="title" expr="object.title" type="string" />
@@ -109,7 +111,7 @@ Feature: Search Manager
         Given the following "Car" objects have been indexed
         """
         [
-            { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg"}
+            { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg", "locale": "fr"}
         ]
         """
         When I search for "Car"
@@ -123,7 +125,7 @@ Feature: Search Manager
                 "class": "Massive\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Car",
                 "url": "foobar",
                 "image_url": "",
-                "locale": null,
+                "locale": "fr",
                 "category": "Car"
             }
         ]

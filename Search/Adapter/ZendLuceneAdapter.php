@@ -34,6 +34,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
+    const LOCALE_FIELDNAME = '__locale';
     const DESCRIPTION_FIELDNAME = '__description';
     const IMAGE_URL = '__image_url';
 
@@ -98,6 +99,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::TITLE_FIELDNAME, $document->getTitle()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
+        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::LOCALE_FIELDNAME, $document->getLocale()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::CLASS_TAG, $document->getClass()));
         $luceneDocument->addField(Lucene\Document\Field::Keyword(self::IMAGE_URL, $document->getImageUrl()));
 
@@ -160,6 +162,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $document->setId($luceneDocument->getFieldValue(self::ID_FIELDNAME));
             $document->setTitle($luceneDocument->getFieldValue(self::TITLE_FIELDNAME));
             $document->setDescription($luceneDocument->getFieldValue(self::DESCRIPTION_FIELDNAME));
+            $document->setLocale($luceneDocument->getFieldValue(self::LOCALE_FIELDNAME));
             $document->setUrl($luceneDocument->getFieldValue(self::URL_FIELDNAME));
             $document->setClass($luceneDocument->getFieldValue(self::CLASS_TAG));
             $document->setImageUrl($luceneDocument->getFieldValue(self::IMAGE_URL));

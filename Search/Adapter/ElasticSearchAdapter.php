@@ -30,6 +30,7 @@ class ElasticSearchAdapter implements AdapterInterface
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
+    const LOCALE_FIELDNAME = '__locale';
     const IMAGE_URL = '__image_url';
 
     /**
@@ -86,6 +87,7 @@ class ElasticSearchAdapter implements AdapterInterface
         $fields[self::URL_FIELDNAME] = $document->getUrl();
         $fields[self::TITLE_FIELDNAME] = $document->getTitle();
         $fields[self::DESCRIPTION_FIELDNAME] = $document->getDescription();
+        $fields[self::LOCALE_FIELDNAME] = $document->getLocale();
         $fields[self::CLASS_TAG] = $document->getClass();
         $fields[self::IMAGE_URL] = $document->getImageUrl();
 
@@ -152,6 +154,7 @@ class ElasticSearchAdapter implements AdapterInterface
             $elasticSource = $elasticHit['_source'];
             $document->setTitle($elasticSource[self::TITLE_FIELDNAME]);
             $document->setDescription($elasticSource[self::DESCRIPTION_FIELDNAME]);
+            $document->setLocale($elasticSource[self::LOCALE_FIELDNAME]);
             $document->setUrl($elasticSource[self::URL_FIELDNAME]);
             $document->setClass($elasticSource[self::CLASS_TAG]);
             $document->setImageUrl($elasticSource[self::IMAGE_URL]);
