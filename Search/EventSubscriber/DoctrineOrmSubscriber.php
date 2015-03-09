@@ -40,7 +40,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return array(
-            Events::postRemove,
+            Events::preRemove,
             Events::postUpdate,
             Events::postPersist,
         );
@@ -73,7 +73,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
      *
      * @param LifecycleEventArgs $event
      */
-    public function postRemove(LifecycleEventArgs $event)
+    public function preRemove(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
 

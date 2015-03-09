@@ -137,7 +137,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * @Given the following ":className" objects have been persisted
+     * @Given the following ":className" objects have been indexed
      */
     public function iIndexTheFollowingObjects($className, PyStringNode $string)
     {

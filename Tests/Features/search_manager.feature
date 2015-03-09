@@ -44,7 +44,7 @@ Feature: Search Manager
         """
 
     Scenario: Basic indexing
-        Given the following "Car" objects have been persisted
+        Given the following "Car" objects have been indexed
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
@@ -55,7 +55,7 @@ Feature: Search Manager
         Then there should be 2 results
 
     Scenario: Purging
-        Given the following "Car" objects have been persisted
+        Given the following "Car" objects have been indexed
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
@@ -67,7 +67,7 @@ Feature: Search Manager
         Then there should be 0 results
 
     Scenario: Deindex
-        Given the following "Car" objects have been persisted
+        Given the following "Car" objects have been indexed
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
@@ -79,7 +79,7 @@ Feature: Search Manager
         Then there should be 1 results
 
     Scenario Outline: Searching
-        Given the following "Car" objects have been persisted
+        Given the following "Car" objects have been indexed
         """
         [
             { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg"},
@@ -96,7 +96,7 @@ Feature: Search Manager
             | Car | 2 |
 
     Scenario: Search for unknown index
-        Given the following "Car" objects have been persisted
+        Given the following "Car" objects have been indexed
         """
         [
             { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg"}
@@ -106,7 +106,7 @@ Feature: Search Manager
         Then an exception with message 'Search indexes "barbarbar" not known. Known indexes: "car"' should be thrown
 
     Scenario: Search returns documents
-        Given the following "Car" objects have been persisted
+        Given the following "Car" objects have been indexed
         """
         [
             { "id": 123, "url": "/url/to", "title": "Car one", "body": "Hello", "image": "foo.jpg"}

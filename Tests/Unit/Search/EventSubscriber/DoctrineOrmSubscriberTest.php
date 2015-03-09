@@ -57,7 +57,7 @@ class DoctrineOrmSubscriberTest extends ProphecyTestCase
     public function testPostRemove()
     {
         $this->searchManager->deindex($this->entity)->shouldBeCalled();
-        $this->subscriber->postRemove($this->event->reveal());
+        $this->subscriber->preRemove($this->event->reveal());
     }
 
     public function testPostUpdate()

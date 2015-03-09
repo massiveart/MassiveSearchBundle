@@ -353,6 +353,7 @@ class SearchManager implements SearchManagerInterface
 
     private function getMetadataFor($className)
     {
+        syslog(LOG_INFO, $className);
         $metadata = $this->metadataFactory->getMetadataForClass($className);
 
         if (null === $metadata) {

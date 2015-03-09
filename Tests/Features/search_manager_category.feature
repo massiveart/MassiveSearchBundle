@@ -85,21 +85,21 @@ Feature: Search Managager category searching
 
         </massive-search-mapping>
         """
-        And the following "Car" objects have been persisted
+        And the following "Car" objects have been indexed
         """
         [
             { "id": 123, "title": "Car one"},
             { "id": 321, "title": "Car two"}
         ]
         """
-        And the following "Bicycle" objects have been persisted
+        And the following "Bicycle" objects have been indexed
         """
         [
             { "id": 123, "title": "Bicycle one"},
             { "id": 321, "title": "Bicycle two"}
         ]
         """
-        And the following "Cat" objects have been persisted
+        And the following "Cat" objects have been indexed
         """
         [
             { "id": 123, "title": "Cat one"}

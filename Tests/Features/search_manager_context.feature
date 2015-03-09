@@ -50,7 +50,7 @@ Feature: Contexts
         And I purge the index "animal_website"
 
     Scenario Outline: Searching in locale with context index
-        Given the following "Product" objects have been persisted
+        Given the following "Product" objects have been indexed
         """
         [
             { "id": 1, "title": "Giraffe", "body": "Long neck", "date": "2015-01-01", "url": "http://foo", "locale": "fr", "image": "foo.png" },
@@ -66,7 +66,7 @@ Feature: Contexts
             | Giraffe | fr | 1 | animal |
 
     Scenario: Search with no index
-        Given the following "Product" objects have been persisted
+        Given the following "Product" objects have been indexed
         """
         [
             { "id": 3, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" },

@@ -45,7 +45,7 @@ Feature: Search Manager
         And I purge the index "product"
 
     Scenario Outline: Searching in locale
-        Given the following "Product" objects have been persisted
+        Given the following "Product" objects have been indexed
         """
         [
             { "id": 1, "title": "Giraffe", "body": "Long neck", "date": "2015-01-01", "url": "http://foo", "locale": "fr", "image": "foo.png" },
@@ -65,7 +65,7 @@ Feature: Search Manager
             | Hyena | de | 1 |
 
     Scenario: Search with no locale
-        Given the following "Product" objects have been persisted
+        Given the following "Product" objects have been indexed
         """
         [
             { "id": 3, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" },
