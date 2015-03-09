@@ -40,10 +40,5 @@
         <!-- Expression language -->
         <service id="massive_search.expression_language" class="%massive_search.expression_language.class%" />
 
-        <!-- Controller -->
-        <service id="massive_search.controller.rest" class="%massive_search.controller.rest.class%">
-            <argument type="service" id="massive_search.search_manager" />
-        </service>
-
     </services>
 </container>

@@ -176,11 +176,4 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
             $this->container->get($serviceId);
         }
     }
-
-    public function testSearchController()
-    {
-        $this->load(array());
-        $this->compile();
-        $this->container->get('massive_search.controller.rest');
-    }
 }
