@@ -37,7 +37,6 @@ Feature: Search Managager category searching
             public $title;
         }
         """
-        And I purge the index "car"
         And that the following mapping for "Car" exists:
         """
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">

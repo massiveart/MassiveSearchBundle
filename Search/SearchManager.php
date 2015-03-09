@@ -217,7 +217,7 @@ class SearchManager implements SearchManagerInterface
             }
         }
 
-        return array_unique($categoryNames);
+        return array_values(array_unique($categoryNames));
     }
 
     /**
@@ -412,5 +412,6 @@ class SearchManager implements SearchManagerInterface
                 implode('", "', $queryCategoryNames), implode('", "', $categoryNames)
             ));
         }
+
     }
 }
