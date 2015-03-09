@@ -34,6 +34,8 @@ class SearchQueryBuilder
     /**
      * Set the index to search in
      *
+     * Mutually exlusive with category
+     *
      * @param string
      * @return SearchQueryBuilder
      */
@@ -51,6 +53,34 @@ class SearchQueryBuilder
     public function locale($locale)
     {
         $this->searchQuery->setLocale($locale);
+
+        return $this;
+    }
+
+    /**
+     * Set the category to search in.
+     *
+     * Mutually exclusive with index
+     *
+     * @param string
+     * @return SearchQueryBuilder
+     */
+    public function category($category)
+    {
+        $this->searchQuery->setCategories(array($category));
+
+        return $this;
+    }
+
+    /**
+     * Set an array of categories to search in
+     *
+     * @param string[]
+     * @return SearchQueryBuilder
+     */
+    public function categories(array $categories)
+    {
+        $this->searchQuery->setCategoties($categories);
 
         return $this;
     }

@@ -30,8 +30,8 @@ Feature: Search Manager
                 <url expr="'foobar'" />
                 <title property="title" />
                 <description property="body" />
+                <category name="Car" />
                 <image property="image" />
-                <category name="Cars" />
 
                 <fields>
                     <field name="title" expr="object.title" type="string" />
@@ -105,7 +105,7 @@ Feature: Search Manager
         When I search for "foo" in index "barbarbar"
         Then an exception with message 'Search indexes "barbarbar" not known. Known indexes: "car"' should be thrown
 
-    Scenario: Search category
+    Scenario: Search returns documents
         Given the following "Car" objects have been persisted
         """
         [
@@ -124,7 +124,7 @@ Feature: Search Manager
                 "url": "foobar",
                 "image_url": "",
                 "locale": null,
-                "category": "Cars"
+                "category": "Car"
             }
         ]
         """

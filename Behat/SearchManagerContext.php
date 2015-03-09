@@ -142,7 +142,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function iIndexTheFollowingObjects($className, PyStringNode $string)
     {
         $objectsData = json_decode($string->getRaw(), true);
-        Assert::assertArrayHasKey($className, $this->entityClasses);
+        Assert::assertArrayHasKey($className, $this->entityClasses, 'Entity exists');
         Assert::assertNotNull($objectsData);
 
         foreach ($objectsData as $objectData) {
@@ -175,12 +175,36 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * @Given I search for :query in index :index
+     * @Given I search for :query in category :category
+     */
+    public function iSearchForInCategory($query, $category)
+    {
+        try {
+            $this->lastResult = $this->getSearchManager()->createSearch($query)->category($category)->execute();
+        } catch (\Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I search for :query in index :index
      */
     public function iSearchForInIndex($query, $index)
     {
         try {
             $this->lastResult = $this->getSearchManager()->createSearch($query)->index($index)->execute();
+        } catch (\Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I search for something with both a category and an index
+     */
+    public function iSearchForInCategoryAndIndex()
+    {
+        try {
+            $this->lastResult = $this->getSearchManager()->createSearch('something')->index('foo')->category('bar')->execute();
         } catch (\Exception $e) {
             $this->lastException = $e;
         }
