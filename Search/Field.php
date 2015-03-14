@@ -31,13 +31,11 @@ class Field
     protected $value;
 
     const TYPE_STRING = 'string';
-    const TYPE_BINRARY = 'binary';
 
     public static function getValidTypes()
     {
         return array(
             self::TYPE_STRING,
-            self::TYPE_BINARY,
         );
     }
 
