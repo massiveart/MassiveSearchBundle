@@ -78,8 +78,8 @@ class ElasticSearchAdapter implements AdapterInterface
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not know. Known types are: %s',
-                        implode(', ', Field::getValidTypes())
+                        'Search field type "%s" is not known. Known types are: %s',
+                        $massiveField->getType(), implode(', ', Field::getValidTypes())
                     ));
             }
         }
@@ -152,12 +152,25 @@ class ElasticSearchAdapter implements AdapterInterface
             $document->setId($elasticHit['_id']);
 
             $elasticSource = $elasticHit['_source'];
-            $document->setTitle($elasticSource[self::TITLE_FIELDNAME]);
-            $document->setDescription($elasticSource[self::DESCRIPTION_FIELDNAME]);
-            $document->setLocale($elasticSource[self::LOCALE_FIELDNAME]);
-            $document->setUrl($elasticSource[self::URL_FIELDNAME]);
-            $document->setClass($elasticSource[self::CLASS_TAG]);
-            $document->setImageUrl($elasticSource[self::IMAGE_URL]);
+
+            if (isset($elasticSource[self::TITLE_FIELDNAME])) {
+                $document->setTitle($elasticSource[self::TITLE_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::DESCRIPTION_FIELDNAME])) {
+                $document->setDescription($elasticSource[self::DESCRIPTION_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::LOCALE_FIELDNAME])) {
+                $document->setLocale($elasticSource[self::LOCALE_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::URL_FIELDNAME])) {
+                $document->setUrl($elasticSource[self::URL_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::CLASS_TAG])) {
+                $document->setClass($elasticSource[self::CLASS_TAG]);
+            }
+            if (isset($elasticSource[self::IMAGE_URL])) {
+                $document->setImageUrl($elasticSource[self::IMAGE_URL]);
+            }
 
             $hit->setId($document->getId());
 

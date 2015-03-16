@@ -10,7 +10,7 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata;
 
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;

@@ -42,6 +42,7 @@ class AppKernel extends TestKernel
         }
 
         $fs->remove(__DIR__ . '/../Resources/app/data');
+        $fs->remove(__DIR__ . '/cache/jms_serializer');
     }
 
     public static function clearData()

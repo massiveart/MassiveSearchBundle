@@ -11,7 +11,7 @@
 namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\Factory;

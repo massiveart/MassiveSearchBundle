@@ -4,13 +4,13 @@ Feature: Search Managager category searching
     I should be able to use the search manager API to do that
 
     Background:
-        Given the entity "Car" exists:
+        Given the entity "Mouse" exists:
         """
         <?php
 
         namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
-        class Car { 
+        class Mouse { 
             public $id;
             public $title;
         }
@@ -37,11 +37,11 @@ Feature: Search Managager category searching
             public $title;
         }
         """
-        And that the following mapping for "Car" exists:
+        And that the following mapping for "Mouse" exists:
         """
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
-            <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
+            <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Mouse">
                 <index name="index_car"/>
                 <id property="id"/>
                 <title property="title" />
@@ -85,11 +85,11 @@ Feature: Search Managager category searching
 
         </massive-search-mapping>
         """
-        And the following "Car" objects have been indexed
+        And the following "Mouse" objects have been indexed
         """
         [
-            { "id": 123, "title": "Car one"},
-            { "id": 321, "title": "Car two"}
+            { "id": 123, "title": "Mouse one"},
+            { "id": 321, "title": "Mouse two"}
         ]
         """
         And the following "Bicycle" objects have been indexed

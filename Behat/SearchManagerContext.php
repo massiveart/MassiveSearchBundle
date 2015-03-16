@@ -102,6 +102,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     {
         $this->entityClasses[$name] = 'Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\\' . $name;
         file_put_contents(AppKernel::getEntityDir() . '/' . $name . '.php', $string->getRaw());
+        $this->pause();
     }
 
     /**
@@ -137,9 +138,26 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @When I index the following ":className" objects
+     */
+    public function whenIIndexTheFollowingObjects($className, PyStringNode $string)
+    {
+        try {
+            $this->doIndexTheFollowingObjects($className, $string);
+        } catch (\Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @Given the following ":className" objects have been indexed
      */
-    public function iIndexTheFollowingObjects($className, PyStringNode $string)
+    public function givenIIndexTheFollowingObjects($className, PyStringNode $string)
+    {
+        $this->doIndexTheFollowingObjects($className, $string);
+    }
+
+    private function doIndexTheFollowingObjects($className, PyStringNode $string)
     {
         $objectsData = json_decode($string->getRaw(), true);
         Assert::assertArrayHasKey($className, $this->entityClasses, 'Entity exists');
@@ -155,6 +173,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         }
 
         $this->getSearchManager()->flush();
+
         $this->pause();
     }
 
@@ -216,7 +235,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function thenAnExceptionWithMessageShouldBeThrown($message)
     {
         Assert::assertNotNull($this->lastException, 'An exception has been thrown');
-        Assert::assertEquals($message, $this->lastException->getMessage());
+        Assert::assertContains($message, $this->lastException->getMessage());
     }
 
     /**

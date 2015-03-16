@@ -86,8 +86,8 @@ class ZendLuceneAdapter implements AdapterInterface
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not know. Known types are: %s',
-                        implode(', ', Field::getValidTypes())
+                        'Search field type "%s" is not known. Known types are: %s',
+                        $field->getType(), implode('", "', Field::getValidTypes())
                     ));
             }
 
@@ -226,6 +226,10 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function listIndexes()
     {
+        if (!file_exists($this->basePath)) {
+            return array();
+        }
+
         $finder = new Finder();
         $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);
         $names = array();

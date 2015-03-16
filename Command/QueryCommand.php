@@ -51,11 +51,13 @@ EOT
         $locale = $input->getOption('locale');
 
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
-        $res = $searchManager->createSearch($query)->indexes($index)->locale($locale)->execute();
+        $start = microtime(true);
+        $hits = $searchManager->createSearch($query)->indexes($index)->locale($locale)->execute();
+        $timeElapsed = microtime(true) - $start;
 
         $table = new Table($output);
         $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class'));
-        foreach ($res as $hit) {
+        foreach ($hits as $hit) {
             $document = $hit->getDocument();
             $table->addRow(array(
                 $hit->getScore(),
@@ -68,6 +70,7 @@ EOT
             ));
         }
         $table->render();
+        $output->writeln(sprintf('%s result(s) in %fs', count($hits), $timeElapsed));
     }
 
     /**

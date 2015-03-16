@@ -4,13 +4,14 @@ Feature: Search Manager
     I should be able to use the search manager API
 
     Background:
-         Given the entity "Car" exists:
+        Given the entity "Car" exists:
         """
         <?php
 
         namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
-        class Car { public $id;
+        class Car { 
+            public $id;
             public $title;
             public $body;
             public $numberOfWheels;
@@ -44,17 +45,6 @@ Feature: Search Manager
 
         </massive-search-mapping>
         """
-
-    Scenario: Basic indexing
-        Given the following "Car" objects have been indexed
-        """
-        [
-            { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
-            { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
-        ]
-        """
-        When I search for "My car"
-        Then there should be 2 results
 
     Scenario: Purging
         Given the following "Car" objects have been indexed

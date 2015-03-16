@@ -12,7 +12,7 @@ namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
 use Prophecy\PhpUnit\ProphecyTestCase;
@@ -85,7 +85,7 @@ class SearchManagerTest extends ProphecyTestCase
             $this->localizationStrategy->reveal()
         );
 
-        $this->product = new \Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product();
+        $this->product = new Product();
     }
 
     /**
@@ -103,7 +103,7 @@ class SearchManagerTest extends ProphecyTestCase
     public function testIndexNoMetadata()
     {
         $this->metadataFactory
-            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
+            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product')
             ->willReturn(null);
 
         $this->searchManager->index($this->product);
@@ -112,7 +112,7 @@ class SearchManagerTest extends ProphecyTestCase
     public function testIndex()
     {
         $this->metadataFactory
-            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
+            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product')
             ->willReturn($this->classHierachyMetadata);
 
         $this->indexMetadata->getName()->willReturn('test');

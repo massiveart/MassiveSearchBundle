@@ -351,9 +351,15 @@ class SearchManager implements SearchManagerInterface
         $this->indexesToFlush[$indexName] = true;
     }
 
+    /**
+     * Return metadata for the given classname
+     *
+     * @param string $className
+     *
+     * @return ClassMetadata
+     */
     private function getMetadataFor($className)
     {
-        syslog(LOG_INFO, $className);
         $metadata = $this->metadataFactory->getMetadataForClass($className);
 
         if (null === $metadata) {
@@ -413,6 +419,5 @@ class SearchManager implements SearchManagerInterface
                 implode('", "', $queryCategoryNames), implode('", "', $categoryNames)
             ));
         }
-
     }
 }
