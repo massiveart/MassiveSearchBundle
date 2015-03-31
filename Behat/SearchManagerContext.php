@@ -194,6 +194,14 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @Given I search for :query in locale :locale with category :category
+     */
+    public function iSearchForInLocaleWIthCategory($query, $locale, $category)
+    {
+        $this->lastResult = $this->getSearchManager()->createSearch($query)->locale($locale)->category($category)->execute();
+    }
+
+    /**
      * @Given I search for :query in category :category
      */
     public function iSearchForInCategory($query, $category)

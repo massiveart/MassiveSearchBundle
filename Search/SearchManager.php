@@ -335,7 +335,7 @@ class SearchManager implements SearchManagerInterface
         $expandedIndexes = array();
 
         foreach ($query->getIndexes() as $index) {
-            foreach ($this->getLocalizedIndexNamesFor($index) as $expandedIndex) {
+            foreach ($this->getLocalizedIndexNamesFor($index, $query->getLocale()) as $expandedIndex) {
                 $expandedIndexes[$expandedIndex] = $expandedIndex;
             }
         }

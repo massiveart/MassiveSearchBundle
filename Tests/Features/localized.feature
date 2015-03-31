@@ -33,6 +33,7 @@ Feature: Search Manager
                 <locale property="locale" />
                 <description property="body" />
                 <image property="image" />
+                <category name="product" />
 
                 <fields>
                     <field name="title" type="string" />
@@ -63,6 +64,17 @@ Feature: Search Manager
             | Lion | fr | 2 |
             | Lion | de | 0 |
             | Hyena | de | 1 |
+
+    Scenario: Search in locale with category
+        Given the following "Product" objects have been indexed
+        """
+        [
+            { "id": 3, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" },
+            { "id": 4, "title": "French Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "fr", "image": "foo.png" }
+        ]
+        """
+        When I search for "Hyena" in locale "de" with category "product"
+        Then there should be "1" results
 
     Scenario: Search with no locale
         Given the following "Product" objects have been indexed
