@@ -114,6 +114,7 @@ class ElasticSearchAdapter implements AdapterInterface
             'type' => $this->documentToType($document),
             'id' => $document->getId(),
             'refresh' => true,
+            'ignore' => 404,
         );
 
         $this->client->delete($params);
