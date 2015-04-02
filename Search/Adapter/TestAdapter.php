@@ -100,7 +100,12 @@ class TestAdapter implements AdapterInterface
                 $isHit = false;
 
                 foreach ($document->getFields() as $field) {
-                    if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $field->getValue())) {
+                    $fieldValue = $field->getValue();
+                    if (is_array($fieldValue)) {
+                        $fieldValue = implode(' ', $fieldValue);
+                    }
+
+                    if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $fieldValue)) {
                         $isHit = true;
                         break;
                     }
