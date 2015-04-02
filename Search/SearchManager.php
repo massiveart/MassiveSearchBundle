@@ -248,18 +248,19 @@ class SearchManager implements SearchManagerInterface
             $metadata = $this->getMetadataFor($className);
 
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
+                $indexName = $indexMetadata->getIndexName();
                 if ($categories) {
                     if (in_array($indexMetadata->getCategoryName(), $categories)) {
-                        $indexNames[] = $indexMetadata->getIndexName();
+                        $indexNames[$indexName] = $indexName;
                     }
                     continue;
                 }
 
-                $indexNames[] = $indexMetadata->getIndexName();
+                $indexNames[$indexName] = $indexName;
             }
         }
 
-        return $indexNames;
+        return array_values($indexNames);
     }
 
     /**

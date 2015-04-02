@@ -71,7 +71,6 @@ class ElasticSearchAdapter implements AdapterInterface
     {
         $fields = array();
         foreach ($document->getFields() as $massiveField) {
-            $fields = array();
             switch ($massiveField->getType()) {
                 case Field::TYPE_STRING:
                     $fields[$massiveField->getName()] = $massiveField->getValue();
