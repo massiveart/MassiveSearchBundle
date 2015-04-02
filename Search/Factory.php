@@ -26,7 +26,7 @@ class Factory
      *
      * @return Document
      */
-    public function makeDocument()
+    public function createDocument()
     {
         return new Document();
     }
@@ -36,7 +36,7 @@ class Factory
      *
      * @return QueryHit
      */
-    public function makeQueryHit()
+    public function createQueryHit()
     {
         return new QueryHit();
     }
@@ -47,7 +47,7 @@ class Factory
      *
      * @return Field
      */
-    public function makeField($name, $value, $type = Field::TYPE_STRING)
+    public function createField($name, $value, $type = Field::TYPE_STRING)
     {
         return new Field($name, $value, $type);
     }
@@ -56,7 +56,7 @@ class Factory
      * Make a new metadata object representing a mapped
      * searchable class
      */
-    public function makeClassMetadata($class)
+    public function createClassMetadata($class)
     {
         return new ClassMetadata($class);
     }
@@ -67,22 +67,22 @@ class Factory
      *
      * @return IndexMetadata
      */
-    public function makeIndexMetadata()
+    public function createIndexMetadata()
     {
         return new IndexMetadata();
     }
 
-    public function makeMetadataField($name)
+    public function createMetadataField($name)
     {
         return new MetadataField($name);
     }
 
-    public function makeMetadataProperty($path)
+    public function createMetadataProperty($path)
     {
         return new Property($path);
     }
 
-    public function makeMetadataExpression($expression)
+    public function createMetadataExpression($expression)
     {
         return new Expression($expression);
     }

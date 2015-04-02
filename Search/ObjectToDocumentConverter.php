@@ -69,7 +69,7 @@ class ObjectToDocumentConverter
         $fieldMapping = $metadata->getFieldMapping();
         $category = $metadata->getCategoryName();
 
-        $document = $this->factory->makeDocument();
+        $document = $this->factory->createDocument();
         $document->setId($this->fieldEvaluator->getValue($object, $idField));
         $document->setClass($metadata->getName());
 
@@ -170,7 +170,7 @@ class ObjectToDocumentConverter
 
             if (!is_array($value)) {
                 $document->addField(
-                    $this->factory->makeField(
+                    $this->factory->createField(
                         $prefix . $fieldName,
                         $value,
                         $mapping['type']
@@ -182,7 +182,7 @@ class ObjectToDocumentConverter
 
             foreach ($value as $key => $itemValue) {
                 $document->addField(
-                    $this->factory->makeField(
+                    $this->factory->createField(
                         $prefix . $fieldName . $key,
                         $itemValue,
                         $mapping['type']

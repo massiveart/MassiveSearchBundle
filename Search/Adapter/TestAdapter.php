@@ -95,7 +95,7 @@ class TestAdapter implements AdapterInterface
             }
 
             foreach ($this->documents[$index] as $document) {
-                $hit = $this->factory->makeQueryHit();
+                $hit = $this->factory->createQueryHit();
 
                 $isHit = false;
 

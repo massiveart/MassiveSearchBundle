@@ -150,8 +150,8 @@ class ZendLuceneAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($luceneHits as $luceneHit) {
-            $hit = $this->factory->makeQueryHit();
-            $document = $this->factory->makeDocument();
+            $hit = $this->factory->createQueryHit();
+            $document = $this->factory->createDocument();
 
             $hit->setDocument($document);
             $hit->setScore($luceneHit->score);
@@ -170,7 +170,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $hit->setId($document->getId());
 
             foreach ($luceneDocument->getFieldNames() as $fieldName) {
-                $document->addField($this->factory->makeField($fieldName, $luceneDocument->getFieldValue($fieldName)));
+                $document->addField($this->factory->createField($fieldName, $luceneDocument->getFieldValue($fieldName)));
             }
             $hits[] = $hit;
         }

@@ -144,8 +144,8 @@ class ElasticSearchAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($elasticHits as $elasticHit) {
-            $hit = $this->factory->makeQueryHit();
-            $document = $this->factory->makeDocument();
+            $hit = $this->factory->createQueryHit();
+            $document = $this->factory->createDocument();
 
             $hit->setDocument($document);
             $hit->setScore($elasticHit['_score']);
@@ -176,7 +176,7 @@ class ElasticSearchAdapter implements AdapterInterface
             $hit->setId($document->getId());
 
             foreach ($elasticSource as $fieldName => $fieldValue) {
-                $document->addField($this->factory->makeField($fieldName, $fieldValue));
+                $document->addField($this->factory->createField($fieldName, $fieldValue));
             }
             $hits[] = $hit;
         }

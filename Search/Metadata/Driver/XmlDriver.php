@@ -52,7 +52,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
-        $classMetadata = $this->factory->makeClassMetadata($class->name);
+        $classMetadata = $this->factory->createClassMetadata($class->name);
 
         $xml = simplexml_load_file($file);
 
@@ -104,7 +104,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         );
 
         foreach ($indexMappings as $contextName => $mapping) {
-            $indexMetadata = $this->factory->makeIndexMetadata();
+            $indexMetadata = $this->factory->createIndexMetadata();
             $indexMetadata->setIndexName($mapping['index']);
             $indexMetadata->setIdField($mapping['id']);
             $indexMetadata->setLocaleField($mapping['locale']);
@@ -200,15 +200,15 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         // if not property or expression given, try using the "name"
         if (isset($field['name']) && !isset($field['expr']) && !isset($field['property'])) {
-            return $this->factory->makeMetadataField((string) $field['name']);
+            return $this->factory->createMetadataField((string) $field['name']);
         }
 
         if (isset($field['expr'])) {
-            return $this->factory->makeMetadataExpression((string) $field['expr']);
+            return $this->factory->createMetadataExpression((string) $field['expr']);
         }
 
         if (isset($field['property'])) {
-            return $this->factory->makeMetadataProperty((string) $field['property']);
+            return $this->factory->createMetadataProperty((string) $field['property']);
         }
 
         throw new \InvalidArgumentException(sprintf(

@@ -25,10 +25,10 @@ class TestAdapterTest extends ProphecyTestCase
 
         $this->document1 = new Document();
         $this->document1->setId(1);
-        $this->document1->addField($this->factory->makeField('foo', 'Foo'));
+        $this->document1->addField($this->factory->createField('foo', 'Foo'));
         $this->document2 = new Document();
         $this->document2->setId(2);
-        $this->document2->addField($this->factory->makeField('foo', 'Foo'));
+        $this->document2->addField($this->factory->createField('foo', 'Foo'));
     }
 
     public function testTestAdapter()
