@@ -19,6 +19,7 @@ class QueryCommandTest extends BaseTestCase
 {
     public function setUp()
     {
+        parent::setUp();
         $command = new QueryCommand();
         $application = new Application($this->getContainer()->get('kernel'));
         $command->setApplication($application);
@@ -30,11 +31,11 @@ class QueryCommandTest extends BaseTestCase
     {
         $this->tester->execute(array(
             'query' => 'Hello',
-            '--index' => 'product',
+            '--index' => array('product'),
         ));
 
         $display = $this->tester->getDisplay();
         $display = explode("\n", $display);
-        $this->assertCount(15, $display);
+        $this->assertCount(16, $display);
     }
 }

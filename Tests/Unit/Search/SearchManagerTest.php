@@ -12,14 +12,14 @@ namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 class SearchManagerTest extends ProphecyTestCase
 {
@@ -62,20 +62,30 @@ class SearchManagerTest extends ProphecyTestCase
     {
         $this->adapter = $this->prophesize('Massive\Bundle\SearchBundle\Search\AdapterInterface');
         $this->metadataFactory = $this->prophesize('Metadata\MetadataFactory');
-        $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
+        $this->indexMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
+        $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
+        $this->metadata->getIndexMetadatas()->willReturn(array(
+            $this->indexMetadata->reveal(),
+        ));
+
         $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
+
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-        $this->factory = new Factory();
+        $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
+        $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
+        $this->fieldEvaluator = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator');
+        $this->localizationStrategy = $this->prophesize('Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface');
 
         $this->searchManager = new SearchManager(
-            $this->factory,
             $this->adapter->reveal(),
             $this->metadataFactory->reveal(),
-            $this->eventDispatcher->reveal()
+            $this->converter->reveal(),
+            $this->eventDispatcher->reveal(),
+            $this->localizationStrategy->reveal()
         );
 
-        $this->product = new \Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product();
+        $this->product = new Product();
     }
 
     /**
@@ -87,13 +97,13 @@ class SearchManagerTest extends ProphecyTestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException
      * @expectedExceptionMessage There is no search mappin
      */
     public function testIndexNoMetadata()
     {
         $this->metadataFactory
-            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
+            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product')
             ->willReturn(null);
 
         $this->searchManager->index($this->product);
@@ -102,25 +112,27 @@ class SearchManagerTest extends ProphecyTestCase
     public function testIndex()
     {
         $this->metadataFactory
-            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product')
+            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product')
             ->willReturn($this->classHierachyMetadata);
 
-        $this->metadata->getName()->willReturn('test');
-        $this->metadata->getIdField()->willReturn('id');
-        $this->metadata->getUrlField()->willReturn('url');
-        $this->metadata->getTitleField()->willReturn('title');
-        $this->metadata->getLocaleField()->willReturn(null);
-        $this->metadata->getDescriptionField()->willReturn('body');
-        $this->metadata->getImageUrlField()->willReturn(null);
-        $this->metadata->getFieldMapping()->willReturn(array(
+        $this->indexMetadata->getName()->willReturn('test');
+        $this->indexMetadata->getIdField()->willReturn('id');
+        $this->indexMetadata->getUrlField()->willReturn('url');
+        $this->indexMetadata->getTitleField()->willReturn('title');
+        $this->indexMetadata->getLocaleField()->willReturn(null);
+        $this->indexMetadata->getDescriptionField()->willReturn('body');
+        $this->indexMetadata->getImageUrlField()->willReturn(null);
+        $this->indexMetadata->getFieldMapping()->willReturn(array(
             'title' => array(
                 'type' => 'string',
             ),
             'body' => array(
                 'type' => 'string',
-            )
+            ),
         ));
-        $this->metadata->getIndexName()->willReturn('product');
+        $this->indexMetadata->getIndexName()->willReturn('product');
+        $this->converter->objectToDocument($this->indexMetadata, $this->product)->willReturn($this->document);
+        $this->converter->getFieldEvaluator()->willReturn($this->fieldEvaluator->reveal());
         $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
 
         $this->searchManager->index($this->product);

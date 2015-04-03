@@ -15,12 +15,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\TableHelper;
+use Symfony\Component\Console\Helper\Table;
 
 /**
  * Command to execute a query on the configured search engine
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class QueryCommand extends ContainerAwareCommand
 {
@@ -31,7 +29,7 @@ class QueryCommand extends ContainerAwareCommand
     {
         $this->setName('massive:search:query');
         $this->addArgument('query', InputArgument::REQUIRED, 'Search query');
-        $this->addOption('index', 'I', InputOption::VALUE_REQUIRED, 'Index to search');
+        $this->addOption('index', 'I', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Index to search');
         $this->addOption('locale', 'l', InputOption::VALUE_REQUIRED, 'Index to search');
         $this->setDescription('Search the using a given query');
         $this->setHelp(<<<EOT
@@ -53,11 +51,13 @@ EOT
         $locale = $input->getOption('locale');
 
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
-        $res = $searchManager->createSearch($query)->index($index)->locale($locale)->execute();
+        $start = microtime(true);
+        $hits = $searchManager->createSearch($query)->indexes($index)->locale($locale)->execute();
+        $timeElapsed = microtime(true) - $start;
 
-        $table = new TableHelper();
+        $table = new Table($output);
         $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class'));
-        foreach ($res as $hit) {
+        foreach ($hits as $hit) {
             $document = $hit->getDocument();
             $table->addRow(array(
                 $hit->getScore(),
@@ -66,10 +66,11 @@ EOT
                 $this->truncate($document->getDescription(), 50),
                 $document->getUrl(),
                 $document->getImageUrl(),
-                $document->getClass()
+                $document->getClass(),
             ));
         }
-        $table->render($output);
+        $table->render();
+        $output->writeln(sprintf('%s result(s) in %fs', count($hits), $timeElapsed));
     }
 
     /**

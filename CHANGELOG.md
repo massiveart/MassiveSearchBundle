@@ -4,9 +4,15 @@ CHANGELOG
 dev-master
 ----------
 
+- [TestAdapter] Supports indexes
+- [Mapping] Expression language
+- [REST] REST API
+- [Persistence] Doctrine ORM event subscriber
 - [Elastic] Elasticsearch adapter
 - [Localization] Localization strategy support
 - [Config] Renamed `adapter_id` to `adapter` in configuration. See UPGRADE.md
+- [Rebuild] Added core support for rebuilding indexes via
+    massive:search:index:rebuild command
 
 0.4.1
 -----

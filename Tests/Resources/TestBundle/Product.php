@@ -1,14 +1,16 @@
 <?php
 
-namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
+namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle;
 
 class Product
 {
-    protected $id;
-    protected $title;
-    protected $body;
-    protected $date;
-    protected $url;
+    public $id;
+    public $title;
+    public $body;
+    public $date;
+    public $url;
+    public $locale;
+    public $image;
 
     public function getId()
     {
@@ -59,4 +61,25 @@ class Product
     {
         $this->url = $url;
     }
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
 }
+

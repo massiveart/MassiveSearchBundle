@@ -25,5 +25,8 @@ class IndexMetadataTest extends \PHPUnit_Framework_TestCase
     {
         $this->metadata->setImageUrlField('field');
         $this->assertEquals('field', $this->metadata->getImageUrlField());
+
+        $this->metadata->setCategoryName('cat_1');
+        $this->assertEquals('cat_1', $this->metadata->getCategoryName());
     }
 }

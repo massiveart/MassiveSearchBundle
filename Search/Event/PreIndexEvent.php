@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\Event;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 
 /**
  * Preindex event is fired before a document is indexed
@@ -23,34 +24,48 @@ class PreIndexEvent extends Event
      * The object, which has been indexed
      * @var object
      */
-    protected $subject;
+    private $subject;
 
     /**
      * The search document, which is the result of the indexing
      * @var Document
      */
-    protected $document;
+    private $document;
 
     /**
      * The metadata, on which the index process has been based
      * @var IndexMetadataInterface
      */
-    protected $metadata;
+    private $metadata;
 
     /**
-     * @param $subject
+     * The field evaluator
+     *
+     * @var FieldEvaluator
+     */
+    private $fieldEvaluator;
+
+    /**
+     * @param mixed $subject
      * @param Document $document
      * @param IndexMetadataInterface $metadata
+     * @param FieldEvaluator $fieldEvaluator
      */
-    public function __construct($subject, Document $document, IndexMetadataInterface $metadata)
-    {
+    public function __construct(
+        $subject,
+        Document $document,
+        IndexMetadataInterface $metadata,
+        FieldEvaluator $fieldEvaluator
+    ) {
         $this->subject = $subject;
         $this->document = $document;
         $this->metadata = $metadata;
+        $this->fieldEvaluator = $fieldEvaluator;
     }
 
     /**
      * Returns the indexed subject
+     *
      * @return mixed
      */
     public function getSubject()
@@ -60,6 +75,7 @@ class PreIndexEvent extends Event
 
     /**
      * Returns the document, which is the result of the indexed object
+     *
      * @return Document
      */
     public function getDocument()
@@ -69,10 +85,21 @@ class PreIndexEvent extends Event
 
     /**
      * Returns the metadata based on which the indexing was done
+     *
      * @return IndexMetadataInterface
      */
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * Return the field evaluator
+     *
+     * @return FieldEvaluator
+     */
+    public function getFieldEvaluator()
+    {
+        return $this->fieldEvaluator;
     }
 }

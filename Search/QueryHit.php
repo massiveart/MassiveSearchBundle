@@ -13,7 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 /**
  * Representation of one search hit
  */
-class QueryHit
+class QueryHit implements \JsonSerializable
 {
     protected $document;
     protected $score;
@@ -65,5 +65,17 @@ class QueryHit
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'document' => $this->document->jsonSerialize(),
+            'score' => $this->score,
+        );
     }
 }

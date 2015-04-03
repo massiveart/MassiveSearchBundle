@@ -36,7 +36,19 @@ class MassiveSearchExtension extends Extension
 
         $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
-        $this->loadMetadata($config, $loader, $container);
+        $this->loadMetadata($loader, $container);
+        $this->loadPersistence($config['persistence'], $loader);
+    }
+
+    private function loadPersistence($config, Loader\XmlFileLoader $loader)
+    {
+        foreach ($config as $persistenceName => $config) {
+            if (false === $config['enabled']) {
+                continue;
+            }
+
+            $loader->load($persistenceName . '.xml');
+        }
     }
 
     private function loadLocalization($config, $loader, $container)
@@ -82,14 +94,25 @@ class MassiveSearchExtension extends Extension
     {
         $container->setParameter('massive_search.adapter.elastic.hosts', $config['hosts']);
         $loader->load('adapter_elastic.xml');
+
+        if (!class_exists($container->getParameter('massive_search.search.adapter.elastic.client.class'))) {
+            throw new \RuntimeException(
+                'Cannot find elastic search client class -- have you installed the elasticsearch/elasticsearch package?'
+            );
+        }
     }
 
-    private function loadMetadata($config, $loader, $container)
+    private function loadMetadata($loader, $container)
     {
         $loader->load('metadata.xml');
 
-        $bundles = $container->getParameter('kernel.bundles');
+        $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'));
+        $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
+        $fileLocator->replaceArgument(0, $metadataPaths);
+    }
 
+    private function getBundleMappingPaths($bundles)
+    {
         $metadataPaths = array();
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
@@ -101,11 +124,15 @@ class MassiveSearchExtension extends Extension
                 }
 
                 $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $metadataPaths[$namespace] = join('/', array($path, 'Resources', 'config', 'massive-search'));
+                $finalPath = implode('/', array($path, 'Resources', 'config', 'massive-search'));
+                if (!file_exists($finalPath)) {
+                    continue;
+                }
+
+                $metadataPaths[$namespace] = $finalPath;
             }
         }
 
-        $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
-        $fileLocator->replaceArgument(0, $metadataPaths);
+        return $metadataPaths;
     }
 }

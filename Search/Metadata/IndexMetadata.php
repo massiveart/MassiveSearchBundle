@@ -10,13 +10,17 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
-use Metadata\ClassMetadata;
 
 /**
  * Metadata for searchable objects
  */
-class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
+class IndexMetadata implements IndexMetadataInterface
 {
+    /**
+     * @var string
+     */
+    private $name;
+
     /**
      * @var string
      */
@@ -58,11 +62,29 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     private $localeField;
 
     /**
+     * @var ClassMetadata
+     */
+    private $classMetadata;
+
+    /**
+     * @var string
+     */
+    private $categoryName;
+
+    /**
      * {@inheritDoc}
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**
@@ -199,5 +221,37 @@ class IndexMetadata extends ClassMetadata implements IndexMetadataInterface
     public function setLocaleField($localeField)
     {
         $this->localeField = $localeField;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getClassMetadata()
+    {
+        return $this->classMetadata;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setClassMetadata(ClassMetadata $classMetadata)
+    {
+        $this->classMetadata = $classMetadata;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCategoryName() 
+    {
+        return $this->categoryName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCategoryName($category)
+    {
+        $this->categoryName = $category;
     }
 }

@@ -61,4 +61,18 @@ interface SearchManagerInterface
      * @return array
      */
     public function getStatus();
+
+    /**
+     * Return a list of all the category names
+     *
+     * @return string[]
+     */
+    public function getCategoryNames();
+
+    /**
+     * Flush the adapter.
+     *
+     * The manager should keep track of the indexes that need flushing.
+     */
+    public function flush();
 }

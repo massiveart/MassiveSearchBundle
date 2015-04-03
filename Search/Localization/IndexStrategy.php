@@ -28,6 +28,24 @@ class IndexStrategy implements LocalizationStrategyInterface
             return $indexName;
         }
 
-        return $indexName . '_' . $locale;
+        $indexName = str_replace('-', '_', $indexName);
+
+        return $indexName . '-' . $locale . '-i18n';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isIndexVariantOf($indexName, $variantName, $locale = null)
+    {
+        if ($indexName == $variantName) {
+            return true;
+        }
+
+        return (boolean) preg_match(sprintf(
+            '{^%s-%s-i18n$}',
+            $indexName,
+            $locale ? : '[a-zA-Z_]+'
+        ), $variantName);
     }
 }

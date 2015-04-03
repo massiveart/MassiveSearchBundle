@@ -17,11 +17,18 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
 interface IndexMetadataInterface
 {
     /**
-     * The FQCN of the mapped class
+     * The FQCN of the mapped class this index represents
      *
      * @return string
      */
     public function getName();
+
+    /**
+     * Set the FCQN of the class this index represents
+     *
+     * @param string
+     */
+    public function setName($name);
 
     /**
      * Set the name of the field representing the URL
@@ -148,4 +155,32 @@ interface IndexMetadataInterface
      * @param string
      */
     public function setLocaleField($field);
+
+    /**
+     * Get the class metadata to which this index metadata applies
+     *
+     * @return ClassMetadata
+     */
+    public function getClassMetadata();
+
+    /**
+     * Set the class metadata to which this index applies
+     *
+     * @param ClassMetadata $classMetadata
+     */
+    public function setClassMetadata(ClassMetadata $classMetadata);
+
+    /**
+     * Return the field containing the category
+     *
+     * @return string
+     */
+    public function getCategoryName();
+
+    /**
+     * Set the field containing the category
+     *
+     * @param string
+     */
+    public function setCategoryName($category);
 }

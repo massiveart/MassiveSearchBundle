@@ -33,26 +33,52 @@ class TestAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $this->documents[$document->getId()] = $document;
-    }
-
-    public function deindex(Document $document, $indexName)
-    {
-        foreach ($this->documents as $i => $selfDocument) {
-            if ($document->getId() === $selfDocument->getId()) {
-                unset($this->documents[$i]);
-            }
-        }
-
-        $this->documents = array_values($this->documents);
+        $this->documents[$indexName][$document->getId()] = $document;
     }
 
     /**
-     * Return all the "indexed" documents
+     * {@inheritDoc}
+     */
+    public function deindex(Document $document, $indexName)
+    {
+        if (!$indexName) {
+            return;
+        }
+
+        foreach ($this->documents[$indexName] as $i => $selfDocument) {
+            if ($document->getId() === $selfDocument->getId()) {
+                unset($this->documents[$indexName][$i]);
+            }
+        }
+
+        $this->documents[$indexName] = array_values($this->documents[$indexName]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function purge($indexName)
+    {
+        unset($this->documents[$indexName]);
+    }
+
+    /**
+     * Return all the indexed documents
+     *
+     * NOTE: Not part of the API
+     *
+     * @return Document[]
      */
     public function getDocuments()
     {
-        return $this->documents;
+        $documents = array();
+        foreach ($this->documents as $localizedDocuments) {
+            foreach ($localizedDocuments as $document) {
+                $documents[] = $document;
+            }
+        }
+
+        return $documents;
     }
 
     /**
@@ -61,26 +87,54 @@ class TestAdapter implements AdapterInterface
     public function search(SearchQuery $searchQuery)
     {
         $hits = array();
+        $indexes = $searchQuery->getIndexes() ? : array_keys($this->documents);
 
-        foreach ($this->documents as $document) {
-            $hit = $this->factory->makeQueryHit();
-
-            $isHit = false;
-            foreach ($document->getFields() as $field) {
-                if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $field->getValue())) {
-                    $isHit = true;
-                    break;
-                }
+        foreach ($indexes as $index) {
+            if (!isset($this->documents[$index])) {
+                continue;
             }
 
-            if ($isHit) {
-                $hit->setDocument($document);
-                $hit->setScore(-1);
-                $hits[] = $hit;
+            foreach ($this->documents[$index] as $document) {
+                $hit = $this->factory->createQueryHit();
+
+                $isHit = false;
+
+                foreach ($document->getFields() as $field) {
+                    $fieldValue = $field->getValue();
+                    if (is_array($fieldValue)) {
+                        $fieldValue = implode(' ', $fieldValue);
+                    }
+
+                    if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $fieldValue)) {
+                        $isHit = true;
+                        break;
+                    }
+                }
+
+                if ($isHit) {
+                    $hit->setDocument($document);
+                    $hit->setScore(-1);
+                    $hits[] = $hit;
+                }
             }
         }
 
         return $hits;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function listIndexes()
+    {
+        return array_keys($this->documents);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush(array $indexNames)
+    {
     }
 
     /**

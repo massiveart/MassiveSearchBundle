@@ -16,7 +16,6 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Elasticsearch\Client as ElasticSearchClient;
-use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
  * ElasticSearch adapter using official client:
@@ -28,10 +27,10 @@ class ElasticSearchAdapter implements AdapterInterface
     const ID_FIELDNAME = '__id';
     const CLASS_TAG = '__class';
 
-    // TODO: This fields should be handled at a higher level
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
     const DESCRIPTION_FIELDNAME = '__description';
+    const LOCALE_FIELDNAME = '__locale';
     const IMAGE_URL = '__image_url';
 
     /**
@@ -45,22 +44,24 @@ class ElasticSearchAdapter implements AdapterInterface
     private $client;
 
     /**
-     * @var LocalizationStrategyInterface
+     * @var boolean
      */
-    private $localizationStrategy;
+    private $indexListLoaded;
+
+    /*
+     * @var array
+     */
+    private $indexList;
 
     /**
      * @param string $basePath Base filesystem path for the index
      */
     public function __construct(
         Factory $factory,
-        LocalizationStrategyInterface $localizationStrategy,
         ElasticSearchClient $client
-    )
-    {
+    ) {
         $this->factory = $factory;
         $this->client = $client;
-        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -68,19 +69,16 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function index(Document $document, $indexName)
     {
-        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
-
         $fields = array();
         foreach ($document->getFields() as $massiveField) {
-            $fields = array();
             switch ($massiveField->getType()) {
                 case Field::TYPE_STRING:
                     $fields[$massiveField->getName()] = $massiveField->getValue();
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not know. Known types nare: %s',
-                        implode(', ', Field::getValidTypes())
+                        'Search field type "%s" is not known. Known types are: %s',
+                        $massiveField->getType(), implode(', ', Field::getValidTypes())
                     ));
             }
         }
@@ -88,8 +86,12 @@ class ElasticSearchAdapter implements AdapterInterface
         $fields[self::URL_FIELDNAME] = $document->getUrl();
         $fields[self::TITLE_FIELDNAME] = $document->getTitle();
         $fields[self::DESCRIPTION_FIELDNAME] = $document->getDescription();
+        $fields[self::LOCALE_FIELDNAME] = $document->getLocale();
         $fields[self::CLASS_TAG] = $document->getClass();
         $fields[self::IMAGE_URL] = $document->getImageUrl();
+
+        // ensure that any new index name is listed when calling listIndexes
+        $this->indexList[$indexName] = $indexName;
 
         $params = array(
             'id' => $document->getId(),
@@ -101,29 +103,17 @@ class ElasticSearchAdapter implements AdapterInterface
         $this->client->index($params);
     }
 
-    private function documentToType(Document $document)
-    {
-        $class = $document->getClass();
-
-        if (!$class) {
-            return 'massive_undefined';
-        }
-
-        return substr(str_replace('\\', '_', $class), 1);
-    }
-
     /**
      * {@inheritDoc}
      */
     public function deindex(Document $document, $indexName)
     {
-        $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
-
         $params = array(
             'index' => $indexName,
             'type' => $this->documentToType($document),
             'id' => $document->getId(),
             'refresh' => true,
+            'ignore' => 404,
         );
 
         $this->client->delete($params);
@@ -136,10 +126,6 @@ class ElasticSearchAdapter implements AdapterInterface
     {
         $indexNames = $searchQuery->getIndexes();
 
-        foreach ($indexNames as &$indexName) {
-            $indexName = $this->localizationStrategy->localizeIndexName($indexName, $searchQuery->getLocale());
-        }
-
         $queryString = $searchQuery->getQueryString();
 
         $params['index'] = implode(',', $indexNames);
@@ -147,8 +133,8 @@ class ElasticSearchAdapter implements AdapterInterface
             'query' => array(
                 'query_string' => array(
                     'query' => $queryString,
-                )
-            )
+                ),
+            ),
         );
 
         $res = $this->client->search($params);
@@ -157,8 +143,8 @@ class ElasticSearchAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($elasticHits as $elasticHit) {
-            $hit = $this->factory->makeQueryHit();
-            $document = $this->factory->makeDocument();
+            $hit = $this->factory->createQueryHit();
+            $document = $this->factory->createDocument();
 
             $hit->setDocument($document);
             $hit->setScore($elasticHit['_score']);
@@ -166,16 +152,30 @@ class ElasticSearchAdapter implements AdapterInterface
             $document->setId($elasticHit['_id']);
 
             $elasticSource = $elasticHit['_source'];
-            $document->setTitle($elasticSource[self::TITLE_FIELDNAME]);
-            $document->setDescription($elasticSource[self::DESCRIPTION_FIELDNAME]);
-            $document->setUrl($elasticSource[self::URL_FIELDNAME]);
-            $document->setClass($elasticSource[self::CLASS_TAG]);
-            $document->setImageUrl($elasticSource[self::IMAGE_URL]);
+
+            if (isset($elasticSource[self::TITLE_FIELDNAME])) {
+                $document->setTitle($elasticSource[self::TITLE_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::DESCRIPTION_FIELDNAME])) {
+                $document->setDescription($elasticSource[self::DESCRIPTION_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::LOCALE_FIELDNAME])) {
+                $document->setLocale($elasticSource[self::LOCALE_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::URL_FIELDNAME])) {
+                $document->setUrl($elasticSource[self::URL_FIELDNAME]);
+            }
+            if (isset($elasticSource[self::CLASS_TAG])) {
+                $document->setClass($elasticSource[self::CLASS_TAG]);
+            }
+            if (isset($elasticSource[self::IMAGE_URL])) {
+                $document->setImageUrl($elasticSource[self::IMAGE_URL]);
+            }
 
             $hit->setId($document->getId());
 
             foreach ($elasticSource as $fieldName => $fieldValue) {
-                $document->addField($this->factory->makeField($fieldName, $fieldValue));
+                $document->addField($this->factory->createField($fieldName, $fieldValue));
             }
             $hits[] = $hit;
         }
@@ -183,14 +183,83 @@ class ElasticSearchAdapter implements AdapterInterface
         return $hits;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getStatus()
     {
-        $indices = $this->client->indices()->status(array('index' => '_all'));
+        $indexes = $this->listIndexes();
 
-        foreach ($indices as $indexName => $index) {
-            $status['idx:' . $indexName] = json_encode($index);
+        $indices = $this->client->indices()->status(array('index' => '_all'));
+        $indexes = $indices['indices'];
+        $status = array();
+
+        foreach ($indexes as $indexName => $index) {
+            foreach ($index as $field => $value) {
+                $status['idx:' . $indexName . '.' . $field] = substr(trim(json_encode($value)), 0, 100);
+            }
         }
 
         return $status;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function purge($indexName)
+    {
+        try {
+            $this->client->indices()->delete(array('index' => $indexName));
+            $this->indexListLoaded = false;
+        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function listIndexes()
+    {
+        if (!$this->indexListLoaded) {
+            $indices = $this->client->indices()->status(array('index' => '_all'));
+            $indexes = $indices['indices'];
+            $this->indexList = array_combine(
+                array_keys($indexes),
+                array_keys($indexes)
+            );
+            $this->indexListLoaded = true;
+        }
+
+        return $this->indexList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush(array $indexNames)
+    {
+        $this->client->indices()->flush(array(
+            'index' => implode(', ', $indexNames),
+            'full' => true,
+        ));
+    }
+
+    /**
+     * Convert FQCN to a snake-case string to use as an
+     * elastic search type.
+     *
+     * @param Document $document
+     *
+     * @return string
+     */
+    private function documentToType(Document $document)
+    {
+        $class = $document->getClass();
+
+        if (!$class) {
+            return 'massive_undefined';
+        }
+
+        return substr(str_replace('\\', '_', $class), 1);
     }
 }

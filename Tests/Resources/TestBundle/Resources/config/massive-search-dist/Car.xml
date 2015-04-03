@@ -1,0 +1,31 @@
+<massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
+
+    <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
+        <index name="car"/>
+        <id property="id"/>
+        <category name="car" />
+        <url property="should-be-overridden" />
+        <title property="title" />
+        <description property="body" />
+        <image property="image" />
+
+        <fields>
+            <field name="title" expr="object.title" type="string" />
+            <field name="body" type="string" />
+            <field name="numberOfWheels" type="string" />
+        </fields>
+
+        <context name="admin">
+            <index name="car_admin"/>
+            <url expr="'/admin/#cars/edit:' ~ object.id" />
+            <title expr="'This is car'" />
+        </context>
+
+        <context name="website">
+            <index name="car_website"/>
+            <url expr="'/admin/#cars/edit:' ~ object.id" />
+            <title expr="'This is car'" />
+        </context>
+    </mapping>
+
+</massive-search-mapping>

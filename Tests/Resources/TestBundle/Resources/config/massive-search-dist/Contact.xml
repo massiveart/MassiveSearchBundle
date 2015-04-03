@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
+
+    <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Contact">
+        <index name="contact" />
+        <id property="id" />
+        <title expr="implode(' ', [object.title, object.firstName, object.lastName])" />
+        <description expr="join(' ', map(object.emails, 'object.email'))" />
+        <category name="car" />
+
+        <locale property="locale" />
+        <fields>
+            <field name="firstName" type="string" />
+            <field name="lastName" type="string" />
+            <field name="emails" expr="join(' ', map(object.emails, 'object.email'))" type="string" />
+            <field name="addresses" expr="join(' ', map(object.addresses, 'join(' ', [object.number, object.street, object.zip, object.state])'))" type="string" />
+        </fields>
+    </mapping>
+
+</massive-search-mapping>

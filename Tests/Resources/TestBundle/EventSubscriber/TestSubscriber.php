@@ -26,7 +26,7 @@ class TestSubscriber implements EventSubscriberInterface
 
     public function handleHit(HitEvent $e)
     {
-        $this->hitDocument = $e->getHit()->getDocument();;
+        $this->hitDocument = $e->getHit()->getDocument();
         $this->hitDocument->setTitle('My title');
         $this->hitDocument->setDescription('My description');
         $this->hitDocument->setUrl('/example');

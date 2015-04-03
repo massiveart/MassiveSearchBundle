@@ -14,25 +14,46 @@ use Metadata\Driver\DriverInterface;
 use Metadata\Driver\AbstractFileDriver;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Metadata\Driver\FileLocatorInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 
+/**
+ * Loads MassiveSearch metadata from XML files
+ */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
-    protected $factory;
+    /**
+     * @var Factory
+     */
+    private $factory;
 
+    /**
+     * @param Factory $factory
+     * @param FileLocatorInterface $locator
+     * @param mixed $context Context name. e.g. backend, frontend
+     */
     public function __construct(Factory $factory, FileLocatorInterface $locator)
     {
         parent::__construct($locator);
         $this->factory = $factory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getExtension()
     {
         return 'xml';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
-        $meta = $this->factory->makeIndexMetadata($class->name);
+        $classMetadata = $this->factory->createClassMetadata($class->name);
+
         $xml = simplexml_load_file($file);
 
         if (count($xml->children()) > 1) {
@@ -46,9 +67,9 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             throw new \InvalidArgumentException(sprintf('No mapping in file "%s"', $file));
         }
 
-        $mapping = $xml->children();
+        $mapping = $xml->children()->mapping;
 
-        $mappedClassName = (string) $mapping->mapping['class'];
+        $mappedClassName = (string) $mapping['class'];
 
         if ($class->getName() !== $mappedClassName) {
             throw new \InvalidArgumentException(sprintf(
@@ -59,30 +80,176 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             ));
         }
 
-        $indexName = (string) $mapping->mapping->indexName[0];
-        $meta->setIndexName($indexName);
+        $indexMapping = $this->getIndexMapping($mapping);
+        $this->validateMapping($indexMapping, $file);
 
-        $idField = (string) $mapping->mapping->idField['name'];
-        $meta->setIdField((string) $idField);
-
-        $titleField = (string) $mapping->mapping->titleField['name'];
-        $meta->setTitleField((string) $titleField);
-
-        $urlField = (string) $mapping->mapping->urlField['name'];
-        $meta->setUrlField((string) $urlField);
-
-        $descriptionField = (string) $mapping->mapping->descriptionField['name'];
-        $meta->setDescriptionField((string) $descriptionField);
-
-        foreach ($mapping->mapping->fields->children() as $field) {
+        // note that fields cannot be overridden in contexts
+        $fields = $mapping->fields->children();
+        $indexMapping['fields'] = array();
+        foreach ($fields as $field) {
             $fieldName = (string) $field['name'];
-            $fieldType = (string) $field['type'];
+            $fieldType = $field['type'];
 
-            $meta->addFieldMapping($fieldName, array(
-                'type' => $fieldType
+            $indexMapping['fields'][$fieldName] = array(
+                'type' => (string) $fieldType,
+                'field' => $this->getField($field, $fieldName),
+            );
+        }
+
+        $indexMappings = array_merge(
+            array(
+                '_default' => $indexMapping,
+            ),
+            $this->extractContextMappings($mapping, $indexMapping)
+        );
+
+        foreach ($indexMappings as $contextName => $mapping) {
+            $indexMetadata = $this->factory->createIndexMetadata();
+            $indexMetadata->setIndexName($mapping['index']);
+            $indexMetadata->setIdField($mapping['id']);
+            $indexMetadata->setLocaleField($mapping['locale']);
+            $indexMetadata->setTitleField($mapping['title']);
+            $indexMetadata->setUrlField($mapping['url']);
+            $indexMetadata->setDescriptionField($mapping['description']);
+            $indexMetadata->setCategoryName($mapping['category']);
+
+            foreach ($mapping['fields'] as $fieldName => $fieldData) {
+                $indexMetadata->addFieldMapping($fieldName, $fieldData);
+            }
+
+            $classMetadata->addIndexMetadata($contextName, $indexMetadata);
+        }
+
+        return $classMetadata;
+    }
+
+    private function getIndexMapping(\SimpleXmlElement $mapping)
+    {
+        $indexMapping = array();
+
+        $indexName = (string) $mapping->index['name'];
+        $indexMapping['index'] = $indexName;
+
+        $idField = $this->getMapping($mapping, 'id');
+        $indexMapping['id'] = $idField;
+
+        $localeField = $this->getMapping($mapping, 'locale');
+        $indexMapping['locale'] = $localeField;
+
+        $titleField = $this->getMapping($mapping, 'title');
+        $indexMapping['title'] = $titleField;
+
+        $urlField = $this->getMapping($mapping, 'url');
+        $indexMapping['url'] = $urlField;
+
+        $descriptionField = $this->getMapping($mapping, 'description');
+        $indexMapping['description'] = $descriptionField;
+
+        $indexMapping['category'] = null;
+        $category = $mapping->category;
+        if ($category) {
+            if (!isset($category['name'])) {
+                throw new \InvalidArgumentException(
+                    'Category must have name attribute'
+                );
+            }
+            $indexMapping['category'] = (string) $category['name'];
+        }
+
+        return $indexMapping;
+    }
+
+    private function validateMapping($indexMapping, $file)
+    {
+        foreach (array('index', 'id', 'title') as $required) {
+            if (!$indexMapping[$required]) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Required field for mapping is not present "%s" in "%s"',
+                    $required,
+                    $file
+                ));
+            }
+        }
+    }
+
+    /**
+     * Return the value object for the mapping
+     *
+     * @param \SimpleXmlElement $mapping
+     * @param mixed $field
+     */
+    private function getMapping(\SimpleXmlElement $mapping, $field)
+    {
+        $field = $mapping->$field;
+
+        if (!$field->getName()) {
+            return;
+        }
+
+        return $this->getField($field);
+    }
+
+    private function getField(\SimpleXmlElement $field)
+    {
+        if (isset($field['expr']) && isset($field['property'])) {
+            throw new \InvalidArgumentException(sprintf(
+                '"expr" and "property" attributes are mutually exclusive in mapping for "%s"',
+                ($field)
             ));
         }
 
-        return $meta;
+        // if not property or expression given, try using the "name"
+        if (isset($field['name']) && !isset($field['expr']) && !isset($field['property'])) {
+            return $this->factory->createMetadataField((string) $field['name']);
+        }
+
+        if (isset($field['expr'])) {
+            return $this->factory->createMetadataExpression((string) $field['expr']);
+        }
+
+        if (isset($field['property'])) {
+            return $this->factory->createMetadataProperty((string) $field['property']);
+        }
+
+        throw new \InvalidArgumentException(sprintf(
+            'Mapping for "%s" must have one of either the "expr" or "property" attributes.',
+            $field
+        ));
+    }
+
+    /**
+     * Overwrite the default mapping if there exists a <context> section
+     * which matches the context given in the constructor of this class.
+     *
+     * @param \SimpleXmlElement $mapping
+     */
+    private function extractContextMappings(\SimpleXmlElement $mapping, $indexMapping)
+    {
+        $contextMappings = array();
+        foreach ($mapping->context as $context) {
+            if (!isset($context['name'])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'No name given to context in XML mapping file for "%s"',
+                    $mapping['class']
+                ));
+            }
+
+            $contextName = (string) $context['name'];
+
+            $contextMapping = $this->getIndexMapping($context);
+            $contextMapping = array_filter($contextMapping, function ($value) {
+                if (null === $value) {
+                    return false;
+                }
+
+                return true;
+            });
+            $contextMappings[$contextName] = array_merge(
+                $indexMapping,
+                $contextMapping
+            );
+        }
+
+        return $contextMappings;
     }
 }
