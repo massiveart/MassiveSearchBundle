@@ -73,6 +73,8 @@ class ZendLuceneAdapter implements AdapterInterface
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
+
+        QueryParser::setDefaultEncoding($this->encoding);
     }
 
     /**
@@ -129,7 +131,6 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function search(SearchQuery $searchQuery)
     {
-        QueryParser::setDefaultEncoding($this->encoding);
         $indexNames = $searchQuery->getIndexes();
         $queryString = $searchQuery->getQueryString();
 
