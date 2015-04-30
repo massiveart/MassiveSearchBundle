@@ -33,6 +33,7 @@ class ZendLuceneAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
     const CLASS_TAG = '__class';
+    const AGGREGATED_INDEXED_CONTENT = '__content';
 
     const URL_FIELDNAME = '__url';
     const TITLE_FIELDNAME = '__title';
@@ -94,12 +95,8 @@ class ZendLuceneAdapter implements AdapterInterface
         foreach ($document->getFields() as $field) {
             switch ($field->getType()) {
                 case Field::TYPE_STRING:
-<<<<<<< HEAD
-                    $luceneField = Lucene\Document\Field::Text($field->getName(), $field->getValue(), $this->encoding);
-=======
-                    $luceneField = Lucene\Document\Field::unIndexed($field->getName(), $field->getValue());
+                    $luceneField = Lucene\Document\Field::unIndexed($field->getName(), $field->getValue(), $this->encoding);
                     $values[] = $field->getValue();
->>>>>>> Optimize zend index after indexing and aggregate fields
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
@@ -113,7 +110,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         // add meta fields - used internally for showing the search results, etc.
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
-        $luceneDocument->addField(Lucene\Document\Field::unStored('__content__', implode(' ', $values)));
+        $luceneDocument->addField(Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $values)));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
@@ -325,6 +322,13 @@ class ZendLuceneAdapter implements AdapterInterface
         return $index;
     }
 
+    /**
+     * Optimize the search indexes after the index rebuild event has been fired.
+     * Should have a priority low enough in order for it to be executed after all
+     * the actual index builders.
+     *
+     * @param IndexRebuildEvent $event
+     */
     public function optizeIndexAfterRebuild(IndexRebuildEvent $event)
     {
         foreach ($this->listIndexes() as $indexName) {
