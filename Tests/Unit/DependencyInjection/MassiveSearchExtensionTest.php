@@ -79,6 +79,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 array(
                     'basepath' => 'foobar',
                     'hide_index_exception' => true,
+                    'encoding' => 'UTF-8',
                 ),
                 array(
                     'massive_search.adapter.zend_lucene.basepath' => 'foobar',

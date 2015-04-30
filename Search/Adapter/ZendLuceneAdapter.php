@@ -19,6 +19,7 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use ZendSearch\Lucene;
 use Symfony\Component\Filesystem\Filesystem;
+use ZendSearch\Lucene\Search\QueryParser;
 
 /**
  * Adapter for the ZendSearch library
@@ -55,16 +56,25 @@ class ZendLuceneAdapter implements AdapterInterface
     private $hideIndexException;
 
     /**
+     * @var string
+     */
+    private $encoding;
+
+    /**
      * @param string $basePath Base filesystem path for the index
      */
     public function __construct(
         Factory $factory,
         $basePath,
-        $hideIndexException = false
+        $hideIndexException = false,
+        $encoding = null
     ) {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
+        $this->encoding = $encoding;
+
+        QueryParser::setDefaultEncoding($this->encoding);
     }
 
     /**
@@ -82,7 +92,7 @@ class ZendLuceneAdapter implements AdapterInterface
         foreach ($document->getFields() as $field) {
             switch ($field->getType()) {
                 case Field::TYPE_STRING:
-                    $luceneField = Lucene\Document\Field::Text($field->getName(), $field->getValue());
+                    $luceneField = Lucene\Document\Field::Text($field->getName(), $field->getValue(), $this->encoding);
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
