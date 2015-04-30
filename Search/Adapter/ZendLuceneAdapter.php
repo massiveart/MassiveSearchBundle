@@ -20,6 +20,7 @@ use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use ZendSearch\Lucene;
 use Symfony\Component\Filesystem\Filesystem;
 use ZendSearch\Lucene\Search\QueryParser;
+use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 
 /**
  * Adapter for the ZendSearch library
@@ -89,10 +90,16 @@ class ZendLuceneAdapter implements AdapterInterface
 
         $luceneDocument = new Lucene\Document();
 
+        $values = array();
         foreach ($document->getFields() as $field) {
             switch ($field->getType()) {
                 case Field::TYPE_STRING:
+<<<<<<< HEAD
                     $luceneField = Lucene\Document\Field::Text($field->getName(), $field->getValue(), $this->encoding);
+=======
+                    $luceneField = Lucene\Document\Field::unIndexed($field->getName(), $field->getValue());
+                    $values[] = $field->getValue();
+>>>>>>> Optimize zend index after indexing and aggregate fields
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
@@ -105,13 +112,14 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         // add meta fields - used internally for showing the search results, etc.
-        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::ID_FIELDNAME, $document->getId()));
-        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::URL_FIELDNAME, $document->getUrl()));
-        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::TITLE_FIELDNAME, $document->getTitle()));
-        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
-        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::LOCALE_FIELDNAME, $document->getLocale()));
-        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::CLASS_TAG, $document->getClass()));
-        $luceneDocument->addField(Lucene\Document\Field::Keyword(self::IMAGE_URL, $document->getImageUrl()));
+        $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
+        $luceneDocument->addField(Lucene\Document\Field::unStored('__content__', implode(' ', $values)));
+        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
+        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
+        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
+        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::LOCALE_FIELDNAME, $document->getLocale()));
+        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::CLASS_TAG, $document->getClass()));
+        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::IMAGE_URL, $document->getImageUrl()));
 
         $index->addDocument($luceneDocument);
     }
@@ -315,5 +323,14 @@ class ZendLuceneAdapter implements AdapterInterface
         $index->setHideException($this->hideIndexException);
 
         return $index;
+    }
+
+    public function optizeIndexAfterRebuild(IndexRebuildEvent $event)
+    {
+        foreach ($this->listIndexes() as $indexName) {
+            $event->getOutput()->writeln(sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
+            $index = $this->getLuceneIndex($indexName);
+            $index->optimize();
+        }
     }
 }
