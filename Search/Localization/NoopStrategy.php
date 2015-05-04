@@ -33,6 +33,6 @@ class NoopStrategy implements LocalizationStrategyInterface
      */
     public function isIndexVariantOf($indexName, $variantName)
     {
-        return true;
+        return $indexName == $variantName;
     }
 }

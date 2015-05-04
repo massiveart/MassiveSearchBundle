@@ -41,7 +41,9 @@ class SearchQueryBuilder
      */
     public function index($indexName)
     {
-        return $this->indexes(array($indexName));
+        $this->searchQuery->setIndexes(array($indexName));
+
+        return $this;
     }
 
     /**

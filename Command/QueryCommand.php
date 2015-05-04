@@ -47,12 +47,12 @@ EOT
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $query = $input->getArgument('query');
-        $index = $input->getOption('index');
+        $indexes = $input->getOption('index');
         $locale = $input->getOption('locale');
 
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
         $start = microtime(true);
-        $hits = $searchManager->createSearch($query)->indexes($index)->locale($locale)->execute();
+        $hits = $searchManager->createSearch($query)->indexes($indexes)->locale($locale)->execute();
         $timeElapsed = microtime(true) - $start;
 
         $table = new Table($output);
