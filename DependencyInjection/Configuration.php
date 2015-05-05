@@ -46,7 +46,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->booleanNode('hide_index_exception')->defaultValue(false)->end()
                                 ->scalarNode('basepath')->defaultValue('%kernel.root_dir%/data')->end()
-                                ->scalarNode('encoding')->defaultValue('ISO8859-1')->end()
+                                ->scalarNode('encoding')->defaultValue('UTF-8')->end()
                             ->end()
                         ->end()
                         ->arrayNode('elastic')
