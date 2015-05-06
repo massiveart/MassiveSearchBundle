@@ -190,6 +190,15 @@ class ZendLuceneAdapter implements AdapterInterface
             $hits[] = $hit;
         }
 
+        // The MultiSearcher does not support sorting, so we do it here.
+        usort($hits, function ($documentA, $documentB) {
+            if ($documentA->getScore() < $documentB->getScore()) {
+                return true;
+            }
+
+            return false;
+        });
+
         return $hits;
     }
 
