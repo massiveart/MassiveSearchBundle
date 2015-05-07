@@ -11,16 +11,16 @@
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
+use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
-use Symfony\Component\Finder\Finder;
+use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
-use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
-use ZendSearch\Lucene;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
-use ZendSearch\Lucene\Search\QueryParser;
-use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
+use ZendSearch\Lucene;
 
 /**
  * Adapter for the ZendSearch library
@@ -68,7 +68,11 @@ class ZendLuceneAdapter implements AdapterInterface
     private $defaultIndexStrategy;
 
     /**
+     * @param Factory $factory
      * @param string $basePath Base filesystem path for the index
+     * @param bool $hideIndexException
+     * @param null $encoding
+     * @param string $defaultIndexStrategy
      */
     public function __construct(
         Factory $factory,
@@ -76,14 +80,19 @@ class ZendLuceneAdapter implements AdapterInterface
         $hideIndexException = false,
         $encoding = null,
         $defaultIndexStrategy = Field::INDEX_AGGREGATE
-    ) {
+    )
+    {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
         $this->defaultIndexStrategy = $defaultIndexStrategy;
 
-        QueryParser::setDefaultEncoding($this->encoding);
+        Lucene\Search\QueryParser::setDefaultEncoding($this->encoding);
+        Lucene\Search\QueryParser::setDefaultOperator(Lucene\Search\QueryParser::B_AND);
+        Lucene\Analysis\Analyzer\Analyzer::setDefault(
+            new Lucene\Analysis\Analyzer\Common\Utf8\CaseInsensitive()
+        );
     }
 
     /**
@@ -103,28 +112,41 @@ class ZendLuceneAdapter implements AdapterInterface
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
             if ($field->getType() !== Field::TYPE_STRING) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Search field type "%s" is not known. Known types are: %s',
-                    $field->getType(), implode('", "', Field::getValidTypes())
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Search field type "%s" is not known. Known types are: %s',
+                        $field->getType(),
+                        implode('", "', Field::getValidTypes())
+                    )
+                );
             }
 
-            $indexStrategy = $field->getIndexStrategy() ? : $this->defaultIndexStrategy;
+            $indexStrategy = $field->getIndexStrategy() ?: $this->defaultIndexStrategy;
 
             switch ($indexStrategy) {
                 case Field::INDEX_AGGREGATE:
-                    $luceneField = Lucene\Document\Field::unIndexed($field->getName(), $field->getValue(), $this->encoding);
+                    $luceneField = Lucene\Document\Field::unIndexed(
+                        $field->getName(),
+                        $field->getValue(),
+                        $this->encoding
+                    );
                     $values[] = $field->getValue();
                     break;
                 case Field::INDEX_UNSTORED:
-                    $luceneField = Lucene\Document\Field::unStored($field->getName(), $field->getValue(), $this->encoding);
+                    $luceneField = Lucene\Document\Field::unStored(
+                        $field->getName(),
+                        $field->getValue(),
+                        $this->encoding
+                    );
                     break;
                 default:
-                    throw new \InvalidArgumentException(sprintf(
-                        'Unknown index strategy "%s", must be one of "%s"',
-                        $field->getIndexStrategy(),
-                        implode('", "', array(Field::INDEX_AGGREGATE, Field::INDEX_UNSTORED))
-                    ));
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Unknown index strategy "%s", must be one of "%s"',
+                            $field->getIndexStrategy(),
+                            implode('", "', array(Field::INDEX_AGGREGATE, Field::INDEX_UNSTORED,))
+                        )
+                    );
             }
 
             $luceneDocument->addField($luceneField);
@@ -187,13 +209,15 @@ class ZendLuceneAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($luceneHits as $luceneHit) {
+            /** @var Lucene\Search\QueryHit $luceneHit */
+
+            $luceneDocument = $luceneHit->getDocument();
+
             $hit = $this->factory->createQueryHit();
             $document = $this->factory->createDocument();
 
             $hit->setDocument($document);
             $hit->setScore($luceneHit->score);
-
-            $luceneDocument = $luceneHit->getDocument();
 
             // map meta fields to document "product"
             $document->setId($luceneDocument->getFieldValue(self::ID_FIELDNAME));
@@ -207,17 +231,18 @@ class ZendLuceneAdapter implements AdapterInterface
             $hit->setId($document->getId());
 
             foreach ($luceneDocument->getFieldNames() as $fieldName) {
-                $document->addField($this->factory->createField($fieldName, $luceneDocument->getFieldValue($fieldName)));
+                $document->addField(
+                    $this->factory->createField($fieldName, $luceneDocument->getFieldValue($fieldName))
+                );
             }
             $hits[] = $hit;
         }
 
         // The MultiSearcher does not support sorting, so we do it here.
-        usort($hits, function ($documentA, $documentB) {
+        usort($hits, function (QueryHit $documentA, QueryHit $documentB) {
             if ($documentA->getScore() < $documentB->getScore()) {
                 return true;
             }
-
             return false;
         });
 
@@ -234,11 +259,13 @@ class ZendLuceneAdapter implements AdapterInterface
         $status = array();
 
         foreach ($indexDirs as $indexDir) {
+            /** @var  $indexDir \Symfony\Component\Finder\SplFileInfo; */
+
             $indexFinder = new Finder();
             $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
             $indexName = basename($indexDir);
 
-            $index = $this->getIndex($this->getIndexPath($indexName, false));
+            $index = $this->getIndex($this->getIndexPath($indexName));
 
             $indexStats = array(
                 'size' => 0,
@@ -281,6 +308,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $names = array();
 
         foreach ($indexDirs as $file) {
+            /** @var  $file \Symfony\Component\Finder\SplFileInfo; */
             $names[] = $file->getBasename();
         }
 
@@ -314,7 +342,9 @@ class ZendLuceneAdapter implements AdapterInterface
 
     /**
      * Determine the index path for a given index name
+     *
      * @param string $indexName
+     *
      * @return string
      */
     private function getIndexPath($indexName)
@@ -325,7 +355,7 @@ class ZendLuceneAdapter implements AdapterInterface
     /**
      * Remove the existing entry for the given Document from the index, if it exists.
      *
-     * @param Lucene\Index $index The Zend Lucene Index
+     * @param Index $index The Zend Lucene Index
      * @param Document $document The Massive Search Document
      */
     private function removeExisting(Index $index, Document $document)
@@ -343,7 +373,9 @@ class ZendLuceneAdapter implements AdapterInterface
      * functional tests.
      *
      * @param string $indexPath
-     * @param boolean $create Create an index or open it
+     * @param bool $create Create an index or open it
+     *
+     * @return Index
      */
     private function getIndex($indexPath, $create = false)
     {
@@ -360,7 +392,7 @@ class ZendLuceneAdapter implements AdapterInterface
      *
      * @param IndexRebuildEvent $event
      */
-    public function optizeIndexAfterRebuild(IndexRebuildEvent $event)
+    public function optimizeIndexAfterRebuild(IndexRebuildEvent $event)
     {
         foreach ($this->listIndexes() as $indexName) {
             $event->getOutput()->writeln(sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
