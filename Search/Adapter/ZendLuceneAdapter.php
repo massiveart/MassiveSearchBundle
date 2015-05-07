@@ -63,18 +63,25 @@ class ZendLuceneAdapter implements AdapterInterface
     private $encoding;
 
     /**
+     * @var string
+     */
+    private $defaultIndexStrategy;
+
+    /**
      * @param string $basePath Base filesystem path for the index
      */
     public function __construct(
         Factory $factory,
         $basePath,
         $hideIndexException = false,
-        $encoding = null
+        $encoding = null,
+        $defaultIndexStrategy = Field::INDEX_AGGREGATE
     ) {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
+        $this->defaultIndexStrategy = $defaultIndexStrategy;
 
         QueryParser::setDefaultEncoding($this->encoding);
     }
@@ -93,15 +100,30 @@ class ZendLuceneAdapter implements AdapterInterface
 
         $values = array();
         foreach ($document->getFields() as $field) {
-            switch ($field->getType()) {
-                case Field::TYPE_STRING:
+            // Zend Lucene does not support "types". We should allow other "types" once they
+            // are properly implemented in at least one other adapter.
+            if ($field->getType() !== Field::TYPE_STRING) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Search field type "%s" is not known. Known types are: %s',
+                    $field->getType(), implode('", "', Field::getValidTypes())
+                ));
+            }
+
+            $indexStrategy = $field->getIndexStrategy() ? : $this->defaultIndexStrategy;
+
+            switch ($indexStrategy) {
+                case Field::INDEX_AGGREGATE:
                     $luceneField = Lucene\Document\Field::unIndexed($field->getName(), $field->getValue(), $this->encoding);
                     $values[] = $field->getValue();
                     break;
+                case Field::INDEX_UNSTORED:
+                    $luceneField = Lucene\Document\Field::unStored($field->getName(), $field->getValue(), $this->encoding);
+                    break;
                 default:
                     throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not known. Known types are: %s',
-                        $field->getType(), implode('", "', Field::getValidTypes())
+                        'Unknown index strategy "%s", must be one of "%s"',
+                        $field->getIndexStrategy(),
+                        implode('", "', array(Field::INDEX_AGGREGATE, Field::INDEX_UNSTORED))
                     ));
             }
 

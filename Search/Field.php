@@ -30,7 +30,26 @@ class Field
      */
     protected $value;
 
+    /**
+     * @var string
+     */
+    protected $indexStrategy;
+
+    /**
+     * Store the field as a string
+     */
     const TYPE_STRING = 'string';
+
+    /**
+     * Aggregate the fields in a single aggregate field for indexing and
+     * store the fields
+     */
+    const INDEX_AGGREGATE = 'aggregate';
+
+    /**
+     * Index, but do not sture the field
+     */
+    const INDEX_UNSTORED = 'unstored';
 
     public static function getValidTypes()
     {
@@ -39,11 +58,12 @@ class Field
         );
     }
 
-    public function __construct($name, $value, $type = self::TYPE_STRING)
+    public function __construct($name, $value, $type = self::TYPE_STRING, $indexStrategy = null)
     {
         $this->name = $name;
         $this->value = $value;
         $this->type = $type;
+        $this->indexStrategy = $indexStrategy;
     }
 
     /**
@@ -104,5 +124,25 @@ class Field
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * Get the index strategy
+     *
+     * @return string One of Field::INDEX_*
+     */
+    public function getIndexStrategy() 
+    {
+        return $this->indexStrategy;
+    }
+
+    /**
+     * Set the index strategy
+     *
+     * @param string $indexStrategy One of Field::INDEX_*
+     */
+    public function setIndexStrategy($indexStrategy)
+    {
+        $this->indexStrategy = $indexStrategy;
     }
 }

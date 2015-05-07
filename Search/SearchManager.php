@@ -239,7 +239,7 @@ class SearchManager implements SearchManagerInterface
      *
      * @return string[]
      */
-    private function getIndexNames($categories = null)
+    public function getIndexNames($categories = null)
     {
         $classNames = $this->metadataFactory->getAllClassNames();
         $indexNames = array();
