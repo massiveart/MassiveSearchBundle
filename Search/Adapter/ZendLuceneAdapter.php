@@ -397,7 +397,7 @@ class ZendLuceneAdapter implements AdapterInterface
      *
      * @param IndexRebuildEvent $event
      */
-    public function optizeIndexAfterRebuild(IndexRebuildEvent $event)
+    public function optimizeIndexAfterRebuild(IndexRebuildEvent $event)
     {
         foreach ($this->listIndexes() as $indexName) {
             $event->getOutput()->writeln(sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
