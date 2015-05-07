@@ -10,7 +10,7 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter\Zend;
 
-use ZendSearch\Lucene\Index as BaseIndex;
+use Zend_Search_Lucene_Index as BaseIndex;
 
 /**
  * This class adds the possibility to hide destructor errors

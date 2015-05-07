@@ -14,8 +14,7 @@
         "php": ">=5.4.0"
     },
     "require-dev": {
-        "zendframework/zend-stdlib": "2.3.1 as 2.0.0rc5",
-        "zendframework/zendsearch": "2.*",
+        "zf1/zend-search-lucene": "~1.0",
         "elasticsearch/elasticsearch": "~1.3",
         "symfony-cmf/testing": "dev-master",
         "symfony/filesystem": "~2.4",
@@ -32,8 +31,7 @@
         "behat/symfony2-extension": "~2.0@dev"
     },
     "suggest": {
-        "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
-        "zendframework/zend-stdlib": "(dependency of zendsearch)",
+        "zf1/zend-search-lucene": "To use zend lucene",
         "elasticsearch/elasticsearch": "To use Elasticsearch"
     },
     "autoload": {

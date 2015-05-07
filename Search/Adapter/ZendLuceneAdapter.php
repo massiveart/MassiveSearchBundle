@@ -20,7 +20,7 @@ use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
-use ZendSearch\Lucene;
+use ZendSearch\Zend_Search_Lucene;
 
 /**
  * Adapter for the ZendSearch library
@@ -88,10 +88,10 @@ class ZendLuceneAdapter implements AdapterInterface
         $this->encoding = $encoding;
         $this->defaultIndexStrategy = $defaultIndexStrategy;
 
-        Lucene\Search\QueryParser::setDefaultEncoding($this->encoding);
-        Lucene\Search\QueryParser::setDefaultOperator(Lucene\Search\QueryParser::B_AND);
-        Lucene\Analysis\Analyzer\Analyzer::setDefault(
-            new Lucene\Analysis\Analyzer\Common\Utf8\CaseInsensitive()
+        \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding($this->encoding);
+        \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
+        \Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+            new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive()
         );
     }
 
@@ -105,7 +105,7 @@ class ZendLuceneAdapter implements AdapterInterface
         // check to see if the subject already exists
         $this->removeExisting($index, $document);
 
-        $luceneDocument = new Lucene\Document();
+        $luceneDocument = new \Zend_Search_Lucene_Document();
 
         $values = array();
         foreach ($document->getFields() as $field) {
@@ -125,7 +125,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
             switch ($indexStrategy) {
                 case Field::INDEX_AGGREGATE:
-                    $luceneField = Lucene\Document\Field::unIndexed(
+                    $luceneField = \Zend_Search_Lucene_Field::unIndexed(
                         $field->getName(),
                         $field->getValue(),
                         $this->encoding
@@ -133,7 +133,7 @@ class ZendLuceneAdapter implements AdapterInterface
                     $values[] = $field->getValue();
                     break;
                 case Field::INDEX_UNSTORED:
-                    $luceneField = Lucene\Document\Field::unStored(
+                    $luceneField = \Zend_Search_Lucene_Field::unStored(
                         $field->getName(),
                         $field->getValue(),
                         $this->encoding
@@ -153,14 +153,14 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         // add meta fields - used internally for showing the search results, etc.
-        $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
-        $luceneDocument->addField(Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $values)));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::LOCALE_FIELDNAME, $document->getLocale()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::CLASS_TAG, $document->getClass()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::IMAGE_URL, $document->getImageUrl()));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::keyword(self::ID_FIELDNAME, $document->getId()));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $values)));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::unIndexed(self::LOCALE_FIELDNAME, $document->getLocale()));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::unIndexed(self::CLASS_TAG, $document->getClass()));
+        $luceneDocument->addField(\Zend_Search_Lucene_Field::unIndexed(self::IMAGE_URL, $document->getImageUrl()));
 
         $index->addDocument($luceneDocument);
     }
@@ -183,7 +183,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $indexNames = $searchQuery->getIndexes();
         $queryString = $searchQuery->getQueryString();
 
-        $searcher = new Lucene\MultiSearcher();
+        $searcher = new \Zend_Search_Lucene_MultiSearcher();
 
         foreach ($indexNames as $indexName) {
             $indexPath = $this->getIndexPath($indexName);
@@ -194,7 +194,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $searcher->addIndex($this->getIndex($indexPath, false));
         }
 
-        $query = Lucene\Search\QueryParser::parse($queryString);
+        $query = \Zend_Search_Lucene_Search_QueryParser::parse($queryString);
 
         try {
             $luceneHits = $searcher->find($query);
@@ -209,7 +209,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($luceneHits as $luceneHit) {
-            /** @var Lucene\Search\QueryHit $luceneHit */
+            /** @var \Zend_Search_Lucene_Search_QueryHit $luceneHit */
 
             $luceneDocument = $luceneHit->getDocument();
 
@@ -358,7 +358,7 @@ class ZendLuceneAdapter implements AdapterInterface
      * @param Index $index The Zend Lucene Index
      * @param Document $document The Massive Search Document
      */
-    private function removeExisting(Index $index, Document $document)
+    private function removeExisting(\Zend_Search_Lucene $index, Document $document)
     {
         $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
 
@@ -379,8 +379,7 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     private function getIndex($indexPath, $create = false)
     {
-        $index = new Index($indexPath, $create);
-        $index->setHideException($this->hideIndexException);
+        $index = new \Zend_Search_Lucene($indexPath, $create);
 
         return $index;
     }
