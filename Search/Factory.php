@@ -47,9 +47,9 @@ class Factory
      *
      * @return Field
      */
-    public function createField($name, $value, $type = Field::TYPE_STRING)
+    public function createField($name, $value, $type = Field::TYPE_STRING, $indexStrategy = null)
     {
-        return new Field($name, $value, $type);
+        return new Field($name, $value, $type, $indexStrategy);
     }
 
     /**

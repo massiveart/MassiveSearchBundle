@@ -127,19 +127,20 @@ class ObjectToDocumentConverter
     private function populateDocument($document, $object, $fieldMapping, $prefix = '')
     {
         foreach ($fieldMapping as $fieldName => $mapping) {
-            if (!isset($mapping['field'])) {
-                throw new \RuntimeException(sprintf(
-                    'Mapping for "%s" does not have "field" key',
-                    $fieldName
-                ));
+            $requiredMappings = array('field', 'type');
+
+            foreach ($requiredMappings as $requiredMapping) {
+                if (!isset($mapping[$requiredMapping])) {
+                    throw new \RuntimeException(sprintf(
+                        'Mapping for "%s" does not have "%s" key',
+                        $requiredMapping
+                    ));
+                }
             }
 
-            if (!isset($mapping['type'])) {
-                throw new \RuntimeException(sprintf(
-                    'Mapping for "%s" does not have "type" key',
-                    $fieldName
-                ));
-            }
+            $mapping = array_merge(array(
+                'index_strategy' => null,
+            ), $mapping);
 
             if ($mapping['type'] == 'complex') {
                 if (!isset($mapping['mapping'])) {
@@ -159,7 +160,8 @@ class ObjectToDocumentConverter
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix . $fieldName . $i
+                        $prefix . $fieldName . $i,
+                        $mapping['index_strategy']
                     );
                 }
 
@@ -173,7 +175,8 @@ class ObjectToDocumentConverter
                     $this->factory->createField(
                         $prefix . $fieldName,
                         $value,
-                        $mapping['type']
+                        $mapping['type'],
+                        $mapping['index_strategy']
                     )
                 );
 
@@ -185,7 +188,8 @@ class ObjectToDocumentConverter
                     $this->factory->createField(
                         $prefix . $fieldName . $key,
                         $itemValue,
-                        $mapping['type']
+                        $mapping['type'],
+                        $mapping['index_strategy']
                     )
                 );
             }
