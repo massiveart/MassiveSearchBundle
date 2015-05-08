@@ -51,6 +51,11 @@ class Field
      */
     const INDEX_UNSTORED = 'unstored';
 
+    /**
+     * Indexed and stored
+     */
+    const INDEX_STORED_INDEXED = 'stored_indexed';
+
     public static function getValidTypes()
     {
         return array(

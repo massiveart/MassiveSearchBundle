@@ -139,6 +139,13 @@ class ZendLuceneAdapter implements AdapterInterface
                         $this->encoding
                     );
                     break;
+                case Field::INDEX_STORED_INDEXED:
+                    $luceneField = Lucene\Document\Field::text(
+                        $field->getName(),
+                        $field->getValue(),
+                        $this->encoding
+                    );
+                    break;
                 default:
                     throw new \InvalidArgumentException(
                         sprintf(
