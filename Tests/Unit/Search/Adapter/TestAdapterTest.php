@@ -18,17 +18,6 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 class TestAdapterTest extends ProphecyTestCase
 {
-
-    /**
-     * @var Document
-     */
-    private $document1;
-
-    /**
-     * @var Document
-     */
-    private $document2;
-
     public function setUp()
     {
         $this->factory = new Factory();
@@ -37,11 +26,9 @@ class TestAdapterTest extends ProphecyTestCase
         $this->document1 = new Document();
         $this->document1->setId(1);
         $this->document1->addField($this->factory->createField('foo', 'Foo'));
-        $this->document1->setCategory('test');
         $this->document2 = new Document();
         $this->document2->setId(2);
         $this->document2->addField($this->factory->createField('foo', 'Foo'));
-        $this->document2->setCategory('test');
     }
 
     public function testTestAdapter()
@@ -50,7 +37,6 @@ class TestAdapterTest extends ProphecyTestCase
         $this->adapter->index($this->document2, 'foo');
         $query = new SearchQuery('Foo');
         $query->setIndexes(array('foo'));
-        $query->setCategories(array('test'));
 
         $res = $this->adapter->search($query);
 
