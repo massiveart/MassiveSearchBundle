@@ -87,7 +87,7 @@ class TestAdapter implements AdapterInterface
     public function search(SearchQuery $searchQuery)
     {
         $hits = array();
-        $indexes = $searchQuery->getIndexes() ? : array_keys($this->documents);
+        $indexes = $searchQuery->getIndexes();
 
         foreach ($indexes as $index) {
             if (!isset($this->documents[$index])) {
