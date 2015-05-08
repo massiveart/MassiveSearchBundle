@@ -1,0 +1,3 @@
+search:
+    resource: @MassiveSearchBundle/Resources/config/routing.yml
+    prefix: /api

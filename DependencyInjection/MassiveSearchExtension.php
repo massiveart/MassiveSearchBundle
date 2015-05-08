@@ -34,25 +34,86 @@ class MassiveSearchExtension extends Extension
 
         $container->setAlias('massive_search.factory', $config['services']['factory']);
 
+        $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
-        $this->loadMetadata($config, $loader, $container);
+        $this->loadMetadata($loader, $container);
+        $this->loadPersistence($config['persistence'], $loader);
     }
 
-    protected function loadSearch($config, $loader, $container)
+    private function loadPersistence($config, Loader\XmlFileLoader $loader)
     {
-        $container->setAlias('massive_search.adapter', $config['adapter_id']);
-        $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['adapters']['zend_lucene']['basepath']);
-        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['adapters']['zend_lucene']['hide_index_exception']);
+        foreach ($config as $persistenceName => $config) {
+            if (false === $config['enabled']) {
+                continue;
+            }
 
-        $loader->load('search.xml');
+            $loader->load($persistenceName . '.xml');
+        }
     }
 
-    protected function loadMetadata($config, $loader, $container)
+    private function loadLocalization($config, $loader, $container)
+    {
+        $loader->load('localization.xml');
+        $strategy = $config['localization_strategy'];
+
+        switch ($strategy) {
+            case 'noop':
+                $strategyId = 'massive_search.localization_strategy.noop';
+                break;
+            case 'index':
+                $strategyId = 'massive_search.localization_strategy.index';
+                break;
+        }
+
+        $container->setAlias('massive_search.localization_strategy', $strategyId);
+    }
+
+    private function loadSearch($config, $loader, $container)
+    {
+        $container->setAlias('massive_search.adapter', 'massive_search.adapter.' . $config['adapter']);
+        $loader->load('search.xml');
+
+        switch ($config['adapter']) {
+            case 'zend_lucene':
+                $this->loadZendSearch($config['adapters']['zend_lucene'], $loader, $container);
+                break;
+            case 'elastic':
+                $this->loadElasticSearch($config['adapters']['elastic'], $loader, $container);
+                break;
+        }
+    }
+
+    private function loadZendSearch($config, $loader, $container)
+    {
+        $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['basepath']);
+        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['hide_index_exception']);
+        $container->setParameter('massive_search.adapter.zend_lucene.encoding', $config['encoding']);
+        $loader->load('adapter_zendlucene.xml');
+    }
+
+    private function loadElasticSearch($config, $loader, $container)
+    {
+        $container->setParameter('massive_search.adapter.elastic.hosts', $config['hosts']);
+        $loader->load('adapter_elastic.xml');
+
+        if (!class_exists($container->getParameter('massive_search.search.adapter.elastic.client.class'))) {
+            throw new \RuntimeException(
+                'Cannot find elastic search client class -- have you installed the elasticsearch/elasticsearch package?'
+            );
+        }
+    }
+
+    private function loadMetadata($loader, $container)
     {
         $loader->load('metadata.xml');
 
-        $bundles = $container->getParameter('kernel.bundles');
+        $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'));
+        $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
+        $fileLocator->replaceArgument(0, $metadataPaths);
+    }
 
+    private function getBundleMappingPaths($bundles)
+    {
         $metadataPaths = array();
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
@@ -64,11 +125,15 @@ class MassiveSearchExtension extends Extension
                 }
 
                 $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $metadataPaths[$namespace] = join('/', array($path, 'Resources', 'config', 'massive-search'));
+                $finalPath = implode('/', array($path, 'Resources', 'config', 'massive-search'));
+                if (!file_exists($finalPath)) {
+                    continue;
+                }
+
+                $metadataPaths[$namespace] = $finalPath;
             }
         }
 
-        $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
-        $fileLocator->replaceArgument(0, $metadataPaths);
+        return $metadataPaths;
     }
 }

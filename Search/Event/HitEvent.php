@@ -11,28 +11,27 @@
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 class HitEvent extends Event
 {
     protected $hit;
-    protected $documentReflection;
+    protected $metadata;
 
-    public function __construct(QueryHit $hit, \ReflectionClass $documentReflection)
+    public function __construct(QueryHit $hit, ClassMetadata $metadata)
     {
         $this->hit = $hit;
-        $this->documentReflection = $documentReflection;
+        $this->metadata = $metadata;
     }
 
-    public function getHit() 
+    public function getHit()
     {
         return $this->hit;
     }
 
-    public function getDocumentReflection() 
+    public function getMetadata()
     {
-        return $this->documentReflection;
+        return $this->metadata;
     }
-    
 }

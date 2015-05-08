@@ -12,8 +12,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Class used to fluently build a search query context
- *
- * @author Daniel Leech <daniel.leech@massiveart.com>
  */
 class SearchQueryBuilder
 {
@@ -36,12 +34,16 @@ class SearchQueryBuilder
     /**
      * Set the index to search in
      *
+     * Mutually exlusive with category
+     *
      * @param string
      * @return SearchQueryBuilder
      */
     public function index($indexName)
     {
-        return $this->indexes(array($indexName));
+        $this->searchQuery->setIndexes(array($indexName));
+
+        return $this;
     }
 
     /**
@@ -53,6 +55,35 @@ class SearchQueryBuilder
     public function locale($locale)
     {
         $this->searchQuery->setLocale($locale);
+
+        return $this;
+    }
+
+    /**
+     * Set the category to search in.
+     *
+     * Mutually exclusive with index
+     *
+     * @param string
+     * @return SearchQueryBuilder
+     */
+    public function category($category)
+    {
+        $this->searchQuery->setCategories(array($category));
+
+        return $this;
+    }
+
+    /**
+     * Set an array of categories to search in
+     *
+     * @param string[]
+     * @return SearchQueryBuilder
+     */
+    public function categories(array $categories)
+    {
+        $this->searchQuery->setCategoties($categories);
+
         return $this;
     }
 
@@ -65,6 +96,7 @@ class SearchQueryBuilder
     public function indexes(array $indexes)
     {
         $this->searchQuery->setIndexes($indexes);
+
         return $this;
     }
 
@@ -78,4 +110,3 @@ class SearchQueryBuilder
         return $this->searchManager->search($this->searchQuery);
     }
 }
-

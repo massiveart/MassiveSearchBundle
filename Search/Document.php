@@ -13,7 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 /**
  * Representation of a one indexed document
  */
-class Document
+class Document implements \JsonSerializable
 {
     /**
      * @var Field[]
@@ -54,6 +54,11 @@ class Document
      * @var string
      */
     protected $locale;
+
+    /**
+     * @var string
+     */
+    protected $category;
 
     /**
      * @param Field $field
@@ -175,10 +180,27 @@ class Document
     /**
      * @return string
      */
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }
+
+    /**
+     * @return string
+     */
+    public function getCategory() 
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+    
 
     /**
      * @param string
@@ -187,7 +209,7 @@ class Document
     {
         $this->locale = $locale;
     }
-    
+
     /**
      * @return Field[]
      */
@@ -222,5 +244,22 @@ class Document
     public function hasField($name)
     {
         return isset($this->fields[$name]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'class' => $this->class,
+            'url' => $this->url,
+            'image_url' => $this->imageUrl,
+            'locale' => $this->locale,
+            'category' => $this->category,
+        );
     }
 }

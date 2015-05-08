@@ -12,8 +12,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 /**
  * Represents a search query with contextual information
- * 
- * @author Daniel Leech <daniel.leech@massiveart.com>
  */
 class SearchQuery
 {
@@ -32,6 +30,16 @@ class SearchQuery
      */
     private $locale;
 
+    /**
+     * @var array
+     */
+    private $categories = array();
+
+    /**
+     * @var array
+     */
+    private $indexes = array();
+
     public function __construct($queryString)
     {
         $this->queryString = $queryString;
@@ -42,7 +50,7 @@ class SearchQuery
      *
      * @return string
      */
-    public function getQueryString() 
+    public function getQueryString()
     {
         return $this->queryString;
     }
@@ -52,7 +60,7 @@ class SearchQuery
      *
      * @return string
      */
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }
@@ -68,11 +76,31 @@ class SearchQuery
     }
 
     /**
+     * Return the categories to search in
+     *
+     * @return array
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Set the categories to search in
+     *
+     * @param array
+     */
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+
+    /**
      * Return the indexes to search in
      *
      * @return array
      */
-    public function getIndexes() 
+    public function getIndexes()
     {
         return $this->indexes;
     }

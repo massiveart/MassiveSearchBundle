@@ -10,22 +10,13 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-use Massive\Bundle\SearchBundle\Search\AdapterInterface;
-use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
-use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Metadata\MetadataFactory;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Massive\Bundle\SearchBundle\Search\SearchQuery;
-use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 /**
  * Search manager is the public API to the search
@@ -49,20 +40,32 @@ class SearchManager implements SearchManagerInterface
     protected $eventDispatcher;
 
     /**
-     * @var Factory
+     * @var ObjectToDocumentConverter
      */
-    protected $factory;
+    protected $converter;
+
+    /**
+     * @var LocalizationStrategyInterface
+     */
+    protected $localizationStrategy;
+
+    /**
+     * @var array
+     */
+    protected $indexesToFlush = array();
 
     public function __construct(
-        Factory $factory,
         AdapterInterface $adapter,
         MetadataFactory $metadataFactory,
-        EventDispatcherInterface $eventDispatcher
+        ObjectToDocumentConverter $converter,
+        EventDispatcherInterface $eventDispatcher,
+        LocalizationStrategyInterface $localizationStrategy
     ) {
         $this->adapter = $adapter;
         $this->metadataFactory = $metadataFactory;
         $this->eventDispatcher = $eventDispatcher;
-        $this->factory = $factory;
+        $this->converter = $converter;
+        $this->localizationStrategy = $localizationStrategy;
     }
 
     /**
@@ -80,19 +83,7 @@ class SearchManager implements SearchManagerInterface
             );
         }
 
-        $objectClass = get_class($object);
-        $metadata = $this->metadataFactory->getMetadataForClass($objectClass);
-
-        if (null === $metadata) {
-            throw new \RuntimeException(
-                sprintf(
-                    'There is no search mapping for class "%s"',
-                    $objectClass
-                )
-            );
-        }
-
-        return $metadata->getOutsideClassMetadata();
+        return $this->getMetadataFor(get_class($object));
     }
 
     /**
@@ -101,10 +92,16 @@ class SearchManager implements SearchManagerInterface
     public function deindex($object)
     {
         $metadata = $this->getMetadata($object);
-        $indexName = $metadata->getIndexName();
-        $document = $this->objectToDocument($metadata, $object);
 
-        $this->adapter->deindex($document, $indexName);
+        foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
+            $this->markIndexToFlush($indexMetadata->getIndexName());
+            $indexNames = $this->getLocalizedIndexNamesFor($indexMetadata->getIndexName());
+
+            foreach ($indexNames as $indexName) {
+                $document = $this->converter->objectToDocument($indexMetadata, $object);
+                $this->adapter->deindex($document, $indexName);
+            }
+        }
     }
 
     /**
@@ -112,16 +109,28 @@ class SearchManager implements SearchManagerInterface
      */
     public function index($object)
     {
-        $metadata = $this->getMetadata($object);
-        $indexName = $metadata->getIndexName();
-        $document = $this->objectToDocument($metadata, $object);
+        $indexMetadatas = $this->getMetadata($object);
 
-        $this->eventDispatcher->dispatch(
-            SearchEvents::PRE_INDEX,
-            new PreIndexEvent($object, $document, $metadata)
-        );
+        foreach ($indexMetadatas->getIndexMetadatas() as $indexMetadata) {
+            $this->markIndexToFlush($indexMetadata->getIndexName());
 
-        $this->adapter->index($document, $indexName);
+            $indexName = $indexMetadata->getIndexName();
+
+            $document = $this->converter->objectToDocument($indexMetadata, $object);
+            $evaluator = $this->converter->getFieldEvaluator();
+
+            // if the index is locale aware, localize the index name
+            if ($indexMetadata->getLocaleField()) {
+                $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
+            }
+
+            $this->eventDispatcher->dispatch(
+                SearchEvents::PRE_INDEX,
+                new PreIndexEvent($object, $document, $indexMetadata, $evaluator)
+            );
+
+            $this->adapter->index($document, $indexName);
+        }
     }
 
     /**
@@ -137,11 +146,8 @@ class SearchManager implements SearchManagerInterface
      */
     public function search(SearchQuery $query)
     {
-        $indexNames = $query->getIndexes();
-
-        if (null === $indexNames) {
-            throw new \Exception('Searching all indexes is not yet implemented');
-        }
+        $this->validateQuery($query);
+        $this->expandQueryIndexes($query);
 
         $this->eventDispatcher->dispatch(
             SearchEvents::SEARCH,
@@ -150,7 +156,6 @@ class SearchManager implements SearchManagerInterface
 
         $hits = $this->adapter->search($query);
 
-        $reflections = array();
         /** @var QueryHit $hit */
         foreach ($hits as $hit) {
             $document = $hit->getDocument();
@@ -160,14 +165,13 @@ class SearchManager implements SearchManagerInterface
                 continue;
             }
 
-            // we need a reflection instance of the document in event listeners
-            if (!isset($metas[$document->getClass()])) {
-                $reflections[$document->getClass()] = new \ReflectionClass($document->getClass());
-            }
+            $metadata = $this->getMetadataFor($document->getClass());
+            $indexMetadata = $metadata->getIndexMetadata('_default');
+            $document->setCategory($indexMetadata->getCategoryName());
 
             $this->eventDispatcher->dispatch(
                 SearchEvents::HIT,
-                new HitEvent($hit, $reflections[$document->getClass()])
+                new HitEvent($hit, $metadata)
             );
         }
 
@@ -186,132 +190,235 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * Map the given object to a new document using the
-     * given metadata.
-     *
-     * @param IndexMetadata $metadata
-     * @param object $object
-     * @return Document
+     * {@inheritDoc}
      */
-    private function objectToDocument(IndexMetadata $metadata, $object)
+    public function purge($indexName)
     {
-        $idField = $metadata->getIdField();
-        $urlField = $metadata->getUrlField();
-        $titleField = $metadata->getTitleField();
-        $descriptionField = $metadata->getDescriptionField();
-        $imageUrlField = $metadata->getImageUrlField();
-        $localeField = $metadata->getLocaleField();
-        $fieldMapping = $metadata->getFieldMapping();
-
-        $accessor = PropertyAccess::createPropertyAccessor();
-
-        $document = $this->factory->makeDocument();
-        $document->setId($accessor->getValue($object, $idField));
-        $document->setClass($metadata->getName());
-
-        if ($urlField) {
-            $url = $accessor->getValue($object, $urlField);
-            if ($url) {
-                $document->setUrl($accessor->getValue($object, $urlField));
-            }
+        $this->markIndexToFlush($indexName);
+        $indexes = $this->getLocalizedIndexNamesFor($indexName);
+        foreach ($indexes as $indexName) {
+            $this->adapter->purge($indexName);
         }
-
-        if ($titleField) {
-            $title = $accessor->getValue($object, $titleField);
-            if ($title) {
-                $document->setTitle($accessor->getValue($object, $titleField));
-            }
-        }
-
-        if ($descriptionField) {
-            $description = $accessor->getValue($object, $descriptionField);
-            if ($description) {
-                $document->setDescription($accessor->getValue($object, $descriptionField));
-            }
-        }
-
-        if ($imageUrlField) {
-            $imageUrl = $accessor->getValue($object, $imageUrlField);
-            $document->setImageUrl($imageUrl);
-        }
-
-        if ($localeField) {
-            $locale = $accessor->getValue($object, $localeField);
-            $document->setLocale($locale);
-        }
-
-        $this->populateDocument($document, $object, $accessor, $fieldMapping);
-
-        return $document;
     }
 
     /**
-     * Populate the Document with the actual values from the object which
-     * is being indexed.
-     *
-     * @param Document $document
-     * @param mixed $object
-     * @param PropertyAccessor $accessor
-     * @param array $fieldMapping
-     * @param string $prefix Prefix the document field name (used when called recursively)
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
-    private function populateDocument($document, $object, $accessor, $fieldMapping, $prefix = '')
+    public function getCategoryNames()
     {
-        foreach ($fieldMapping as $field => $mapping) {
+        $classNames = $this->metadataFactory->getAllClassNames();
+        $categoryNames = array();
 
-            if ($mapping['type'] == 'complex') {
+        foreach ($classNames as $className) {
+            $metadata = $this->getMetadataFor($className);
 
-                if (!isset($mapping['mapping'])) {
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            '"complex" field mappings must have an additional array key "mapping" ' .
-                            'which contains the mapping for the complex structure in mapping: %s',
-                            print_r($mapping, true)
-                        )
-                    );
-                }
-
-                $childObjects = $accessor->getValue($object, $field);
-
-                foreach ($childObjects as $i => $childObject) {
-                    $this->populateDocument(
-                        $document,
-                        $childObject,
-                        $accessor,
-                        $mapping['mapping']->getFieldMapping(),
-                        $prefix . $field . $i
-                    );
-                }
-            } else {
-                if (is_array($object)) {
-                    $path = '[' . $field . ']';
-                } else {
-                    $path = $field;
-                }
-
-                $value = $accessor->getValue($object, $path);
-
-                if (!is_array($value)) {
-                    $document->addField(
-                        $this->factory->makeField(
-                            $prefix . $field,
-                            $value,
-                            $mapping['type']
-                        )
-                    );
-                } else {
-                    foreach ($value as $key => $itemValue) {
-                        $document->addField(
-                            $this->factory->makeField(
-                                $prefix . $field . $key,
-                                $itemValue,
-                                $mapping['type']
-                            )
-                        );
-                    }
-                }
+            foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
+                $categoryNames[] = $indexMetadata->getCategoryName();
             }
+        }
+
+        return array_values(array_unique($categoryNames));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function flush()
+    {
+        $this->adapter->flush(array_keys($this->indexesToFlush));
+        $this->indexesToFlush = array();
+    }
+
+    /**
+     * Return a list of all the index names (according to the metadata)
+     *
+     * If categories are specified, only return the indexes corresponding
+     * to the given categories.
+     *
+     * @param array $categories
+     *
+     * @return string[]
+     */
+    public function getIndexNames($categories = null)
+    {
+        $classNames = $this->metadataFactory->getAllClassNames();
+        $indexNames = array();
+
+        foreach ($classNames as $className) {
+            $metadata = $this->getMetadataFor($className);
+
+            foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
+                $indexName = $indexMetadata->getIndexName();
+                if ($categories) {
+                    if (in_array($indexMetadata->getCategoryName(), $categories)) {
+                        $indexNames[$indexName] = $indexName;
+                    }
+                    continue;
+                }
+
+                $indexNames[$indexName] = $indexName;
+            }
+        }
+
+        return array_values($indexNames);
+    }
+
+    /**
+     * List all of the expanded index names in the search implementation
+     * optionally only in the given locale.
+     *
+     * @param string $locale
+     * @return string[]
+     */
+    private function getLocalizedIndexNames($locale = null)
+    {
+        $localizedIndexNames = array();
+        $indexNames = $this->getIndexNames();
+
+        foreach ($indexNames as $indexName) {
+            foreach ($this->getLocalizedIndexNamesFor($indexName, $locale) as $localizedIndexName) {
+                $localizedIndexNames[$localizedIndexName] = $localizedIndexName;
+            }
+        }
+
+        return array_values($localizedIndexNames);
+    }
+
+    /**
+     * Retrieve all the index names including localized names (i.e. variants)
+     * for the given index name, optionally limiting to the given locale.
+     *
+     * @param string $indexName
+     * @param string $locale
+     *
+     * @return string[]
+     */
+    private function getLocalizedIndexNamesFor($indexName, $locale = null)
+    {
+        $adapterIndexNames = $this->adapter->listIndexes();
+        $indexNames = array();
+
+        foreach ($adapterIndexNames as $adapterIndexName) {
+            if ($this->localizationStrategy->isIndexVariantOf($indexName, $adapterIndexName, $locale)) {
+                $indexNames[] = $adapterIndexName;
+            }
+        }
+
+        return $indexNames;
+    }
+
+    /**
+     * Add additional indexes to the Query object.
+     *
+     * If the query object has no indexes, then add all indexes (including
+     * variants), otherwise expand the indexes the query does have to include
+     * all of their variants.
+     *
+     * @param SearchQuery $query
+     */
+    private function expandQueryIndexes(SearchQuery $query)
+    {
+        $categories = $query->getCategories();
+
+        if ($categories) {
+            // if categories have been specified, override the indexes.
+            // The two are mutually exlusive and this has already been
+            // validated.
+            $query->setIndexes($this->getIndexNames($categories));
+        }
+
+        if (!$query->getIndexes()) {
+            $indexNames = $this->getLocalizedIndexNames($query->getLocale());
+            $query->setIndexes($indexNames);
+            return;
+        }
+
+        $expandedIndexes = array();
+
+        foreach ($query->getIndexes() as $index) {
+            foreach ($this->getLocalizedIndexNamesFor($index, $query->getLocale()) as $expandedIndex) {
+                $expandedIndexes[$expandedIndex] = $expandedIndex;
+            }
+        }
+
+        $query->setIndexes($expandedIndexes);
+    }
+
+    /**
+     * Mark an index to be flushed when "flush" is called.
+     */
+    private function markIndexToFlush($indexName)
+    {
+        $this->indexesToFlush[$indexName] = true;
+    }
+
+    /**
+     * Return metadata for the given classname
+     *
+     * @param string $className
+     *
+     * @return ClassMetadata
+     */
+    private function getMetadataFor($className)
+    {
+        $metadata = $this->metadataFactory->getMetadataForClass($className);
+
+        if (null === $metadata) {
+            throw new MetadataNotFoundException(
+                sprintf(
+                    'There is no search mapping for class "%s"',
+                    $className
+                )
+            );
+        }
+
+        return $metadata->getOutsideClassMetadata();
+    }
+
+    /**
+     * If query has indexes, ensure that they are known
+     *
+     * @throws Exception\SearchException
+     * @param SearchQuery $query
+     */
+    private function validateQuery(SearchQuery $query)
+    {
+        $indexNames = $this->getIndexNames();
+        $queryIndexNames = $query->getIndexes();
+        $queryCategoryNames = $query->getCategories();
+        $categoryNames = $this->getCategoryNames();
+
+        if ($queryCategoryNames && $queryIndexNames) {
+            throw new Exception\SearchException(sprintf(
+                'Category and indexes are mutually exclusive, you specified categories "%s" and indexes "%s"',
+                implode('", "', $queryCategoryNames), implode('", "', $queryIndexNames)
+            ));
+        }
+
+        foreach ($queryIndexNames as $queryIndexName) {
+            if (!in_array($queryIndexName, $indexNames)) {
+                $unknownIndexes[] = $queryIndexName;
+            }
+        }
+
+        if (false === empty($unknownIndexes)) {
+            throw new Exception\SearchException(sprintf(
+                'Search indexes "%s" not known. Known indexes: "%s"',
+                implode('", "', $queryIndexNames), implode('", "', $indexNames)
+            ));
+        }
+
+        foreach ($queryCategoryNames as $queryCategoryName) {
+            if (!in_array($queryCategoryName, $categoryNames)) {
+                $unknownCategories[] = $queryCategoryName;
+            }
+        }
+
+        if (false === empty($unknownCategories)) {
+            throw new Exception\SearchException(sprintf(
+                'Categories "%s" not known. Known categories: "%s"',
+                implode('", "', $queryCategoryNames), implode('", "', $categoryNames)
+            ));
         }
     }
 }

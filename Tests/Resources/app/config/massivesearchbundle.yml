@@ -1,1 +1,15 @@
-massive_search: ~
+framework:
+    router:
+        resource: %kernel.root_dir%/config/routing.yml
+
+massive_search:
+    # use the test search adapter
+    adapter: test
+
+    # the index localization strategy appends the locale to the index name
+    localization_strategy: index
+
+parameters:
+    massive_search.adapter.zend_lucene.basepath: %kernel.root_dir%/cache/data
+    massive_search.adapter.zend_lucene.hide_index_exception: true
+    massive_search.adapter.zend_lucene.encoding: ISO8859-1
