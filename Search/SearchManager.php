@@ -11,6 +11,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Metadata\MetadataFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
