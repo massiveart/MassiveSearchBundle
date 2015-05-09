@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-dev-master
+0.5.1
+----------
+
+- [ZendLucene] Add index type 'INDEX_STORED_INDEXED'
+
+0.5.0
 ----------
 
 - [TestAdapter] Supports indexes
