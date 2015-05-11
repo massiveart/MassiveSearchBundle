@@ -153,7 +153,11 @@ class ObjectToDocumentConverter
                     );
                 }
 
-                $childObjects = $this->fieldEvaluator->getValue($object, new Property($fieldName));
+                $childObjects = $this->fieldEvaluator->getValue($object, $mapping['field']);
+
+                if (null === $childObjects) {
+                    continue;
+                }
 
                 foreach ($childObjects as $i => $childObject) {
                     $this->populateDocument(
