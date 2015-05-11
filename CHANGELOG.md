@@ -10,13 +10,15 @@ dev-develop
   configuration
 - [Search] If not localized managed indexes exist then a global search is
   performed: https://github.com/massiveart/MassiveSearchBundle/issues/38
+- [Metadata] **BC BREAK**: Removed index strategies, replaced with explicit `stored` and
+  `indexed` and `aggregate` flags.
 
 0.5.1
 -----
 
 ### Features
 
-- [ZendLucene] Add index type 'INDEX_STORED_INDEXED'
+- [ZendLucene] Add index strategy 'INDEX_STORED_INDEXED'
 
 0.5.0
 -----
