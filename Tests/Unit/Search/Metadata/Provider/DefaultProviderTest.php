@@ -6,6 +6,7 @@ use Metadata\MetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Provider\DefaultProvider;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Document;
+use Metadata\ClassHierarchyMetadata;
 
 class DefaultProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,6 +21,10 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
         $this->metadataFactory = $this->prophesize(MetadataFactory::class);
         $this->metadata1 = $this->prophesize(ClassMetadata::class);
         $this->metadata2 = $this->prophesize(ClassMetadata::class);
+        $this->hierarchyMetadata1 = $this->prophesize(ClassHierarchyMetadata::class);
+        $this->hierarchyMetadata2 = $this->prophesize(ClassHierarchyMetadata::class);
+        $this->hierarchyMetadata1->getOutsideClassMetadata()->willReturn($this->metadata1);
+        $this->hierarchyMetadata2->getOutsideClassMetadata()->willReturn($this->metadata2);
         $this->document = $this->prophesize(Document::class);
         $this->provider = new DefaultProvider(
             $this->metadataFactory->reveal()
@@ -32,7 +37,7 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetMetadataForObject()
     {
         $object = new \stdClass;
-        $this->metadataFactory->getMetadataForClass('stdClass')->willReturn($this->metadata1->reveal());
+        $this->metadataFactory->getMetadataForClass('stdClass')->willReturn($this->hierarchyMetadata1->reveal());
         $metadata = $this->provider->getMetadataForObject($object);
         $this->assertSame($this->metadata1->reveal(), $metadata);
     }
@@ -43,8 +48,8 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetAllMetadata()
     {
         $this->metadataFactory->getAllClassNames()->willReturn(array('one', 'two'));
-        $this->metadataFactory->getMetadataForClass('one')->willReturn($this->metadata1->reveal());
-        $this->metadataFactory->getMetadataForClass('two')->willReturn($this->metadata2->reveal());
+        $this->metadataFactory->getMetadataForClass('one')->willReturn($this->hierarchyMetadata1->reveal());
+        $this->metadataFactory->getMetadataForClass('two')->willReturn($this->hierarchyMetadata2->reveal());
         $metadatas = $this->provider->getAllMetadata();
 
         $this->assertSame(array(
@@ -59,7 +64,7 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetMetadataForDocument()
     {
         $this->document->getClass()->willReturn('Class');
-        $this->metadataFactory->getMetadataForClass('Class')->willReturn($this->metadata1->reveal());
+        $this->metadataFactory->getMetadataForClass('Class')->willReturn($this->hierarchyMetadata1->reveal());
         $metadata = $this->provider->getMetadataForDocument($this->document->reveal());
         $this->assertSame($this->metadata1->reveal(), $metadata);
     }

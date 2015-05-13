@@ -15,29 +15,29 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Compiler pass to register metadata drivers
+ * Compiler pass to register metadata providers
  */
-class MetadataDriverPass implements CompilerPassInterface
+class MetadataProviderPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(
-            'massive_search.metadata.driver.chain'
+            'massive_search.metadata.provider.chain'
         )) {
             return;
         }
 
         $driverChainDef = $container->getDefinition(
-            'massive_search.metadata.driver.chain'
+            'massive_search.metadata.provider.chain'
         );
 
-        $ids = $container->findTaggedServiceIds('massive_search.metadata.driver');
+        $ids = $container->findTaggedServiceIds('massive_search.metadata.provider');
         $serviceRefs = array();
 
         foreach (array_keys($ids) as $id) {
             $serviceRefs[] = new Reference($id);
         }
 
-        $driverChainDef->addArgument($serviceRefs);
+        $driverChainDef->replaceArgument(0, $serviceRefs);
     }
 }

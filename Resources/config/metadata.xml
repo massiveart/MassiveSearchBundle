@@ -34,6 +34,7 @@
         <!-- Metadata Provider Default -->
         <service id="massive_search.metadata.provider.default" class="%massive_search.metadata.provider.default.class%">
             <argument type="service" id="massive_search.metadata.factory" />
+            <tag name="massive_search.metadata.provider" />
         </service>
 
         <!-- Metadata Provide Chain -->
