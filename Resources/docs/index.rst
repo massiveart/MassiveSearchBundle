@@ -1,5 +1,5 @@
 MassiveSearchBundle
-==================
+===================
 
 This is the documentation for the `MassiveSearchBundle <https://github.com/massiveart/MassiveSearchBundle>`_.
 
