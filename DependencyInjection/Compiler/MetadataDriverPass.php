@@ -22,16 +22,16 @@ class MetadataDriverPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(
-            'massive_search.metadata.driver.chain'
+            'massive_search.metadata.provider.chain'
         )) {
             return;
         }
 
         $driverChainDef = $container->getDefinition(
-            'massive_search.metadata.driver.chain'
+            'massive_search.metadata.provider.chain'
         );
 
-        $ids = $container->findTaggedServiceIds('massive_search.metadata.driver');
+        $ids = $container->findTaggedServiceIds('massive_search.metadata.provider');
         $serviceRefs = array();
 
         foreach (array_keys($ids) as $id) {

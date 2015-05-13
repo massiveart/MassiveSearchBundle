@@ -10,13 +10,16 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
+use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
+use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface as MetadataProviderInterface;
+use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Metadata\MetadataFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 /**
  * Search manager is the public API to the search
@@ -30,12 +33,12 @@ class SearchManager implements SearchManagerInterface
     protected $adapter;
 
     /**
-     * @var \Metadata\MetadataFactory
+     * @var ProviderInterface
      */
-    protected $metadataFactory;
+    protected $metadataProvider;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
 
@@ -56,13 +59,13 @@ class SearchManager implements SearchManagerInterface
 
     public function __construct(
         AdapterInterface $adapter,
-        MetadataFactory $metadataFactory,
+        MetadataProviderInterface $metadataProvider,
         ObjectToDocumentConverter $converter,
         EventDispatcherInterface $eventDispatcher,
         LocalizationStrategyInterface $localizationStrategy
     ) {
         $this->adapter = $adapter;
-        $this->metadataFactory = $metadataFactory;
+        $this->metadataProvider = $metadataProvider;
         $this->eventDispatcher = $eventDispatcher;
         $this->converter = $converter;
         $this->localizationStrategy = $localizationStrategy;
@@ -83,7 +86,18 @@ class SearchManager implements SearchManagerInterface
             );
         }
 
-        return $this->getMetadataFor(get_class($object));
+        $metadata = $this->metadataProvider->getMetadataForObject($object);
+
+        if (null === $metadata) {
+            throw new MetadataNotFoundException(
+                sprintf(
+                    'There is no search mapping for object with class "%s"',
+                    get_class($object)
+                )
+            );
+        }
+
+        return $metadata;
     }
 
     /**
@@ -109,9 +123,9 @@ class SearchManager implements SearchManagerInterface
      */
     public function index($object)
     {
-        $indexMetadatas = $this->getMetadata($object);
+        $indexMetadata = $this->getMetadata($object);
 
-        foreach ($indexMetadatas->getIndexMetadatas() as $indexMetadata) {
+        foreach ($indexMetadata->getIndexMetadatas() as $indexMetadata) {
             $this->markIndexToFlush($indexMetadata->getIndexName());
 
             $indexName = $indexMetadata->getIndexName();
@@ -174,7 +188,7 @@ class SearchManager implements SearchManagerInterface
                 continue;
             }
 
-            $metadata = $this->getMetadataFor($document->getClass());
+            $metadata = $this->metadataProvider->getMetadataForDocument($document);
             $indexMetadata = $metadata->getIndexMetadata('_default');
             $document->setCategory($indexMetadata->getCategoryName());
 
@@ -215,12 +229,10 @@ class SearchManager implements SearchManagerInterface
      */
     public function getCategoryNames()
     {
-        $classNames = $this->metadataFactory->getAllClassNames();
+        $metadatas = $this->metadataProvider->getAllMetadata();
         $categoryNames = array();
 
-        foreach ($classNames as $className) {
-            $metadata = $this->getMetadataFor($className);
-
+        foreach ($metadatas as $metadata) {
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
                 $categoryNames[] = $indexMetadata->getCategoryName();
             }
@@ -250,12 +262,10 @@ class SearchManager implements SearchManagerInterface
      */
     public function getIndexNames($categories = null)
     {
-        $classNames = $this->metadataFactory->getAllClassNames();
+        $metadatas = $this->metadataProvider->getAllMetadata();
         $indexNames = array();
 
-        foreach ($classNames as $className) {
-            $metadata = $this->getMetadataFor($className);
-
+        foreach ($metadatas as $metadata) {
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
                 $indexName = $indexMetadata->getIndexName();
                 if ($categories) {
@@ -359,29 +369,6 @@ class SearchManager implements SearchManagerInterface
     private function markIndexToFlush($indexName)
     {
         $this->indexesToFlush[$indexName] = true;
-    }
-
-    /**
-     * Return metadata for the given classname
-     *
-     * @param string $className
-     *
-     * @return ClassMetadata
-     */
-    private function getMetadataFor($className)
-    {
-        $metadata = $this->metadataFactory->getMetadataForClass($className);
-
-        if (null === $metadata) {
-            throw new MetadataNotFoundException(
-                sprintf(
-                    'There is no search mapping for class "%s"',
-                    $className
-                )
-            );
-        }
-
-        return $metadata->getOutsideClassMetadata();
     }
 
     /**
