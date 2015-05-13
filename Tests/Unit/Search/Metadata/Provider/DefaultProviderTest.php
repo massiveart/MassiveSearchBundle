@@ -18,14 +18,14 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->metadataFactory = $this->prophesize(MetadataFactory::class);
-        $this->metadata1 = $this->prophesize(ClassMetadata::class);
-        $this->metadata2 = $this->prophesize(ClassMetadata::class);
-        $this->hierarchyMetadata1 = $this->prophesize(ClassHierarchyMetadata::class);
-        $this->hierarchyMetadata2 = $this->prophesize(ClassHierarchyMetadata::class);
+        $this->metadataFactory = $this->prophesize('Metadata\MetadataFactory');
+        $this->metadata1 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
+        $this->metadata2 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
+        $this->hierarchyMetadata1 = $this->prophesize('Metadata\ClassHierarchyMetadata');
+        $this->hierarchyMetadata2 = $this->prophesize('Metadata\ClassHierarchyMetadata');
         $this->hierarchyMetadata1->getOutsideClassMetadata()->willReturn($this->metadata1);
         $this->hierarchyMetadata2->getOutsideClassMetadata()->willReturn($this->metadata2);
-        $this->document = $this->prophesize(Document::class);
+        $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
         $this->provider = new DefaultProvider(
             $this->metadataFactory->reveal()
         );
