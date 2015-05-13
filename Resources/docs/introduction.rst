@@ -2,7 +2,7 @@ Introduction
 ============
 
 The MassiveSearchBundle provides an extensible, localized search *abstraction* which is
-concerned primarily with providing a site-search capabilities.
+concerned primarily with providing "site" search capabilities.
 
 What it does
 ------------
@@ -95,7 +95,7 @@ Create your model in ``<YourBundle>/Entity/Product.php``:
     }
 
 Place the following mapping file in the
-``Resources/config/massive-search/Product.xml``
+``Resources/config/massive-search/Product.xml``:
 
 .. code-block:: xml
 

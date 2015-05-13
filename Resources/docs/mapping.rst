@@ -97,41 +97,6 @@ Functions:
 - ``map``: Maps to the ``array_map`` function in PHP. e.g. ``map([1, 2, 3],
   'el + 1')`` equals ``array(2, 3, 4)``.
 
-Contexts
-~~~~~~~~
-
-Sometimes you will require different mappings based on the context of the web
-application. For example, an Article may have one URL in the front office, and
-another in the backoffice (i.e. for viewing and editing respectively).
-
-MassiveSearchBundle solves this with ``contexts``. A ``context`` allows you
-to map additional indexes:
-
-.. code-block:: xml
-
-    <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
-    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
-
-        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
-            <index name="product" />
-            <id property="id" />
-            <url expr="'/path/to/' ~ article.title'" />
-            <fields>
-                <field name="title" type="string" />
-                <field name="body" type="string" />
-            </fields>
-
-            <context name="admin">
-                <url exp="'/admin/edit/article/' ~ object.id" />
-                <index name="product_foo" />
-            </context>
-        </mapping>
-
-    </massive-search-mapping>
-
-The above would create two mappings for the ``Product``. The second would use
-the index name ``product_foo`` and override the ``url`` field.
-
 Localization
 ------------
 
@@ -194,9 +159,6 @@ The following example uses all the mapping options:
                 <field name="body" type="string" />
             </fields>
 
-            <context name="admin">
-                <url exp="'/admin/edit/article/' ~ object.id" />
-            </context>
         </mapping>
 
     </massive-search-mapping>

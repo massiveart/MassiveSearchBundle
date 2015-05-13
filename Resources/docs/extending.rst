@@ -8,7 +8,8 @@ Factory
 
 The factory service can be customized, enabling you to instantiate your own
 classes for use in any listeners which you register. For example, you want to
-add a "thumbnail" field to the Document object.
+add a "thumbnail" field to the Document object and create a custom document
+``MyCustomDocument``:
 
 .. code-block:: php
 
@@ -38,7 +39,7 @@ service in your main application configuration:
 Metadata Drivers
 ----------------
 
-Simply extend the ``Metadata\Driver\DriverInterface`` and add the tag
+Extend the ``Metadata\Driver\DriverInterface`` and add the tag
 ``massive_search.metadata.driver`` tag to your implementations service
 definition.
 
@@ -55,8 +56,9 @@ guide.
 Events
 ------
 
-The MassiveSearchBundle issues events which can be listened to using the
-standard. You can register a listener in your DI configuration as follows:
+The MassiveSearchBundle issues events which can be listened to by using the
+standard Symfony event dispatcher. You can register a listener in your
+dependency injection configuration as follows:
 
 .. code-block:: xml
 
