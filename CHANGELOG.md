@@ -8,6 +8,8 @@ dev-develop
 
 - [Configuraiton] Undefined index when elastic search is used without
   configuration
+- [Search] If not localized managed indexes exist then a global search is
+  performed: https://github.com/massiveart/MassiveSearchBundle/issues/38
 
 0.5.1
 -----
