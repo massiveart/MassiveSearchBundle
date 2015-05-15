@@ -149,6 +149,15 @@ class SearchManager implements SearchManagerInterface
         $this->validateQuery($query);
         $this->expandQueryIndexes($query);
 
+        // At this point the indexes should have been expanded to potentially
+        // include all indexes managed by massive search, if it is empty then
+        // there is nothing to search for.
+        // 
+        // See: https://github.com/massiveart/MassiveSearchBundle/issues/38
+        if (0 === count($query->getIndexes())) {
+            return array();
+        }
+
         $this->eventDispatcher->dispatch(
             SearchEvents::SEARCH,
             new SearchEvent($query)
