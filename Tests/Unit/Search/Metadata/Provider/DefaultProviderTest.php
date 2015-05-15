@@ -7,13 +7,43 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Provider\DefaultProvider;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Metadata\ClassHierarchyMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 
 class DefaultProviderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ProviderInterface
+     */
     private $provider;
+
+    /**
+     * @var MetadataFactory
+     */
     private $metadataFactory;
+
+    /**
+     * @var ClassMetadata
+     */
     private $metadata1;
+
+    /**
+     * @var ClassMetadata
+     */
     private $metadata2;
+
+    /**
+     * @var ClassHierarchyMetadata
+     */
+    private $hierarchyMetadata1;
+
+    /**
+     * @var ClassHierarchyMetadata
+     */
+    private $hierarchyMetadata2;
+
+    /**
+     * @var Document
+     */
     private $document;
 
     public function setUp()

@@ -13,15 +13,22 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata\Provider;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Metadata\MetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Metadata\MetadataFactoryInterface;
 
 /**
  * Default metadata provider
  */
 class DefaultProvider implements ProviderInterface
 {
+    /**
+     * @var MetadataFactoryInterface
+     */
     private $metadataFactory;
 
-    public function __construct(MetadataFactory $metadataFactory)
+    /**
+     * @param MetadataFactoryInterface $metadataFactory
+     */
+    public function __construct(MetadataFactoryInterface $metadataFactory)
     {
         $this->metadataFactory = $metadataFactory;
     }
@@ -53,6 +60,7 @@ class DefaultProvider implements ProviderInterface
     public function getMetadataForDocument(Document $document)
     {
         $className = $document->getClass();
+
         return $this->metadataFactory->getMetadataForClass($className)->getOutsideClassMetadata();
     }
 }

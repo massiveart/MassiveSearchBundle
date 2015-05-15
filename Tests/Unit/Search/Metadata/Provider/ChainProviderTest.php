@@ -3,9 +3,37 @@
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata\Provider;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\Provider\ChainProvider;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\Document;
 
 class ChainProviderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ProviderInterface
+     */
+    private $provider1;
+
+    /**
+     * @var ProviderInterface
+     */
+    private $provider2;
+
+    /**
+     * @var ClassMetadata
+     */
+    private $metadata;
+
+    /**
+     * @var Document
+     */
+    private $document;
+
+    /**
+     * @var ChainProvider
+     */
+    private $chainProvider;
+
     public function setUp()
     {
         $this->provider1 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface');

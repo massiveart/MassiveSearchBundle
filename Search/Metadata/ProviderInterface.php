@@ -11,9 +11,14 @@
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 /**
- * Provide a more flexible extension point for loading metadata.
+ * ProviderInterface instances provide search metadata for object instances.
+ *
+ * Currently this metadata system is implemented side-by-side with the JMS metadata
+ * loader which only provides support for loading metadata by class name, but does provide
+ * extra features such as hierachrical class metadata resolution.
  */
 interface ProviderInterface
 {
