@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('elastic')
+                            ->addDefaultsifNotSet()
                             ->children()
                                 ->arrayNode('hosts')
                                     ->defaultValue(array('localhost:9200'))
