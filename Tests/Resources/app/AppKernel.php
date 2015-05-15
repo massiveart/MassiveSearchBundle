@@ -40,9 +40,15 @@ class AppKernel extends TestKernel
         if (file_exists(self::getTempConfig())) {
             $fs->remove(self::getTempConfig());
         }
+        $massiveCacheDir = __DIR__ . '/cache/massive-search';
 
         $fs->remove(__DIR__ . '/../Resources/app/data');
         $fs->remove(__DIR__ . '/cache/jms_serializer');
+
+        if (file_exists($massiveCacheDir)) {
+            $fs->remove($massiveCacheDir);
+            mkdir($massiveCacheDir);
+        }
     }
 
     public static function clearData()

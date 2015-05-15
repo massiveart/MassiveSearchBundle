@@ -36,7 +36,7 @@ class MassiveSearchExtension extends Extension
 
         $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
-        $this->loadMetadata($loader, $container);
+        $this->loadMetadata($config['metadata'], $loader, $container);
         $this->loadPersistence($config['persistence'], $loader);
     }
 
@@ -103,8 +103,17 @@ class MassiveSearchExtension extends Extension
         }
     }
 
-    private function loadMetadata($loader, $container)
+    private function loadMetadata($config, $loader, $container)
     {
+        $dir = $container->getParameterBag()->resolveValue($config['cache_dir']);
+        if (!file_exists($dir)) {
+            if (!@mkdir($dir, 0777, true)) {
+                throw new \RuntimeException(sprintf('Could not create cache directory "%s".', $dir));
+            }
+        }
+        $container->setParameter('massive_search.metadata.cache_dir', $config['cache_dir']);
+        $container->setParameter('massive_search.metadata.debug', $config['debug']);
+
         $loader->load('metadata.xml');
 
         $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'));

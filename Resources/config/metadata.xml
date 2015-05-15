@@ -10,12 +10,23 @@
         <parameter key="massive_search.metadata.file_locator.class">Metadata\Driver\FileLocator</parameter>
         <parameter key="massive_search.metadata.factory.class">Metadata\MetadataFactory</parameter>
         <parameter key="massive_search.metadata.field_evaluator.class">Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator</parameter>
+        <parameter key="massive_search.metadata.cache.file_cache.class">Metadata\Cache\FileCache</parameter>
     </parameters>
 
     <services>
         <!-- Metadata Factory -->
         <service id="massive_search.metadata.factory" class="%massive_search.metadata.factory.class%">
             <argument type="service" id="massive_search.metadata.driver.chain" />
+            <argument>Metadata\ClassHierarchyMetadata</argument>
+            <argument>%massive_search.metadata.debug%</argument>
+            <call method="setCache">
+                <argument type="service" id="massive_search.metadata.cache.file_cache" />
+            </call>
+        </service>
+
+        <!-- Metadata File Cache -->
+        <service id="massive_search.metadata.cache.file_cache" class="%massive_search.metadata.cache.file_cache.class%">
+            <argument>%massive_search.metadata.cache_dir%</argument>
         </service>
 
         <!-- File Locator !-->

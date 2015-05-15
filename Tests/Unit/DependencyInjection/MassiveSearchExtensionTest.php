@@ -20,6 +20,8 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
 
         $this->container->setParameter('kernel.root_dir', '/some/path');
+        $this->container->setParameter('kernel.cache_dir', __DIR__ . '/../../Resources/app/cache');
+        $this->container->setParameter('kernel.debug', false);
         $this->container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
     }
 
