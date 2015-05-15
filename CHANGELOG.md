@@ -1,20 +1,34 @@
 CHANGELOG
 =========
 
+dev-develop
+-----------
+
+### Bugfix
+
+- [Configuraiton] Undefined index when elastic search is used without
+  configuration
+
 0.5.1
-----------
+-----
+
+### Features
 
 - [ZendLucene] Add index type 'INDEX_STORED_INDEXED'
 
 0.5.0
-----------
+-----
+
+### Features
 
 - [TestAdapter] Supports indexes
 - [Mapping] Expression language
-- [REST] REST API
 - [Persistence] Doctrine ORM event subscriber
 - [Elastic] Elasticsearch adapter
 - [Localization] Localization strategy support
+
+### Enhancements
+
 - [Config] Renamed `adapter_id` to `adapter` in configuration. See UPGRADE.md
 - [Rebuild] Added core support for rebuilding indexes via
     massive:search:index:rebuild command
