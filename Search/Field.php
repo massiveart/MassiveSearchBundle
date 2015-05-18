@@ -35,14 +35,14 @@ class Field
      *
      * @var boolean
      */
-    protected $stored = true;
+    protected $stored;
 
     /**
      * The value should be indexed (i.e. it should be searchable).
      *
      * @var boolean
      */
-    protected $indexed = true;
+    protected $indexed;
 
     /**
      * Aggregate the values with other aggregate values into an indexed
@@ -55,7 +55,7 @@ class Field
      *
      * @var boolean
      */
-    protected $aggregate = false;
+    protected $aggregate;
 
     /**
      * Store the field as a string
@@ -69,12 +69,14 @@ class Field
         );
     }
 
-    public function __construct($name, $value, $type = self::TYPE_STRING, $indexStrategy = null)
+    public function __construct($name, $value, $type = self::TYPE_STRING, $stored = true, $indexed = true, $aggregate = false)
     {
         $this->name = $name;
         $this->value = $value;
         $this->type = $type;
-        $this->indexStrategy = $indexStrategy;
+        $this->stored = $stored;
+        $this->indexed = $indexed;
+        $this->aggregate = $aggregate;
     }
 
     /**

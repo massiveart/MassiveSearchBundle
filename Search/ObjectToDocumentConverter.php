@@ -133,13 +133,15 @@ class ObjectToDocumentConverter
                 if (!isset($mapping[$requiredMapping])) {
                     throw new \RuntimeException(sprintf(
                         'Mapping for "%s" does not have "%s" key',
-                        $requiredMapping
+                        get_class($document), $requiredMapping
                     ));
                 }
             }
 
             $mapping = array_merge(array(
-                'index_strategy' => null,
+                'stored' => true,
+                'aggregate' => false,
+                'indexed' => true,
             ), $mapping);
 
             if ($mapping['type'] == 'complex') {
@@ -164,8 +166,7 @@ class ObjectToDocumentConverter
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix . $fieldName . $i,
-                        $mapping['index_strategy']
+                        $prefix . $fieldName . $i
                     );
                 }
 
@@ -180,7 +181,9 @@ class ObjectToDocumentConverter
                         $prefix . $fieldName,
                         $value,
                         $mapping['type'],
-                        $mapping['index_strategy']
+                        $mapping['stored'],
+                        $mapping['indexed'],
+                        $mapping['aggregate']
                     )
                 );
 
@@ -193,7 +196,9 @@ class ObjectToDocumentConverter
                         $prefix . $fieldName . $key,
                         $itemValue,
                         $mapping['type'],
-                        $mapping['index_strategy']
+                        $mapping['stored'],
+                        $mapping['indexed'],
+                        $mapping['aggregate']
                     )
                 );
             }
