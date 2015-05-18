@@ -139,7 +139,9 @@ class ObjectToDocumentConverter
             }
 
             $mapping = array_merge(array(
-                'index_strategy' => null,
+                'stored' => true,
+                'indexed' => true,
+                'aggregated' => false,
             ), $mapping);
 
             if ($mapping['type'] == 'complex') {
@@ -164,8 +166,7 @@ class ObjectToDocumentConverter
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix . $fieldName . $i,
-                        $mapping['index_strategy']
+                        $prefix . $fieldName . $i
                     );
                 }
 
@@ -180,7 +181,9 @@ class ObjectToDocumentConverter
                         $prefix . $fieldName,
                         $value,
                         $mapping['type'],
-                        $mapping['index_strategy']
+                        $mapping['stored'],
+                        $mapping['indexed'],
+                        $mapping['aggregated']
                     )
                 );
 
@@ -193,7 +196,9 @@ class ObjectToDocumentConverter
                         $prefix . $fieldName . $key,
                         $itemValue,
                         $mapping['type'],
-                        $mapping['index_strategy']
+                        $mapping['stored'],
+                        $mapping['indexed'],
+                        $mapping['aggregated']
                     )
                 );
             }
