@@ -133,15 +133,15 @@ class ObjectToDocumentConverter
                 if (!isset($mapping[$requiredMapping])) {
                     throw new \RuntimeException(sprintf(
                         'Mapping for "%s" does not have "%s" key',
-                        $requiredMapping
+                        get_class($document), $requiredMapping
                     ));
                 }
             }
 
             $mapping = array_merge(array(
                 'stored' => true,
+                'aggregate' => false,
                 'indexed' => true,
-                'aggregated' => false,
             ), $mapping);
 
             if ($mapping['type'] == 'complex') {
@@ -183,7 +183,7 @@ class ObjectToDocumentConverter
                         $mapping['type'],
                         $mapping['stored'],
                         $mapping['indexed'],
-                        $mapping['aggregated']
+                        $mapping['aggregate']
                     )
                 );
 
@@ -198,7 +198,7 @@ class ObjectToDocumentConverter
                         $mapping['type'],
                         $mapping['stored'],
                         $mapping['indexed'],
-                        $mapping['aggregated']
+                        $mapping['aggregate']
                     )
                 );
             }
