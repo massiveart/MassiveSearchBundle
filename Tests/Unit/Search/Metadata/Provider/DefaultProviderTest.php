@@ -73,6 +73,17 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * It should return null if no metadata for an object was found
+     */
+    public function testReturnNullNoMetdataForObject()
+    {
+        $object = new \stdClass;
+        $this->metadataFactory->getMetadataForClass('stdClass')->willReturn(null);
+        $metadata = $this->provider->getMetadataForObject($object);
+        $this->assertNull($metadata);
+    }
+
+    /**
      * It should return all metadatas
      */
     public function testGetAllMetadata()
@@ -97,5 +108,16 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
         $this->metadataFactory->getMetadataForClass('Class')->willReturn($this->hierarchyMetadata1->reveal());
         $metadata = $this->provider->getMetadataForDocument($this->document->reveal());
         $this->assertSame($this->metadata1->reveal(), $metadata);
+    }
+
+    /**
+     * It should return null if no metadata for document was found
+     */
+    public function testReturnNullNoMetdataForDocumnet()
+    {
+        $this->document->getClass()->willReturn('Class');
+        $this->metadataFactory->getMetadataForClass('Class')->willReturn(null);
+        $metadata = $this->provider->getMetadataForDocument($this->document->reveal());
+        $this->assertNull($metadata);
     }
 }

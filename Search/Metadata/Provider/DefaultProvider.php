@@ -37,7 +37,13 @@ class DefaultProvider implements ProviderInterface
      */
     public function getMetadataForObject($object)
     {
-        return $this->metadataFactory->getMetadataForClass(get_class($object))->getOutsideClassMetadata();
+        $metadata = $this->metadataFactory->getMetadataForClass(get_class($object));
+
+        if (null === $metadata) {
+            return null;
+        }
+        
+        return $metadata->getOutsideClassMetadata();
     }
 
     /**
@@ -61,6 +67,12 @@ class DefaultProvider implements ProviderInterface
     {
         $className = $document->getClass();
 
-        return $this->metadataFactory->getMetadataForClass($className)->getOutsideClassMetadata();
+        $metadata = $this->metadataFactory->getMetadataForClass($className);
+        
+        if (null === $metadata) {
+            return null;
+        }
+        
+        return $metadata->getOutsideClassMetadata();
     }
 }
