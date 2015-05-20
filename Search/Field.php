@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 /**
- * Representation of a indexed field
+ * Representation of a indexed field.
  */
 class Field
 {
@@ -33,14 +34,14 @@ class Field
     /**
      * The value should be stored (i.e. it should be retrievable).
      *
-     * @var boolean
+     * @var bool
      */
     protected $stored;
 
     /**
      * The value should be indexed (i.e. it should be searchable).
      *
-     * @var boolean
+     * @var bool
      */
     protected $indexed;
 
@@ -53,12 +54,12 @@ class Field
      * Note for this to be beneficial the field should NOT be indexed (as the
      * field value will be tokenized and indexed in the aggregate field).
      *
-     * @var boolean
+     * @var bool
      */
     protected $aggregate;
 
     /**
-     * Store the field as a string
+     * Store the field as a string.
      */
     const TYPE_STRING = 'string';
 
@@ -80,7 +81,7 @@ class Field
     }
 
     /**
-     * Return the field name
+     * Return the field name.
      *
      * @return string
      */
@@ -90,7 +91,7 @@ class Field
     }
 
     /**
-     * Set the field name
+     * Set the field name.
      *
      * @param string
      */
@@ -100,7 +101,7 @@ class Field
     }
 
     /**
-     * Return the field type
+     * Return the field type.
      *
      * @return string
      */
@@ -110,7 +111,7 @@ class Field
     }
 
     /**
-     * Set the field type
+     * Set the field type.
      *
      * @param string
      */
@@ -120,7 +121,7 @@ class Field
     }
 
     /**
-     * Return the field value
+     * Return the field value.
      *
      * @return scalar
      */
@@ -130,7 +131,7 @@ class Field
     }
 
     /**
-     * Set the field value
+     * Set the field value.
      *
      * @param scalar
      */
@@ -144,7 +145,7 @@ class Field
      * Stored field values are retrievable but not necessarily
      * indexed.
      *
-     * @param boolean $boolean
+     * @param bool $boolean
      */
     public function setStored(bool $stored)
     {
@@ -152,21 +153,21 @@ class Field
     }
 
     /**
-     * Return true if the field should be stored
+     * Return true if the field should be stored.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isStored() 
+    public function isStored()
     {
         return $this->stored;
     }
 
     /**
-     * Set if the field should be indexed
+     * Set if the field should be indexed.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isIndexed() 
+    public function isIndexed()
     {
         return $this->indexed;
     }
@@ -174,9 +175,9 @@ class Field
     /**
      * Aggregate the values of this field into a single indexed field.
      *
-     * @param boolean $aggregate
+     * @param bool $aggregate
      */
-    public function setAggregate(bool $aggregate) 
+    public function setAggregate(bool $aggregate)
     {
         $this->aggregate = $aggregate;
     }
@@ -184,7 +185,7 @@ class Field
     /**
      * Return true if the field values should be in an aggregate indexed field.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAggregate()
     {

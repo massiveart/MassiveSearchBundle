@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 /**
- * Represents a search query with contextual information
+ * Represents a search query with contextual information.
  */
 class SearchQuery
 {
@@ -46,7 +47,7 @@ class SearchQuery
     }
 
     /**
-     * Return the query string
+     * Return the query string.
      *
      * @return string
      */
@@ -56,7 +57,7 @@ class SearchQuery
     }
 
     /**
-     * Return the locale
+     * Return the locale.
      *
      * @return string
      */
@@ -66,7 +67,7 @@ class SearchQuery
     }
 
     /**
-     * Set the locale
+     * Set the locale.
      *
      * @param string
      */
@@ -76,7 +77,7 @@ class SearchQuery
     }
 
     /**
-     * Return the categories to search in
+     * Return the categories to search in.
      *
      * @return array
      */
@@ -86,7 +87,7 @@ class SearchQuery
     }
 
     /**
-     * Set the categories to search in
+     * Set the categories to search in.
      *
      * @param array
      */
@@ -96,7 +97,7 @@ class SearchQuery
     }
 
     /**
-     * Return the indexes to search in
+     * Return the indexes to search in.
      *
      * @return array
      */
@@ -106,7 +107,7 @@ class SearchQuery
     }
 
     /**
-     * Set the indexes to search in
+     * Set the indexes to search in.
      *
      * @param array
      */

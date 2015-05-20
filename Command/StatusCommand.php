@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ use Symfony\Component\Console\Helper\Table;
 
 /**
  * This command returns some vendor specific information about
- * the currently configured search implementation
+ * the currently configured search implementation.
  */
 class StatusCommand extends ContainerAwareCommand
 {

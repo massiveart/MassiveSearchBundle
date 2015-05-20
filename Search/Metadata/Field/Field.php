@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +14,7 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 
 /**
- * Simple value object for representing fields
+ * Simple value object for representing fields.
  *
  * This is different from Property in that this represents
  * a value that should be determined from the "name" of the
@@ -40,7 +41,7 @@ class Field implements FieldInterface
     }
 
     /**
-     * Return the name of the field
+     * Return the name of the field.
      *
      * @return string
      */

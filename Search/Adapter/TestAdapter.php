@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +17,7 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\Factory;
 
 /**
- * Test adapter for testing scenarios
+ * Test adapter for testing scenarios.
  */
 class TestAdapter implements AdapterInterface
 {
@@ -63,7 +64,7 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * Return all the indexed documents
+     * Return all the indexed documents.
      *
      * NOTE: Not part of the API
      *
@@ -105,7 +106,7 @@ class TestAdapter implements AdapterInterface
                         $fieldValue = implode(' ', $fieldValue);
                     }
 
-                    if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) .'}i', $fieldValue)) {
+                    if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) . '}i', $fieldValue)) {
                         $isHit = true;
                         break;
                     }

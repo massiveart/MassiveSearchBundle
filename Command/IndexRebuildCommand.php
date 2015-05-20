@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 
 /**
- * Comand to build (or rebuild) the search index
+ * Comand to build (or rebuild) the search index.
  */
 class IndexRebuildCommand extends ContainerAwareCommand
 {

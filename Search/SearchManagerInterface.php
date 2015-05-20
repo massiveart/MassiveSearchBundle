@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,31 +17,36 @@ interface SearchManagerInterface
 {
     /**
      * @param object $object
+     *
      * @return IndexMetadataInterface
+     *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
     public function getMetadata($object);
 
     /**
-     * Search with the given query string
+     * Search with the given query string.
      *
      * @param SearchQuery
+     *
      * @return QueryHit[]
+     *
      * @throws \Exception
      */
     public function search(SearchQuery $searchQuery);
 
     /**
-     * Create a search query builder
+     * Create a search query builder.
      *
      * @param string $queryString
+     *
      * @return SearchQueryBuilder
      */
     public function createSearch($query);
 
     /**
-     * Attempt to index the given object
+     * Attempt to index the given object.
      *
      * @param object $object
      */
@@ -48,7 +54,7 @@ interface SearchManagerInterface
 
     /**
      * Remove the given mapped objects entry from
-     * its corresponding index
+     * its corresponding index.
      *
      * @param object $object
      */
@@ -56,14 +62,14 @@ interface SearchManagerInterface
 
     /**
      * Return an array of arbitrary information
-     * about the current state of the adapter
+     * about the current state of the adapter.
      *
      * @return array
      */
     public function getStatus();
 
     /**
-     * Return a list of all the category names
+     * Return a list of all the category names.
      *
      * @return string[]
      */

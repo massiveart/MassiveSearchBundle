@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,11 +13,10 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 
 /**
- * Convert mapped objects to search documents
+ * Convert mapped objects to search documents.
  */
 class ObjectToDocumentConverter
 {
@@ -41,7 +41,7 @@ class ObjectToDocumentConverter
     }
 
     /**
-     * Return the field evaluator
+     * Return the field evaluator.
      *
      * @return FieldEvaluator
      */
@@ -56,6 +56,7 @@ class ObjectToDocumentConverter
      *
      * @param IndexMetadata $metadata
      * @param object $object
+     *
      * @return Document
      */
     public function objectToDocument(IndexMetadata $metadata, $object)
@@ -148,7 +149,7 @@ class ObjectToDocumentConverter
                 if (!isset($mapping['mapping'])) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            '"complex" field mappings must have an additional array key "mapping" '.
+                            '"complex" field mappings must have an additional array key "mapping" ' .
                             'which contains the mapping for the complex structure in mapping: %s',
                             print_r($mapping, true)
                         )

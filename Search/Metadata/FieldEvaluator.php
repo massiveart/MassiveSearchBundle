@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 
 /**
- * Evaluate the value of fields
+ * Evaluate the value of fields.
  */
 class FieldEvaluator
 {
@@ -42,7 +43,7 @@ class FieldEvaluator
     }
 
     /**
-     * Evaluate the value from the given object and field
+     * Evaluate the value from the given object and field.
      *
      * @param mixed $object
      * @param mixed $field
@@ -75,7 +76,7 @@ class FieldEvaluator
     }
 
     /**
-     * Evaluate a property (using PropertyAccess)
+     * Evaluate a property (using PropertyAccess).
      *
      * @param mixed $object
      * @param Property $field
@@ -97,7 +98,7 @@ class FieldEvaluator
     private function getFieldValue($object, Field $field)
     {
         if (is_array($object)) {
-            $path = '[' . $field->getName(). ']';
+            $path = '[' . $field->getName() . ']';
         } else {
             $path = $field->getName();
         }
@@ -106,7 +107,7 @@ class FieldEvaluator
     }
 
     /**
-     * Evaluate an expression (ExpressionLanguage)
+     * Evaluate an expression (ExpressionLanguage).
      *
      * @param mixed $object
      * @param Expression $field

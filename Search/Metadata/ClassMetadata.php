@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,7 +25,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     private $indexMetadatas = array();
 
     /**
-     * Add an index metadata for the given context name
+     * Add an index metadata for the given context name.
      *
      * @param mixed $contextName
      * @param IndexMetadata $indexMetadata
@@ -44,7 +45,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     }
 
     /**
-     * Return the IndexMetadata metadata instances
+     * Return the IndexMetadata metadata instances.
      *
      * @return IndexMetadata[]
      */
@@ -54,7 +55,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     }
 
     /**
-     * Return the indexmetadata for the given context
+     * Return the indexmetadata for the given context.
      *
      * @param string $contextName
      *
@@ -78,6 +79,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     public function serialize()
     {
         $data = parent::serialize();
+
         return serialize(array($data, serialize($this->indexMetadatas)));
     }
 

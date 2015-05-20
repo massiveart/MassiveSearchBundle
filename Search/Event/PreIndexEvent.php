@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,30 +17,33 @@ use Symfony\Component\EventDispatcher\Event;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 
 /**
- * Preindex event is fired before a document is indexed
+ * Preindex event is fired before a document is indexed.
  */
 class PreIndexEvent extends Event
 {
     /**
-     * The object, which has been indexed
+     * The object, which has been indexed.
+     *
      * @var object
      */
     private $subject;
 
     /**
-     * The search document, which is the result of the indexing
+     * The search document, which is the result of the indexing.
+     *
      * @var Document
      */
     private $document;
 
     /**
-     * The metadata, on which the index process has been based
+     * The metadata, on which the index process has been based.
+     *
      * @var IndexMetadataInterface
      */
     private $metadata;
 
     /**
-     * The field evaluator
+     * The field evaluator.
      *
      * @var FieldEvaluator
      */
@@ -64,7 +68,7 @@ class PreIndexEvent extends Event
     }
 
     /**
-     * Returns the indexed subject
+     * Returns the indexed subject.
      *
      * @return mixed
      */
@@ -74,7 +78,7 @@ class PreIndexEvent extends Event
     }
 
     /**
-     * Returns the document, which is the result of the indexed object
+     * Returns the document, which is the result of the indexed object.
      *
      * @return Document
      */
@@ -84,7 +88,7 @@ class PreIndexEvent extends Event
     }
 
     /**
-     * Returns the metadata based on which the indexing was done
+     * Returns the metadata based on which the indexing was done.
      *
      * @return IndexMetadataInterface
      */
@@ -94,7 +98,7 @@ class PreIndexEvent extends Event
     }
 
     /**
-     * Return the field evaluator
+     * Return the field evaluator.
      *
      * @return FieldEvaluator
      */

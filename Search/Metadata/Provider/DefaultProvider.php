@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +17,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Metadata\MetadataFactoryInterface;
 
 /**
- * Default metadata provider
+ * Default metadata provider.
  */
 class DefaultProvider implements ProviderInterface
 {
@@ -40,9 +41,9 @@ class DefaultProvider implements ProviderInterface
         $metadata = $this->metadataFactory->getMetadataForClass(get_class($object));
 
         if (null === $metadata) {
-            return null;
+            return;
         }
-        
+
         return $metadata->getOutsideClassMetadata();
     }
 
@@ -68,11 +69,11 @@ class DefaultProvider implements ProviderInterface
         $className = $document->getClass();
 
         $metadata = $this->metadataFactory->getMetadataForClass($className);
-        
+
         if (null === $metadata) {
-            return null;
+            return;
         }
-        
+
         return $metadata->getOutsideClassMetadata();
     }
 }

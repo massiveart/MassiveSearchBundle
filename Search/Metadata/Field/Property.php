@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,7 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 
 /**
  * Simple value object for representing properties which
- * should be accesible using the PropertyAccessor
+ * should be accesible using the PropertyAccessor.
  */
 class Property implements FieldInterface
 {
@@ -32,7 +33,7 @@ class Property implements FieldInterface
     }
 
     /**
-     * Return the name of the referenced propery
+     * Return the name of the referenced propery.
      *
      * @return string
      */
