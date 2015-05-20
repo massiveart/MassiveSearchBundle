@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 
 class SearchManagerTest extends ProphecyTestCase
 {
@@ -29,9 +30,9 @@ class SearchManagerTest extends ProphecyTestCase
     private $adapter;
 
     /**
-     * @var MetadataFactory
+     * @var ProviderInterface
      */
-    private $metadataFactory;
+    private $provider;
 
     /**
      * @var IndexMetadataInterface
@@ -61,15 +62,12 @@ class SearchManagerTest extends ProphecyTestCase
     public function setUp()
     {
         $this->adapter = $this->prophesize('Massive\Bundle\SearchBundle\Search\AdapterInterface');
-        $this->metadataFactory = $this->prophesize('Metadata\MetadataFactory');
+        $this->provider = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface');
         $this->indexMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
         $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
         $this->metadata->getIndexMetadatas()->willReturn(array(
             $this->indexMetadata->reveal(),
         ));
-
-        $this->classHierachyMetadata = $this->prophesize('Metadata\ClassHierarchyMetadata');
-        $this->classHierachyMetadata->getOutsideClassMetadata()->willReturn($this->metadata);
 
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
@@ -79,7 +77,7 @@ class SearchManagerTest extends ProphecyTestCase
 
         $this->searchManager = new SearchManager(
             $this->adapter->reveal(),
-            $this->metadataFactory->reveal(),
+            $this->provider->reveal(),
             $this->converter->reveal(),
             $this->eventDispatcher->reveal(),
             $this->localizationStrategy->reveal()
@@ -89,6 +87,8 @@ class SearchManagerTest extends ProphecyTestCase
     }
 
     /**
+     * It should throw an exception if a non-object is passed to be indexed
+     *
      * @expectedException \InvalidArgumentException
      */
     public function testIndexNonObject()
@@ -102,8 +102,8 @@ class SearchManagerTest extends ProphecyTestCase
      */
     public function testIndexNoMetadata()
     {
-        $this->metadataFactory
-            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product')
+        $this->provider
+            ->getMetadataForObject($this->product)
             ->willReturn(null);
 
         $this->searchManager->index($this->product);
@@ -111,9 +111,9 @@ class SearchManagerTest extends ProphecyTestCase
 
     public function testIndex()
     {
-        $this->metadataFactory
-            ->getMetadataForClass('Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product')
-            ->willReturn($this->classHierachyMetadata);
+        $this->provider
+            ->getMetadataForObject($this->product)
+            ->willReturn($this->metadata->reveal());
 
         $this->indexMetadata->getName()->willReturn('test');
         $this->indexMetadata->getIdField()->willReturn('id');

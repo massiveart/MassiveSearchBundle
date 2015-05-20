@@ -36,10 +36,33 @@ service in your main application configuration:
         services:
             factory: my.factory.service
 
-Metadata Drivers
-----------------
+Metadata Providers
+------------------
 
-Extend the ``Metadata\Driver\DriverInterface`` and add the tag
+Massive Search allows you to implement the metadata `ProviderInterface`,
+instances of which can load metadata from both domain object and search
+document instances.
+
+.. note:: 
+
+    The metadata system is based upon the `JMS Metadata`_ library, although it
+    diverges in that we allow you to load metadata from object instances instead
+    of only the class name. It is still possible to implement standard JMS
+    Metadata drivers as detailed below.
+
+To implement a provider just implement the ``Metadata\\ProviderInterface`` and
+add your class to the dependency injection configuration with the
+``massive_search.metadata.provider`` tag:
+
+.. code-block:: xml
+
+    <service id="massive_search.metadata.provider.foo" class="Vendor\\Search\\Provider">
+        <tag type="massive_search.metadata.provider" />
+    </service>
+
+You can also implement standard JMS serializer drivers. This would be optimal
+if you only need the class name to determine the metadata. Extend the
+``Metadata\Driver\DriverInterface`` and add the tag
 ``massive_search.metadata.driver`` tag to your implementations service
 definition.
 
@@ -50,8 +73,10 @@ definition.
         <tag type="massive_search.metadata.driver" />
     </service>
 
-This is non-trivial and you should use the existing XML implementation as a
-guide.
+.. note::
+
+    Adding new metadata providers is non-trivial, you should check the
+    existing code for implementation details.
 
 Events
 ------
@@ -110,3 +135,5 @@ Fired before a document is indexed. See the code for more information.
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Fired when a search request is performed. See the code for more information.
+
+.. JMS Metadata_: https://github.com/schmittjoh/metadata

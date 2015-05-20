@@ -13,6 +13,7 @@ dev-develop
 - [Metadata] **BC BREAK**: Removed index strategies, replaced with explicit `stored` and
   `indexed` and `aggregate` flags.
 - [Metadata] Added metadata cache
+- [Metadata] Added metadata providers
 
 0.5.1
 -----
