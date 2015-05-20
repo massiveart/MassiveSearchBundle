@@ -14,5 +14,5 @@ before_script:
 
 script: 
     - phpunit --coverage-text
-    - vendor/behat/behat/bin/behat --suite=zend_lucene
-    - vendor/behat/behat/bin/behat --suite=elastic
+    - vendor/bin/behat --suite=zend_lucene
+    - vendor/bin/behat --suite=elastic

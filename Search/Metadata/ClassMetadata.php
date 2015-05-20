@@ -16,7 +16,7 @@ use Metadata\ClassMetadata as BaseClassMetadata;
  * Metadata for a mapped search object. A single class
  * may have several different search mappings.
  */
-class ClassMetadata extends BaseClassMetadata
+class ClassMetadata extends BaseClassMetadata implements \Serializable
 {
     /**
      * @var array
@@ -70,5 +70,24 @@ class ClassMetadata extends BaseClassMetadata
         }
 
         return $this->indexMetadatas[$contextName];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function serialize()
+    {
+        $data = parent::serialize();
+        return serialize(array($data, serialize($this->indexMetadatas)));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function unserialize($data)
+    {
+        list($data, $indexMetadata) = unserialize($data);
+        parent::unserialize($data);
+        $this->indexMetadatas = unserialize($indexMetadata);
     }
 }

@@ -12,6 +12,7 @@ dev-develop
   performed: https://github.com/massiveart/MassiveSearchBundle/issues/38
 - [Metadata] **BC BREAK**: Removed index strategies, replaced with explicit `stored` and
   `indexed` and `aggregate` flags.
+- [Metadata] Added metadata cache
 
 0.5.1
 -----
