@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,7 +23,7 @@ class ComplexMetadata
     private $fieldMapping = array();
 
     /**
-     * Return the field mapping for the complex data
+     * Return the field mapping for the complex data.
      */
     public function getFieldMapping()
     {
@@ -30,7 +31,7 @@ class ComplexMetadata
     }
 
     /**
-     * Set the field mapping
+     * Set the field mapping.
      */
     public function setFieldMapping($fieldMapping)
     {
@@ -38,7 +39,7 @@ class ComplexMetadata
     }
 
     /**
-     * Add some field mapping
+     * Add some field mapping.
      */
     public function addFieldMapping($name, $mapping)
     {

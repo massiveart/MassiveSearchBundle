@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 /**
- * Event names that are used by the Search event dispatcher
+ * Event names that are used by the Search event dispatcher.
  */
 class SearchEvents
 {

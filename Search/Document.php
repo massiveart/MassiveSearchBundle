@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 /**
- * Representation of a one indexed document
+ * Representation of a one indexed document.
  */
 class Document implements \JsonSerializable
 {
@@ -188,7 +189,7 @@ class Document implements \JsonSerializable
     /**
      * @return string
      */
-    public function getCategory() 
+    public function getCategory()
     {
         return $this->category;
     }
@@ -200,7 +201,6 @@ class Document implements \JsonSerializable
     {
         $this->category = $category;
     }
-    
 
     /**
      * @param string
@@ -219,9 +219,10 @@ class Document implements \JsonSerializable
     }
 
     /**
-     * Return the named field
+     * Return the named field.
      *
      * @return Field
+     *
      * @throws InvalidArgumentException When it doesn't exist
      */
     public function getField($name)
@@ -237,9 +238,9 @@ class Document implements \JsonSerializable
     }
 
     /**
-     * Return true if the field exists
+     * Return true if the field exists.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasField($name)
     {

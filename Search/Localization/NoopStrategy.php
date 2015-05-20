@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +14,7 @@ namespace Massive\Bundle\SearchBundle\Search\Localization;
 use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
- * No operation localization strategy
+ * No operation localization strategy.
  *
  * Does ... nothing
  * Use with care

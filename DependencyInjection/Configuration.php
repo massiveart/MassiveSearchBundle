@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Massive CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *

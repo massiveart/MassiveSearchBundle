@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,7 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 
 /**
  * Simple value object for representing expressions which
- * can be evaluated using the ExpressionLanguage
+ * can be evaluated using the ExpressionLanguage.
  */
 class Expression implements FieldInterface
 {
@@ -32,7 +33,7 @@ class Expression implements FieldInterface
     }
 
     /**
-     * Return the expression
+     * Return the expression.
      *
      * @return string
      */

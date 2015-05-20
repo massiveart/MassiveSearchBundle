@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,11 +15,9 @@ use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
-use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface as MetadataProviderInterface;
-use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
-use Metadata\MetadataFactory;
+
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -166,7 +165,7 @@ class SearchManager implements SearchManagerInterface
         // At this point the indexes should have been expanded to potentially
         // include all indexes managed by massive search, if it is empty then
         // there is nothing to search for.
-        // 
+        //
         // See: https://github.com/massiveart/MassiveSearchBundle/issues/38
         if (0 === count($query->getIndexes())) {
             return array();
@@ -207,7 +206,7 @@ class SearchManager implements SearchManagerInterface
     public function getStatus()
     {
         $data = array('Adapter' => get_class($this->adapter));
-        $data += $this->adapter->getStatus() ? : array();
+        $data += $this->adapter->getStatus() ?: array();
 
         return $data;
     }
@@ -251,7 +250,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * Return a list of all the index names (according to the metadata)
+     * Return a list of all the index names (according to the metadata).
      *
      * If categories are specified, only return the indexes corresponding
      * to the given categories.
@@ -287,6 +286,7 @@ class SearchManager implements SearchManagerInterface
      * optionally only in the given locale.
      *
      * @param string $locale
+     *
      * @return string[]
      */
     private function getLocalizedIndexNames($locale = null)
@@ -349,6 +349,7 @@ class SearchManager implements SearchManagerInterface
         if (!$query->getIndexes()) {
             $indexNames = $this->getLocalizedIndexNames($query->getLocale());
             $query->setIndexes($indexNames);
+
             return;
         }
 
@@ -372,9 +373,10 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * If query has indexes, ensure that they are known
+     * If query has indexes, ensure that they are known.
      *
      * @throws Exception\SearchException
+     *
      * @param SearchQuery $query
      */
     private function validateQuery(SearchQuery $query)

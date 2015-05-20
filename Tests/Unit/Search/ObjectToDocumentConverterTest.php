@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -113,7 +114,7 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
     }
 
     /**
-     * It should map the indexed, stored and aggregate fields
+     * It should map the indexed, stored and aggregate fields.
      *
      * @dataProvider provideIndexStoredAndAggregate
      */
@@ -127,7 +128,7 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
                 'stored' => $stored,
                 'indexed' => $indexed,
                 'aggregate' => $aggregate,
-            )
+            ),
         ));
         $document = $this->converter->objectToDocument($this->indexMetadata, $this->product);
         $field = $document->getField('title');
@@ -146,7 +147,7 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
     }
 
     /**
-     * It should throw an exception if an incomplete mapping is provided
+     * It should throw an exception if an incomplete mapping is provided.
      *
      * @expectedException \RuntimeException
      * @expectedExceptionMessage does not have
@@ -156,14 +157,14 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
         $this->indexMetadata->setIdField(new Field('id'));
         $this->indexMetadata->setFieldMapping(array(
             'title' => array(
-            )
+            ),
         ));
         $this->converter->objectToDocument($this->indexMetadata, $this->product);
     }
 
     /**
      * It should throw an exception if an incomplete mapping is provided for
-     * a complex field
+     * a complex field.
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage field mappings must have an additional

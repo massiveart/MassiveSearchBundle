@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,9 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
-
 /**
- * Metadata for searchable objects
+ * Metadata for searchable objects.
  */
 class IndexMetadata implements IndexMetadataInterface
 {
@@ -242,7 +242,7 @@ class IndexMetadata implements IndexMetadataInterface
     /**
      * {@inheritDoc}
      */
-    public function getCategoryName() 
+    public function getCategoryName()
     {
         return $this->categoryName;
     }

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +14,7 @@ namespace Massive\Bundle\SearchBundle\Search\Localization;
 use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 
 /**
- * Index localization strategy
+ * Index localization strategy.
  *
  * Uses a separate index for each localization
  */
@@ -45,7 +46,7 @@ class IndexStrategy implements LocalizationStrategyInterface
         return (boolean) preg_match(sprintf(
             '{^%s-%s-i18n$}',
             $indexName,
-            $locale ? : '[a-zA-Z_]+'
+            $locale ?: '[a-zA-Z_]+'
         ), $variantName);
     }
 }

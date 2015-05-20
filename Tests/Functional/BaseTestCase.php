@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,7 +39,7 @@ abstract class BaseTestCase extends SymfonyCmfBaseTestCase
         for ($i = 1; $i <= $nbResults; $i++) {
             $product = new Product();
             $product->setId($i);
-            $product->setTitle('Hello this is a product '.$i);
+            $product->setTitle('Hello this is a product ' . $i);
             $product->setBody('To be or not to be, that is the question');
             $product->setUrl('/foobar');
             $product->setLocale('fr');

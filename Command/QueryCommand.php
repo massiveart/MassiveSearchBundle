@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
 
 /**
- * Command to execute a query on the configured search engine
+ * Command to execute a query on the configured search engine.
  */
 class QueryCommand extends ContainerAwareCommand
 {
@@ -74,12 +75,12 @@ EOT
     }
 
     /**
-     * Truncate the given string
+     * Truncate the given string.
      *
      * See: https://github.com/symfony/symfony/issues/11977
      *
      * @param string Text to truncate
-     * @param integer Length
+     * @param int Length
      * @param string Suffix to append
      */
     private function truncate($text, $length, $suffix = '...')

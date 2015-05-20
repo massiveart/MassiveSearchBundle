@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,7 +15,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 
 /**
- * Expression language for massive search bundle
+ * Expression language for massive search bundle.
  */
 class MassiveSearchExpressionLanguage extends ExpressionLanguage
 {
@@ -30,7 +31,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
     }
 
     /**
-     * Join is an alias for PHP implode:
+     * Join is an alias for PHP implode:.
      *
      *   join(',', ['one', 'two', 'three']) = "one,two,three"
      *

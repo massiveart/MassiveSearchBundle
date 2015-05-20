@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the MassiveSearchBundle
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata\Provider;
 
 use Metadata\MetadataFactory;
@@ -62,29 +71,29 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return metadata for the given object
+     * It should return metadata for the given object.
      */
     public function testGetMetadataForObject()
     {
-        $object = new \stdClass;
+        $object = new \stdClass();
         $this->metadataFactory->getMetadataForClass('stdClass')->willReturn($this->hierarchyMetadata1->reveal());
         $metadata = $this->provider->getMetadataForObject($object);
         $this->assertSame($this->metadata1->reveal(), $metadata);
     }
 
     /**
-     * It should return null if no metadata for an object was found
+     * It should return null if no metadata for an object was found.
      */
     public function testReturnNullNoMetdataForObject()
     {
-        $object = new \stdClass;
+        $object = new \stdClass();
         $this->metadataFactory->getMetadataForClass('stdClass')->willReturn(null);
         $metadata = $this->provider->getMetadataForObject($object);
         $this->assertNull($metadata);
     }
 
     /**
-     * It should return all metadatas
+     * It should return all metadatas.
      */
     public function testGetAllMetadata()
     {
@@ -100,7 +109,7 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return the metadata for a search document
+     * It should return the metadata for a search document.
      */
     public function testGetMetadataForDocument()
     {
@@ -111,7 +120,7 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return null if no metadata for document was found
+     * It should return null if no metadata for document was found.
      */
     public function testReturnNullNoMetdataForDocumnet()
     {

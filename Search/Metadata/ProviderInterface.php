@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,6 @@
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Document;
-use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 /**
  * ProviderInterface instances provide search metadata for object instances.
@@ -23,21 +23,21 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 interface ProviderInterface
 {
     /**
-     * Load metadata for the given object
+     * Load metadata for the given object.
      *
      * @param object $object
      */
     public function getMetadataForObject($object);
 
     /**
-     * Return all metadata instances
+     * Return all metadata instances.
      *
      * @return ClassMetadata[]
      */
     public function getAllMetadata();
 
     /**
-     * Return metadata for the given document
+     * Return metadata for the given document.
      *
      * @return ClassMetadata
      */

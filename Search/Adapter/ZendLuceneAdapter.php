@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use ZendSearch\Lucene;
 
 /**
- * Adapter for the ZendSearch library
+ * Adapter for the ZendSearch library.
  *
  * https://github.com/zendframework/ZendSearch
  * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html
@@ -42,7 +43,8 @@ class ZendLuceneAdapter implements AdapterInterface
     const IMAGE_URL = '__image_url';
 
     /**
-     * The base directory for the search indexes
+     * The base directory for the search indexes.
+     *
      * @var string
      */
     private $basePath;
@@ -73,8 +75,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $basePath,
         $hideIndexException = false,
         $encoding = null
-    )
-    {
+    ) {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
@@ -186,7 +187,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($luceneHits as $luceneHit) {
-            /** @var Lucene\Search\QueryHit $luceneHit */
+            /* @var Lucene\Search\QueryHit $luceneHit */
 
             $luceneDocument = $luceneHit->getDocument();
 
@@ -220,6 +221,7 @@ class ZendLuceneAdapter implements AdapterInterface
             if ($documentA->getScore() < $documentB->getScore()) {
                 return true;
             }
+
             return false;
         });
 
@@ -236,7 +238,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $status = array();
 
         foreach ($indexDirs as $indexDir) {
-            /** @var  $indexDir \Symfony\Component\Finder\SplFileInfo; */
+            /* @var  $indexDir \Symfony\Component\Finder\SplFileInfo; */
 
             $indexFinder = new Finder();
             $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
@@ -285,7 +287,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $names = array();
 
         foreach ($indexDirs as $file) {
-            /** @var  $file \Symfony\Component\Finder\SplFileInfo; */
+            /* @var  $file \Symfony\Component\Finder\SplFileInfo; */
             $names[] = $file->getBasename();
         }
 
@@ -316,7 +318,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Return (or create) a Lucene index for the given name
+     * Return (or create) a Lucene index for the given name.
      *
      * @param string $indexName
      *
@@ -334,7 +336,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Determine the index path for a given index name
+     * Determine the index path for a given index name.
      *
      * @param string $indexName
      *

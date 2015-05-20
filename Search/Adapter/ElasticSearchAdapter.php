@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Elasticsearch\Client as ElasticSearchClient;
 
 /**
- * ElasticSearch adapter using official client:
+ * ElasticSearch adapter using official client:.
  *
  * https://github.com/elasticsearch/elasticsearch-php
  */
@@ -44,7 +45,7 @@ class ElasticSearchAdapter implements AdapterInterface
     private $client;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $indexListLoaded;
 

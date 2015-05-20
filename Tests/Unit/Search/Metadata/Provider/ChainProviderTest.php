@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the MassiveSearchBundle
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata\Provider;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\Provider\ChainProvider;
@@ -43,12 +52,12 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->chainProvider = new ChainProvider(array(
             $this->provider1->reveal(),
-            $this->provider2->reveal()
+            $this->provider2->reveal(),
         ));
     }
 
     /**
-     * It should get all metadatas
+     * It should get all metadatas.
      */
     public function testGetAllMetadatas()
     {
@@ -63,18 +72,18 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should return metadata for the given object
+     * It should return metadata for the given object.
      */
     public function testGetMetadataForObject()
     {
-        $object = new \stdClass;
+        $object = new \stdClass();
         $this->provider1->getMetadataForObject($object)->willReturn($this->metadata->reveal());
         $metadata = $this->chainProvider->getMetadataForObject($object);
         $this->assertSame($this->metadata->reveal(), $metadata);
     }
 
     /**
-     * It should return the metadata for a search document
+     * It should return the metadata for a search document.
      */
     public function testGetMetadataForDocument()
     {

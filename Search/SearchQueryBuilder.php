@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 /**
- * Class used to fluently build a search query context
+ * Class used to fluently build a search query context.
  */
 class SearchQueryBuilder
 {
@@ -32,11 +33,12 @@ class SearchQueryBuilder
     }
 
     /**
-     * Set the index to search in
+     * Set the index to search in.
      *
      * Mutually exlusive with category
      *
      * @param string
+     *
      * @return SearchQueryBuilder
      */
     public function index($indexName)
@@ -47,9 +49,10 @@ class SearchQueryBuilder
     }
 
     /**
-     * Set the locale to search in
+     * Set the locale to search in.
      *
      * @param string
+     *
      * @return SearchQueryBuilder
      */
     public function locale($locale)
@@ -65,6 +68,7 @@ class SearchQueryBuilder
      * Mutually exclusive with index
      *
      * @param string
+     *
      * @return SearchQueryBuilder
      */
     public function category($category)
@@ -75,9 +79,10 @@ class SearchQueryBuilder
     }
 
     /**
-     * Set an array of categories to search in
+     * Set an array of categories to search in.
      *
      * @param string[]
+     *
      * @return SearchQueryBuilder
      */
     public function categories(array $categories)
@@ -88,9 +93,10 @@ class SearchQueryBuilder
     }
 
     /**
-     * Set the indexes to search in
+     * Set the indexes to search in.
      *
      * @param string
+     *
      * @return SearchQueryBuilder
      */
     public function indexes(array $indexes)
@@ -101,7 +107,7 @@ class SearchQueryBuilder
     }
 
     /**
-     * Execute the search
+     * Execute the search.
      *
      * @return array
      */

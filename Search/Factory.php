@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,12 +18,12 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field as MetadataField;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 /**
- * Factory class for all new Search objects
+ * Factory class for all new Search objects.
  */
 class Factory
 {
     /**
-     * Make a new search document
+     * Make a new search document.
      *
      * @return Document
      */
@@ -32,7 +33,7 @@ class Factory
     }
 
     /**
-     * Make a new query hit
+     * Make a new query hit.
      *
      * @return QueryHit
      */
@@ -43,7 +44,7 @@ class Factory
 
     /**
      * Make a new search field (fields are contained within
-     * documents)
+     * documents).
      *
      * @return Field
      */
@@ -54,7 +55,7 @@ class Factory
 
     /**
      * Make a new metadata object representing a mapped
-     * searchable class
+     * searchable class.
      */
     public function createClassMetadata($class)
     {

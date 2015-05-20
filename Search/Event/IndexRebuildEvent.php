@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -29,7 +30,7 @@ class IndexRebuildEvent extends Event
     {
         $this->filter = $filter;
         $this->purge = $purge;
-        $this->output = $output ? : new NullOutput();
+        $this->output = $output ?: new NullOutput();
     }
 
     /**
@@ -45,9 +46,9 @@ class IndexRebuildEvent extends Event
     }
 
     /**
-     * If each affected index should be purged before rebuilding
+     * If each affected index should be purged before rebuilding.
      *
-     * @return boolean
+     * @return bool
      */
     public function getPurge()
     {
@@ -55,7 +56,7 @@ class IndexRebuildEvent extends Event
     }
 
     /**
-     * Return the console Output class
+     * Return the console Output class.
      *
      * @return OutputInterface
      */

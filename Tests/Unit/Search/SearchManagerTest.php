@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,12 +15,10 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Metadata\ClassHierarchyMetadata;
-use Metadata\MetadataFactory;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 
 class SearchManagerTest extends ProphecyTestCase
@@ -87,7 +86,7 @@ class SearchManagerTest extends ProphecyTestCase
     }
 
     /**
-     * It should throw an exception if a non-object is passed to be indexed
+     * It should throw an exception if a non-object is passed to be indexed.
      *
      * @expectedException \InvalidArgumentException
      */

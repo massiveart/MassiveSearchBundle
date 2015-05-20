@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
 /**
  * Fields are simple value objects that represent a method
- * of retrieving data from an object
+ * of retrieving data from an object.
  */
 interface FieldInterface
 {

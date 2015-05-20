@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,11 +12,10 @@
 namespace Massive\Bundle\SearchBundle\Search\Metadata\Provider;
 
 use Massive\Bundle\SearchBundle\Search\Document;
-use Metadata\MetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 
 /**
- * Chain provider
+ * Chain provider.
  */
 class ChainProvider implements ProviderInterface
 {
@@ -39,7 +39,7 @@ class ChainProvider implements ProviderInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -70,6 +70,6 @@ class ChainProvider implements ProviderInterface
             }
         }
 
-        return null;
+        return;
     }
 }

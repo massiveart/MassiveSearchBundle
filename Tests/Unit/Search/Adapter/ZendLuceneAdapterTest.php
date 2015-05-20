@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the MassiveSearchBundle
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Unit\Search\Adapter;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
@@ -33,7 +42,7 @@ class ZendLuceneAdapterTest extends ProphecyTestCase
     }
 
     /**
-     * Listing indexes when the path does not exist should return an empty array
+     * Listing indexes when the path does not exist should return an empty array.
      */
     public function testListIndexesNotExist()
     {
@@ -58,7 +67,7 @@ class ZendLuceneAdapterTest extends ProphecyTestCase
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
         $this->document->getFields()->willReturn(array(
-            $this->field1
+            $this->field1,
         ));
 
         $this->field1->getName()->wilLReturn('hallo');
@@ -81,28 +90,28 @@ class ZendLuceneAdapterTest extends ProphecyTestCase
             array(
                 true,
                 true,
-                null
+                null,
             ),
             array(
                 false,
                 true,
-                null
+                null,
             ),
             array(
                 true,
                 false,
-                null
+                null,
             ),
             array(
                 false,
                 false,
                 array('\InvalidArgumentException', 'cannot be both not indexed and not stored'),
-            )
+            ),
         );
     }
 
     /**
-     * If the field is aggregate, its value should be aggregated into the aggregate field
+     * If the field is aggregate, its value should be aggregated into the aggregate field.
      */
     public function testIndexWithAggregate()
     {
