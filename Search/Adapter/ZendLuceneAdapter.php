@@ -183,7 +183,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $indexNames = $searchQuery->getIndexes();
         $queryString = $searchQuery->getQueryString();
 
-        $searcher = new \Zend_Search_Lucene_MultiSearcher();
+        $searcher = new Zend\MultiSearcher();
 
         foreach ($indexNames as $indexName) {
             $indexPath = $this->getIndexPath($indexName);
