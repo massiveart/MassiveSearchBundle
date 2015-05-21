@@ -78,12 +78,10 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 'zend_lucene',
                 array(
                     'basepath' => 'foobar',
-                    'hide_index_exception' => true,
                     'encoding' => 'UTF-8',
                 ),
                 array(
                     'massive_search.adapter.zend_lucene.basepath' => 'foobar',
-                    'massive_search.adapter.zend_lucene.hide_index_exception' => true,
                 ),
             ),
             array(
@@ -92,7 +90,6 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
                 ),
                 array(
                     'massive_search.adapter.zend_lucene.basepath' => '%kernel.root_dir%/data',
-                    'massive_search.adapter.zend_lucene.hide_index_exception' => false,
                 ),
             ),
             array(

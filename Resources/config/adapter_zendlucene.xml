@@ -12,7 +12,6 @@
         <service id="massive_search.adapter.zend_lucene" class="%massive_search.search.adapter.zend_lucene.class%">
             <argument type="service" id="massive_search.factory" />
             <argument>%massive_search.adapter.zend_lucene.basepath%</argument>
-            <argument>%massive_search.adapter.zend_lucene.hide_index_exception%</argument>
             <argument>%massive_search.adapter.zend_lucene.encoding%</argument>
             <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="optimizeIndexAfterRebuild" priority="-999" />
         </service>

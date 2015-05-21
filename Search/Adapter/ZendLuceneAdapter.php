@@ -53,11 +53,6 @@ class ZendLuceneAdapter implements AdapterInterface
     private $factory;
 
     /**
-     * @var Boolean
-     */
-    private $hideIndexException;
-
-    /**
      * @var string
      */
     private $encoding;
@@ -70,21 +65,18 @@ class ZendLuceneAdapter implements AdapterInterface
     /**
      * @param Factory $factory
      * @param string $basePath Base filesystem path for the index
-     * @param bool $hideIndexException
      * @param null $encoding
      * @param string $defaultIndexStrategy
      */
     public function __construct(
         Factory $factory,
         $basePath,
-        $hideIndexException = false,
         $encoding = null,
         $defaultIndexStrategy = Field::INDEX_AGGREGATE
     )
     {
         $this->basePath = $basePath;
         $this->factory = $factory;
-        $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
         $this->defaultIndexStrategy = $defaultIndexStrategy;
 
@@ -358,7 +350,7 @@ class ZendLuceneAdapter implements AdapterInterface
      * @param Index $index The Zend Lucene Index
      * @param Document $document The Massive Search Document
      */
-    private function removeExisting(\Zend_Search_Lucene $index, Document $document)
+    private function removeExisting(\Zend_Search_Lucene_Interface $index, Document $document)
     {
         $hits = $index->find(self::ID_FIELDNAME . ':' . $document->getId());
 
@@ -379,9 +371,11 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     private function getIndex($indexPath, $create = false)
     {
-        $index = new \Zend_Search_Lucene($indexPath, $create);
+        if ($create) {
+            return \Zend_Search_Lucene::create($indexPath);
+        }
 
-        return $index;
+        return \Zend_Search_Lucene::open($indexPath);
     }
 
     /**

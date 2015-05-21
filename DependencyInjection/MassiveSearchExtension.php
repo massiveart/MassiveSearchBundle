@@ -86,7 +86,6 @@ class MassiveSearchExtension extends Extension
     private function loadZendSearch($config, $loader, $container)
     {
         $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['basepath']);
-        $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['hide_index_exception']);
         $container->setParameter('massive_search.adapter.zend_lucene.encoding', $config['encoding']);
         $loader->load('adapter_zendlucene.xml');
     }
