@@ -25,6 +25,7 @@
         "matthiasnoback/symfony-dependency-injection-test": "0.7.1",
         "doctrine/doctrine-bundle": "~1.3",
         "doctrine/orm": "~2.4",
+        "dantleech/phpbench": "~1.0",
 
         "behat/behat": "~3.0.0",
         "behat/web-api-extension": "~1.0@dev",

@@ -1,0 +1,12 @@
+<?php
+
+require(__DIR__ . '/vendor/symfony-cmf/testing/bootstrap/bootstrap.php');
+
+$config = new PhpBench\Configuration();
+$config->setPath(__DIR__ . '/Tests/Benchmark');
+$config->addReport(array(
+    'name' => 'console_table',
+    'deviation' => false
+));
+
+return $config;
