@@ -17,9 +17,6 @@ use PhpBench\Benchmark\Iteration;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 
-/**
- * @processIsolation iteration
- */
 abstract class AdapterBench extends BaseTestCase implements Benchmark
 {
     public function setUp()
@@ -82,7 +79,7 @@ abstract class AdapterBench extends BaseTestCase implements Benchmark
     {
         return new SearchManager(
             $this->getContainer()->get($adapterId),
-            $this->getContainer()->get('massive_search.metadata.factory'),
+            $this->getContainer()->get('massive_search.metadata.provider.chain'),
             $this->getContainer()->get('massive_search.object_to_document_converter'),
             $this->getContainer()->get('event_dispatcher'),
             $this->getContainer()->get('massive_search.localization_strategy')
