@@ -6,7 +6,7 @@ services:
 sudo: false
 
 php:
-  - 5.4
+  - 5.6
 
 before_script:
   - composer selfupdate
@@ -16,6 +16,7 @@ script:
     - phpunit --coverage-text
     - vendor/bin/behat --suite=zend_lucene
     - vendor/bin/behat --suite=elastic
+    - vendor/bin/phpbench run --report=all
 
 env: 
   - SYMFONY_DEPRECATIONS_HELPER=weak

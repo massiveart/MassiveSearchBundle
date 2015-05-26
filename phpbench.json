@@ -1,0 +1,22 @@
+{
+    "bootstrap": "vendor/symfony-cmf/testing/bootstrap/bootstrap.php",
+    "path": "Tests/Benchmark",
+    "reports": {
+        "index_scaling": {
+            "generator": "table_custom",
+            "title": "Index scaling performance",
+            "description": "Test indexing performance on increasing numbers of records",
+            "file": "Tests/Benchmark/reports/index_scaling.json"
+        },
+        "search_scaling": {
+            "extends": "index_scaling",
+            "title": "Search scaling performance",
+            "description": "Test search performance with increasing numbers of records",
+            "params": {"group": "search"}
+        },
+        "all": {
+            "generator": "composite",
+            "reports": ["index_scaling", "search_scaling"]
+        }
+    }
+}
