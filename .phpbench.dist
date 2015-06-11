@@ -5,8 +5,30 @@ require(__DIR__ . '/vendor/symfony-cmf/testing/bootstrap/bootstrap.php');
 $config = new PhpBench\Configuration();
 $config->setPath(__DIR__ . '/Tests/Benchmark');
 $config->addReport(array(
+    'title' => 'Indexing comparison',
+    'description' => <<<EOT
+This benchmark compares the Test adapter, which is a dummy adapter which uses an array for storage, against
+the Elastic Search and Zend Lucene adapters
+EOT
+    ,
     'name' => 'console_table',
-    'deviation' => false
+    'groups' => array('index'),
+    'aggregate' => 'subject',
+    'cols' => array('class', 'iters', 'mean_time', 'deviation_min'),
+    'sort' => 'time',
+));
+
+$config->addReport(array(
+    'title' => 'Indexing Scalability',
+    'description' => <<<EOT
+Compares how performances scales on multiple adapters
+EOT
+    ,
+    'name' => 'console_table',
+    'groups' => array('index'),
+    'aggregate' => 'run',
+    'cols' => array('params', 'iters', 'mean_time', 'deviation_min'),
+    'sort' => 'time',
 ));
 
 return $config;

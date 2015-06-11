@@ -37,8 +37,9 @@ abstract class AdapterBench extends BaseTestCase implements Benchmark
     }
 
     /**
-     * @description Bench mark indexing
+     * @description Indexing
      * @paramProvider provideNbDocuments
+     * @group index
      */
     public function benchIndex(Iteration $iteration)
     {
@@ -65,9 +66,10 @@ abstract class AdapterBench extends BaseTestCase implements Benchmark
     }
 
     /**
-     * @description Bench mark search
+     * @description Search
      * @paramProvider provideNbDocuments
      * @beforeMethod benchIndex
+     * @group search
      */
     public function benchSearch()
     {

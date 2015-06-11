@@ -19,6 +19,7 @@ use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 
 /**
  * @processIsolation iteration
+ * @group adapter_lucene
  */
 class ZendLuceneBench extends AdapterBench implements Benchmark
 {
