@@ -17,6 +17,9 @@ use PhpBench\Benchmark\Iteration;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 
+/**
+ * @iterations 3
+ */
 abstract class AdapterBench extends BaseTestCase implements Benchmark
 {
     public function setUp()
@@ -37,7 +40,6 @@ abstract class AdapterBench extends BaseTestCase implements Benchmark
     }
 
     /**
-     * @description Indexing
      * @paramProvider provideNbDocuments
      * @group index
      */
@@ -66,7 +68,6 @@ abstract class AdapterBench extends BaseTestCase implements Benchmark
     }
 
     /**
-     * @description Search
      * @paramProvider provideNbDocuments
      * @beforeMethod benchIndex
      * @group search
