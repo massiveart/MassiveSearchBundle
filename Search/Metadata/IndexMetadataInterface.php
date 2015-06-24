@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,48 +12,47 @@
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
 /**
- * Metadata for searchable objects
- * @package Massive\Bundle\SearchBundle\Search\Metadata
+ * Metadata for searchable objects.
  */
 interface IndexMetadataInterface
 {
     /**
-     * The FQCN of the mapped class this index represents
+     * The FQCN of the mapped class this index represents.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set the FCQN of the class this index represents
+     * Set the FCQN of the class this index represents.
      *
      * @param string
      */
     public function setName($name);
 
     /**
-     * Set the name of the field representing the URL
+     * Set the name of the field representing the URL.
      *
      * @param string
      */
     public function setUrlField($urlField);
 
     /**
-     * Set the name of the field representing the description
+     * Set the name of the field representing the description.
      *
      * @param string
      */
     public function setDescriptionField($descriptionField);
 
     /**
-     * Return the field mapping
+     * Return the field mapping.
      *
      * @return array
      */
     public function getFieldMapping();
 
     /**
-     * Set the name of the field representing the title
+     * Set the name of the field representing the title.
      *
      * @param string
      */
@@ -60,7 +60,7 @@ interface IndexMetadataInterface
 
     /**
      * Return the name of the field on the mapped document which
-     * represents the URL (should be named URI)
+     * represents the URL (should be named URI).
      *
      * @return string
      */
@@ -68,19 +68,19 @@ interface IndexMetadataInterface
 
     /**
      * Return the name of the field on the mapped document which
-     * represents the ID
+     * represents the ID.
      *
      * @return string
      */
     public function getIdField();
 
     /**
-     * Set the search index name
+     * Set the search index name.
      */
     public function setIndexName($indexName);
 
     /**
-     * Add a field mapping
+     * Add a field mapping.
      *
      * @param string
      * @param array
@@ -88,7 +88,7 @@ interface IndexMetadataInterface
     public function addFieldMapping($name, $mapping);
 
     /**
-     * Set the field mapping
+     * Set the field mapping.
      *
      * @param array
      */
@@ -96,14 +96,14 @@ interface IndexMetadataInterface
 
     /**
      * Return the name of the field on the mapped document which
-     * represents the ID
+     * represents the ID.
      *
      * @return string
      */
     public function getTitleField();
 
     /**
-     * Return the search index name to use for the mapped class
+     * Return the search index name to use for the mapped class.
      *
      * @return string
      */
@@ -111,7 +111,7 @@ interface IndexMetadataInterface
 
     /**
      * Set the name of the field on the mapped document which represents
-     * the ID field
+     * the ID field.
      *
      * @param string
      */
@@ -119,7 +119,7 @@ interface IndexMetadataInterface
 
     /**
      * Return the name of the field on the mapped document which
-     * represents the description
+     * represents the description.
      *
      * @return string
      */
@@ -135,7 +135,7 @@ interface IndexMetadataInterface
     public function getImageUrlField();
 
     /**
-     * Set the name of the field representing the URL of the image
+     * Set the name of the field representing the URL of the image.
      *
      * @param string
      */
@@ -143,42 +143,42 @@ interface IndexMetadataInterface
 
     /**
      * Return the name of the fild on the mapped document which
-     * represents the locale
+     * represents the locale.
      *
      * @return string
      */
     public function getLocaleField();
 
     /**
-     * Set the name of the field representing the locale
+     * Set the name of the field representing the locale.
      *
      * @param string
      */
     public function setLocaleField($field);
 
     /**
-     * Get the class metadata to which this index metadata applies
+     * Get the class metadata to which this index metadata applies.
      *
      * @return ClassMetadata
      */
     public function getClassMetadata();
 
     /**
-     * Set the class metadata to which this index applies
+     * Set the class metadata to which this index applies.
      *
      * @param ClassMetadata $classMetadata
      */
     public function setClassMetadata(ClassMetadata $classMetadata);
 
     /**
-     * Return the field containing the category
+     * Return the field containing the category.
      *
      * @return string
      */
     public function getCategoryName();
 
     /**
-     * Set the field containing the category
+     * Set the field containing the category.
      *
      * @param string
      */

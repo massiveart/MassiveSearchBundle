@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 /**
- * Representation of a indexed field
+ * Representation of a indexed field.
  */
 class Field
 {
@@ -31,30 +32,36 @@ class Field
     protected $value;
 
     /**
-     * @var string
+     * The value should be stored (i.e. it should be retrievable).
+     *
+     * @var bool
      */
-    protected $indexStrategy;
+    protected $stored;
 
     /**
-     * Store the field as a string
+     * The value should be indexed (i.e. it should be searchable).
+     *
+     * @var bool
+     */
+    protected $indexed;
+
+    /**
+     * Aggregate the values with other aggregate values into an indexed
+     * aggregate field (this can have performance benefits on certain
+     * implementations, like Zend Lucene, as it reduces the number of indexed
+     * fields on the document).
+     *
+     * Note for this to be beneficial the field should NOT be indexed (as the
+     * field value will be tokenized and indexed in the aggregate field).
+     *
+     * @var bool
+     */
+    protected $aggregate;
+
+    /**
+     * Store the field as a string.
      */
     const TYPE_STRING = 'string';
-
-    /**
-     * Aggregate the fields in a single aggregate field for indexing and
-     * store the fields
-     */
-    const INDEX_AGGREGATE = 'aggregate';
-
-    /**
-     * Index, but do not sture the field
-     */
-    const INDEX_UNSTORED = 'unstored';
-
-    /**
-     * Indexed and stored
-     */
-    const INDEX_STORED_INDEXED = 'stored_indexed';
 
     public static function getValidTypes()
     {
@@ -63,16 +70,18 @@ class Field
         );
     }
 
-    public function __construct($name, $value, $type = self::TYPE_STRING, $indexStrategy = null)
+    public function __construct($name, $value, $type = self::TYPE_STRING, $stored = true, $indexed = true, $aggregate = false)
     {
         $this->name = $name;
         $this->value = $value;
         $this->type = $type;
-        $this->indexStrategy = $indexStrategy;
+        $this->stored = $stored;
+        $this->indexed = $indexed;
+        $this->aggregate = $aggregate;
     }
 
     /**
-     * Return the field name
+     * Return the field name.
      *
      * @return string
      */
@@ -82,7 +91,7 @@ class Field
     }
 
     /**
-     * Set the field name
+     * Set the field name.
      *
      * @param string
      */
@@ -92,7 +101,7 @@ class Field
     }
 
     /**
-     * Return the field type
+     * Return the field type.
      *
      * @return string
      */
@@ -102,7 +111,7 @@ class Field
     }
 
     /**
-     * Set the field type
+     * Set the field type.
      *
      * @param string
      */
@@ -112,7 +121,7 @@ class Field
     }
 
     /**
-     * Return the field value
+     * Return the field value.
      *
      * @return scalar
      */
@@ -122,7 +131,7 @@ class Field
     }
 
     /**
-     * Set the field value
+     * Set the field value.
      *
      * @param scalar
      */
@@ -132,22 +141,54 @@ class Field
     }
 
     /**
-     * Get the index strategy
+     * Set if the field should be stored or not
+     * Stored field values are retrievable but not necessarily
+     * indexed.
      *
-     * @return string One of Field::INDEX_*
+     * @param bool $boolean
      */
-    public function getIndexStrategy() 
+    public function setStored(bool $stored)
     {
-        return $this->indexStrategy;
+        $this->stored = $stored;
     }
 
     /**
-     * Set the index strategy
+     * Return true if the field should be stored.
      *
-     * @param string $indexStrategy One of Field::INDEX_*
+     * @return bool
      */
-    public function setIndexStrategy($indexStrategy)
+    public function isStored()
     {
-        $this->indexStrategy = $indexStrategy;
+        return $this->stored;
+    }
+
+    /**
+     * Set if the field should be indexed.
+     *
+     * @return bool
+     */
+    public function isIndexed()
+    {
+        return $this->indexed;
+    }
+
+    /**
+     * Aggregate the values of this field into a single indexed field.
+     *
+     * @param bool $aggregate
+     */
+    public function setAggregate(bool $aggregate)
+    {
+        $this->aggregate = $aggregate;
+    }
+
+    /**
+     * Return true if the field values should be in an aggregate indexed field.
+     *
+     * @return bool
+     */
+    public function isAggregate()
+    {
+        return $this->aggregate;
     }
 }

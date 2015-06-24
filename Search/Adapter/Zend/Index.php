@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,7 +31,7 @@ class Index extends BaseIndex
      *
      * Set to true to catch exceptions in the __destruct method
      *
-     * @param boolean $hideDestructException
+     * @param bool $hideDestructException
      */
     public function setHideException($hideDestructException)
     {

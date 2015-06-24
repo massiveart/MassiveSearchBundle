@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the MassiveSearchBundle
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Massive\Bundle\SearchBundle\Tests\Resources\app;
 
 use Symfony\Cmf\Component\Testing\HttpKernel\TestKernel;
@@ -40,9 +49,15 @@ class AppKernel extends TestKernel
         if (file_exists(self::getTempConfig())) {
             $fs->remove(self::getTempConfig());
         }
+        $massiveCacheDir = __DIR__ . '/cache/massive-search';
 
         $fs->remove(__DIR__ . '/../Resources/app/data');
         $fs->remove(__DIR__ . '/cache/jms_serializer');
+
+        if (file_exists($massiveCacheDir)) {
+            $fs->remove($massiveCacheDir);
+            mkdir($massiveCacheDir);
+        }
     }
 
     public static function clearData()

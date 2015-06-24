@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,6 +18,7 @@ use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 
 class ObjectToDocumentConverterTest extends ProphecyTestCase
 {
@@ -109,5 +111,73 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
         foreach ($expected as $method => $expectedValue) {
             $this->assertEquals($expectedValue, $document->$method());
         }
+    }
+
+    /**
+     * It should map the indexed, stored and aggregate fields.
+     *
+     * @dataProvider provideIndexStoredAndAggregate
+     */
+    public function testIndexedStoredAndAggregate($stored, $indexed, $aggregate)
+    {
+        $this->indexMetadata->setIdField(new Field('id'));
+        $this->indexMetadata->setFieldMapping(array(
+            'title' => array(
+                'type' => 'string',
+                'field' => new Property('title'),
+                'stored' => $stored,
+                'indexed' => $indexed,
+                'aggregate' => $aggregate,
+            ),
+        ));
+        $document = $this->converter->objectToDocument($this->indexMetadata, $this->product);
+        $field = $document->getField('title');
+
+        $this->assertEquals($stored, $field->isStored());
+        $this->assertEquals($indexed, $field->isIndexed());
+        $this->assertEquals($aggregate, $field->isAggregate());
+    }
+
+    public function provideIndexStoredAndAggregate()
+    {
+        return array(
+            array(true, true, true),
+            array(false, false, false),
+        );
+    }
+
+    /**
+     * It should throw an exception if an incomplete mapping is provided.
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage does not have
+     */
+    public function testMissingRequiredMapping()
+    {
+        $this->indexMetadata->setIdField(new Field('id'));
+        $this->indexMetadata->setFieldMapping(array(
+            'title' => array(
+            ),
+        ));
+        $this->converter->objectToDocument($this->indexMetadata, $this->product);
+    }
+
+    /**
+     * It should throw an exception if an incomplete mapping is provided for
+     * a complex field.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage field mappings must have an additional
+     */
+    public function testMissingRequiredMappingComplex()
+    {
+        $this->indexMetadata->setIdField(new Field('id'));
+        $this->indexMetadata->setFieldMapping(array(
+            'title' => array(
+                'type' => 'complex',
+                'field' => new Property('title'),
+            ),
+        ));
+        $this->converter->objectToDocument($this->indexMetadata, $this->product);
     }
 }

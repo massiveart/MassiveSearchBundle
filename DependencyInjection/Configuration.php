@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Massive CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -50,6 +51,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('elastic')
+                            ->addDefaultsifNotSet()
                             ->children()
                                 ->arrayNode('hosts')
                                     ->defaultValue(array('localhost:9200'))
@@ -57,6 +59,13 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('metadata')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/massive-search')->end()
+                        ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
                     ->end()
                 ->end()
                 ->arrayNode('persistence')

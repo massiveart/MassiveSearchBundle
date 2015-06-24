@@ -1,20 +1,40 @@
 CHANGELOG
 =========
 
-0.5.1
-----------
+dev-develop
+-----------
 
-- [ZendLucene] Add index type 'INDEX_STORED_INDEXED'
+### Bugfix
+
+- [Configuraiton] Undefined index when elastic search is used without
+  configuration
+- [Search] If not localized managed indexes exist then a global search is
+  performed: https://github.com/massiveart/MassiveSearchBundle/issues/38
+- [Metadata] **BC BREAK**: Removed index strategies, replaced with explicit `stored` and
+  `indexed` and `aggregate` flags.
+- [Metadata] Added metadata cache
+- [Metadata] Added metadata providers
+
+0.5.1
+-----
+
+### Features
+
+- [ZendLucene] Add index strategy 'INDEX_STORED_INDEXED'
 
 0.5.0
-----------
+-----
+
+### Features
 
 - [TestAdapter] Supports indexes
 - [Mapping] Expression language
-- [REST] REST API
 - [Persistence] Doctrine ORM event subscriber
 - [Elastic] Elasticsearch adapter
 - [Localization] Localization strategy support
+
+### Enhancements
+
 - [Config] Renamed `adapter_id` to `adapter` in configuration. See UPGRADE.md
 - [Rebuild] Added core support for rebuilding indexes via
     massive:search:index:rebuild command

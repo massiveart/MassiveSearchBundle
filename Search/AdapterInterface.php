@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,7 +19,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 interface AdapterInterface
 {
     /**
-     * Index the given Document object
+     * Index the given Document object.
      *
      * @param Document $document Document to index
      * @param string $indexName Name of index to store document in
@@ -26,7 +27,7 @@ interface AdapterInterface
     public function index(Document $document, $indexName);
 
     /**
-     * Remove the given Document from the index
+     * Remove the given Document from the index.
      *
      * @param Document $document
      * @param string $indexName
@@ -34,13 +35,12 @@ interface AdapterInterface
     public function deindex(Document $document, $indexName);
 
     /**
-     * Purge the given index with the given locale
-     *
+     * Purge the given index with the given locale.
      */
     public function purge($indexName);
 
     /**
-     * Search using the given query string
+     * Search using the given query string.
      *
      * @param string $queryString
      */
@@ -55,7 +55,7 @@ interface AdapterInterface
     public function getStatus();
 
     /**
-     * List all index names in the search implementation
+     * List all index names in the search implementation.
      *
      * @return array
      */

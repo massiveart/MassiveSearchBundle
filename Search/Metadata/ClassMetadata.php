@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +17,7 @@ use Metadata\ClassMetadata as BaseClassMetadata;
  * Metadata for a mapped search object. A single class
  * may have several different search mappings.
  */
-class ClassMetadata extends BaseClassMetadata
+class ClassMetadata extends BaseClassMetadata implements \Serializable
 {
     /**
      * @var array
@@ -24,7 +25,7 @@ class ClassMetadata extends BaseClassMetadata
     private $indexMetadatas = array();
 
     /**
-     * Add an index metadata for the given context name
+     * Add an index metadata for the given context name.
      *
      * @param mixed $contextName
      * @param IndexMetadata $indexMetadata
@@ -44,7 +45,7 @@ class ClassMetadata extends BaseClassMetadata
     }
 
     /**
-     * Return the IndexMetadata metadata instances
+     * Return the IndexMetadata metadata instances.
      *
      * @return IndexMetadata[]
      */
@@ -54,7 +55,7 @@ class ClassMetadata extends BaseClassMetadata
     }
 
     /**
-     * Return the indexmetadata for the given context
+     * Return the indexmetadata for the given context.
      *
      * @param string $contextName
      *
@@ -70,5 +71,25 @@ class ClassMetadata extends BaseClassMetadata
         }
 
         return $this->indexMetadatas[$contextName];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function serialize()
+    {
+        $data = parent::serialize();
+
+        return serialize(array($data, serialize($this->indexMetadatas)));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function unserialize($data)
+    {
+        list($data, $indexMetadata) = unserialize($data);
+        parent::unserialize($data);
+        $this->indexMetadatas = unserialize($indexMetadata);
     }
 }

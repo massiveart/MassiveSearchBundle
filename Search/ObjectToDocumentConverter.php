@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,11 +13,10 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 
 /**
- * Convert mapped objects to search documents
+ * Convert mapped objects to search documents.
  */
 class ObjectToDocumentConverter
 {
@@ -41,7 +41,7 @@ class ObjectToDocumentConverter
     }
 
     /**
-     * Return the field evaluator
+     * Return the field evaluator.
      *
      * @return FieldEvaluator
      */
@@ -56,6 +56,7 @@ class ObjectToDocumentConverter
      *
      * @param IndexMetadata $metadata
      * @param object $object
+     *
      * @return Document
      */
     public function objectToDocument(IndexMetadata $metadata, $object)
@@ -133,35 +134,40 @@ class ObjectToDocumentConverter
                 if (!isset($mapping[$requiredMapping])) {
                     throw new \RuntimeException(sprintf(
                         'Mapping for "%s" does not have "%s" key',
-                        $requiredMapping
+                        get_class($document), $requiredMapping
                     ));
                 }
             }
 
             $mapping = array_merge(array(
-                'index_strategy' => null,
+                'stored' => true,
+                'aggregate' => false,
+                'indexed' => true,
             ), $mapping);
 
             if ($mapping['type'] == 'complex') {
                 if (!isset($mapping['mapping'])) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            '"complex" field mappings must have an additional array key "mapping" '.
+                            '"complex" field mappings must have an additional array key "mapping" ' .
                             'which contains the mapping for the complex structure in mapping: %s',
                             print_r($mapping, true)
                         )
                     );
                 }
 
-                $childObjects = $this->fieldEvaluator->getValue($object, new Property($fieldName));
+                $childObjects = $this->fieldEvaluator->getValue($object, $mapping['field']);
+
+                if (null === $childObjects) {
+                    continue;
+                }
 
                 foreach ($childObjects as $i => $childObject) {
                     $this->populateDocument(
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix . $fieldName . $i,
-                        $mapping['index_strategy']
+                        $prefix . $fieldName . $i
                     );
                 }
 
@@ -176,7 +182,9 @@ class ObjectToDocumentConverter
                         $prefix . $fieldName,
                         $value,
                         $mapping['type'],
-                        $mapping['index_strategy']
+                        $mapping['stored'],
+                        $mapping['indexed'],
+                        $mapping['aggregate']
                     )
                 );
 
@@ -189,7 +197,9 @@ class ObjectToDocumentConverter
                         $prefix . $fieldName . $key,
                         $itemValue,
                         $mapping['type'],
-                        $mapping['index_strategy']
+                        $mapping['stored'],
+                        $mapping['indexed'],
+                        $mapping['aggregate']
                     )
                 );
             }

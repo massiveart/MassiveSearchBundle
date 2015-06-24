@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use ZendSearch\Lucene;
 
 /**
- * Adapter for the ZendSearch library
+ * Adapter for the ZendSearch library.
  *
  * https://github.com/zendframework/ZendSearch
  * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html
@@ -42,7 +43,8 @@ class ZendLuceneAdapter implements AdapterInterface
     const IMAGE_URL = '__image_url';
 
     /**
-     * The base directory for the search indexes
+     * The base directory for the search indexes.
+     *
      * @var string
      */
     private $basePath;
@@ -63,30 +65,21 @@ class ZendLuceneAdapter implements AdapterInterface
     private $encoding;
 
     /**
-     * @var string
-     */
-    private $defaultIndexStrategy;
-
-    /**
      * @param Factory $factory
      * @param string $basePath Base filesystem path for the index
      * @param bool $hideIndexException
      * @param null $encoding
-     * @param string $defaultIndexStrategy
      */
     public function __construct(
         Factory $factory,
         $basePath,
         $hideIndexException = false,
-        $encoding = null,
-        $defaultIndexStrategy = Field::INDEX_AGGREGATE
-    )
-    {
+        $encoding = null
+    ) {
         $this->basePath = $basePath;
         $this->factory = $factory;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
-        $this->defaultIndexStrategy = $defaultIndexStrategy;
 
         Lucene\Search\QueryParser::setDefaultEncoding($this->encoding);
         Lucene\Search\QueryParser::setDefaultOperator(Lucene\Search\QueryParser::B_AND);
@@ -107,7 +100,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         $luceneDocument = new Lucene\Document();
 
-        $values = array();
+        $aggregateValues = array();
         foreach ($document->getFields() as $field) {
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
@@ -121,39 +114,15 @@ class ZendLuceneAdapter implements AdapterInterface
                 );
             }
 
-            $indexStrategy = $field->getIndexStrategy() ?: $this->defaultIndexStrategy;
+            $luceneFieldType = $this->getFieldType($field);
+            $luceneField = Lucene\Document\Field::$luceneFieldType(
+                $field->getName(),
+                $field->getValue(),
+                $this->encoding
+            );
 
-            switch ($indexStrategy) {
-                case Field::INDEX_AGGREGATE:
-                    $luceneField = Lucene\Document\Field::unIndexed(
-                        $field->getName(),
-                        $field->getValue(),
-                        $this->encoding
-                    );
-                    $values[] = $field->getValue();
-                    break;
-                case Field::INDEX_UNSTORED:
-                    $luceneField = Lucene\Document\Field::unStored(
-                        $field->getName(),
-                        $field->getValue(),
-                        $this->encoding
-                    );
-                    break;
-                case Field::INDEX_STORED_INDEXED:
-                    $luceneField = Lucene\Document\Field::text(
-                        $field->getName(),
-                        $field->getValue(),
-                        $this->encoding
-                    );
-                    break;
-                default:
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            'Unknown index strategy "%s", must be one of "%s"',
-                            $field->getIndexStrategy(),
-                            implode('", "', array(Field::INDEX_AGGREGATE, Field::INDEX_UNSTORED,))
-                        )
-                    );
+            if ($field->isAggregate()) {
+                $aggregateValues[] = $field->getValue();
             }
 
             $luceneDocument->addField($luceneField);
@@ -161,7 +130,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         // add meta fields - used internally for showing the search results, etc.
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
-        $luceneDocument->addField(Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $values)));
+        $luceneDocument->addField(Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues)));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
@@ -170,6 +139,8 @@ class ZendLuceneAdapter implements AdapterInterface
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::IMAGE_URL, $document->getImageUrl()));
 
         $index->addDocument($luceneDocument);
+
+        return $luceneDocument;
     }
 
     /**
@@ -216,7 +187,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $hits = array();
 
         foreach ($luceneHits as $luceneHit) {
-            /** @var Lucene\Search\QueryHit $luceneHit */
+            /* @var Lucene\Search\QueryHit $luceneHit */
 
             $luceneDocument = $luceneHit->getDocument();
 
@@ -250,6 +221,7 @@ class ZendLuceneAdapter implements AdapterInterface
             if ($documentA->getScore() < $documentB->getScore()) {
                 return true;
             }
+
             return false;
         });
 
@@ -266,7 +238,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $status = array();
 
         foreach ($indexDirs as $indexDir) {
-            /** @var  $indexDir \Symfony\Component\Finder\SplFileInfo; */
+            /* @var  $indexDir \Symfony\Component\Finder\SplFileInfo; */
 
             $indexFinder = new Finder();
             $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
@@ -315,7 +287,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $names = array();
 
         foreach ($indexDirs as $file) {
-            /** @var  $file \Symfony\Component\Finder\SplFileInfo; */
+            /* @var  $file \Symfony\Component\Finder\SplFileInfo; */
             $names[] = $file->getBasename();
         }
 
@@ -330,7 +302,23 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Return (or create) a Lucene index for the given name
+     * Optimize the search indexes after the index rebuild event has been fired.
+     * Should have a priority low enough in order for it to be executed after all
+     * the actual index builders.
+     *
+     * @param IndexRebuildEvent $event
+     */
+    public function optimizeIndexAfterRebuild(IndexRebuildEvent $event)
+    {
+        foreach ($this->listIndexes() as $indexName) {
+            $event->getOutput()->writeln(sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
+            $index = $this->getLuceneIndex($indexName);
+            $index->optimize();
+        }
+    }
+
+    /**
+     * Return (or create) a Lucene index for the given name.
      *
      * @param string $indexName
      *
@@ -348,7 +336,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Determine the index path for a given index name
+     * Determine the index path for a given index name.
      *
      * @param string $indexName
      *
@@ -393,18 +381,29 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Optimize the search indexes after the index rebuild event has been fired.
-     * Should have a priority low enough in order for it to be executed after all
-     * the actual index builders.
+     * Return the zend lucene field type to use for the given field.
      *
-     * @param IndexRebuildEvent $event
+     * @param Field $field
+     *
+     * @return string
      */
-    public function optimizeIndexAfterRebuild(IndexRebuildEvent $event)
+    private function getFieldType(Field $field)
     {
-        foreach ($this->listIndexes() as $indexName) {
-            $event->getOutput()->writeln(sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
-            $index = $this->getLuceneIndex($indexName);
-            $index->optimize();
+        if ($field->isStored() && $field->isIndexed()) {
+            return 'text';
         }
+
+        if (false === $field->isStored() && $field->isIndexed()) {
+            return 'unStored';
+        }
+
+        if ($field->isStored() && false === $field->isIndexed()) {
+            return 'unIndexed';
+        }
+
+        throw new \InvalidArgumentException(sprintf(
+            'Field "%s" cannot be both not indexed and not stored',
+            $field->getName()
+        ));
     }
 }

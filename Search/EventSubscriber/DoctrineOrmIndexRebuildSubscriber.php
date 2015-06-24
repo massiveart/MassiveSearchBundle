@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +20,6 @@ use Metadata\MetadataFactory;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 /**
@@ -74,7 +73,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Rebuild the index
+     * Rebuild the index.
      *
      * @param IndexRebuildEvent $event
      */

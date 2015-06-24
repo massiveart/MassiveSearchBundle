@@ -55,7 +55,6 @@ versions can also be found in the ``require-dev`` section (as all the libraries 
 Documentation
 -------------
 
-See [the official documentation](http://massivesearchbundle.readthedocs.org)
+See the official documentation_.
 
-.. _`PropertyAccess`: http://symfony.com/doc/current/components/property_access/index.html
-.. _`ExpressionLanguage`: http://symfony.com/doc/current/components/expression_language/index.html
+.. _`documentation`: http://massivesearchbundle.readthedocs.org

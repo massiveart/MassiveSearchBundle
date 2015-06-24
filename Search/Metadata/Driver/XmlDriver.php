@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 
 /**
- * Loads MassiveSearch metadata from XML files
+ * Loads MassiveSearch metadata from XML files.
  */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
@@ -173,7 +174,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     }
 
     /**
-     * Return the value object for the mapping
+     * Return the value object for the mapping.
      *
      * @param \SimpleXmlElement $mapping
      * @param mixed $field

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -19,7 +20,7 @@ use PHPUnit_Framework_Assert as Assert;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 
 /**
- * Behat context for search manager features
+ * Behat context for search manager features.
  */
 class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContext
 {
@@ -300,13 +301,13 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * Return the search manager using the configured adapter ID
+     * Return the search manager using the configured adapter ID.
      */
     protected function getSearchManager()
     {
         return new SearchManager(
             $this->kernel->getContainer()->get($this->adapterId),
-            $this->kernel->getContainer()->get('massive_search.metadata.factory'),
+            $this->kernel->getContainer()->get('massive_search.metadata.provider.chain'),
             $this->kernel->getContainer()->get('massive_search.object_to_document_converter'),
             $this->kernel->getContainer()->get('event_dispatcher'),
             $this->kernel->getContainer()->get('massive_search.localization_strategy')

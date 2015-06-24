@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,7 +18,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 
 /**
- * Index mapped doctrine ORM documents
+ * Index mapped doctrine ORM documents.
  */
 class DoctrineOrmSubscriber implements EventSubscriber
 {
@@ -47,7 +48,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
     }
 
     /**
-     * Index entities after they have been persisted
+     * Index entities after they have been persisted.
      *
      * @param LifecycleEventArgs $event
      */
@@ -58,7 +59,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
     }
 
     /**
-     * Index entites after the have been updated
+     * Index entites after the have been updated.
      *
      * @param LifecycleEventArgs $event
      */
@@ -69,7 +70,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
     }
 
     /**
-     * Deindex entities after they have been removed
+     * Deindex entities after they have been removed.
      *
      * @param LifecycleEventArgs $event
      */

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,8 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 /**
- * Provides data for search event
- * @package Massive\Bundle\SearchBundle\Search\Event
+ * Provides data for search event.
  */
 class SearchEvent extends Event
 {
