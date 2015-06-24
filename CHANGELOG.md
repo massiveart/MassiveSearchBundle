@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-dev-develop
+0.6.0
 -----------
 
 ### Bugfix
