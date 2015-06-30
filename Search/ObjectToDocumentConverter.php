@@ -176,6 +176,13 @@ class ObjectToDocumentConverter
 
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
 
+            if ($value !== null && false === is_scalar($value)) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Search field "%s" resolved to non-scalar value with type "%s". Only scalar (single) values can be indexed.',
+                    $fieldName, gettype($value)
+                ));
+            }
+
             if (!is_array($value)) {
                 $document->addField(
                     $this->factory->createField(
