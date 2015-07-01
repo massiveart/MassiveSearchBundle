@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.7.0
+-----------
+
+### Bugfix
+
+- [Metadata] Added scalar check
+
 0.6.0
 -----------
 
