@@ -11,8 +11,8 @@
 
 namespace Massive\MassiveSearchBundle\Tests\Unit\Search;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\Document;
+use Prophecy\PhpUnit\ProphecyTestCase;
 
 class DocumentTest extends ProphecyTestCase
 {

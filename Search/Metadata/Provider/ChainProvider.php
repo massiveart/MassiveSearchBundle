@@ -47,7 +47,7 @@ class ChainProvider implements ProviderInterface
      */
     public function getAllMetadata()
     {
-        $metadatas = array();
+        $metadatas = [];
         foreach ($this->providers as $provider) {
             foreach ($provider->getAllMetadata() as $metadata) {
                 $metadatas[] = $metadata;

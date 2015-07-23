@@ -11,10 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataDriverPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataProviderPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class MassiveSearchBundle extends Bundle
 {

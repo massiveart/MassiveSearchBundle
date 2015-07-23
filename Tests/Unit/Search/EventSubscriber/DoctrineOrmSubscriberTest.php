@@ -11,10 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Prophecy\PhpUnit\ProphecyTestCase;
-use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class DoctrineOrmSubscriberTest extends ProphecyTestCase
 {

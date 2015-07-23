@@ -12,8 +12,8 @@
 namespace Massive\Bundle\SearchBundle\Search\Metadata\Provider;
 
 use Massive\Bundle\SearchBundle\Search\Document;
-use Metadata\MetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Metadata\MetadataFactory;
 use Metadata\MetadataFactoryInterface;
 
 /**
@@ -53,7 +53,7 @@ class DefaultProvider implements ProviderInterface
     public function getAllMetadata()
     {
         $classNames = $this->metadataFactory->getAllClassNames();
-        $metadatas = array();
+        $metadatas = [];
         foreach ($classNames as $className) {
             $metadatas[] = $this->metadataFactory->getMetadataForClass($className)->getOutsideClassMetadata();
         }

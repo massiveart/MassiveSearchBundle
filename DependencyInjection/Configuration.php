@@ -11,8 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
@@ -33,11 +33,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->enumNode('localization_strategy')
-                    ->values(array('noop', 'index'))
+                    ->values(['noop', 'index'])
                     ->defaultValue('noop')
                 ->end()
                 ->enumNode('adapter')
-                    ->values(array('zend_lucene', 'elastic', 'test'))
+                    ->values(['zend_lucene', 'elastic', 'test'])
                     ->defaultValue('zend_lucene')->end()
                 ->arrayNode('adapters')
                     ->addDefaultsifNotSet()
@@ -54,7 +54,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsifNotSet()
                             ->children()
                                 ->arrayNode('hosts')
-                                    ->defaultValue(array('localhost:9200'))
+                                    ->defaultValue(['localhost:9200'])
                                     ->prototype('scalar')->end()
                                 ->end()
                             ->end()

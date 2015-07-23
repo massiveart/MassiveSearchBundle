@@ -11,11 +11,11 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field as MetadataField;
-use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
 /**
  * Factory class for all new Search objects.

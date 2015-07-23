@@ -73,10 +73,10 @@ class QueryHit implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array(
+        return [
             'id' => $this->id,
             'document' => $this->document->jsonSerialize(),
             'score' => $this->score,
-        );
+        ];
     }
 }

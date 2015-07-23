@@ -28,12 +28,12 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
 
     protected function getContainerExtensions()
     {
-        $this->container->setParameter('kernel.bundles', array('Massive\Bundle\SearchBundle\MassiveSearchBundle'));
+        $this->container->setParameter('kernel.bundles', ['Massive\Bundle\SearchBundle\MassiveSearchBundle']);
         $this->container->setParameter('kernel.root_dir', __DIR__ . '/../../Resources/app');
 
-        return array(
+        return [
             new MassiveSearchExtension(),
-        );
+        ];
     }
 
     public function testLoad()
@@ -43,21 +43,21 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
 
     public function provideLocalizationStrategy()
     {
-        return array(
-            array(
-                array(
-                ),
+        return [
+            [
+                [
+                ],
                 'noop',
-                array(
+                [
                     'localization_strategy' => 'noop',
-                ),
+                ],
                 'noop',
-                array(
+                [
                     'localization_strategy' => 'index',
-                ),
+                ],
                 'index',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -76,52 +76,52 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
 
     public function provideAdapterConfig()
     {
-        return array(
-            array(
+        return [
+            [
                 'zend_lucene',
-                array(
+                [
                     'basepath' => 'foobar',
                     'hide_index_exception' => true,
                     'encoding' => 'UTF-8',
-                ),
-                array(
+                ],
+                [
                     'massive_search.adapter.zend_lucene.basepath' => 'foobar',
                     'massive_search.adapter.zend_lucene.hide_index_exception' => true,
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 'zend_lucene',
-                array(
-                ),
-                array(
+                [
+                ],
+                [
                     'massive_search.adapter.zend_lucene.basepath' => '%kernel.root_dir%/data',
                     'massive_search.adapter.zend_lucene.hide_index_exception' => false,
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 'elastic',
-                array(
-                    'hosts' => array(
+                [
+                    'hosts' => [
                         'localhost:8081',
                         'http://www.example.com:9091',
-                    ),
-                ),
-                array(
-                    'massive_search.adapter.elastic.hosts' => array(
+                    ],
+                ],
+                [
+                    'massive_search.adapter.elastic.hosts' => [
                         'localhost:8081',
                         'http://www.example.com:9091',
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'elastic',
-                array(
-                ),
-                array(
-                    'massive_search.adapter.elastic.hosts' => array('localhost:9200'),
-                ),
-            ),
-        );
+                [
+                ],
+                [
+                    'massive_search.adapter.elastic.hosts' => ['localhost:9200'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -129,12 +129,12 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
      */
     public function testAdapterConfig($adapter, $config, $expectedParameters)
     {
-        $config = array(
+        $config = [
             'adapter' => $adapter,
-            'adapters' => array(
+            'adapters' => [
                 $adapter => $config,
-            ),
-        );
+            ],
+        ];
 
         $this->load($config);
 
@@ -151,15 +151,15 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
 
     public function providePersistence()
     {
-        return array(
-            array(null, array()),
-            array(
+        return [
+            [null, []],
+            [
                 'doctrine_orm',
-                array(
+                [
                     'massive_search.search.event_subscriber.doctrine_orm',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -167,7 +167,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
      */
     public function testPersistence($persistenceName = null, $expectedServices)
     {
-        $config = array();
+        $config = [];
 
         if ($persistenceName) {
             $config['persistence'][$persistenceName]['enabled'] = true;

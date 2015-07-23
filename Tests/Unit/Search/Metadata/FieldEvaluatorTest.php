@@ -11,16 +11,16 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata;
 
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
-use Prophecy\PhpUnit\ProphecyTestCase;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
-use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
-use Prophecy\Argument;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
+use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTestCase;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class FieldEvaluatorTest extends ProphecyTestCase
 {
@@ -40,29 +40,29 @@ class FieldEvaluatorTest extends ProphecyTestCase
 
     public function provideGetValue()
     {
-        return array(
-            array(
+        return [
+            [
                 new Field('title'),
-                array(
+                [
                     'title' => 'My product',
-                ),
+                ],
                 'My product',
-            ),
-            array(
+            ],
+            [
                 new Property('title'),
-                array(
+                [
                     'title' => 'My product',
-                ),
+                ],
                 'My product',
-            ),
-            array(
+            ],
+            [
                 new Expression('object.title'),
-                array(
+                [
                     'title' => 'My product',
-                ),
+                ],
                 'this_was_evaluated',
-            ),
-        );
+            ],
+        ];
     }
 
     /**

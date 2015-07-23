@@ -12,11 +12,11 @@
 namespace Massive\Bundle\SearchBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to execute a query on the configured search engine.
@@ -57,10 +57,10 @@ EOT
         $timeElapsed = microtime(true) - $start;
 
         $table = new Table($output);
-        $table->setHeaders(array('Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class'));
+        $table->setHeaders(['Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class']);
         foreach ($hits as $hit) {
             $document = $hit->getDocument();
-            $table->addRow(array(
+            $table->addRow([
                 $hit->getScore(),
                 $document->getId(),
                 $document->getTitle(),
@@ -68,7 +68,7 @@ EOT
                 $document->getUrl(),
                 $document->getImageUrl(),
                 $document->getClass(),
-            ));
+            ]);
         }
         $table->render();
         $output->writeln(sprintf('%s result(s) in %fs', count($hits), $timeElapsed));

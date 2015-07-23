@@ -11,9 +11,9 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Massive\Bundle\SearchBundle\Command\StatusCommand;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class StatusCommandTest extends BaseTestCase
 {
@@ -28,8 +28,8 @@ class StatusCommandTest extends BaseTestCase
 
     public function testCommand()
     {
-        $this->tester->execute(array(
-        ));
+        $this->tester->execute([
+        ]);
 
         $this->assertEquals(0, $this->tester->getStatusCode());
     }

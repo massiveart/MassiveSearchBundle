@@ -11,8 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\ExpressionLanguage\MassiveSearchExpressionLanguage;
+use Prophecy\PhpUnit\ProphecyTestCase;
 
 class MassiveSearchExpressionLanguageTest extends ProphecyTestCase
 {
@@ -23,20 +23,20 @@ class MassiveSearchExpressionLanguageTest extends ProphecyTestCase
 
     public function provideExpression()
     {
-        return array(
-            array(
+        return [
+            [
                 'join(" ", [ "one", "two", "three" ])',
                 'one two three',
-            ),
-            array(
+            ],
+            [
                 'join(" ", [])',
                 '',
-            ),
-            array(
+            ],
+            [
                 'map([{"foo": "one"}, {"foo":"two"}, {"foo": "three"}], "el[\'foo\']")',
-                array('one', 'two', 'three'),
-            ),
-        );
+                ['one', 'two', 'three'],
+            ],
+        ];
     }
 
     /**

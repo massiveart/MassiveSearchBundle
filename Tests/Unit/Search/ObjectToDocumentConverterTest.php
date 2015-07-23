@@ -11,14 +11,14 @@
 
 namespace Unit\Search;
 
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
-use Prophecy\PhpUnit\ProphecyTestCase;
-use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
-use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
+use Prophecy\PhpUnit\ProphecyTestCase;
 
 class ObjectToDocumentConverterTest extends ProphecyTestCase
 {
@@ -63,32 +63,32 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
 
     public function provideConversion()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'setIdField' => 'id',
                     'setTitleField' => 'title',
                     'setDescriptionField' => 'body',
                     'setUrlField' => 'url',
                     'setImageUrlField' => 'image',
                     'setLocaleField' => 'locale',
-                ), array(
+                ], [
                     'id' => '66',
                     'title' => 'My product',
                     'body' => 'Description of this',
                     'url' => '/path/to',
                     'image' => '/path/to/image',
                     'locale' => 'fr',
-                ), array(
+                ], [
                     'getImageUrl' => '/path/to/image',
                     'getDescription' => 'Description of this',
                     'getId' => '66',
                     'getTitle' => 'My product',
                     'getUrl' => '/path/to',
                     'getLocale' => 'fr',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -121,15 +121,15 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
     public function testIndexedStoredAndAggregate($stored, $indexed, $aggregate)
     {
         $this->indexMetadata->setIdField(new Field('id'));
-        $this->indexMetadata->setFieldMapping(array(
-            'title' => array(
+        $this->indexMetadata->setFieldMapping([
+            'title' => [
                 'type' => 'string',
                 'field' => new Property('title'),
                 'stored' => $stored,
                 'indexed' => $indexed,
                 'aggregate' => $aggregate,
-            ),
-        ));
+            ],
+        ]);
         $document = $this->converter->objectToDocument($this->indexMetadata, $this->product);
         $field = $document->getField('title');
 
@@ -140,10 +140,10 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
 
     public function provideIndexStoredAndAggregate()
     {
-        return array(
-            array(true, true, true),
-            array(false, false, false),
-        );
+        return [
+            [true, true, true],
+            [false, false, false],
+        ];
     }
 
     /**
@@ -155,10 +155,10 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
     public function testMissingRequiredMapping()
     {
         $this->indexMetadata->setIdField(new Field('id'));
-        $this->indexMetadata->setFieldMapping(array(
-            'title' => array(
-            ),
-        ));
+        $this->indexMetadata->setFieldMapping([
+            'title' => [
+            ],
+        ]);
         $this->converter->objectToDocument($this->indexMetadata, $this->product);
     }
 
@@ -172,12 +172,12 @@ class ObjectToDocumentConverterTest extends ProphecyTestCase
     public function testMissingRequiredMappingComplex()
     {
         $this->indexMetadata->setIdField(new Field('id'));
-        $this->indexMetadata->setFieldMapping(array(
-            'title' => array(
+        $this->indexMetadata->setFieldMapping([
+            'title' => [
                 'type' => 'complex',
                 'field' => new Property('title'),
-            ),
-        ));
+            ],
+        ]);
         $this->converter->objectToDocument($this->indexMetadata, $this->product);
     }
 }

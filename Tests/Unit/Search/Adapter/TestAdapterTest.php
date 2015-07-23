@@ -11,11 +11,11 @@
 
 namespace Massive\Bundle\SearchBundle\Unit\Search\Adapter;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
-use Massive\Bundle\SearchBundle\Search\Factory;
-use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter;
+use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Prophecy\PhpUnit\ProphecyTestCase;
 
 class TestAdapterTest extends ProphecyTestCase
 {
@@ -37,7 +37,7 @@ class TestAdapterTest extends ProphecyTestCase
         $this->adapter->index($this->document1, 'foo');
         $this->adapter->index($this->document2, 'foo');
         $query = new SearchQuery('Foo');
-        $query->setIndexes(array('foo'));
+        $query->setIndexes(['foo']);
 
         $res = $this->adapter->search($query);
 
