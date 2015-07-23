@@ -76,15 +76,15 @@ class AppKernel extends TestKernel
 
     public function configure()
     {
-        $this->requireBundleSets(array(
+        $this->requireBundleSets([
             'default',
             'doctrine_orm',
-        ));
+        ]);
 
-        $this->addBundles(array(
+        $this->addBundles([
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
             new \Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle(),
-        ));
+        ]);
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)

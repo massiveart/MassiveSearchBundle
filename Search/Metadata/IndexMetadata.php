@@ -29,7 +29,7 @@ class IndexMetadata implements IndexMetadataInterface
     /**
      * @var array
      */
-    private $fieldMapping = array();
+    private $fieldMapping = [];
 
     /**
      * @var string

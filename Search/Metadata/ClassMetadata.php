@@ -22,7 +22,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     /**
      * @var array
      */
-    private $indexMetadatas = array();
+    private $indexMetadatas = [];
 
     /**
      * Add an index metadata for the given context name.
@@ -80,7 +80,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     {
         $data = parent::serialize();
 
-        return serialize(array($data, serialize($this->indexMetadatas)));
+        return serialize([$data, serialize($this->indexMetadatas)]);
     }
 
     /**

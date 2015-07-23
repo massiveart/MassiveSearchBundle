@@ -17,11 +17,11 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function provideStrategy()
     {
-        return array(
-            array('hello', 'fr', 'hello-fr-i18n'),
-            array('hello', null, 'hello'),
-            array('', 'fr', '-fr-i18n'),
-        );
+        return [
+            ['hello', 'fr', 'hello-fr-i18n'],
+            ['hello', null, 'hello'],
+            ['', 'fr', '-fr-i18n'],
+        ];
     }
 
     /**
@@ -36,33 +36,33 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function provideisIndexVariantOf()
     {
-        return array(
-            array(
+        return [
+            [
                 'asdfasdf',
                 'my_index',
                 false,
-            ),
-            array(
+            ],
+            [
                 'my_index-fr-i18n',
                 'my_index',
                 true,
-            ),
-            array(
+            ],
+            [
                 'foo_bar_index-de_at-i18n',
                 'foo_bar_index',
                 true,
-            ),
-            array(
+            ],
+            [
                 'foo_bar_index_de_at_i18n',
                 'foo_bar_index',
                 false,
-            ),
-            array(
+            ],
+            [
                 'foo_bar_foo_index_de-at-i18n',
                 'foo_bar_index',
                 false,
-            ),
-        );
+            ],
+        ];
     }
 
     /**

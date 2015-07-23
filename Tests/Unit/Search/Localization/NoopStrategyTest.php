@@ -17,11 +17,11 @@ class NoopStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function provideStrategy()
     {
-        return array(
-            array('hello', 'fr', 'hello'),
-            array('hello', null, 'hello'),
-            array('', 'fr', ''),
-        );
+        return [
+            ['hello', 'fr', 'hello'],
+            ['hello', null, 'hello'],
+            ['', 'fr', ''],
+        ];
     }
 
     /**

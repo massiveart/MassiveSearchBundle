@@ -11,17 +11,17 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
-use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
-use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 /**
  * Test adapter for testing scenarios.
  */
 class TestAdapter implements AdapterInterface
 {
-    protected $documents = array();
+    protected $documents = [];
     protected $factory;
 
     public function __construct(Factory $factory)
@@ -72,7 +72,7 @@ class TestAdapter implements AdapterInterface
      */
     public function getDocuments()
     {
-        $documents = array();
+        $documents = [];
         foreach ($this->documents as $localizedDocuments) {
             foreach ($localizedDocuments as $document) {
                 $documents[] = $document;
@@ -87,7 +87,7 @@ class TestAdapter implements AdapterInterface
      */
     public function search(SearchQuery $searchQuery)
     {
-        $hits = array();
+        $hits = [];
         $indexes = $searchQuery->getIndexes();
 
         foreach ($indexes as $index) {
@@ -143,6 +143,6 @@ class TestAdapter implements AdapterInterface
      */
     public function getStatus()
     {
-        return array();
+        return [];
     }
 }

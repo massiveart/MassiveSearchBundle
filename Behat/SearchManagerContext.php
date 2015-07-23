@@ -14,10 +14,10 @@ namespace Massive\Bundle\SearchBundle\Behat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
-use Symfony\Component\HttpKernel\KernelInterface;
-use PHPUnit_Framework_Assert as Assert;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
+use PHPUnit_Framework_Assert as Assert;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Behat context for search manager features.
@@ -47,7 +47,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     /**
      * @var object[]
      */
-    private $entities = array();
+    private $entities = [];
 
     /**
      * @var Exception
@@ -131,7 +131,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function iShouldHaveTheFollowingDocuments(PyStringNode $string)
     {
         $expected = json_decode($string->getRaw(), true);
-        $documents = array();
+        $documents = [];
         foreach ($this->lastResult as $hit) {
             $documents[] = $hit->getDocument()->jsonSerialize();
         }

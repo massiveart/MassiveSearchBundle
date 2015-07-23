@@ -11,8 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Search\ExpressionLanguage;
 
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Expression language for massive search bundle.
@@ -70,15 +70,15 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
             },
             function (array $values, $elements, $expression) {
                 if (count($elements) === 0) {
-                    return array();
+                    return [];
                 }
 
-                $result = array();
+                $result = [];
 
                 foreach ($elements as $element) {
-                    $result[] = $this->evaluate($expression, array(
+                    $result[] = $this->evaluate($expression, [
                         'el' => $element,
-                    ));
+                    ]);
                 }
 
                 return $result;

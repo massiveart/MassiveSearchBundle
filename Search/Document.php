@@ -19,7 +19,7 @@ class Document implements \JsonSerializable
     /**
      * @var Field[]
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * @var string
@@ -252,7 +252,7 @@ class Document implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array(
+        return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
@@ -261,6 +261,6 @@ class Document implements \JsonSerializable
             'image_url' => $this->imageUrl,
             'locale' => $this->locale,
             'category' => $this->category,
-        );
+        ];
     }
 }

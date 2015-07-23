@@ -11,11 +11,11 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 
 /**
  * Evaluate the value of fields.
@@ -115,9 +115,9 @@ class FieldEvaluator
     private function getExpressionValue($object, Expression $field)
     {
         try {
-            return $this->expressionLanguage->evaluate($field->getExpression(), array(
+            return $this->expressionLanguage->evaluate($field->getExpression(), [
                 'object' => $object,
-            ));
+            ]);
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf(
                 'Error encountered when evaluating expression "%s"',

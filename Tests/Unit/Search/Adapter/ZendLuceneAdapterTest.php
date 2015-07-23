@@ -11,9 +11,9 @@
 
 namespace Unit\Search\Adapter;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ZendLuceneAdapterTest extends ProphecyTestCase
@@ -48,7 +48,7 @@ class ZendLuceneAdapterTest extends ProphecyTestCase
     {
         $adapter = $this->createAdapter('/path-not-exist');
         $result = $adapter->listIndexes();
-        $this->assertEquals(array(), $result);
+        $this->assertEquals([], $result);
     }
 
     /**
@@ -66,9 +66,9 @@ class ZendLuceneAdapterTest extends ProphecyTestCase
 
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
-        $this->document->getFields()->willReturn(array(
+        $this->document->getFields()->willReturn([
             $this->field1,
-        ));
+        ]);
 
         $this->field1->getName()->wilLReturn('hallo');
         $this->field1->getValue()->willReturn('goodbye');
@@ -86,28 +86,28 @@ class ZendLuceneAdapterTest extends ProphecyTestCase
 
     public function provideIndexWithFieldType()
     {
-        return array(
-            array(
+        return [
+            [
                 true,
                 true,
                 null,
-            ),
-            array(
+            ],
+            [
                 false,
                 true,
                 null,
-            ),
-            array(
+            ],
+            [
                 true,
                 false,
                 null,
-            ),
-            array(
+            ],
+            [
                 false,
                 false,
-                array('\InvalidArgumentException', 'cannot be both not indexed and not stored'),
-            ),
-        );
+                ['\InvalidArgumentException', 'cannot be both not indexed and not stored'],
+            ],
+        ];
     }
 
     /**
@@ -117,12 +117,12 @@ class ZendLuceneAdapterTest extends ProphecyTestCase
     {
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
-        $this->document->getFields()->willReturn(array(
+        $this->document->getFields()->willReturn([
             $this->field1,
             $this->field2,
-        ));
+        ]);
 
-        foreach (array('field1', 'field2') as $fieldName) {
+        foreach (['field1', 'field2'] as $fieldName) {
             $this->$fieldName->getName()->wilLReturn('hallo');
             $this->$fieldName->getValue()->willReturn('goodbye');
             $this->$fieldName->getType()->willReturn(Field::TYPE_STRING);

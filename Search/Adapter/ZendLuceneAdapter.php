@@ -11,16 +11,16 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
-use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
+use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use ZendSearch\Lucene;
 
 /**
@@ -100,7 +100,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         $luceneDocument = new Lucene\Document();
 
-        $aggregateValues = array();
+        $aggregateValues = [];
         foreach ($document->getFields() as $field) {
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
@@ -181,10 +181,10 @@ class ZendLuceneAdapter implements AdapterInterface
                 throw $e;
             }
 
-            $luceneHits = array();
+            $luceneHits = [];
         }
 
-        $hits = array();
+        $hits = [];
 
         foreach ($luceneHits as $luceneHit) {
             /* @var Lucene\Search\QueryHit $luceneHit */
@@ -235,7 +235,7 @@ class ZendLuceneAdapter implements AdapterInterface
     {
         $finder = new Finder();
         $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);
-        $status = array();
+        $status = [];
 
         foreach ($indexDirs as $indexDir) {
             /* @var  $indexDir \Symfony\Component\Finder\SplFileInfo; */
@@ -246,15 +246,15 @@ class ZendLuceneAdapter implements AdapterInterface
 
             $index = $this->getIndex($this->getIndexPath($indexName));
 
-            $indexStats = array(
+            $indexStats = [
                 'size' => 0,
                 'nb_files' => 0,
                 'nb_documents' => $index->count(),
-            );
+            ];
 
             foreach ($files as $file) {
                 $indexStats['size'] += filesize($file);
-                $indexStats['nb_files']++;
+                ++$indexStats['nb_files'];
             }
 
             $status['idx:' . $indexName] = json_encode($indexStats);
@@ -279,12 +279,12 @@ class ZendLuceneAdapter implements AdapterInterface
     public function listIndexes()
     {
         if (!file_exists($this->basePath)) {
-            return array();
+            return [];
         }
 
         $finder = new Finder();
         $indexDirs = $finder->directories()->depth('== 0')->in($this->basePath);
-        $names = array();
+        $names = [];
 
         foreach ($indexDirs as $file) {
             /* @var  $file \Symfony\Component\Finder\SplFileInfo; */

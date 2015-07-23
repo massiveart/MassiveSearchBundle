@@ -11,16 +11,16 @@
 
 namespace Massive\Bundle\SearchBundle\Search\EventSubscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Doctrine\Common\Persistence\ObjectManager;
-use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
-use Metadata\MetadataFactory;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
-use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Metadata\MetadataFactory;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Rebuilds the indexes which relate to Doctrine ORM entities.
@@ -45,7 +45,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     /**
      * @var array
      */
-    private $purged = array();
+    private $purged = [];
 
     /**
      * @param ObjectManager $objectManager
@@ -67,9 +67,9 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             SearchEvents::INDEX_REBUILD => 'rebuildIndex',
-        );
+        ];
     }
 
     /**
@@ -147,7 +147,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         $count = 0;
         foreach ($objects as $object) {
             $this->searchManager->index($object);
-            $count++;
+            ++$count;
         }
         $output->writeln(sprintf(
             ' <info>[OK]</info> %s entities indexed',

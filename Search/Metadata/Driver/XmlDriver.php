@@ -11,13 +11,13 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata\Driver;
 
-use Metadata\Driver\DriverInterface;
-use Metadata\Driver\AbstractFileDriver;
 use Massive\Bundle\SearchBundle\Search\Factory;
-use Metadata\Driver\FileLocatorInterface;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Metadata\Driver\AbstractFileDriver;
+use Metadata\Driver\DriverInterface;
+use Metadata\Driver\FileLocatorInterface;
 
 /**
  * Loads MassiveSearch metadata from XML files.
@@ -86,21 +86,21 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         // note that fields cannot be overridden in contexts
         $fields = $mapping->fields->children();
-        $indexMapping['fields'] = array();
+        $indexMapping['fields'] = [];
         foreach ($fields as $field) {
             $fieldName = (string) $field['name'];
             $fieldType = $field['type'];
 
-            $indexMapping['fields'][$fieldName] = array(
+            $indexMapping['fields'][$fieldName] = [
                 'type' => (string) $fieldType,
                 'field' => $this->getField($field, $fieldName),
-            );
+            ];
         }
 
         $indexMappings = array_merge(
-            array(
+            [
                 '_default' => $indexMapping,
-            ),
+            ],
             $this->extractContextMappings($mapping, $indexMapping)
         );
 
@@ -126,7 +126,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     private function getIndexMapping(\SimpleXmlElement $mapping)
     {
-        $indexMapping = array();
+        $indexMapping = [];
 
         $indexName = (string) $mapping->index['name'];
         $indexMapping['index'] = $indexName;
@@ -162,7 +162,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     private function validateMapping($indexMapping, $file)
     {
-        foreach (array('index', 'id', 'title') as $required) {
+        foreach (['index', 'id', 'title'] as $required) {
             if (!$indexMapping[$required]) {
                 throw new \InvalidArgumentException(sprintf(
                     'Required field for mapping is not present "%s" in "%s"',
@@ -226,7 +226,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     private function extractContextMappings(\SimpleXmlElement $mapping, $indexMapping)
     {
-        $contextMappings = array();
+        $contextMappings = [];
         foreach ($mapping->context as $context) {
             if (!isset($context['name'])) {
                 throw new \InvalidArgumentException(sprintf(

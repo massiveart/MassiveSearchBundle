@@ -11,9 +11,9 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Convert mapped objects to search documents.
@@ -128,7 +128,7 @@ class ObjectToDocumentConverter
     private function populateDocument($document, $object, $fieldMapping, $prefix = '')
     {
         foreach ($fieldMapping as $fieldName => $mapping) {
-            $requiredMappings = array('field', 'type');
+            $requiredMappings = ['field', 'type'];
 
             foreach ($requiredMappings as $requiredMapping) {
                 if (!isset($mapping[$requiredMapping])) {
@@ -139,11 +139,11 @@ class ObjectToDocumentConverter
                 }
             }
 
-            $mapping = array_merge(array(
+            $mapping = array_merge([
                 'stored' => true,
                 'aggregate' => false,
                 'indexed' => true,
-            ), $mapping);
+            ], $mapping);
 
             if ($mapping['type'] == 'complex') {
                 if (!isset($mapping['mapping'])) {
