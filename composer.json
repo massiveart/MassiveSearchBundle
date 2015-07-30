@@ -30,7 +30,7 @@
         "behat/behat": "~3.0.0",
         "behat/web-api-extension": "~1.0@dev",
         "behat/symfony2-extension": "~2.0@dev",
-        "phpbench/phpbench": "~0.2.0"
+        "phpbench/phpbench": "dev-use_classname@dev"
     },
     "suggest": {
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
