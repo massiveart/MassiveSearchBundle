@@ -1,0 +1,49 @@
+{
+    "bootstrap": "vendor/symfony-cmf/testing/bootstrap/bootstrap.php",
+    "path": "Tests/Benchmark",
+    "reports": {
+        "index_overview": {
+            "extends": "aggregate",
+            "title": "Indexing Overview",
+            "description": "Comparison of indexing for each adapter overall",
+            "selector": ".//subject[group[@name='index']][parameter[@name='nb_documents']/@value = '1000']"
+        },
+        "index_scaling": {
+            "generator": "console_table",
+            "title": "Index scaling performance",
+            "headers": ["Adapter", "10 records", "100 records", "1000 records"],
+            "selector": ".//subject[group[@name='index']][parameter[@name='nb_documents']/@value = '1000']",
+            "cells": {
+                "adapter": "php:bench('class_name', string(ancestor::benchmark/@class))",
+                "10_records": "number(../subject[group[@name='index']][parameter[@name='nb_documents']/@value = '10']//iteration/@time)",
+                "100_records": "number(../subject[group[@name='index']][parameter[@name='nb_documents']/@value = '100']//iteration/@time)",
+                "1000_records": "number(../subject[group[@name='index']][parameter[@name='nb_documents']/@value = '1000']//iteration/@time)"
+            },
+            "format": {
+                "10_records": ["!number", "%s<comment>μs</comment>"],
+                "100_records": ["!number", "%s<comment>μs</comment>"],
+                "1000_records": ["!number", "%s<comment>μs</comment>"]
+            }
+        },
+        "search_overview": {
+            "extends": "aggregate",
+            "title": "Search Overview",
+            "selector": ".//subject[group[@name='search']][parameter[@name='nb_documents']/@value = '1000']"
+        },
+        "search_scaling": {
+            "extends": "index_scaling",
+            "title": "Search scaling performance",
+            "selector": ".//subject[group[@name='index']][parameter[@name='nb_documents']/@value = '1000']",
+            "cells": {
+                "adapter": "php:bench('class_name', string(ancestor::benchmark/@class))",
+                "10_records": "number(../subject[group[@name='search']][parameter[@name='nb_documents']/@value = '10']//iteration/@time)",
+                "100_records": "number(../subject[group[@name='search']][parameter[@name='nb_documents']/@value = '100']//iteration/@time)",
+                "1000_records": "number(../subject[group[@name='search']][parameter[@name='nb_documents']/@value = '1000']//iteration/@time)"
+            }
+        },
+        "all": {
+            "generator": "composite",
+            "reports": ["index_overview", "index_scaling", "search_overview", "search_scaling"]
+        }
+    }
+}

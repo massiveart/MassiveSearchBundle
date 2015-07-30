@@ -16,3 +16,4 @@ script:
     - phpunit --coverage-text
     - vendor/bin/behat --suite=zend_lucene
     - vendor/bin/behat --suite=elastic
+    - vendor/bin/phpbench run
