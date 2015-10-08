@@ -19,10 +19,9 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class FieldEvaluatorTest extends ProphecyTestCase
+class FieldEvaluatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ObjectToDocumentConverter

@@ -12,9 +12,8 @@
 namespace Unit\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class ClassMetadataTest extends ProphecyTestCase
+class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 {
     private $indexMetadata;
     private $classMetadata;

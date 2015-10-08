@@ -24,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class IndexRebuildCommand extends ContainerAwareCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configure()
     {
@@ -34,7 +34,7 @@ class IndexRebuildCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {

@@ -74,7 +74,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serialize()
     {
@@ -84,7 +84,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserialize($data)
     {

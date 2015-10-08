@@ -18,9 +18,8 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class ObjectToDocumentConverterTest extends ProphecyTestCase
+class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var IndexMetadata

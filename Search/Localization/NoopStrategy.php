@@ -22,7 +22,7 @@ use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 class NoopStrategy implements LocalizationStrategyInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function localizeIndexName($indexName, $locale)
     {
@@ -30,7 +30,7 @@ class NoopStrategy implements LocalizationStrategyInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isIndexVariantOf($indexName, $variantName)
     {

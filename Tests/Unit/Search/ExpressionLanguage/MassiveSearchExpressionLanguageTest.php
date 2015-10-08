@@ -12,9 +12,8 @@
 namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\ExpressionLanguage\MassiveSearchExpressionLanguage;
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class MassiveSearchExpressionLanguageTest extends ProphecyTestCase
+class MassiveSearchExpressionLanguageTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

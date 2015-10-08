@@ -24,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class QueryCommand extends ContainerAwareCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configure()
     {
@@ -43,7 +43,7 @@ EOT
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {

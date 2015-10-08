@@ -14,9 +14,8 @@ namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class DoctrineOrmSubscriberTest extends ProphecyTestCase
+class DoctrineOrmSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SearchManager
