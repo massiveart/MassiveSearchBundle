@@ -115,10 +115,16 @@ class ZendLuceneAdapter implements AdapterInterface
                 );
             }
 
+            $value = $field->getValue();
+            // handle array values
+            if (is_array($value)) {
+                $value = implode(' ', $value);
+            }
+
             $luceneFieldType = $this->getFieldType($field);
             $luceneField = Lucene\Document\Field::$luceneFieldType(
                 $field->getName(),
-                $field->getValue(),
+                $value,
                 $this->encoding
             );
 

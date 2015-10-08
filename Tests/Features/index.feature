@@ -19,6 +19,7 @@ Feature: Indexing
             public $date;
             public $image;
             public $locale;
+            public $passengers = array('jack', 'jill');
         }
         """
         And I purge the index "car"
@@ -41,20 +42,27 @@ Feature: Indexing
                     <field name="title" expr="object.title" type="string" />
                     <field name="body" type="string" />
                     <field name="numberOfWheels" type="string" />
+                    <field name="passengers" type="string" />
                 </fields>
             </mapping>
 
         </massive-search-mapping>
         """
-        When I index the following "Car" objects
+        And I index the following "Car" objects
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
             { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
         ]
         """
-        And I search for "My car"
+        When I search for "My car"
         Then there should be 2 results
+        And I search for "jack"
+        Then there should be 2 results
+        And I search for "john"
+        Then there should be 0 results
+        And I search for "jac"
+        Then there should be 0 results
 
     Scenario: Invalid mapping, unknown field type
         Given that the following mapping for "Car" exists:
