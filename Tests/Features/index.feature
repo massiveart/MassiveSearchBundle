@@ -19,7 +19,7 @@ Feature: Indexing
             public $date;
             public $image;
             public $locale;
-            public $passengers = array('jack', 'jill');
+            public $passengers = array('Jack Jackson', 'jill');
         }
         """
         And I purge the index "car"
@@ -63,6 +63,8 @@ Feature: Indexing
         Then there should be 0 results
         And I search for "jac"
         Then there should be 0 results
+        And I search for "Jackson"
+        Then there should be 2 results
 
     Scenario: Invalid mapping, unknown field type
         Given that the following mapping for "Car" exists:
