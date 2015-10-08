@@ -10,9 +10,12 @@ php:
 
 before_script:
   - composer selfupdate
-  - composer install --dev
+  - composer install
 
 script: 
     - phpunit --coverage-text
     - vendor/bin/behat --suite=zend_lucene
     - vendor/bin/behat --suite=elastic
+
+env: 
+  - SYMFONY_DEPRECATIONS_HELPER=weak

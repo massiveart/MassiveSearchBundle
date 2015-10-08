@@ -248,7 +248,7 @@ class Document implements \JsonSerializable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function jsonSerialize()
     {

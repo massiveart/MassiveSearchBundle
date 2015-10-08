@@ -33,8 +33,9 @@ class DefaultProvider implements ProviderInterface
     {
         $this->metadataFactory = $metadataFactory;
     }
+
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMetadataForObject($object)
     {
@@ -48,7 +49,7 @@ class DefaultProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAllMetadata()
     {
@@ -62,7 +63,7 @@ class DefaultProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMetadataForDocument(Document $document)
     {

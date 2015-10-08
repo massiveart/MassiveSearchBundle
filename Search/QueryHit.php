@@ -69,7 +69,7 @@ class QueryHit implements \JsonSerializable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function jsonSerialize()
     {

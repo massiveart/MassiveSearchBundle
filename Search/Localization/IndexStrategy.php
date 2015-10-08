@@ -21,7 +21,7 @@ use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
 class IndexStrategy implements LocalizationStrategyInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function localizeIndexName($indexName, $locale)
     {
@@ -35,7 +35,7 @@ class IndexStrategy implements LocalizationStrategyInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isIndexVariantOf($indexName, $variantName, $locale = null)
     {

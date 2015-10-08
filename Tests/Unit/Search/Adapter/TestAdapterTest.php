@@ -15,9 +15,8 @@ use Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class TestAdapterTest extends ProphecyTestCase
+class TestAdapterTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

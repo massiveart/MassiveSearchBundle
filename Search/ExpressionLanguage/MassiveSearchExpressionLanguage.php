@@ -20,7 +20,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 class MassiveSearchExpressionLanguage extends ExpressionLanguage
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function registerFunctions()
     {

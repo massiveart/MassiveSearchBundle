@@ -55,7 +55,7 @@ class ZendLuceneAdapter implements AdapterInterface
     private $factory;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     private $hideIndexException;
 
@@ -89,7 +89,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function index(Document $document, $indexName)
     {
@@ -144,7 +144,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deindex(Document $document, $indexName)
     {
@@ -154,7 +154,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function search(SearchQuery $searchQuery)
     {
@@ -229,7 +229,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStatus()
     {
@@ -264,7 +264,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function purge($indexName)
     {
@@ -274,7 +274,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listIndexes()
     {
@@ -295,7 +295,7 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush(array $indexNames)
     {

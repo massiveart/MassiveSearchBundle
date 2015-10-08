@@ -41,7 +41,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getExtension()
     {
@@ -49,7 +49,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {

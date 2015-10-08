@@ -98,7 +98,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deindex($object)
     {
@@ -145,7 +145,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createSearch($string)
     {
@@ -210,7 +210,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function purge($indexName)
     {
@@ -222,7 +222,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCategoryNames()
     {
@@ -239,7 +239,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush()
     {

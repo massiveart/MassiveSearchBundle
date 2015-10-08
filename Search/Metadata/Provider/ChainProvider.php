@@ -27,7 +27,7 @@ class ChainProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMetadataForObject($object)
     {
@@ -43,7 +43,7 @@ class ChainProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAllMetadata()
     {
@@ -58,7 +58,7 @@ class ChainProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMetadataForDocument(Document $document)
     {

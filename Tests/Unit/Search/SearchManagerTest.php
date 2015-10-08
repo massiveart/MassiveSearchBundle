@@ -18,10 +18,9 @@ use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Metadata\ClassHierarchyMetadata;
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class SearchManagerTest extends ProphecyTestCase
+class SearchManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AdapterInterface

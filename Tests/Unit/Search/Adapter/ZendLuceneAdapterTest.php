@@ -13,10 +13,9 @@ namespace Unit\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
 use Massive\Bundle\SearchBundle\Search\Field;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ZendLuceneAdapterTest extends ProphecyTestCase
+class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
 {
     private $dataPath;
     private $factory;

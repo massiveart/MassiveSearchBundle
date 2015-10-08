@@ -66,7 +66,7 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function index(Document $document, $indexName)
     {
@@ -105,7 +105,7 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deindex(Document $document, $indexName)
     {
@@ -121,7 +121,7 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function search(SearchQuery $searchQuery)
     {
@@ -185,7 +185,7 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStatus()
     {
@@ -205,7 +205,7 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function purge($indexName)
     {
@@ -217,7 +217,7 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listIndexes()
     {
@@ -235,7 +235,7 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush(array $indexNames)
     {

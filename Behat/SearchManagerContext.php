@@ -81,7 +81,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setKernel(KernelInterface $kernel)
     {

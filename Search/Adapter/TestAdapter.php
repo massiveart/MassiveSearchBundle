@@ -30,7 +30,7 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function index(Document $document, $indexName)
     {
@@ -38,7 +38,7 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deindex(Document $document, $indexName)
     {
@@ -56,7 +56,7 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function purge($indexName)
     {
@@ -83,7 +83,7 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function search(SearchQuery $searchQuery)
     {
@@ -124,7 +124,7 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listIndexes()
     {
@@ -132,14 +132,14 @@ class TestAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush(array $indexNames)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStatus()
     {
