@@ -18,6 +18,7 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 /**
  * @Iterations(3)
  * @BeforeMethods({"setUp"})
+ * @BeforeMethods({"tearDown"})
  */
 abstract class AdapterBench extends BaseTestCase
 {
@@ -29,6 +30,7 @@ abstract class AdapterBench extends BaseTestCase
 
     public function tearDown()
     {
+        AppKernel::resetEnvironment();
     }
 
     abstract protected function getAdapterId();
