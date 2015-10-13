@@ -11,17 +11,19 @@
 
 namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
-use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
-use Doctrine\Common\Persistence\ObjectManager;
-use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
-use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmIndexRebuildSubscriber;
-use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
-use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
-use Prophecy\Argument;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
+use Metadata\ClassHierarchyMetadata;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmIndexRebuildSubscriber;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
+use Prophecy\Argument;
+use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 
 class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -70,6 +72,7 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $subscriber;
 
+
     public function setUp()
     {
         $this->output = new BufferedOutput();
@@ -86,10 +89,11 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->searchMetadataFactory->reveal(),
             $this->searchManager->reveal()
         );
+
     }
 
     /**
-     * It should call the named repository method if requested.
+     * It should call the named repository method if requested
      */
     public function testRepositoryMethod()
     {
@@ -105,7 +109,7 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should throw an exception if the repository method does not exist.
+     * It should throw an exception if the repository method does not exist
      *
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Repository method "barfoo" does not exist
@@ -133,9 +137,9 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $this->objectManager->getMetadataFactory()->willReturn($this->ormMetadataFactory);
         $this->searchHierarchy->getOutsideClassMetadata()->willReturn($this->searchMetadata->reveal());
-        $this->ormMetadataFactory->getAllMetadata()->willReturn([
-            $this->ormMetadata->reveal(),
-        ]);
+        $this->ormMetadataFactory->getAllMetadata()->willReturn(array(
+            $this->ormMetadata->reveal()
+        ));
         $this->ormMetadata->name = 'stdClass';
         $this->searchMetadata->name = 'stdClass';
         $this->searchMetadataFactory->getMetadataForClass('stdClass')->willReturn($this->searchHierarchy->reveal());
@@ -148,6 +152,6 @@ class TestRepository
 {
     public function foobar()
     {
-        return [new \stdClass()];
+        return array(new \stdClass);
     }
 }

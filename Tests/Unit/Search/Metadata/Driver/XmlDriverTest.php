@@ -2,8 +2,8 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata\Driver;
 
-use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Driver\XmlDriver;
+use Massive\Bundle\SearchBundle\Search\Factory;
 
 class XmlDriverTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +28,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should load metadata from a file.
+     * It should load metadata from a file
      */
     public function testLoadMetadataFromFile()
     {
@@ -64,7 +64,7 @@ EOT
     }
 
     /**
-     * It should allow the specification of reindex directives.
+     * It should allow the specification of reindex directives
      */
     public function testReindexDirectives()
     {
@@ -91,14 +91,12 @@ EOT
     {
         $path = $this->getTmpMappingPath();
         file_put_contents($path, $mapping);
-
         return $path;
     }
 
     private function getTmpMappingPath()
     {
         $tempDir = sys_get_temp_dir();
-
         return $tempDir . '/' . self::TMP_FILE;
     }
 }

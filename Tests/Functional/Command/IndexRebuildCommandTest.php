@@ -11,9 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Massive\Bundle\SearchBundle\Command\IndexRebuildCommand;
+use Massive\Bundle\SearchBundle\Command\StatusCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Massive\Bundle\SearchBundle\Command\IndexRebuildCommand;
 
 class IndexRebuildCommandTest extends BaseTestCase
 {
