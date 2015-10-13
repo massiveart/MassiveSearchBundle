@@ -84,14 +84,14 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         $purge = $event->getPurge();
 
         $metadataFactory = $this->objectManager->getMetadataFactory();
-        $metadata = $metadataFactory->getAllMetadata();
+        $metadatas = $metadataFactory->getAllMetadata();
 
-        foreach ($metadata as $class) {
+        foreach ($metadatas as $class) {
             if ($filter && !preg_match('{' . $filter . '}', $class->name)) {
                 continue;
             }
 
-            $searchMeta = $this->searchMetadataFactory->getMetadataForClass($class->getName());
+            $searchMeta = $this->searchMetadataFactory->getMetadataForClass($class->name);
 
             if (null === $searchMeta) {
                 continue;
@@ -139,11 +139,21 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
      */
     private function rebuildClass(OutputInterface $output, ClassMetadata $class)
     {
-        $output->write('<comment>Rebuilding</comment>: ' . $class->getName());
+        $output->write('<comment>Rebuilding</comment>: ' . $class->name);
 
         $repositoryMethod = $class->getReindexRepositoryMethod();
         $repositoryMethod = $repositoryMethod ?: 'findAll';
-        $objects = $this->objectManager->getRepository($class->name)->$repositoryMethod();
+
+        $repository = $this->objectManager->getRepository($class->name);
+
+        if (!method_exists($repository, $repositoryMethod)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Repository method "%s" does not exist.',
+                $repositoryMethod
+            ));
+        }
+
+        $objects = $repository->$repositoryMethod();
 
         $count = 0;
         foreach ($objects as $object) {
