@@ -100,6 +100,8 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $event = $this->createEvent(null, false);
         $this->subscriber->rebuildIndex($event);
+
+        $this->assertContains('1 entities indexed', $this->output->fetch());
     }
 
     /**
