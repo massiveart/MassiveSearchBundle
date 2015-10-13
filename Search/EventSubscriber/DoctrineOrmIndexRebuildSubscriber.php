@@ -100,10 +100,10 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
             $classMetadata = $searchMeta->getOutsideClassMetadata();
 
             if ($purge) {
-                $this->doPurge($output, $classMetadata, $class);
+                $this->doPurge($output, $classMetadata);
             }
 
-            $this->rebuildClass($output, $class);
+            $this->rebuildClass($output, $classMetadata);
         }
     }
 
@@ -114,9 +114,8 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
      *
      * @param OutputInterface $output
      * @param ClassMetadata $classMetadata
-     * @param OrmMetadata $ormMetadata
      */
-    private function doPurge(OutputInterface $output, ClassMetadata $classMetadata, OrmMetadata $ormMetadata)
+    private function doPurge(OutputInterface $output, ClassMetadata $classMetadata)
     {
         foreach ($classMetadata->getIndexMetadatas() as $indexMetadata) {
             $indexName = $indexMetadata->getIndexName();
@@ -138,11 +137,13 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
      * @param OutputInterface $output
      * @param OrmMetadata $ormMetadata
      */
-    private function rebuildClass(OutputInterface $output, OrmMetadata $ormMetadata)
+    private function rebuildClass(OutputInterface $output, ClassMetadata $class)
     {
-        $output->write('<comment>Rebuilding</comment>: ' . $ormMetadata->getName());
+        $output->write('<comment>Rebuilding</comment>: ' . $class->getName());
 
-        $objects = $this->objectManager->getRepository($ormMetadata->name)->findAll();
+        $repositoryMethod = $class->getReindexRepositoryMethod();
+        $repositoryMethod = $repositoryMethod ?: 'findAll';
+        $objects = $this->objectManager->getRepository($class->name)->$repositoryMethod();
 
         $count = 0;
         foreach ($objects as $object) {
