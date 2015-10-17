@@ -107,11 +107,11 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
      *
      * @return string|null
      */
-    public function getReindexRepositoryMethod() 
+    public function getReindexRepositoryMethod()
     {
         return $this->repositoryMethod;
     }
-    
+
     /**
      * Set the repository method which should be used when reindexing.
      *
