@@ -32,8 +32,7 @@ class IndexRebuildCommandTest extends BaseTestCase
      */
     public function testCommand()
     {
-        $this->tester->execute([
-        ]);
+        $this->tester->execute([]);
 
         $this->assertEquals(0, $this->tester->getStatusCode());
     }

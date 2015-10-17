@@ -76,13 +76,13 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->output = new BufferedOutput();
-        $this->objectManager = $this->prophesize(ObjectManager::class);
-        $this->ormMetadataFactory = $this->prophesize(ClassMetadataFactory::class);
-        $this->ormMetadata = $this->prophesize(OrmMetadata::class);
-        $this->searchMetadataFactory = $this->prophesize(MetadataFactory::class);
-        $this->searchHierarchy = $this->prophesize(ClassHierarchyMetadata::class);
-        $this->searchMetadata = $this->prophesize(ClassMetadata::class);
-        $this->searchManager = $this->prophesize(SearchManager::class);
+        $this->objectManager = $this->prophesize('Doctrine\Common\Persistence\ObjectManager');
+        $this->ormMetadataFactory = $this->prophesize('Doctrine\Common\Persistence\Mapping\ClassMetadataFactory');
+        $this->ormMetadata = $this->prophesize('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $this->searchMetadataFactory = $this->prophesize('Metadata\MetadataFactory');
+        $this->searchHierarchy = $this->prophesize('Metadata\ClassHierarchyMetadata');
+        $this->searchMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
+        $this->searchManager = $this->prophesize('Massive\Bundle\SearchBundle\Search\SearchManager');
 
         $this->subscriber = new DoctrineOrmIndexRebuildSubscriber(
             $this->objectManager->reveal(),
