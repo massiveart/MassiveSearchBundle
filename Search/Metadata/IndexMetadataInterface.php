@@ -31,18 +31,18 @@ interface IndexMetadataInterface
     public function setName($name);
 
     /**
-     * Set the name of the field representing the URL.
+     * Return the search index name to use for the mapped class.
      *
-     * @param string
+     * @return string
      */
-    public function setUrlField($urlField);
+    public function getIndexName();
 
     /**
-     * Set the name of the field representing the description.
+     * Set the search index name.
      *
-     * @param string
+     * @param string $indexName
      */
-    public function setDescriptionField($descriptionField);
+    public function setIndexName($indexName);
 
     /**
      * Return the field mapping.
@@ -52,42 +52,6 @@ interface IndexMetadataInterface
     public function getFieldMapping();
 
     /**
-     * Set the name of the field representing the title.
-     *
-     * @param string
-     */
-    public function setTitleField($titleField);
-
-    /**
-     * Return the name of the field on the mapped document which
-     * represents the URL (should be named URI).
-     *
-     * @return string
-     */
-    public function getUrlField();
-
-    /**
-     * Return the name of the field on the mapped document which
-     * represents the ID.
-     *
-     * @return string
-     */
-    public function getIdField();
-
-    /**
-     * Set the search index name.
-     */
-    public function setIndexName($indexName);
-
-    /**
-     * Add a field mapping.
-     *
-     * @param string
-     * @param array
-     */
-    public function addFieldMapping($name, $mapping);
-
-    /**
      * Set the field mapping.
      *
      * @param array
@@ -95,49 +59,87 @@ interface IndexMetadataInterface
     public function setFieldMapping($fieldMapping);
 
     /**
+     * Add a field mapping.
+     *
+     * @param string
+     * @param FieldInterface
+     */
+    public function addFieldMapping($name, $mapping);
+
+    /**
      * Return the name of the field on the mapped document which
      * represents the ID.
      *
-     * @return string
+     * @return FieldInterface
      */
-    public function getTitleField();
-
-    /**
-     * Return the search index name to use for the mapped class.
-     *
-     * @return string
-     */
-    public function getIndexName();
+    public function getIdField();
 
     /**
      * Set the name of the field on the mapped document which represents
      * the ID field.
      *
-     * @param string
+     * @param FieldInterface $idField
      */
     public function setIdField($idField);
 
     /**
      * Return the name of the field on the mapped document which
+     * represents the URL (should be named URI).
+     *
+     * @return FieldInterface
+     */
+    public function getUrlField();
+
+    /**
+     * Set the name of the field representing the URL.
+     *
+     * @param FieldInterface $urlField
+     */
+    public function setUrlField($urlField);
+
+    /**
+     * Return the name of the field on the mapped document which
+     * represents the ID.
+     *
+     * @return FieldInterface
+     */
+    public function getTitleField();
+
+    /**
+     * Set the name of the field representing the title.
+     *
+     * @param FieldInterface $titleField
+     */
+    public function setTitleField($titleField);
+
+    /**
+     * Return the name of the field on the mapped document which
      * represents the description.
      *
-     * @return string
+     * @return FieldInterface
      */
     public function getDescriptionField();
+
+    /**
+     * Set the name of the field representing the description.
+     *
+     * @param FieldInterface $descriptionField
+     */
+    public function setDescriptionField($descriptionField);
 
     /**
      * Return the name of the field on the mapped document which
      * represents the image URL which should accompany the search
      * result.
      *
-     * @return string
+     * @return FieldInterface
      */
     public function getImageUrlField();
 
     /**
      * Set the name of the field representing the URL of the image.
      *
-     * @param string
+     * @param FieldInterface $imageUrlField
      */
     public function setImageUrlField($imageUrlField);
 
@@ -145,14 +147,14 @@ interface IndexMetadataInterface
      * Return the name of the fild on the mapped document which
      * represents the locale.
      *
-     * @return string
+     * @return FieldInterface
      */
     public function getLocaleField();
 
     /**
      * Set the name of the field representing the locale.
      *
-     * @param string
+     * @param FieldInterface $field
      */
     public function setLocaleField($field);
 
