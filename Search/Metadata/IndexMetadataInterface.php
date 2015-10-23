@@ -159,6 +159,38 @@ interface IndexMetadataInterface
     public function setLocaleField($field);
 
     /**
+     * Returns the optional set of options for the mapping.
+     *
+     * @return array
+     */
+    public function getOptions();
+
+    /**
+     * Returns the value of the option with the given name.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getOption($name);
+
+    /**
+     * Sets the options for the mapping.
+     *
+     * @param $options
+     */
+    public function setOptions(array $options);
+
+    /**
+     * Adds another option to the mapping.
+     *
+     * @param string $name The key of the option
+     * @param string $value The value of the option
+     * @return mixed
+     */
+    public function addOption($name, $value);
+
+    /**
      * Get the class metadata to which this index metadata applies.
      *
      * @return ClassMetadata

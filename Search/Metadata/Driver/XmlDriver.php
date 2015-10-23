@@ -97,6 +97,14 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             ];
         }
 
+        if ($mapping->options) {
+            $options = $mapping->options->children();
+            $indexMapping['options'] = [];
+            foreach ($options as $option) {
+                $indexMapping['options'][(string)$option['name']] = (string)$option;
+            }
+        }
+
         $indexMappings = array_merge(
             [
                 '_default' => $indexMapping,
@@ -116,6 +124,12 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
             foreach ($mapping['fields'] as $fieldName => $fieldData) {
                 $indexMetadata->addFieldMapping($fieldName, $fieldData);
+            }
+
+            if (isset($mapping['options'])) {
+                foreach ($mapping['options'] as $name => $value) {
+                    $indexMetadata->addOption($name, $value);
+                }
             }
 
             $classMetadata->addIndexMetadata($contextName, $indexMetadata);

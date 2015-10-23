@@ -12,10 +12,5 @@
             <field name="title" type="string" />
             <field name="description" type="string" />
         </fields>
-
-        <options>
-            <option name="key1">value1</option>
-            <option name="key2">value2</option>
-        </options>
     </mapping>
 </massive-search-mapping>

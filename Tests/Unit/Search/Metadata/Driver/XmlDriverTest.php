@@ -93,5 +93,37 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('title', $fieldMappings['title']['field']->getName());
         $this->assertEquals('string', $fieldMappings['description']['type']);
         $this->assertEquals('description', $fieldMappings['description']['field']->getName());
+
+        $options = $indexMetadata->getOptions();
+        $this->assertEquals('value1', $options['key1']);
+        $this->assertEquals('value2', $options['key2']);
+    }
+
+    public function testLoadMetadataFromFileWithoutOptions()
+    {
+        $this->reflectionClass->getName()->willReturn('Sulu\Bundle\ExampleBundle\Entity\Example');
+
+        $metadata = $this->xmlDriver->loadMetadataFromFile(
+            $this->reflectionClass->reveal(),
+            __DIR__ . '/../../../../Resources/DataFixtures/Mapping/ExampleWithoutOptions.xml'
+        );
+
+        $indexMetadata = $metadata->getIndexMetadata('_default');
+
+        $this->assertEquals('id', $indexMetadata->getIdField()->getProperty());
+        $this->assertEquals('title', $indexMetadata->getTitleField()->getProperty());
+        $this->assertEquals('description', $indexMetadata->getDescriptionField()->getProperty());
+        $this->assertEquals('example', $indexMetadata->getIndexName());
+        $this->assertEquals('example', $indexMetadata->getCategoryName());
+        $this->assertEquals('locale', $indexMetadata->getLocaleField()->getProperty());
+
+        $fieldMappings = $indexMetadata->getFieldMapping();
+        $this->assertEquals('string', $fieldMappings['title']['type']);
+        $this->assertEquals('title', $fieldMappings['title']['field']->getName());
+        $this->assertEquals('string', $fieldMappings['description']['type']);
+        $this->assertEquals('description', $fieldMappings['description']['field']->getName());
+
+        $options = $indexMetadata->getOptions();
+        $this->assertEmpty($options);
     }
 }

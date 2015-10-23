@@ -62,6 +62,11 @@ class IndexMetadata implements IndexMetadataInterface
     private $localeField;
 
     /**
+     * @var array
+     */
+    private $options = [];
+
+    /**
      * @var ClassMetadata
      */
     private $classMetadata;
@@ -221,6 +226,42 @@ class IndexMetadata implements IndexMetadataInterface
     public function setLocaleField($localeField)
     {
         $this->localeField = $localeField;
+    }
+
+    /**
+     * {@inheritdoc
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOption($name)
+    {
+        if (!array_key_exists($name, $this->options)) {
+            return null;
+        }
+
+        return $this->options[$name];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addOption($name, $value)
+    {
+        $this->options[$name] = $value;
     }
 
     /**
