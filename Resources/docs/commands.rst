@@ -28,6 +28,8 @@ Display status information for the current search implementation::
     | idx:product | {"size":11825,"nb_files":36,"nb_documents":10}               |
     +-------------+--------------------------------------------------------------+
 
+.. _command_search_index_rebuild:
+
 ``massive:search:index:rebuild``
 --------------------------------
 

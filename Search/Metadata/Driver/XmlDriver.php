@@ -97,6 +97,12 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             ];
         }
 
+        if ($mapping->reindex) {
+            if ($mapping->reindex['repository-method']) {
+                $classMetadata->setReindexRepositoryMethod((string) $mapping->reindex['repository-method']);
+            }
+        }
+
         $indexMappings = array_merge(
             [
                 '_default' => $indexMapping,

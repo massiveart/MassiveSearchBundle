@@ -23,12 +23,12 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 class DoctrineOrmSubscriber implements EventSubscriber
 {
     /**
-     * @var SearchManager
+     * @var SearchManagerInterface
      */
     private $searchManager;
 
     /**
-     * @param SearchManager $searchManager
+     * @param SearchManagerInterface $searchManager
      */
     public function __construct(SearchManagerInterface $searchManager)
     {
