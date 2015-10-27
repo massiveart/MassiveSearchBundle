@@ -50,7 +50,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     private $entities = [];
 
     /**
-     * @var Exception
+     * @var \Exception
      */
     private $lastException = null;
 
@@ -63,14 +63,6 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * @BeforeSuite
-     */
-    public static function clearCache()
-    {
-        AppKernel::clearData();
-    }
-
-    /**
      * @BeforeScenario
      */
     public function setUp()
@@ -78,6 +70,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         $this->kernel->shutdown();
         $this->kernel->boot();
         AppKernel::resetEnvironment();
+        AppKernel::clearData();
     }
 
     /**
@@ -310,7 +303,8 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
             $this->kernel->getContainer()->get('massive_search.metadata.provider.chain'),
             $this->kernel->getContainer()->get('massive_search.object_to_document_converter'),
             $this->kernel->getContainer()->get('event_dispatcher'),
-            $this->kernel->getContainer()->get('massive_search.localization_strategy')
+            $this->kernel->getContainer()->get('massive_search.localization_strategy'),
+            $this->kernel->getContainer()->get('massive_search.metadata.field_evaluator')
         );
     }
 

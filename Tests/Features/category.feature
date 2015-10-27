@@ -42,7 +42,7 @@ Feature: Search Managager category searching
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
             <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Mouse">
-                <index name="index_car"/>
+                <index value="index_car"/>
                 <id property="id"/>
                 <title property="title" />
                 <category name="transport" />
@@ -58,7 +58,7 @@ Feature: Search Managager category searching
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
             <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Bicycle">
-                <index name="index_bicycle"/>
+                <index value="index_bicycle"/>
                 <id property="id"/>
                 <title property="title" />
                 <category name="transport" />
@@ -74,7 +74,7 @@ Feature: Search Managager category searching
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
             <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Cat">
-                <index name="index_cat"/>
+                <index value="index_cat"/>
                 <id property="id"/>
                 <title property="title" />
                 <category name="animals" />

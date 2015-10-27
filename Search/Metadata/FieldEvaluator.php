@@ -58,8 +58,8 @@ class FieldEvaluator
                     return $this->getExpressionValue($object, $field);
                 case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Field':
                     return $this->getFieldValue($object, $field);
-                case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Literal':
-                    return $this->getLiteralValue($object, $field);
+                case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Value':
+                    return $field->getValue();
             }
         } catch (\Exception $e) {
             throw new \Exception(sprintf(

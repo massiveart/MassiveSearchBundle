@@ -15,7 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Localization\IndexStrategy;
 
 class IndexStrategyTest extends \PHPUnit_Framework_TestCase
 {
-    public function provideStrategy()
+    public function provideLocalizeIndexName()
     {
         return [
             ['hello', 'fr', 'hello-fr-i18n'],
@@ -25,13 +25,13 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideStrategy
+     * @dataProvider provideLocalizeIndexName
      */
-    public function testStrategy($indexName, $locale, $expected)
+    public function testLocalizeIndexName($indexName, $locale, $expected)
     {
         $strategy = new IndexStrategy();
-        $res = $strategy->localizeIndexName($indexName, $locale);
-        $this->assertEquals($expected, $res);
+        $result = $strategy->localizeIndexName($indexName, $locale);
+        $this->assertEquals($expected, $result);
     }
 
     public function provideisIndexVariantOf()
@@ -73,5 +73,24 @@ class IndexStrategyTest extends \PHPUnit_Framework_TestCase
         $strategy = new IndexStrategy();
         $result = $strategy->isIndexVariantOf($indexName, $variantName);
         $this->assertEquals($isVariant, $result);
+    }
+
+    public function provideDelocalizeIndexName()
+    {
+        return [
+            ['hello-en-i18n', 'hello'],
+            ['hello-test-en-i18n', 'hello-test'],
+            ['hello-test-en_us-i18n', 'hello-test'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideDelocalizeIndexName
+     */
+    public function testStrategy($indexName, $expected)
+    {
+        $strategy = new IndexStrategy();
+        $result = $strategy->delocalizeIndexName($indexName);
+        $this->assertEquals($expected, $result);
     }
 }

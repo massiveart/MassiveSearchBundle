@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface as MetadataProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -30,7 +31,7 @@ class SearchManager implements SearchManagerInterface
     protected $adapter;
 
     /**
-     * @var ProviderInterface
+     * @var MetadataProviderInterface
      */
     protected $metadataProvider;
 
@@ -50,6 +51,11 @@ class SearchManager implements SearchManagerInterface
     protected $localizationStrategy;
 
     /**
+     * @var FieldEvaluator
+     */
+    protected $fieldEvaluator;
+
+    /**
      * @var array
      */
     protected $indexesToFlush = [];
@@ -59,13 +65,15 @@ class SearchManager implements SearchManagerInterface
         MetadataProviderInterface $metadataProvider,
         ObjectToDocumentConverter $converter,
         EventDispatcherInterface $eventDispatcher,
-        LocalizationStrategyInterface $localizationStrategy
+        LocalizationStrategyInterface $localizationStrategy,
+        FieldEvaluator $fieldEvaluator
     ) {
         $this->adapter = $adapter;
         $this->metadataProvider = $metadataProvider;
         $this->eventDispatcher = $eventDispatcher;
         $this->converter = $converter;
         $this->localizationStrategy = $localizationStrategy;
+        $this->fieldEvaluator = $fieldEvaluator;
     }
 
     /**
@@ -105,8 +113,9 @@ class SearchManager implements SearchManagerInterface
         $metadata = $this->getMetadata($object);
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-            $this->markIndexToFlush($indexMetadata->getIndexName());
-            $indexNames = $this->getLocalizedIndexNamesFor($indexMetadata->getIndexName());
+            $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            $this->markIndexToFlush($indexName);
+            $indexNames = $this->getLocalizedIndexNamesFor($indexName);
 
             foreach ($indexNames as $indexName) {
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
@@ -123,9 +132,8 @@ class SearchManager implements SearchManagerInterface
         $indexMetadata = $this->getMetadata($object);
 
         foreach ($indexMetadata->getIndexMetadatas() as $indexMetadata) {
-            $this->markIndexToFlush($indexMetadata->getIndexName());
-
-            $indexName = $indexMetadata->getIndexName();
+            $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            $this->markIndexToFlush($indexName);
 
             $document = $this->converter->objectToDocument($indexMetadata, $object);
             $evaluator = $this->converter->getFieldEvaluator();
@@ -248,35 +256,18 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * Return a list of all the index names (according to the metadata).
-     *
-     * If categories are specified, only return the indexes corresponding
-     * to the given categories.
-     *
-     * @param array $categories
-     *
-     * @return string[]
+     * {@inheritdoc}
      */
     public function getIndexNames($categories = null)
     {
-        $metadatas = $this->metadataProvider->getAllMetadata();
-        $indexNames = [];
-
-        foreach ($metadatas as $metadata) {
-            foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-                $indexName = $indexMetadata->getIndexName();
-                if ($categories) {
-                    if (in_array($indexMetadata->getCategoryName(), $categories)) {
-                        $indexNames[$indexName] = $indexName;
-                    }
-                    continue;
-                }
-
-                $indexNames[$indexName] = $indexName;
-            }
-        }
-
-        return array_values($indexNames);
+        return array_unique(
+            array_map(
+                function ($indexName) {
+                    return $this->localizationStrategy->delocalizeIndexName($indexName);
+                },
+                $this->adapter->listIndexes()
+            )
+        );
     }
 
     /**
@@ -385,10 +376,13 @@ class SearchManager implements SearchManagerInterface
         $categoryNames = $this->getCategoryNames();
 
         if ($queryCategoryNames && $queryIndexNames) {
-            throw new Exception\SearchException(sprintf(
-                'Category and indexes are mutually exclusive, you specified categories "%s" and indexes "%s"',
-                implode('", "', $queryCategoryNames), implode('", "', $queryIndexNames)
-            ));
+            throw new Exception\SearchException(
+                sprintf(
+                    'Category and indexes are mutually exclusive, you specified categories "%s" and indexes "%s"',
+                    implode('", "', $queryCategoryNames),
+                    implode('", "', $queryIndexNames)
+                )
+            );
         }
 
         foreach ($queryIndexNames as $queryIndexName) {
@@ -398,10 +392,13 @@ class SearchManager implements SearchManagerInterface
         }
 
         if (false === empty($unknownIndexes)) {
-            throw new Exception\SearchException(sprintf(
-                'Search indexes "%s" not known. Known indexes: "%s"',
-                implode('", "', $queryIndexNames), implode('", "', $indexNames)
-            ));
+            throw new Exception\SearchException(
+                sprintf(
+                    'Search indexes "%s" not known. Known indexes: "%s"',
+                    implode('", "', $queryIndexNames),
+                    implode('", "', $indexNames)
+                )
+            );
         }
 
         foreach ($queryCategoryNames as $queryCategoryName) {
@@ -411,10 +408,13 @@ class SearchManager implements SearchManagerInterface
         }
 
         if (false === empty($unknownCategories)) {
-            throw new Exception\SearchException(sprintf(
-                'Categories "%s" not known. Known categories: "%s"',
-                implode('", "', $queryCategoryNames), implode('", "', $categoryNames)
-            ));
+            throw new Exception\SearchException(
+                sprintf(
+                    'Categories "%s" not known. Known categories: "%s"',
+                    implode('", "', $queryCategoryNames),
+                    implode('", "', $categoryNames)
+                )
+            );
         }
     }
 }

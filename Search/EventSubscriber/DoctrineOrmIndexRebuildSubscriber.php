@@ -43,11 +43,6 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     private $searchManager;
 
     /**
-     * @var array
-     */
-    private $purged = [];
-
-    /**
      * @param ObjectManager $objectManager
      * @param MetadataFactory $searchMetadataFactory
      * @param SearchManager $searchManager
@@ -81,7 +76,6 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     {
         $output = $event->getOutput();
         $filter = $event->getFilter();
-        $purge = $event->getPurge();
 
         $metadataFactory = $this->objectManager->getMetadataFactory();
         $metadatas = $metadataFactory->getAllMetadata();
@@ -99,34 +93,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
 
             $classMetadata = $searchMeta->getOutsideClassMetadata();
 
-            if ($purge) {
-                $this->doPurge($output, $classMetadata);
-            }
-
             $this->rebuildClass($output, $classMetadata);
-        }
-    }
-
-    /**
-     * Purge the index for the given class metadata.
-     *
-     * Note that only one purge will be performed per session.
-     *
-     * @param OutputInterface $output
-     * @param ClassMetadata $classMetadata
-     */
-    private function doPurge(OutputInterface $output, ClassMetadata $classMetadata)
-    {
-        foreach ($classMetadata->getIndexMetadatas() as $indexMetadata) {
-            $indexName = $indexMetadata->getIndexName();
-
-            if (isset($this->purged[$indexName])) {
-                return;
-            }
-
-            $output->writeln('<info>Purging index</info>: ' . $indexName);
-            $this->searchManager->purge($indexName);
-            $this->purged[$indexName] = true;
         }
     }
 

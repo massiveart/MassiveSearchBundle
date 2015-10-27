@@ -37,6 +37,18 @@ class IndexStrategy implements LocalizationStrategyInterface
     /**
      * {@inheritdoc}
      */
+    public function delocalizeIndexName($indexName)
+    {
+        if (preg_match('/(.*)(-.*-i18n)/', $indexName, $matches) === 0) {
+            return $indexName;
+        }
+
+        return $matches[1];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isIndexVariantOf($indexName, $variantName, $locale = null)
     {
         if ($indexName == $variantName) {
@@ -44,7 +56,7 @@ class IndexStrategy implements LocalizationStrategyInterface
         }
 
         return (boolean) preg_match(sprintf(
-            '{^%s-%s-i18n$}',
+            '/^%s-%s-i18n$/',
             $indexName,
             $locale ?: '[a-zA-Z_]+'
         ), $variantName);

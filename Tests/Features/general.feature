@@ -27,7 +27,7 @@ Feature: Search Manager
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
             <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
-                <index name="car"/>
+                <index value="car"/>
                 <id property="id"/>
                 <url expr="'foobar'" />
                 <title property="title" />

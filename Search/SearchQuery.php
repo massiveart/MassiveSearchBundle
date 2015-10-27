@@ -17,11 +17,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 class SearchQuery
 {
     /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
-
-    /**
      * @var string
      */
     private $queryString;

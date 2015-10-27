@@ -134,8 +134,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     {
         $indexMapping = [];
 
-        $indexName = (string) $mapping->index['name'];
-        $indexMapping['index'] = $indexName;
+        $indexField = $this->getMapping($mapping, 'index');
+        $indexMapping['index'] = $indexField;
 
         $idField = $this->getMapping($mapping, 'id');
         $indexMapping['id'] = $idField;
@@ -216,6 +216,10 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         if (isset($field['property'])) {
             return $this->factory->createMetadataProperty((string) $field['property']);
+        }
+
+        if (isset($field['value'])) {
+            return $this->factory->createMetadataValue((string) $field['value']);
         }
 
         throw new \InvalidArgumentException(sprintf(

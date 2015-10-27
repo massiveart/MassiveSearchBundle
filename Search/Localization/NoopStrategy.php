@@ -32,7 +32,15 @@ class NoopStrategy implements LocalizationStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function isIndexVariantOf($indexName, $variantName)
+    public function delocalizeIndexName($indexName)
+    {
+        return $indexName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isIndexVariantOf($indexName, $variantName, $locale = null)
     {
         return $indexName == $variantName;
     }
