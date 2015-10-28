@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.8.0
+-----------
+
+- [Rebuild] Added reindex directive
+- [Tests] Removed prophecy bridge
+- [Generell] Added Style-CI configuration
+
 0.7.0
 -----------
 
