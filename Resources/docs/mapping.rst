@@ -135,6 +135,28 @@ then it will be assumed that the object is not localized.
 
     </massive-search-mapping>
 
+Reindexing
+----------
+
+When reindexing your data using the :ref:`command_search_index_rebuild`
+command, you may not want to always reindex *all* of the entities in the
+database, for example you may want to limit the search results only to
+entities updated within the last 30 days.
+
+You can specify a specific method to use on the repository as follows:
+
+.. code-block:: xml
+
+    <!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
+    <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
+
+        <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+            <!-- ... -->
+            <reindex repository-method="findForLast30Days" />
+        </mapping>
+
+    </massive-search-mapping>
+
 Full example
 ------------
 
@@ -146,6 +168,7 @@ The following example uses all the mapping options:
     <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
+            <reindex repository-method="findOnlySomethings" />
             <index name="product" />
             <id property="id" />
             <locale property="locale" />

@@ -11,10 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata\Provider;
 
+use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Provider\ChainProvider;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
-use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
-use Massive\Bundle\SearchBundle\Search\Document;
 
 class ChainProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -50,10 +50,10 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
         $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
 
-        $this->chainProvider = new ChainProvider(array(
+        $this->chainProvider = new ChainProvider([
             $this->provider1->reveal(),
             $this->provider2->reveal(),
-        ));
+        ]);
     }
 
     /**
@@ -61,14 +61,14 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAllMetadatas()
     {
-        $this->provider1->getAllMetadata()->willReturn(array($this->metadata->reveal()));
-        $this->provider2->getAllMetadata()->willReturn(array($this->metadata->reveal()));
+        $this->provider1->getAllMetadata()->willReturn([$this->metadata->reveal()]);
+        $this->provider2->getAllMetadata()->willReturn([$this->metadata->reveal()]);
         $metadatas = $this->chainProvider->getAllMetadata();
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             $this->metadata->reveal(),
             $this->metadata->reveal(),
-        ), $metadatas);
+        ], $metadatas);
     }
 
     /**

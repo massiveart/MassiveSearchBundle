@@ -14,8 +14,8 @@ namespace Massive\Bundle\SearchBundle\Search\EventSubscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 
 /**
  * Index mapped doctrine ORM documents.
@@ -23,12 +23,12 @@ use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 class DoctrineOrmSubscriber implements EventSubscriber
 {
     /**
-     * @var SearchManager
+     * @var SearchManagerInterface
      */
     private $searchManager;
 
     /**
-     * @param SearchManager $searchManager
+     * @param SearchManagerInterface $searchManager
      */
     public function __construct(SearchManagerInterface $searchManager)
     {
@@ -36,15 +36,15 @@ class DoctrineOrmSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::preRemove,
             Events::postUpdate,
             Events::postPersist,
-        );
+        ];
     }
 
     /**

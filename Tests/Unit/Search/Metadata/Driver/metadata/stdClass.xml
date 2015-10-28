@@ -1,0 +1,13 @@
+<massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
+
+    <mapping class="stdClass">
+        <index name="index_bicycle"/>
+        <id property="id"/>
+        <title property="title" />
+        <category name="transport" />
+        <fields>
+            <field name="title" expr="object.title" type="string" />
+        </fields>
+    </mapping>
+
+</massive-search-mapping>

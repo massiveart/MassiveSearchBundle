@@ -43,7 +43,7 @@ class SearchQueryBuilder
      */
     public function index($indexName)
     {
-        $this->searchQuery->setIndexes(array($indexName));
+        $this->searchQuery->setIndexes([$indexName]);
 
         return $this;
     }
@@ -73,7 +73,7 @@ class SearchQueryBuilder
      */
     public function category($category)
     {
-        $this->searchQuery->setCategories(array($category));
+        $this->searchQuery->setCategories([$category]);
 
         return $this;
     }

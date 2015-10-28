@@ -29,7 +29,7 @@ class IndexMetadata implements IndexMetadataInterface
     /**
      * @var array
      */
-    private $fieldMapping = array();
+    private $fieldMapping = [];
 
     /**
      * @var string
@@ -72,7 +72,7 @@ class IndexMetadata implements IndexMetadataInterface
     private $categoryName;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -80,7 +80,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setName($name)
     {
@@ -88,7 +88,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIndexName()
     {
@@ -96,7 +96,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setIndexName($indexName)
     {
@@ -104,7 +104,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFieldMapping()
     {
@@ -112,7 +112,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setFieldMapping($fieldMapping)
     {
@@ -120,7 +120,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addFieldMapping($name, $mapping)
     {
@@ -128,7 +128,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdField()
     {
@@ -136,7 +136,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setIdField($idField)
     {
@@ -144,7 +144,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUrlField()
     {
@@ -152,7 +152,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setUrlField($urlField)
     {
@@ -160,7 +160,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTitleField()
     {
@@ -168,7 +168,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setTitleField($titleField)
     {
@@ -176,7 +176,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDescriptionField()
     {
@@ -184,7 +184,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setDescriptionField($descriptionField)
     {
@@ -192,7 +192,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getImageUrlField()
     {
@@ -200,7 +200,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setImageUrlField($imageUrlField)
     {
@@ -208,7 +208,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocaleField()
     {
@@ -216,7 +216,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLocaleField($localeField)
     {
@@ -224,7 +224,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClassMetadata()
     {
@@ -232,7 +232,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setClassMetadata(ClassMetadata $classMetadata)
     {
@@ -240,7 +240,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCategoryName()
     {
@@ -248,7 +248,7 @@ class IndexMetadata implements IndexMetadataInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCategoryName($category)
     {

@@ -11,10 +11,9 @@
 
 namespace Unit\Search\Metadata;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
-class ClassMetadataTest extends ProphecyTestCase
+class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 {
     private $indexMetadata;
     private $classMetadata;
@@ -55,6 +54,6 @@ class ClassMetadataTest extends ProphecyTestCase
         $this->indexMetadata->setName('\stdClass')->shouldBeCalled();
 
         $indexMetadatas = $this->classMetadata->getIndexMetadatas();
-        $this->assertEquals(array('foo_context', 'foo_bar'), array_keys($indexMetadatas));
+        $this->assertEquals(['foo_context', 'foo_bar'], array_keys($indexMetadatas));
     }
 }

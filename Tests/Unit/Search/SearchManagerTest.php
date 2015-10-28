@@ -13,15 +13,14 @@ namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use Metadata\ClassHierarchyMetadata;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 
-class SearchManagerTest extends ProphecyTestCase
+class SearchManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AdapterInterface
@@ -64,9 +63,9 @@ class SearchManagerTest extends ProphecyTestCase
         $this->provider = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface');
         $this->indexMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
         $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
-        $this->metadata->getIndexMetadatas()->willReturn(array(
+        $this->metadata->getIndexMetadatas()->willReturn([
             $this->indexMetadata->reveal(),
-        ));
+        ]);
 
         $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
@@ -121,14 +120,14 @@ class SearchManagerTest extends ProphecyTestCase
         $this->indexMetadata->getLocaleField()->willReturn(null);
         $this->indexMetadata->getDescriptionField()->willReturn('body');
         $this->indexMetadata->getImageUrlField()->willReturn(null);
-        $this->indexMetadata->getFieldMapping()->willReturn(array(
-            'title' => array(
+        $this->indexMetadata->getFieldMapping()->willReturn([
+            'title' => [
                 'type' => 'string',
-            ),
-            'body' => array(
+            ],
+            'body' => [
                 'type' => 'string',
-            ),
-        ));
+            ],
+        ]);
         $this->indexMetadata->getIndexName()->willReturn('product');
         $this->converter->objectToDocument($this->indexMetadata, $this->product)->willReturn($this->document);
         $this->converter->getFieldEvaluator()->willReturn($this->fieldEvaluator->reveal());

@@ -15,9 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
-
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface as MetadataProviderInterface;
-
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -54,7 +52,7 @@ class SearchManager implements SearchManagerInterface
     /**
      * @var array
      */
-    protected $indexesToFlush = array();
+    protected $indexesToFlush = [];
 
     public function __construct(
         AdapterInterface $adapter,
@@ -100,7 +98,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deindex($object)
     {
@@ -147,7 +145,7 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createSearch($string)
     {
@@ -168,7 +166,7 @@ class SearchManager implements SearchManagerInterface
         //
         // See: https://github.com/massiveart/MassiveSearchBundle/issues/38
         if (0 === count($query->getIndexes())) {
-            return array();
+            return [];
         }
 
         $this->eventDispatcher->dispatch(
@@ -205,14 +203,14 @@ class SearchManager implements SearchManagerInterface
      */
     public function getStatus()
     {
-        $data = array('Adapter' => get_class($this->adapter));
-        $data += $this->adapter->getStatus() ?: array();
+        $data = ['Adapter' => get_class($this->adapter)];
+        $data += $this->adapter->getStatus() ?: [];
 
         return $data;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function purge($indexName)
     {
@@ -224,12 +222,12 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCategoryNames()
     {
         $metadatas = $this->metadataProvider->getAllMetadata();
-        $categoryNames = array();
+        $categoryNames = [];
 
         foreach ($metadatas as $metadata) {
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
@@ -241,12 +239,12 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush()
     {
         $this->adapter->flush(array_keys($this->indexesToFlush));
-        $this->indexesToFlush = array();
+        $this->indexesToFlush = [];
     }
 
     /**
@@ -262,7 +260,7 @@ class SearchManager implements SearchManagerInterface
     public function getIndexNames($categories = null)
     {
         $metadatas = $this->metadataProvider->getAllMetadata();
-        $indexNames = array();
+        $indexNames = [];
 
         foreach ($metadatas as $metadata) {
             foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
@@ -291,7 +289,7 @@ class SearchManager implements SearchManagerInterface
      */
     private function getLocalizedIndexNames($locale = null)
     {
-        $localizedIndexNames = array();
+        $localizedIndexNames = [];
         $indexNames = $this->getIndexNames();
 
         foreach ($indexNames as $indexName) {
@@ -315,7 +313,7 @@ class SearchManager implements SearchManagerInterface
     private function getLocalizedIndexNamesFor($indexName, $locale = null)
     {
         $adapterIndexNames = $this->adapter->listIndexes();
-        $indexNames = array();
+        $indexNames = [];
 
         foreach ($adapterIndexNames as $adapterIndexName) {
             if ($this->localizationStrategy->isIndexVariantOf($indexName, $adapterIndexName, $locale)) {
@@ -353,7 +351,7 @@ class SearchManager implements SearchManagerInterface
             return;
         }
 
-        $expandedIndexes = array();
+        $expandedIndexes = [];
 
         foreach ($query->getIndexes() as $index) {
             foreach ($this->getLocalizedIndexNamesFor($index, $query->getLocale()) as $expandedIndex) {

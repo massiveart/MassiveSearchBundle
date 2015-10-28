@@ -20,7 +20,7 @@ class ComplexMetadata
     /**
      * @var array
      */
-    private $fieldMapping = array();
+    private $fieldMapping = [];
 
     /**
      * Return the field mapping for the complex data.

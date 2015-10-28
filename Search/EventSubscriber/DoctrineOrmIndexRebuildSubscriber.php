@@ -11,16 +11,16 @@
 
 namespace Massive\Bundle\SearchBundle\Search\EventSubscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Doctrine\ORM\Mapping\ClassMetadataFactory;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Doctrine\Common\Persistence\ObjectManager;
-use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
-use Metadata\MetadataFactory;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
-use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Metadata\MetadataFactory;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Rebuilds the indexes which relate to Doctrine ORM entities.
@@ -45,7 +45,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     /**
      * @var array
      */
-    private $purged = array();
+    private $purged = [];
 
     /**
      * @param ObjectManager $objectManager
@@ -63,13 +63,13 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             SearchEvents::INDEX_REBUILD => 'rebuildIndex',
-        );
+        ];
     }
 
     /**
@@ -84,14 +84,14 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         $purge = $event->getPurge();
 
         $metadataFactory = $this->objectManager->getMetadataFactory();
-        $metadata = $metadataFactory->getAllMetadata();
+        $metadatas = $metadataFactory->getAllMetadata();
 
-        foreach ($metadata as $class) {
+        foreach ($metadatas as $class) {
             if ($filter && !preg_match('{' . $filter . '}', $class->name)) {
                 continue;
             }
 
-            $searchMeta = $this->searchMetadataFactory->getMetadataForClass($class->getName());
+            $searchMeta = $this->searchMetadataFactory->getMetadataForClass($class->name);
 
             if (null === $searchMeta) {
                 continue;
@@ -100,10 +100,10 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
             $classMetadata = $searchMeta->getOutsideClassMetadata();
 
             if ($purge) {
-                $this->doPurge($output, $classMetadata, $class);
+                $this->doPurge($output, $classMetadata);
             }
 
-            $this->rebuildClass($output, $class);
+            $this->rebuildClass($output, $classMetadata);
         }
     }
 
@@ -114,9 +114,8 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
      *
      * @param OutputInterface $output
      * @param ClassMetadata $classMetadata
-     * @param OrmMetadata $ormMetadata
      */
-    private function doPurge(OutputInterface $output, ClassMetadata $classMetadata, OrmMetadata $ormMetadata)
+    private function doPurge(OutputInterface $output, ClassMetadata $classMetadata)
     {
         foreach ($classMetadata->getIndexMetadatas() as $indexMetadata) {
             $indexName = $indexMetadata->getIndexName();
@@ -138,16 +137,28 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
      * @param OutputInterface $output
      * @param OrmMetadata $ormMetadata
      */
-    private function rebuildClass(OutputInterface $output, OrmMetadata $ormMetadata)
+    private function rebuildClass(OutputInterface $output, ClassMetadata $class)
     {
-        $output->write('<comment>Rebuilding</comment>: ' . $ormMetadata->getName());
+        $output->write('<comment>Rebuilding</comment>: ' . $class->name);
 
-        $objects = $this->objectManager->getRepository($ormMetadata->name)->findAll();
+        $repositoryMethod = $class->getReindexRepositoryMethod();
+        $repositoryMethod = $repositoryMethod ?: 'findAll';
+
+        $repository = $this->objectManager->getRepository($class->name);
+
+        if (!method_exists($repository, $repositoryMethod)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Repository method "%s" does not exist.',
+                $repositoryMethod
+            ));
+        }
+
+        $objects = $repository->$repositoryMethod();
 
         $count = 0;
         foreach ($objects as $object) {
             $this->searchManager->index($object);
-            $count++;
+            ++$count;
         }
         $output->writeln(sprintf(
             ' <info>[OK]</info> %s entities indexed',

@@ -62,7 +62,7 @@ interface AdapterInterface
     public function listIndexes();
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush(array $indexNames);
 }

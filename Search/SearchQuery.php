@@ -34,12 +34,12 @@ class SearchQuery
     /**
      * @var array
      */
-    private $categories = array();
+    private $categories = [];
 
     /**
      * @var array
      */
-    private $indexes = array();
+    private $indexes = [];
 
     public function __construct($queryString)
     {

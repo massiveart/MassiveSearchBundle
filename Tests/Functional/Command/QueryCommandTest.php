@@ -11,10 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
-use Symfony\Component\Console\Tester\CommandTester;
 use Massive\Bundle\SearchBundle\Command\QueryCommand;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class QueryCommandTest extends BaseTestCase
 {
@@ -30,10 +30,10 @@ class QueryCommandTest extends BaseTestCase
 
     public function testCommand()
     {
-        $this->tester->execute(array(
+        $this->tester->execute([
             'query' => 'Hello',
-            '--index' => array('product'),
-        ));
+            '--index' => ['product'],
+        ]);
 
         $display = $this->tester->getDisplay();
         $display = explode("\n", $display);

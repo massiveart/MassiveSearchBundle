@@ -11,12 +11,12 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
+use Elasticsearch\Client as ElasticSearchClient;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
-use Elasticsearch\Client as ElasticSearchClient;
 
 /**
  * ElasticSearch adapter using official client:.
@@ -66,11 +66,11 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function index(Document $document, $indexName)
     {
-        $fields = array();
+        $fields = [];
         foreach ($document->getFields() as $massiveField) {
             switch ($massiveField->getType()) {
                 case Field::TYPE_STRING:
@@ -94,34 +94,34 @@ class ElasticSearchAdapter implements AdapterInterface
         // ensure that any new index name is listed when calling listIndexes
         $this->indexList[$indexName] = $indexName;
 
-        $params = array(
+        $params = [
             'id' => $document->getId(),
             'index' => $indexName,
             'type' => $this->documentToType($document),
             'body' => $fields,
-        );
+        ];
 
         $this->client->index($params);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deindex(Document $document, $indexName)
     {
-        $params = array(
+        $params = [
             'index' => $indexName,
             'type' => $this->documentToType($document),
             'id' => $document->getId(),
             'refresh' => true,
             'ignore' => 404,
-        );
+        ];
 
         $this->client->delete($params);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function search(SearchQuery $searchQuery)
     {
@@ -130,18 +130,18 @@ class ElasticSearchAdapter implements AdapterInterface
         $queryString = $searchQuery->getQueryString();
 
         $params['index'] = implode(',', $indexNames);
-        $params['body'] = array(
-            'query' => array(
-                'query_string' => array(
+        $params['body'] = [
+            'query' => [
+                'query_string' => [
                     'query' => $queryString,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $res = $this->client->search($params);
         $elasticHits = $res['hits']['hits'];
 
-        $hits = array();
+        $hits = [];
 
         foreach ($elasticHits as $elasticHit) {
             $hit = $this->factory->createQueryHit();
@@ -185,15 +185,15 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStatus()
     {
         $indexes = $this->listIndexes();
 
-        $indices = $this->client->indices()->status(array('index' => '_all'));
+        $indices = $this->client->indices()->status(['index' => '_all']);
         $indexes = $indices['indices'];
-        $status = array();
+        $status = [];
 
         foreach ($indexes as $indexName => $index) {
             foreach ($index as $field => $value) {
@@ -205,24 +205,24 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function purge($indexName)
     {
         try {
-            $this->client->indices()->delete(array('index' => $indexName));
+            $this->client->indices()->delete(['index' => $indexName]);
             $this->indexListLoaded = false;
         } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
         }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listIndexes()
     {
         if (!$this->indexListLoaded) {
-            $indices = $this->client->indices()->status(array('index' => '_all'));
+            $indices = $this->client->indices()->status(['index' => '_all']);
             $indexes = $indices['indices'];
             $this->indexList = array_combine(
                 array_keys($indexes),
@@ -235,14 +235,14 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function flush(array $indexNames)
     {
-        $this->client->indices()->flush(array(
+        $this->client->indices()->flush([
             'index' => implode(', ', $indexNames),
             'full' => true,
-        ));
+        ]);
     }
 
     /**

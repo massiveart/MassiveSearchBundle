@@ -11,10 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Loader;
 class MassiveSearchExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -124,18 +124,18 @@ class MassiveSearchExtension extends Extension
 
     private function getBundleMappingPaths($bundles)
     {
-        $metadataPaths = array();
+        $metadataPaths = [];
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
             $path = dirname($refl->getFilename());
 
-            foreach (array('Entity', 'Document', 'Model') as $entityNamespace) {
+            foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
                 if (!file_exists($path . '/' . $entityNamespace)) {
                     continue;
                 }
 
                 $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $finalPath = implode('/', array($path, 'Resources', 'config', 'massive-search'));
+                $finalPath = implode('/', [$path, 'Resources', 'config', 'massive-search']);
                 if (!file_exists($finalPath)) {
                     continue;
                 }

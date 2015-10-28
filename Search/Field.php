@@ -65,9 +65,9 @@ class Field
 
     public static function getValidTypes()
     {
-        return array(
+        return [
             self::TYPE_STRING,
-        );
+        ];
     }
 
     public function __construct($name, $value, $type = self::TYPE_STRING, $stored = true, $indexed = true, $aggregate = false)

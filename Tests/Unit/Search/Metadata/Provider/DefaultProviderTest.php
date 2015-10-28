@@ -11,12 +11,12 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Metadata\Provider;
 
-use Metadata\MetadataFactory;
-use Massive\Bundle\SearchBundle\Search\Metadata\Provider\DefaultProvider;
-use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Document;
-use Metadata\ClassHierarchyMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\Provider\DefaultProvider;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Metadata\ClassHierarchyMetadata;
+use Metadata\MetadataFactory;
 
 class DefaultProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -97,15 +97,15 @@ class DefaultProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAllMetadata()
     {
-        $this->metadataFactory->getAllClassNames()->willReturn(array('one', 'two'));
+        $this->metadataFactory->getAllClassNames()->willReturn(['one', 'two']);
         $this->metadataFactory->getMetadataForClass('one')->willReturn($this->hierarchyMetadata1->reveal());
         $this->metadataFactory->getMetadataForClass('two')->willReturn($this->hierarchyMetadata2->reveal());
         $metadatas = $this->provider->getAllMetadata();
 
-        $this->assertSame(array(
+        $this->assertSame([
             $this->metadata1->reveal(),
             $this->metadata2->reveal(),
-        ), $metadatas);
+        ], $metadatas);
     }
 
     /**

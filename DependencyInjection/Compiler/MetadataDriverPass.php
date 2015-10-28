@@ -11,8 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -33,7 +33,7 @@ class MetadataDriverPass implements CompilerPassInterface
         );
 
         $ids = $container->findTaggedServiceIds('massive_search.metadata.driver');
-        $serviceRefs = array();
+        $serviceRefs = [];
 
         foreach (array_keys($ids) as $id) {
             $serviceRefs[] = new Reference($id);

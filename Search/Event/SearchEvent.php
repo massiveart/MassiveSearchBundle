@@ -11,8 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Provides data for search event.

@@ -11,9 +11,9 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
+use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
 
 abstract class BaseTestCase extends SymfonyCmfBaseTestCase
 {
@@ -36,7 +36,7 @@ abstract class BaseTestCase extends SymfonyCmfBaseTestCase
     protected function generateIndex($nbResults)
     {
         $nbResults = 10;
-        for ($i = 1; $i <= $nbResults; $i++) {
+        for ($i = 1; $i <= $nbResults; ++$i) {
             $product = new Product();
             $product->setId($i);
             $product->setTitle('Hello this is a product ' . $i);

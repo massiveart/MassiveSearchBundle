@@ -11,25 +11,27 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Massive\Bundle\SearchBundle\Command\StatusCommand;
+use Massive\Bundle\SearchBundle\Command\IndexRebuildCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class StatusCommandTest extends BaseTestCase
+class IndexRebuildCommandTest extends BaseTestCase
 {
     public function setUp()
     {
         parent::setUp();
-        $command = new StatusCommand();
+        $command = new IndexRebuildCommand();
         $application = new Application($this->getContainer()->get('kernel'));
         $command->setApplication($application);
         $this->tester = new CommandTester($command);
     }
 
+    /**
+     * This command just fires an event.
+     */
     public function testCommand()
     {
-        $this->tester->execute([
-        ]);
+        $this->tester->execute([]);
 
         $this->assertEquals(0, $this->tester->getStatusCode());
     }

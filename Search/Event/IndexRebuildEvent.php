@@ -11,9 +11,9 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * This event is dispatched when the rebuild index command

@@ -22,7 +22,12 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     /**
      * @var array
      */
-    private $indexMetadatas = array();
+    private $indexMetadatas = [];
+
+    /**
+     * @var string
+     */
+    private $repositoryMethod;
 
     /**
      * Add an index metadata for the given context name.
@@ -74,22 +79,46 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serialize()
     {
         $data = parent::serialize();
 
-        return serialize(array($data, serialize($this->indexMetadatas)));
+        return serialize([$data, serialize($this->indexMetadatas)]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserialize($data)
     {
         list($data, $indexMetadata) = unserialize($data);
         parent::unserialize($data);
         $this->indexMetadatas = unserialize($indexMetadata);
+    }
+
+    /**
+     * When reindexing, the repository method will be used to retrieve all of
+     * the entities which should be reindexed.
+     *
+     * NULL may be returned if the implementation should use a default method
+     * name. (e.g. `findAll` in Doctrine ORM).
+     *
+     * @return string|null
+     */
+    public function getReindexRepositoryMethod()
+    {
+        return $this->repositoryMethod;
+    }
+
+    /**
+     * Set the repository method which should be used when reindexing.
+     *
+     * @param string $repositoryMethod
+     */
+    public function setReindexRepositoryMethod($repositoryMethod)
+    {
+        $this->repositoryMethod = $repositoryMethod;
     }
 }

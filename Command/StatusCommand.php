@@ -12,9 +12,9 @@
 namespace Massive\Bundle\SearchBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 
 /**
  * This command returns some vendor specific information about
@@ -38,10 +38,10 @@ EOT
         $status = $searchManager->getStatus();
 
         $table = new Table($output);
-        $table->setHeaders(array('Field', 'Value'));
+        $table->setHeaders(['Field', 'Value']);
 
         foreach ($status as $field => $value) {
-            $table->addRow(array($field, $value));
+            $table->addRow([$field, $value]);
         }
 
         $table->render();
