@@ -171,18 +171,4 @@ interface IndexMetadataInterface
      * @param ClassMetadata $classMetadata
      */
     public function setClassMetadata(ClassMetadata $classMetadata);
-
-    /**
-     * Return the field containing the category.
-     *
-     * @return string
-     */
-    public function getCategoryName();
-
-    /**
-     * Set the field containing the category.
-     *
-     * @param string
-     */
-    public function setCategoryName($category);
 }

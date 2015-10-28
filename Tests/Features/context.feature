@@ -39,7 +39,7 @@ Feature: Contexts
                 </fields>
 
                 <context name="admin">
-                    <index name="animal_website" />
+                    <index value="animal_website" />
                     <url expr="'/admin/edit/article/' ~ object.id" />
                 </context>
             </mapping>

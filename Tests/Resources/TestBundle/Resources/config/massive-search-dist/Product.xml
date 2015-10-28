@@ -8,7 +8,6 @@
         <locale property="locale" />
         <description property="body" />
         <image property="image" />
-        <category name="product" />
 
         <fields>
             <field name="title" type="string" />

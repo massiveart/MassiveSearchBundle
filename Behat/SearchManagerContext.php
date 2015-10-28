@@ -188,44 +188,12 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * @Given I search for :query in locale :locale with category :category
-     */
-    public function iSearchForInLocaleWIthCategory($query, $locale, $category)
-    {
-        $this->lastResult = $this->getSearchManager()->createSearch($query)->locale($locale)->category($category)->execute();
-    }
-
-    /**
-     * @Given I search for :query in category :category
-     */
-    public function iSearchForInCategory($query, $category)
-    {
-        try {
-            $this->lastResult = $this->getSearchManager()->createSearch($query)->category($category)->execute();
-        } catch (\Exception $e) {
-            $this->lastException = $e;
-        }
-    }
-
-    /**
      * @When I search for :query in index :index
      */
     public function iSearchForInIndex($query, $index)
     {
         try {
             $this->lastResult = $this->getSearchManager()->createSearch($query)->index($index)->execute();
-        } catch (\Exception $e) {
-            $this->lastException = $e;
-        }
-    }
-
-    /**
-     * @When I search for something with both a category and an index
-     */
-    public function iSearchForInCategoryAndIndex()
-    {
-        try {
-            $this->lastResult = $this->getSearchManager()->createSearch('something')->index('foo')->category('bar')->execute();
         } catch (\Exception $e) {
             $this->lastException = $e;
         }

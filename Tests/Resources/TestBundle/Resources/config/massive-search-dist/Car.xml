@@ -3,7 +3,6 @@
     <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
         <index value="car"/>
         <id property="id"/>
-        <category name="car" />
         <url property="should-be-overridden" />
         <title property="title" />
         <description property="body" />

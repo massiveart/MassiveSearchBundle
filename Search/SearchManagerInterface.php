@@ -39,7 +39,7 @@ interface SearchManagerInterface
     /**
      * Create a search query builder.
      *
-     * @param string $queryString
+     * @param string $query
      *
      * @return SearchQueryBuilder
      */
@@ -76,23 +76,11 @@ interface SearchManagerInterface
     public function purge($indexName);
 
     /**
-     * Return a list of all the category names.
-     *
-     * @return string[]
-     */
-    public function getCategoryNames();
-
-    /**
      * Return a list of all the index names (according to the metadata).
      *
-     * If categories are specified, only return the indexes corresponding
-     * to the given categories.
-     *
-     * @param array $categories
-     *
      * @return string[]
      */
-    public function getIndexNames($categories = null);
+    public function getIndexNames();
 
     /**
      * Flush the adapter.

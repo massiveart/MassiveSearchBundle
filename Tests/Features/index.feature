@@ -34,7 +34,6 @@ Feature: Indexing
                 <url expr="'foobar'" />
                 <title property="title" />
                 <description property="body" />
-                <category name="Car" />
                 <image property="image" />
                 <locale property="locale" />
 
@@ -68,7 +67,6 @@ Feature: Indexing
                 <url expr="'foobar'" />
                 <title property="title" />
                 <description property="body" />
-                <category name="Car" />
                 <image property="image" />
                 <locale property="locale" />
 

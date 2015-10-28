@@ -32,7 +32,6 @@ Feature: Search Manager
                 <url expr="'foobar'" />
                 <title property="title" />
                 <description property="body" />
-                <category name="Car" />
                 <image property="image" />
                 <locale property="locale" />
 
@@ -115,8 +114,7 @@ Feature: Search Manager
                 "class": "Massive\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Car",
                 "url": "foobar",
                 "image_url": "",
-                "locale": "fr",
-                "category": "Car"
+                "locale": "fr"
             }
         ]
         """

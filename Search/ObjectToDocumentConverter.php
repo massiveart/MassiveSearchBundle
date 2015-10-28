@@ -68,7 +68,6 @@ class ObjectToDocumentConverter
         $imageUrlField = $metadata->getImageUrlField();
         $localeField = $metadata->getLocaleField();
         $fieldMapping = $metadata->getFieldMapping();
-        $category = $metadata->getCategoryName();
 
         $document = $this->factory->createDocument();
         $document->setId($this->fieldEvaluator->getValue($object, $idField));
@@ -103,10 +102,6 @@ class ObjectToDocumentConverter
         if ($localeField) {
             $locale = $this->fieldEvaluator->getValue($object, $localeField);
             $document->setLocale($locale);
-        }
-
-        if ($category) {
-            $document->setCategory($category);
         }
 
         $this->populateDocument($document, $object, $fieldMapping);

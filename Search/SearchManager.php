@@ -195,7 +195,6 @@ class SearchManager implements SearchManagerInterface
 
             $metadata = $this->metadataProvider->getMetadataForDocument($document);
             $indexMetadata = $metadata->getIndexMetadata('_default');
-            $document->setCategory($indexMetadata->getCategoryName());
 
             $this->eventDispatcher->dispatch(
                 SearchEvents::HIT,
@@ -232,23 +231,6 @@ class SearchManager implements SearchManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCategoryNames()
-    {
-        $metadatas = $this->metadataProvider->getAllMetadata();
-        $categoryNames = [];
-
-        foreach ($metadatas as $metadata) {
-            foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-                $categoryNames[] = $indexMetadata->getCategoryName();
-            }
-        }
-
-        return array_values(array_unique($categoryNames));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
         $this->adapter->flush(array_keys($this->indexesToFlush));
@@ -258,7 +240,7 @@ class SearchManager implements SearchManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getIndexNames($categories = null)
+    public function getIndexNames()
     {
         return array_unique(
             array_map(
@@ -326,15 +308,6 @@ class SearchManager implements SearchManagerInterface
      */
     private function expandQueryIndexes(SearchQuery $query)
     {
-        $categories = $query->getCategories();
-
-        if ($categories) {
-            // if categories have been specified, override the indexes.
-            // The two are mutually exlusive and this has already been
-            // validated.
-            $query->setIndexes($this->getIndexNames($categories));
-        }
-
         if (!$query->getIndexes()) {
             $indexNames = $this->getLocalizedIndexNames($query->getLocale());
             $query->setIndexes($indexNames);
@@ -372,18 +345,6 @@ class SearchManager implements SearchManagerInterface
     {
         $indexNames = $this->getIndexNames();
         $queryIndexNames = $query->getIndexes();
-        $queryCategoryNames = $query->getCategories();
-        $categoryNames = $this->getCategoryNames();
-
-        if ($queryCategoryNames && $queryIndexNames) {
-            throw new Exception\SearchException(
-                sprintf(
-                    'Category and indexes are mutually exclusive, you specified categories "%s" and indexes "%s"',
-                    implode('", "', $queryCategoryNames),
-                    implode('", "', $queryIndexNames)
-                )
-            );
-        }
 
         foreach ($queryIndexNames as $queryIndexName) {
             if (!in_array($queryIndexName, $indexNames)) {
@@ -397,22 +358,6 @@ class SearchManager implements SearchManagerInterface
                     'Search indexes "%s" not known. Known indexes: "%s"',
                     implode('", "', $queryIndexNames),
                     implode('", "', $indexNames)
-                )
-            );
-        }
-
-        foreach ($queryCategoryNames as $queryCategoryName) {
-            if (!in_array($queryCategoryName, $categoryNames)) {
-                $unknownCategories[] = $queryCategoryName;
-            }
-        }
-
-        if (false === empty($unknownCategories)) {
-            throw new Exception\SearchException(
-                sprintf(
-                    'Categories "%s" not known. Known categories: "%s"',
-                    implode('", "', $queryCategoryNames),
-                    implode('", "', $categoryNames)
                 )
             );
         }

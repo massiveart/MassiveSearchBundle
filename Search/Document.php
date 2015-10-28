@@ -57,11 +57,6 @@ class Document implements \JsonSerializable
     protected $locale;
 
     /**
-     * @var string
-     */
-    protected $category;
-
-    /**
      * @param Field $field
      */
     public function addField(Field $field)
@@ -187,22 +182,6 @@ class Document implements \JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param string $category
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-    }
-
-    /**
      * @param string
      */
     public function setLocale($locale)
@@ -260,7 +239,6 @@ class Document implements \JsonSerializable
             'url' => $this->url,
             'image_url' => $this->imageUrl,
             'locale' => $this->locale,
-            'category' => $this->category,
         ];
     }
 }

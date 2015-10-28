@@ -5,7 +5,6 @@
         <title property="title" />
         <description property="description" />
         <index expr="object.getWebspace()" />
-        <category name="example" />
         <locale property="locale" />
 
         <fields>

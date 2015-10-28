@@ -5,7 +5,6 @@
         <title property="title" />
         <description property="description" />
         <index name="example" />
-        <category name="example" />
         <locale property="locale" />
 
         <fields>

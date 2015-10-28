@@ -90,7 +90,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('title', $indexMetadata->getTitleField()->getProperty());
         $this->assertEquals('description', $indexMetadata->getDescriptionField()->getProperty());
         $this->assertEquals('example', $indexMetadata->getIndexName()->getName());
-        $this->assertEquals('example', $indexMetadata->getCategoryName());
         $this->assertEquals('locale', $indexMetadata->getLocaleField()->getProperty());
 
         $fieldMappings = $indexMetadata->getFieldMapping();

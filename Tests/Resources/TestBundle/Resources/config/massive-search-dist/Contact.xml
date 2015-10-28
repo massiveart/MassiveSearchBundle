@@ -6,7 +6,6 @@
         <id property="id" />
         <title expr="implode(' ', [object.title, object.firstName, object.lastName])" />
         <description expr="join(' ', map(object.emails, 'object.email'))" />
-        <category name="car" />
 
         <locale property="locale" />
         <fields>
