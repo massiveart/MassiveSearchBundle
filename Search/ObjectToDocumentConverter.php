@@ -61,6 +61,7 @@ class ObjectToDocumentConverter
      */
     public function objectToDocument(IndexMetadata $metadata, $object)
     {
+        $indexNameField = $metadata->getIndexName();
         $idField = $metadata->getIdField();
         $urlField = $metadata->getUrlField();
         $titleField = $metadata->getTitleField();
@@ -70,6 +71,7 @@ class ObjectToDocumentConverter
         $fieldMapping = $metadata->getFieldMapping();
 
         $document = $this->factory->createDocument();
+        $document->setIndex($this->fieldEvaluator->getValue($object, $indexNameField));
         $document->setId($this->fieldEvaluator->getValue($object, $idField));
         $document->setClass($metadata->getName());
 

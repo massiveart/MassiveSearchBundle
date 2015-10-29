@@ -57,6 +57,11 @@ class Document implements \JsonSerializable
     protected $locale;
 
     /**
+     * @var string
+     */
+    protected $index;
+
+    /**
      * @param Field $field
      */
     public function addField(Field $field)
@@ -187,6 +192,22 @@ class Document implements \JsonSerializable
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * @param string $index
+     */
+    public function setIndex($index)
+    {
+        $this->index = $index;
     }
 
     /**

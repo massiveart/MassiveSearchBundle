@@ -194,7 +194,6 @@ class SearchManager implements SearchManagerInterface
             }
 
             $metadata = $this->metadataProvider->getMetadataForDocument($document);
-            $indexMetadata = $metadata->getIndexMetadata('_default');
 
             $this->eventDispatcher->dispatch(
                 SearchEvents::HIT,
