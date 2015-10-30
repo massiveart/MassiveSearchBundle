@@ -7,6 +7,7 @@ dev-develop
 ### Feature
 
 - [Configuration] Index name can now also be created using expression language
+- [Configuration] Search categories have been removed
 
 0.8.0
 -----------

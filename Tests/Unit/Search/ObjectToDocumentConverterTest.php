@@ -14,6 +14,7 @@ namespace Unit\Search;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
@@ -99,6 +100,9 @@ class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
             $this->product->$key = $value;
         }
 
+        $indexField = new Value('product');
+        $this->indexMetadata->setIndexName($indexField);
+        $this->fieldEvaluator->getValue($this->product, $indexField)->willReturn('product');
         foreach ($metadata as $methodName => $value) {
             $field = new Field($value);
             $this->indexMetadata->{$methodName}($field);
@@ -120,6 +124,7 @@ class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
     public function testIndexedStoredAndAggregate($stored, $indexed, $aggregate)
     {
         $this->indexMetadata->setIdField(new Field('id'));
+        $this->indexMetadata->setIndexName(new Value('product'));
         $this->indexMetadata->setFieldMapping([
             'title' => [
                 'type' => 'string',
@@ -154,6 +159,7 @@ class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
     public function testMissingRequiredMapping()
     {
         $this->indexMetadata->setIdField(new Field('id'));
+        $this->indexMetadata->setIndexName(new Value('product'));
         $this->indexMetadata->setFieldMapping([
             'title' => [
             ],
@@ -171,6 +177,7 @@ class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
     public function testMissingRequiredMappingComplex()
     {
         $this->indexMetadata->setIdField(new Field('id'));
+        $this->indexMetadata->setIndexName(new Value('product'));
         $this->indexMetadata->setFieldMapping([
             'title' => [
                 'type' => 'complex',

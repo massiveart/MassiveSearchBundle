@@ -51,7 +51,6 @@ class AppKernel extends TestKernel
         }
         $massiveCacheDir = __DIR__ . '/cache/massive-search';
 
-        $fs->remove(__DIR__ . '/../Resources/app/data');
         $fs->remove(__DIR__ . '/cache/jms_serializer');
 
         if (file_exists($massiveCacheDir)) {

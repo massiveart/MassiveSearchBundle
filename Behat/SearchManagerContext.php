@@ -71,6 +71,12 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         $this->kernel->boot();
         AppKernel::resetEnvironment();
         AppKernel::clearData();
+
+        // clear indexes
+        $indexNames = $this->getSearchManager()->getIndexNames();
+        foreach ($indexNames as $indexName) {
+            $this->getSearchManager()->purge($indexName);
+        }
     }
 
     /**

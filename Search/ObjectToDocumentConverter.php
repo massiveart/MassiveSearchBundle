@@ -13,7 +13,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Convert mapped objects to search documents.
@@ -32,7 +31,7 @@ class ObjectToDocumentConverter
 
     /**
      * @param Factory $factory
-     * @param ExpressionLanguage $expressionLanguage
+     * @param FieldEvaluator $fieldEvaluator
      */
     public function __construct(Factory $factory, FieldEvaluator $fieldEvaluator)
     {
