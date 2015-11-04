@@ -10,7 +10,7 @@ through *mapping*. Currently only **XML mapping** is natively supported:
     <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
-            <index name="product" />
+            <index value="product" />
             <id property="id" />
             <fields>
                 <field name="title" type="string" />
@@ -36,10 +36,11 @@ The possible mappings are:
 - **fields**: List of ``<field />`` elements detailing which fields should be
   indexed (i.e. used when finding search results).
 
-Each mapping canuse either a ``property`` attribute or an ``expr`` attribute.
-These attributes determine how the value is retrieved. ``property`` will use
-the Symfony `PropertyAccess`_ component, and ``expr`` will use
-`ExpressionLanguage`_.
+Each mapping can use either a ``property``, ``expr`` attribute or an ``value``
+attribute. These attributes determine how the value is retrieved. ``property``
+will use the Symfony `PropertyAccess`_ component, and ``expr`` will use
+`ExpressionLanguage`_. ``value`` is the easiest one, which just uses the
+literal value passed
 
 PropertyAccess allows you to access properties of an object by path, e.g.
 ``title``, or ``parent.title``. The expression allows you to build expressions
