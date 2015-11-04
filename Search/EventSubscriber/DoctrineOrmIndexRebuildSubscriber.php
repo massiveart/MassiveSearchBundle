@@ -11,7 +11,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\EventSubscriber;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
@@ -102,7 +101,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
      * metadata.
      *
      * @param OutputInterface $output
-     * @param OrmMetadata $ormMetadata
+     * @param ClassMetadata $class
      */
     private function rebuildClass(OutputInterface $output, ClassMetadata $class)
     {

@@ -85,7 +85,7 @@ class ZendLuceneAdapter implements AdapterInterface
         Lucene\Search\QueryParser::setDefaultEncoding($this->encoding);
         Lucene\Search\QueryParser::setDefaultOperator(Lucene\Search\QueryParser::B_AND);
         Lucene\Analysis\Analyzer\Analyzer::setDefault(
-            new Lucene\Analysis\Analyzer\Common\Utf8\CaseInsensitive()
+            new Lucene\Analysis\Analyzer\Common\Utf8Num\CaseInsensitive()
         );
     }
 

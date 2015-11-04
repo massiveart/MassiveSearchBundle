@@ -252,28 +252,6 @@ class SearchManager implements SearchManagerInterface
     }
 
     /**
-     * List all of the expanded index names in the search implementation
-     * optionally only in the given locale.
-     *
-     * @param string $locale
-     *
-     * @return string[]
-     */
-    private function getLocalizedIndexNames($locale = null)
-    {
-        $localizedIndexNames = [];
-        $indexNames = $this->getIndexNames();
-
-        foreach ($indexNames as $indexName) {
-            foreach ($this->getLocalizedIndexNamesFor($indexName, $locale) as $localizedIndexName) {
-                $localizedIndexNames[$localizedIndexName] = $localizedIndexName;
-            }
-        }
-
-        return array_values($localizedIndexNames);
-    }
-
-    /**
      * Retrieve all the index names including localized names (i.e. variants)
      * for the given index name, optionally limiting to the given locale.
      *
@@ -307,13 +285,6 @@ class SearchManager implements SearchManagerInterface
      */
     private function expandQueryIndexes(SearchQuery $query)
     {
-        if (!$query->getIndexes()) {
-            $indexNames = $this->getLocalizedIndexNames($query->getLocale());
-            $query->setIndexes($indexNames);
-
-            return;
-        }
-
         $expandedIndexes = [];
 
         foreach ($query->getIndexes() as $index) {
