@@ -182,7 +182,10 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function iSearchFor($query)
     {
-        $this->lastResult = $this->getSearchManager()->createSearch($query)->execute();
+        $this->lastResult = $this->getSearchManager()
+            ->createSearch($query)
+            ->indexes($this->getSearchManager()->getIndexNames())
+            ->execute();
     }
 
     /**
@@ -190,7 +193,11 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function iSearchForInLocale($query, $locale)
     {
-        $this->lastResult = $this->getSearchManager()->createSearch($query)->locale($locale)->execute();
+        $this->lastResult = $this->getSearchManager()
+            ->createSearch($query)
+            ->indexes($this->getSearchManager()->getIndexNames())
+            ->locale($locale)
+            ->execute();
     }
 
     /**
