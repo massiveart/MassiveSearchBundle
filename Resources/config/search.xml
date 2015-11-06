@@ -29,6 +29,7 @@
             <argument type="service" id="massive_search.object_to_document_converter" />
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="massive_search.localization_strategy" />
+            <argument type="service" id="massive_search.metadata.field_evaluator" />
         </service>
 
         <!-- Object to document converter -->

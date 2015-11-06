@@ -11,14 +11,14 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 
 interface SearchManagerInterface
 {
     /**
      * @param object $object
      *
-     * @return IndexMetadataInterface
+     * @return ClassMetadata
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -39,7 +39,7 @@ interface SearchManagerInterface
     /**
      * Create a search query builder.
      *
-     * @param string $queryString
+     * @param string $query
      *
      * @return SearchQueryBuilder
      */
@@ -69,11 +69,18 @@ interface SearchManagerInterface
     public function getStatus();
 
     /**
-     * Return a list of all the category names.
+     * Purges the index with the given name.
+     *
+     * @param string $indexName
+     */
+    public function purge($indexName);
+
+    /**
+     * Return a list of all the index names (according to the metadata).
      *
      * @return string[]
      */
-    public function getCategoryNames();
+    public function getIndexNames();
 
     /**
      * Flush the adapter.

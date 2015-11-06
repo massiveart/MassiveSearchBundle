@@ -13,7 +13,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Convert mapped objects to search documents.
@@ -32,7 +31,7 @@ class ObjectToDocumentConverter
 
     /**
      * @param Factory $factory
-     * @param ExpressionLanguage $expressionLanguage
+     * @param FieldEvaluator $fieldEvaluator
      */
     public function __construct(Factory $factory, FieldEvaluator $fieldEvaluator)
     {
@@ -61,6 +60,7 @@ class ObjectToDocumentConverter
      */
     public function objectToDocument(IndexMetadata $metadata, $object)
     {
+        $indexNameField = $metadata->getIndexName();
         $idField = $metadata->getIdField();
         $urlField = $metadata->getUrlField();
         $titleField = $metadata->getTitleField();
@@ -68,9 +68,9 @@ class ObjectToDocumentConverter
         $imageUrlField = $metadata->getImageUrlField();
         $localeField = $metadata->getLocaleField();
         $fieldMapping = $metadata->getFieldMapping();
-        $category = $metadata->getCategoryName();
 
         $document = $this->factory->createDocument();
+        $document->setIndex($this->fieldEvaluator->getValue($object, $indexNameField));
         $document->setId($this->fieldEvaluator->getValue($object, $idField));
         $document->setClass($metadata->getName());
 
@@ -103,10 +103,6 @@ class ObjectToDocumentConverter
         if ($localeField) {
             $locale = $this->fieldEvaluator->getValue($object, $localeField);
             $document->setLocale($locale);
-        }
-
-        if ($category) {
-            $document->setCategory($category);
         }
 
         $this->populateDocument($document, $object, $fieldMapping);

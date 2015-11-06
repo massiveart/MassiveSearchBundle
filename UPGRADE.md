@@ -1,6 +1,15 @@
 UPGRADE
 =======
 
+dev-develop
+-----------
+
+- The index name is now evaluated the same way as the field names. This means
+  that the current XML mappings also change, so ``<index value="...">`` instead
+  of ``<index name="...">`` have to be used.
+
+- The search categories have been removed.
+
 0.5
 ---
 

@@ -18,6 +18,11 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class QueryCommandTest extends BaseTestCase
 {
+    /**
+     * @var CommandTester
+     */
+    private $tester;
+
     public function setUp()
     {
         parent::setUp();

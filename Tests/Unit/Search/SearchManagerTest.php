@@ -12,11 +12,16 @@
 namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
-use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
-use Metadata\ClassHierarchyMetadata;
+use Metadata\ClassMetadata;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -33,14 +38,9 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * @var IndexMetadataInterface
+     * @var ClassMetadata
      */
     private $metadata;
-
-    /**
-     * @var ClassHierarchyMetadata
-     */
-    private $classHierachyMetadata;
 
     /**
      * @var EventDispatcherInterface
@@ -48,9 +48,34 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
     private $eventDispatcher;
 
     /**
+     * @var FieldEvaluator
+     */
+    private $fieldEvaluator;
+
+    /**
      * @var SearchManager
      */
     private $searchManager;
+
+    /**
+     * @var IndexMetadata
+     */
+    private $indexMetadata;
+
+    /**
+     * @var ObjectToDocumentConverter
+     */
+    private $converter;
+
+    /**
+     * @var Document
+     */
+    private $document;
+
+    /**
+     * @var LocalizationStrategyInterface
+     */
+    private $localizationStrategy;
 
     /**
      * @var Product
@@ -78,7 +103,8 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
             $this->provider->reveal(),
             $this->converter->reveal(),
             $this->eventDispatcher->reveal(),
-            $this->localizationStrategy->reveal()
+            $this->localizationStrategy->reveal(),
+            $this->fieldEvaluator->reveal()
         );
 
         $this->product = new Product();
@@ -128,7 +154,7 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
                 'type' => 'string',
             ],
         ]);
-        $this->indexMetadata->getIndexName()->willReturn('product');
+        $this->indexMetadata->getIndexName()->willReturn(new Value('product'));
         $this->converter->objectToDocument($this->indexMetadata, $this->product)->willReturn($this->document);
         $this->converter->getFieldEvaluator()->willReturn($this->fieldEvaluator->reveal());
         $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));

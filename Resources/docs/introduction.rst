@@ -103,7 +103,7 @@ Place the following mapping file in the
     <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
 
         <mapping class="Model\Product">
-            <index name="product" />
+            <index value="product" />
             <id property="id" />
             <title property="name" />
             <url expr="'/path/to/' ~ object.id" />

@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field as MetadataField;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
 /**
@@ -81,6 +82,11 @@ class Factory
     public function createMetadataProperty($path)
     {
         return new Property($path);
+    }
+
+    public function createMetadataValue($value)
+    {
+        return new Value($value);
     }
 
     public function createMetadataExpression($expression)

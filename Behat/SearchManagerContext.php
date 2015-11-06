@@ -63,14 +63,6 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
-     * @BeforeSuite
-     */
-    public static function clearCache()
-    {
-        AppKernel::clearData();
-    }
-
-    /**
      * @BeforeScenario
      */
     public function setUp()
@@ -78,6 +70,13 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         $this->kernel->shutdown();
         $this->kernel->boot();
         AppKernel::resetEnvironment();
+        AppKernel::clearData();
+
+        // clear indexes
+        $indexNames = $this->getSearchManager()->getIndexNames();
+        foreach ($indexNames as $indexName) {
+            $this->getSearchManager()->purge($indexName);
+        }
     }
 
     /**
@@ -183,7 +182,10 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function iSearchFor($query)
     {
-        $this->lastResult = $this->getSearchManager()->createSearch($query)->execute();
+        $this->lastResult = $this->getSearchManager()
+            ->createSearch($query)
+            ->indexes($this->getSearchManager()->getIndexNames())
+            ->execute();
     }
 
     /**
@@ -191,27 +193,11 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function iSearchForInLocale($query, $locale)
     {
-        $this->lastResult = $this->getSearchManager()->createSearch($query)->locale($locale)->execute();
-    }
-
-    /**
-     * @Given I search for :query in locale :locale with category :category
-     */
-    public function iSearchForInLocaleWIthCategory($query, $locale, $category)
-    {
-        $this->lastResult = $this->getSearchManager()->createSearch($query)->locale($locale)->category($category)->execute();
-    }
-
-    /**
-     * @Given I search for :query in category :category
-     */
-    public function iSearchForInCategory($query, $category)
-    {
-        try {
-            $this->lastResult = $this->getSearchManager()->createSearch($query)->category($category)->execute();
-        } catch (\Exception $e) {
-            $this->lastException = $e;
-        }
+        $this->lastResult = $this->getSearchManager()
+            ->createSearch($query)
+            ->indexes($this->getSearchManager()->getIndexNames())
+            ->locale($locale)
+            ->execute();
     }
 
     /**
@@ -221,18 +207,6 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     {
         try {
             $this->lastResult = $this->getSearchManager()->createSearch($query)->index($index)->execute();
-        } catch (\Exception $e) {
-            $this->lastException = $e;
-        }
-    }
-
-    /**
-     * @When I search for something with both a category and an index
-     */
-    public function iSearchForInCategoryAndIndex()
-    {
-        try {
-            $this->lastResult = $this->getSearchManager()->createSearch('something')->index('foo')->category('bar')->execute();
         } catch (\Exception $e) {
             $this->lastException = $e;
         }
@@ -310,7 +284,8 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
             $this->kernel->getContainer()->get('massive_search.metadata.provider.chain'),
             $this->kernel->getContainer()->get('massive_search.object_to_document_converter'),
             $this->kernel->getContainer()->get('event_dispatcher'),
-            $this->kernel->getContainer()->get('massive_search.localization_strategy')
+            $this->kernel->getContainer()->get('massive_search.localization_strategy'),
+            $this->kernel->getContainer()->get('massive_search.metadata.field_evaluator')
         );
     }
 

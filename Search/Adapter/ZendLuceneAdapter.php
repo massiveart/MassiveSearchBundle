@@ -33,6 +33,7 @@ use ZendSearch\Lucene;
 class ZendLuceneAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
+    const INDEX_FIELDNAME = '__index';
     const CLASS_TAG = '__class';
     const AGGREGATED_INDEXED_CONTENT = '__content';
 
@@ -84,7 +85,7 @@ class ZendLuceneAdapter implements AdapterInterface
         Lucene\Search\QueryParser::setDefaultEncoding($this->encoding);
         Lucene\Search\QueryParser::setDefaultOperator(Lucene\Search\QueryParser::B_AND);
         Lucene\Analysis\Analyzer\Analyzer::setDefault(
-            new Lucene\Analysis\Analyzer\Common\Utf8\CaseInsensitive()
+            new Lucene\Analysis\Analyzer\Common\Utf8Num\CaseInsensitive()
         );
     }
 
@@ -130,6 +131,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
         // add meta fields - used internally for showing the search results, etc.
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
+        $luceneDocument->addField(Lucene\Document\Field::keyword(self::INDEX_FIELDNAME, $document->getIndex()));
         $luceneDocument->addField(Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues)));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
@@ -199,6 +201,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
             // map meta fields to document "product"
             $document->setId($luceneDocument->getFieldValue(self::ID_FIELDNAME));
+            $document->setIndex($luceneDocument->getFieldValue(self::INDEX_FIELDNAME));
             $document->setTitle($luceneDocument->getFieldValue(self::TITLE_FIELDNAME));
             $document->setDescription($luceneDocument->getFieldValue(self::DESCRIPTION_FIELDNAME));
             $document->setLocale($luceneDocument->getFieldValue(self::LOCALE_FIELDNAME));

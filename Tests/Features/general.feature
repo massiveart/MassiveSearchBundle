@@ -27,12 +27,11 @@ Feature: Search Manager
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
             <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
-                <index name="car"/>
+                <index value="car"/>
                 <id property="id"/>
                 <url expr="'foobar'" />
                 <title property="title" />
                 <description property="body" />
-                <category name="Car" />
                 <image property="image" />
                 <locale property="locale" />
 
@@ -115,8 +114,7 @@ Feature: Search Manager
                 "class": "Massive\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Car",
                 "url": "foobar",
                 "image_url": "",
-                "locale": "fr",
-                "category": "Car"
+                "locale": "fr"
             }
         ]
         """

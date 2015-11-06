@@ -35,8 +35,6 @@ class SearchQueryBuilder
     /**
      * Set the index to search in.
      *
-     * Mutually exlusive with category
-     *
      * @param string
      *
      * @return SearchQueryBuilder
@@ -63,39 +61,9 @@ class SearchQueryBuilder
     }
 
     /**
-     * Set the category to search in.
-     *
-     * Mutually exclusive with index
-     *
-     * @param string
-     *
-     * @return SearchQueryBuilder
-     */
-    public function category($category)
-    {
-        $this->searchQuery->setCategories([$category]);
-
-        return $this;
-    }
-
-    /**
-     * Set an array of categories to search in.
-     *
-     * @param string[]
-     *
-     * @return SearchQueryBuilder
-     */
-    public function categories(array $categories)
-    {
-        $this->searchQuery->setCategoties($categories);
-
-        return $this;
-    }
-
-    /**
      * Set the indexes to search in.
      *
-     * @param string
+     * @param array $indexes
      *
      * @return SearchQueryBuilder
      */

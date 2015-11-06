@@ -12,20 +12,44 @@
 namespace Unit\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
+use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
     private $dataPath;
+
+    /**
+     * @var Factory
+     */
     private $factory;
+
+    /**
+     * @var Document
+     */
+    private $document;
+
+    /**
+     * @var Field
+     */
+    private $field1;
+
+    /**
+     * @var Field
+     */
+    private $field2;
 
     public function setUp()
     {
-        $this->factory = $this->prophesize('Massive\Bundle\SearchBundle\Search\Factory');
-        $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
-        $this->field1 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Field');
-        $this->field2 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Field');
+        $this->factory = $this->prophesize(Factory::class);
+        $this->document = $this->prophesize(Document::class);
+        $this->field1 = $this->prophesize(Field::class);
+        $this->field2 = $this->prophesize(Field::class);
         $filesystem = new Filesystem();
         $this->dataPath = __DIR__ . '/../../../Resources/app/data';
         if (file_exists($this->dataPath)) {
@@ -68,6 +92,7 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         $this->document->getFields()->willReturn([
             $this->field1,
         ]);
+        $this->document->getIndex()->willReturn('foo');
 
         $this->field1->getName()->wilLReturn('hallo');
         $this->field1->getValue()->willReturn('goodbye');
@@ -116,6 +141,7 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
+        $this->document->getIndex()->willReturn('foo');
         $this->document->getFields()->willReturn([
             $this->field1,
             $this->field2,

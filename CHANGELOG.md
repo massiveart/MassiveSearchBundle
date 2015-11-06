@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+dev-develop
+-----------
+
+### Feature
+
+- [Configuration] Index name can now also be created using expression language
+- [Configuration] Search categories have been removed
+
 0.8.0
 -----------
 
@@ -16,7 +24,7 @@ CHANGELOG
 - [Metadata] Added scalar check
 
 0.6.0
------------
+-----
 
 ### Bugfix
 

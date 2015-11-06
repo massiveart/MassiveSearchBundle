@@ -26,6 +26,7 @@ use Massive\Bundle\SearchBundle\Search\SearchQuery;
 class ElasticSearchAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
+    const INDEX_FIELDNAME = '__index';
     const CLASS_TAG = '__class';
 
     const URL_FIELDNAME = '__url';
@@ -84,6 +85,7 @@ class ElasticSearchAdapter implements AdapterInterface
             }
         }
 
+        $fields[self::INDEX_FIELDNAME] = $document->getIndex();
         $fields[self::URL_FIELDNAME] = $document->getUrl();
         $fields[self::TITLE_FIELDNAME] = $document->getTitle();
         $fields[self::DESCRIPTION_FIELDNAME] = $document->getDescription();
@@ -154,6 +156,9 @@ class ElasticSearchAdapter implements AdapterInterface
 
             $elasticSource = $elasticHit['_source'];
 
+            if (isset($elasticSource[self::INDEX_FIELDNAME])) {
+                $document->setIndex($elasticSource[self::INDEX_FIELDNAME]);
+            }
             if (isset($elasticSource[self::TITLE_FIELDNAME])) {
                 $document->setTitle($elasticSource[self::TITLE_FIELDNAME]);
             }

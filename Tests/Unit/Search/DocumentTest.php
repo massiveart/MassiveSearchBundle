@@ -12,9 +12,20 @@
 namespace Massive\MassiveSearchBundle\Tests\Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Field;
 
 class DocumentTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Field
+     */
+    private $field1;
+
+    /**
+     * @var Document
+     */
+    private $document;
+
     public function setUp()
     {
         parent::setUp();
@@ -25,7 +36,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testDocumentAddExistingField()
     {
@@ -42,7 +53,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testDocumentGetFieldNotExisting()
     {
@@ -62,7 +73,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->document->setImageUrl('http://url.com/myimage.jpg');
         $this->assertEquals('http://url.com/myimage.jpg', $this->document->getImageUrl());
 
-        $this->document->setCategory('cat_1');
-        $this->assertEquals('cat_1', $this->document->getCategory());
+        $this->document->setIndex('test');
+        $this->assertEquals('test', $this->document->getIndex());
     }
 }

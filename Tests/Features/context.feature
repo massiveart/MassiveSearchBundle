@@ -25,7 +25,7 @@ Feature: Contexts
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
             <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
-                <index name="animal"/>
+                <index value="animal"/>
                 <id property="id"/>
                 <url expr="object.url" />
                 <title property="title" />
@@ -39,7 +39,7 @@ Feature: Contexts
                 </fields>
 
                 <context name="admin">
-                    <index name="animal_website" />
+                    <index value="animal_website" />
                     <url expr="'/admin/edit/article/' ~ object.id" />
                 </context>
             </mapping>

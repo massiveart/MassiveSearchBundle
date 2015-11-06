@@ -3,20 +3,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="massive_search.search.event_subscriber.doctrine_orm.class">Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber</parameter>
-        <parameter key="massive_search.search.event_subscriber.doctrine_orm_index_rebuild.class">Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmIndexRebuildSubscriber</parameter>
-    </parameters>
-
     <services>
-        <service id="massive_search.search.event_subscriber.doctrine_orm" class="%massive_search.search.event_subscriber.doctrine_orm.class%">
+        <service id="massive_search.search.event_subscriber.doctrine_orm" class="Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber">
             <argument type="service" id="massive_search.search_manager" />
             <tag name="doctrine.event_subscriber" />
         </service>
 
-        <service id="massive_search.search.event_subscriber.doctrine_orm_index_rebuild" class="%massive_search.search.event_subscriber.doctrine_orm_index_rebuild.class%">
+        <service id="massive_search.search.event_subscriber.doctrine_orm_index_rebuild" class="Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmIndexRebuildSubscriber">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="massive_search.metadata.factory" />
+            <argument type="service" id="massive_search.search_manager" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="massive_search.search.event_subscriber.purge_subscriber" class="Massive\Bundle\SearchBundle\Search\EventSubscriber\PurgeSubscriber">
             <argument type="service" id="massive_search.search_manager" />
             <tag name="kernel.event_subscriber" />
         </service>

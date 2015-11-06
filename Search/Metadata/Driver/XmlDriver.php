@@ -118,7 +118,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $indexMetadata->setTitleField($mapping['title']);
             $indexMetadata->setUrlField($mapping['url']);
             $indexMetadata->setDescriptionField($mapping['description']);
-            $indexMetadata->setCategoryName($mapping['category']);
 
             foreach ($mapping['fields'] as $fieldName => $fieldData) {
                 $indexMetadata->addFieldMapping($fieldName, $fieldData);
@@ -134,8 +133,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     {
         $indexMapping = [];
 
-        $indexName = (string) $mapping->index['name'];
-        $indexMapping['index'] = $indexName;
+        $indexField = $this->getMapping($mapping, 'index');
+        $indexMapping['index'] = $indexField;
 
         $idField = $this->getMapping($mapping, 'id');
         $indexMapping['id'] = $idField;
@@ -151,17 +150,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         $descriptionField = $this->getMapping($mapping, 'description');
         $indexMapping['description'] = $descriptionField;
-
-        $indexMapping['category'] = null;
-        $category = $mapping->category;
-        if ($category) {
-            if (!isset($category['name'])) {
-                throw new \InvalidArgumentException(
-                    'Category must have name attribute'
-                );
-            }
-            $indexMapping['category'] = (string) $category['name'];
-        }
 
         return $indexMapping;
     }
@@ -216,6 +204,10 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         if (isset($field['property'])) {
             return $this->factory->createMetadataProperty((string) $field['property']);
+        }
+
+        if (isset($field['value'])) {
+            return $this->factory->createMetadataValue((string) $field['value']);
         }
 
         throw new \InvalidArgumentException(sprintf(

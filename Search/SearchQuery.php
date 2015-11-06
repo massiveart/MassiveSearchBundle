@@ -17,11 +17,6 @@ namespace Massive\Bundle\SearchBundle\Search;
 class SearchQuery
 {
     /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
-
-    /**
      * @var string
      */
     private $queryString;
@@ -30,11 +25,6 @@ class SearchQuery
      * @var string
      */
     private $locale;
-
-    /**
-     * @var array
-     */
-    private $categories = [];
 
     /**
      * @var array
@@ -74,26 +64,6 @@ class SearchQuery
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    }
-
-    /**
-     * Return the categories to search in.
-     *
-     * @return array
-     */
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * Set the categories to search in.
-     *
-     * @param array
-     */
-    public function setCategories($categories)
-    {
-        $this->categories = $categories;
     }
 
     /**
