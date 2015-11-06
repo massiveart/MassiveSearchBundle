@@ -118,7 +118,7 @@ class ZendLuceneAdapter implements AdapterInterface
             $value = $field->getValue();
             // handle array values
             if (is_array($value)) {
-                $value = '[' . implode('],[', $value) . ']';
+                $value = '|' . implode('|', $value) . '|';
             }
 
             $luceneFieldType = $this->getFieldType($field);
@@ -129,7 +129,7 @@ class ZendLuceneAdapter implements AdapterInterface
             );
 
             if ($field->isAggregate()) {
-                $aggregateValues[] = $field->getValue();
+                $aggregateValues[] = $value;
             }
 
             $luceneDocument->addField($luceneField);
