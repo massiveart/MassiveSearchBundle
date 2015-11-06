@@ -50,7 +50,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     private $entities = [];
 
     /**
-     * @var Exception
+     * @var \Exception
      */
     private $lastException = null;
 

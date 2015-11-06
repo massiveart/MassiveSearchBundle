@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
     <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
