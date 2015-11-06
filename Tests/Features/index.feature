@@ -4,13 +4,13 @@ Feature: Indexing
     I must first index them
 
     Background:
-        Given the entity "Car" exists:
+        Given the entity "IndexingCar" exists:
         """
         <?php
 
         namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
-        class Car { 
+        class IndexingCar {
             public $id;
             public $title;
             public $body;
@@ -25,11 +25,11 @@ Feature: Indexing
         And I purge the index "car"
 
     Scenario: Basic indexing
-        Given that the following mapping for "Car" exists:
+        Given that the following mapping for "IndexingCar" exists:
         """
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
-            <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
+            <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\IndexingCar">
                 <index value="car"/>
                 <id property="id"/>
                 <url expr="'foobar'" />
@@ -48,30 +48,36 @@ Feature: Indexing
 
         </massive-search-mapping>
         """
-        And I index the following "Car" objects
+        And I index the following "IndexingCar" objects
         """
         [
-            { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
-            { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
+            { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg", "passengers": ["Jackson", "Jill"] },
+            { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg", "passengers": ["Jack"] }
         ]
         """
         When I search for "My car"
         Then there should be 2 results
-        And I search for "jack"
+        And I search for "jac*"
         Then there should be 2 results
+        And I search for "Jac*"
+        Then there should be 2 results
+        And I search for "jill"
+        Then there should be 1 results
+        And I search for "Jill"
+        Then there should be 1 results
         And I search for "john"
         Then there should be 0 results
         And I search for "jac"
         Then there should be 0 results
         And I search for "Jackson"
-        Then there should be 2 results
+        Then there should be 1 results
 
     Scenario: Invalid mapping, unknown field type
-        Given that the following mapping for "Car" exists:
+        Given that the following mapping for "IndexingCar" exists:
         """
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
 
-            <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Car">
+            <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\IndexingCar">
                 <index value="car"/>
                 <id property="id"/>
                 <url expr="'foobar'" />
@@ -87,7 +93,7 @@ Feature: Indexing
 
         </massive-search-mapping>
         """
-        When I index the following "Car" objects
+        When I index the following "IndexingCar" objects
         """
         [
             { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
