@@ -22,7 +22,7 @@ interface LocalizationStrategyInterface
      * @param string $indexName
      * @param string $locale
      *
-     * @return
+     * @return string
      */
     public function localizeIndexName($indexName, $locale);
 
@@ -31,7 +31,7 @@ interface LocalizationStrategyInterface
      *
      * @param $indexName
      *
-     * @return mixed
+     * @return string
      */
     public function delocalizeIndexName($indexName);
 
