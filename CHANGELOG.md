@@ -1,10 +1,8 @@
 CHANGELOG
 =========
 
-dev-develop
+0.9.0
 -----------
-
-### Feature
 
 - [Configuration] Index name can now also be created using expression language
 - [Configuration] Search categories have been removed
