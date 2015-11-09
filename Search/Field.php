@@ -63,6 +63,11 @@ class Field
      */
     const TYPE_STRING = 'string';
 
+    /**
+     * Store the field as a array.
+     */
+    const TYPE_ARRAY = 'array';
+
     public static function getValidTypes()
     {
         return [

@@ -12,9 +12,11 @@
 namespace Unit\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
+use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Prophecy\Argument;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
@@ -43,6 +45,11 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
      * @var Field
      */
     private $field2;
+
+    /**
+     * @var ConverterManagerInterface
+     */
+    private $converter;
 
     public function setUp()
     {
@@ -89,9 +96,11 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
 
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
-        $this->document->getFields()->willReturn([
-            $this->field1,
-        ]);
+        $this->document->getFields()->willReturn(
+            [
+                $this->field1,
+            ]
+        );
         $this->document->getIndex()->willReturn('foo');
 
         $this->field1->getName()->wilLReturn('hallo');
@@ -142,10 +151,12 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
         $this->document->getIndex()->willReturn('foo');
-        $this->document->getFields()->willReturn([
-            $this->field1,
-            $this->field2,
-        ]);
+        $this->document->getFields()->willReturn(
+            [
+                $this->field1,
+                $this->field2,
+            ]
+        );
 
         foreach (['field1', 'field2'] as $fieldName) {
             $this->$fieldName->getName()->wilLReturn('hallo');
@@ -166,10 +177,47 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function createAdapter($basePath)
+    /**
+     * If the field is type array, it should be converted.
+     */
+    public function testConverter()
     {
+        $adapter = $this->createAdapter($this->dataPath, false);
+        $this->converter->hasConverter(Field::TYPE_ARRAY, Field::TYPE_STRING)->willReturn(true);
+        $this->converter->convert([1,2,3], Field::TYPE_ARRAY, Field::TYPE_STRING)->willReturn('1,2,3');
+
+        $this->document->getId()->willReturn(12);
+        $this->document->getIndex()->willReturn('foo');
+        $this->document->getFields()->willReturn(
+            [
+                $this->field1->reveal(),
+            ]
+        );
+
+        $this->field1->getName()->wilLReturn('hallo');
+        $this->field1->getValue()->willReturn([1, 2, 3]);
+        $this->field1->getType()->willReturn(Field::TYPE_ARRAY);
+        $this->field1->isStored()->willReturn(true);
+        $this->field1->isIndexed()->willReturn(true);
+        $this->field1->isAggregate()->willReturn(false);
+
+        $luceneDocument = $adapter->index($this->document->reveal(), 'foo');
+        $luceneField = $luceneDocument->getField('hallo');
+
+        $this->assertEquals('1,2,3', $luceneField->getUtf8Value());
+        $this->converter->convert([1,2,3], Field::TYPE_ARRAY, Field::TYPE_STRING)->shouldBeCalled();
+    }
+
+    private function createAdapter($basePath, $noConverter = true)
+    {
+        $this->converter = $this->prophesize(ConverterManagerInterface::class);
+        if ($noConverter) {
+            $this->converter->hasConverter(Argument::any(), Argument::any())->willReturn(false);
+        }
+
         $adapter = new ZendLuceneAdapter(
             $this->factory->reveal(),
+            $this->converter->reveal(),
             $basePath
         );
 

@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
+use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
@@ -64,21 +65,28 @@ class ZendLuceneAdapter implements AdapterInterface
      * @var string
      */
     private $encoding;
+    /**
+     * @var ConverterManagerInterface
+     */
+    private $converter;
 
     /**
      * @param Factory $factory
+     * @param ConverterManagerInterface $converter
      * @param string $basePath Base filesystem path for the index
      * @param bool $hideIndexException
      * @param null $encoding
      */
     public function __construct(
         Factory $factory,
+        ConverterManagerInterface $converter,
         $basePath,
         $hideIndexException = false,
         $encoding = null
     ) {
-        $this->basePath = $basePath;
         $this->factory = $factory;
+        $this->converter = $converter;
+        $this->basePath = $basePath;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
 
@@ -103,9 +111,17 @@ class ZendLuceneAdapter implements AdapterInterface
 
         $aggregateValues = [];
         foreach ($document->getFields() as $field) {
+            $type = $field->getType();
+            $value = $field->getValue();
+
+            if ($this->converter->hasConverter($type, Field::TYPE_STRING)) {
+                $value = $this->converter->convert($value, $type, Field::TYPE_STRING);
+                $type = Field::TYPE_STRING;
+            }
+
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
-            if ($field->getType() !== Field::TYPE_STRING) {
+            if ($type !== Field::TYPE_STRING) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Search field type "%s" is not known. Known types are: %s',
@@ -113,12 +129,6 @@ class ZendLuceneAdapter implements AdapterInterface
                         implode('", "', Field::getValidTypes())
                     )
                 );
-            }
-
-            $value = $field->getValue();
-            // handle array values
-            if (is_array($value)) {
-                $value = '|' . implode('|', $value) . '|';
             }
 
             $luceneFieldType = $this->getFieldType($field);

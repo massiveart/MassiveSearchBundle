@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Elasticsearch\Client as ElasticSearchClient;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
+use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
@@ -54,16 +55,19 @@ class ElasticSearchAdapter implements AdapterInterface
      * @var array
      */
     private $indexList;
-
     /**
-     * @param string $basePath Base filesystem path for the index
+     * @var ConverterManagerInterface
      */
+    private $converter;
+
     public function __construct(
         Factory $factory,
-        ElasticSearchClient $client
+        ElasticSearchClient $client,
+        ConverterManagerInterface $converter
     ) {
         $this->factory = $factory;
         $this->client = $client;
+        $this->converter = $converter;
     }
 
     /**
@@ -73,15 +77,27 @@ class ElasticSearchAdapter implements AdapterInterface
     {
         $fields = [];
         foreach ($document->getFields() as $massiveField) {
-            switch ($massiveField->getType()) {
+            $type = $massiveField->getType();
+            $value = $massiveField->getValue();
+
+            if ($this->converter->hasConverter($type, Field::TYPE_STRING)) {
+                $value = $this->converter->convert($value, $type, Field::TYPE_STRING);
+                $type = Field::TYPE_STRING;
+            }
+
+            switch ($type) {
                 case Field::TYPE_STRING:
-                    $fields[$massiveField->getName()] = $massiveField->getValue();
+                case Field::TYPE_ARRAY:
+                    $fields[$massiveField->getName()] = $value;
                     break;
                 default:
-                    throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not known. Known types are: %s',
-                        $massiveField->getType(), implode(', ', Field::getValidTypes())
-                    ));
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Search field type "%s" is not known. Known types are: %s',
+                            $massiveField->getType(),
+                            implode(', ', Field::getValidTypes())
+                        )
+                    );
             }
         }
 
@@ -244,10 +260,12 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function flush(array $indexNames)
     {
-        $this->client->indices()->flush([
-            'index' => implode(', ', $indexNames),
-            'full' => true,
-        ]);
+        $this->client->indices()->flush(
+            [
+                'index' => implode(', ', $indexNames),
+                'full' => true,
+            ]
+        );
     }
 
     /**

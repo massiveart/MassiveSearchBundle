@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle;
 
+use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\ConverterPass;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataDriverPass;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataProviderPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,5 +24,6 @@ class MassiveSearchBundle extends Bundle
         parent::build($container);
         $container->addCompilerPass(new MetadataDriverPass());
         $container->addCompilerPass(new MetadataProviderPass());
+        $container->addCompilerPass(new ConverterPass());
     }
 }

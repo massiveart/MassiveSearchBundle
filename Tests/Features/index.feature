@@ -19,7 +19,7 @@ Feature: Indexing
             public $date;
             public $image;
             public $locale;
-            public $passengers = array('Jack Jackson', 'jill');
+            public $passengers;
         }
         """
         And I purge the index "car"
@@ -42,7 +42,7 @@ Feature: Indexing
                     <field name="title" expr="object.title" type="string" />
                     <field name="body" type="string" />
                     <field name="numberOfWheels" type="string" />
-                    <field name="passengers" type="string" />
+                    <field name="passengers" type="array" />
                 </fields>
             </mapping>
 
