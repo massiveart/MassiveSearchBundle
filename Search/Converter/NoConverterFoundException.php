@@ -22,17 +22,11 @@ class NoConverterFoundException extends SearchException
      */
     private $from;
 
-    /**
-     * @var string
-     */
-    private $to;
-
-    public function __construct($from, $to)
+    public function __construct($from)
     {
-        parent::__construct(sprintf('No converter found to convert value from "%s" to "%s"', $from, $to));
+        parent::__construct(sprintf('No converter found to convert value from type "%s"', $from));
 
         $this->from = $from;
-        $this->to = $to;
     }
 
     /**
@@ -43,15 +37,5 @@ class NoConverterFoundException extends SearchException
     public function getFrom()
     {
         return $this->from;
-    }
-
-    /**
-     * Returns target format.
-     *
-     * @return string
-     */
-    public function getTo()
-    {
-        return $this->to;
     }
 }

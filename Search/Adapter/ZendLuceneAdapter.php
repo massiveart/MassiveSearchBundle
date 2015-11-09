@@ -65,10 +65,6 @@ class ZendLuceneAdapter implements AdapterInterface
      * @var string
      */
     private $encoding;
-    /**
-     * @var ConverterManagerInterface
-     */
-    private $converter;
 
     /**
      * @param Factory $factory
@@ -79,13 +75,11 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function __construct(
         Factory $factory,
-        ConverterManagerInterface $converter,
         $basePath,
         $hideIndexException = false,
         $encoding = null
     ) {
         $this->factory = $factory;
-        $this->converter = $converter;
         $this->basePath = $basePath;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
@@ -114,14 +108,9 @@ class ZendLuceneAdapter implements AdapterInterface
             $type = $field->getType();
             $value = $field->getValue();
 
-            if ($this->converter->hasConverter($type, Field::TYPE_STRING)) {
-                $value = $this->converter->convert($value, $type, Field::TYPE_STRING);
-                $type = Field::TYPE_STRING;
-            }
-
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
-            if ($type !== Field::TYPE_STRING) {
+            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Search field type "%s" is not known. Known types are: %s',
@@ -129,6 +118,11 @@ class ZendLuceneAdapter implements AdapterInterface
                         implode('", "', Field::getValidTypes())
                     )
                 );
+            }
+
+            // handle array values
+            if (is_array($value)) {
+                $value = '|' . implode('|', $value) . '|';
             }
 
             $luceneFieldType = $this->getFieldType($field);
@@ -148,10 +142,14 @@ class ZendLuceneAdapter implements AdapterInterface
         // add meta fields - used internally for showing the search results, etc.
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::INDEX_FIELDNAME, $document->getIndex()));
-        $luceneDocument->addField(Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues)));
+        $luceneDocument->addField(
+            Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues))
+        );
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
+        $luceneDocument->addField(
+            Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription())
+        );
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::LOCALE_FIELDNAME, $document->getLocale()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::CLASS_TAG, $document->getClass()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::IMAGE_URL, $document->getImageUrl()));
@@ -236,13 +234,16 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         // The MultiSearcher does not support sorting, so we do it here.
-        usort($hits, function (QueryHit $documentA, QueryHit $documentB) {
-            if ($documentA->getScore() < $documentB->getScore()) {
-                return true;
-            }
+        usort(
+            $hits,
+            function (QueryHit $documentA, QueryHit $documentB) {
+                if ($documentA->getScore() < $documentB->getScore()) {
+                    return true;
+                }
 
-            return false;
-        });
+                return false;
+            }
+        );
 
         return $hits;
     }
@@ -420,9 +421,11 @@ class ZendLuceneAdapter implements AdapterInterface
             return 'unIndexed';
         }
 
-        throw new \InvalidArgumentException(sprintf(
-            'Field "%s" cannot be both not indexed and not stored',
-            $field->getName()
-        ));
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Field "%s" cannot be both not indexed and not stored',
+                $field->getName()
+            )
+        );
     }
 }

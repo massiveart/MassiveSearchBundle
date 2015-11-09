@@ -72,11 +72,18 @@ class Field
     {
         return [
             self::TYPE_STRING,
+            self::TYPE_ARRAY,
         ];
     }
 
-    public function __construct($name, $value, $type = self::TYPE_STRING, $stored = true, $indexed = true, $aggregate = false)
-    {
+    public function __construct(
+        $name,
+        $value,
+        $type = self::TYPE_STRING,
+        $stored = true,
+        $indexed = true,
+        $aggregate = false
+    ) {
         $this->name = $name;
         $this->value = $value;
         $this->type = $type;
@@ -128,7 +135,7 @@ class Field
     /**
      * Return the field value.
      *
-     * @return scalar
+     * @return mixed
      */
     public function getValue()
     {
@@ -150,7 +157,7 @@ class Field
      * Stored field values are retrievable but not necessarily
      * indexed.
      *
-     * @param bool $boolean
+     * @param bool $stored
      */
     public function setStored(bool $stored)
     {

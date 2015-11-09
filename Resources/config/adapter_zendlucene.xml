@@ -2,13 +2,10 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
     <services>
-
         <service id="massive_search.adapter.zend_lucene"
                  class="Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter">
             <argument type="service" id="massive_search.factory"/>
-            <argument type="service" id="massive_search.converter"/>
             <argument>%massive_search.adapter.zend_lucene.basepath%</argument>
             <argument>%massive_search.adapter.zend_lucene.hide_index_exception%</argument>
             <argument>%massive_search.adapter.zend_lucene.encoding%</argument>
@@ -16,11 +13,5 @@
                  method="optimizeIndexAfterRebuild"
                  priority="-999"/>
         </service>
-
-        <service id="massive_search.adapter.zend_lucene.array_converter"
-                 class="Massive\Bundle\SearchBundle\Search\Converter\ZendLuceneArrayConverter" public="false">
-            <tag name="massive_search.converter" from="array" to="string"/>
-        </service>
-
     </services>
 </container>

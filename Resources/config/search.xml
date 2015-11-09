@@ -18,7 +18,9 @@
         <service id="massive_search.factory_default" class="%massive_search.factory_default.class%" />
 
         <!-- Converter -->
-        <service id="massive_search.converter" class="Massive\Bundle\SearchBundle\Search\Converter\ConverterManager"/>
+        <service id="massive_search.converter" class="Massive\Bundle\SearchBundle\Search\Converter\ConverterManager">
+            <argument type="service" id="service_container"/>
+        </service>
 
         <!-- Adapters -->
         <service id="massive_search.adapter.test" class="%massive_search.search.adapter.test.class%">
@@ -39,6 +41,7 @@
         <service id="massive_search.object_to_document_converter" class="%massive_search.object_to_document_converter.class%">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.metadata.field_evaluator" />
+            <argument type="service" id="massive_search.converter" />
         </service>
 
         <!-- Expression language -->

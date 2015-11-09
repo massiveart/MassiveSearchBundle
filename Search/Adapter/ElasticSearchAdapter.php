@@ -13,7 +13,6 @@ namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Elasticsearch\Client as ElasticSearchClient;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
-use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
@@ -51,23 +50,17 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     private $indexListLoaded;
 
-    /*
+    /**
      * @var array
      */
     private $indexList;
-    /**
-     * @var ConverterManagerInterface
-     */
-    private $converter;
 
     public function __construct(
         Factory $factory,
-        ElasticSearchClient $client,
-        ConverterManagerInterface $converter
+        ElasticSearchClient $client
     ) {
         $this->factory = $factory;
         $this->client = $client;
-        $this->converter = $converter;
     }
 
     /**
@@ -79,11 +72,6 @@ class ElasticSearchAdapter implements AdapterInterface
         foreach ($document->getFields() as $massiveField) {
             $type = $massiveField->getType();
             $value = $massiveField->getValue();
-
-            if ($this->converter->hasConverter($type, Field::TYPE_STRING)) {
-                $value = $this->converter->convert($value, $type, Field::TYPE_STRING);
-                $type = Field::TYPE_STRING;
-            }
 
             switch ($type) {
                 case Field::TYPE_STRING:

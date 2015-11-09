@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
+use Massive\Bundle\SearchBundle\Search\Converter\ConverterManager;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
@@ -30,13 +31,15 @@ class ObjectToDocumentConverter
     private $factory;
 
     /**
-     * @param Factory $factory
-     * @param FieldEvaluator $fieldEvaluator
+     * @var ConverterManager
      */
-    public function __construct(Factory $factory, FieldEvaluator $fieldEvaluator)
+    private $converterManager;
+
+    public function __construct(Factory $factory, FieldEvaluator $fieldEvaluator, ConverterManager $converterManager)
     {
         $this->factory = $factory;
         $this->fieldEvaluator = $fieldEvaluator;
+        $this->converterManager = $converterManager;
     }
 
     /**
@@ -170,7 +173,14 @@ class ObjectToDocumentConverter
                 continue;
             }
 
+            $type = $mapping['type'];
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
+
+            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
+                $value = $this->converterManager->convert($value, $type);
+
+                $type = is_array($value) ? Field::TYPE_ARRAY : Field::TYPE_STRING;
+            }
 
             if ($value !== null && false === is_scalar($value) && false === is_array($value)) {
                 throw new \InvalidArgumentException(sprintf(
@@ -184,7 +194,7 @@ class ObjectToDocumentConverter
                     $this->factory->createField(
                         $prefix . $fieldName,
                         $value,
-                        $mapping['type'],
+                        $type,
                         $mapping['stored'],
                         $mapping['indexed'],
                         $mapping['aggregate']

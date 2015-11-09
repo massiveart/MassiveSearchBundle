@@ -20,19 +20,17 @@ interface ConverterManagerInterface
      *
      * @param mixed $value
      * @param string $from source format.
-     * @param string $to target format.
      *
      * @return mixed
      */
-    public function convert($value, $from, $to);
+    public function convert($value, $from);
 
     /**
      * Returns true if a converter exists which converts from source to target format.
      *
      * @param string $from source format.
-     * @param string $to target format.
      *
      * @return bool
      */
-    public function hasConverter($from, $to);
+    public function hasConverter($from);
 }
