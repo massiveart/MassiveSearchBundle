@@ -13,7 +13,6 @@ namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
-use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
@@ -68,7 +67,6 @@ class ZendLuceneAdapter implements AdapterInterface
 
     /**
      * @param Factory $factory
-     * @param ConverterManagerInterface $converter
      * @param string $basePath Base filesystem path for the index
      * @param bool $hideIndexException
      * @param null $encoding

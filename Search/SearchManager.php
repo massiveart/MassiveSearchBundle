@@ -11,7 +11,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;

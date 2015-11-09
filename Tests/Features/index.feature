@@ -100,5 +100,5 @@ Feature: Indexing
             { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
         ]
         """
-        Then an exception with message 'Search field type "foobar" is not known.' should be thrown
+        Then an exception with message 'No converter found to convert value from type "foobar"' should be thrown
 

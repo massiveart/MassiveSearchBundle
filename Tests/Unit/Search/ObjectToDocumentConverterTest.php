@@ -11,6 +11,7 @@
 
 namespace Unit\Search;
 
+use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
@@ -47,17 +48,24 @@ class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
      */
     private $converter;
 
+    /**
+     * @var ConverterManagerInterface
+     */
+    private $converterManager;
+
     public function setUp()
     {
         parent::setUp();
         $this->factory = new Factory();
-        $this->fieldEvaluator = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator');
+        $this->fieldEvaluator = $this->prophesize(FieldEvaluator::class);
+        $this->converterManager = $this->prophesize(ConverterManagerInterface::class);
         $this->indexMetadata = new IndexMetadata();
         $this->product = new Product();
 
         $this->converter = new ObjectToDocumentConverter(
             $this->factory,
-            $this->fieldEvaluator->reveal()
+            $this->fieldEvaluator->reveal(),
+            $this->converterManager->reveal()
         );
     }
 
