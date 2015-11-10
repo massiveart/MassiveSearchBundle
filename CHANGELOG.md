@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+dev-develop
+-----------
+
+### Feature
+
+- [Converter]     Added support for custom type converter
+- [General]       Added support for arrays 
+
 0.9.0
 -----------
 
@@ -12,7 +20,7 @@ CHANGELOG
 
 - [Rebuild] Added reindex directive
 - [Tests] Removed prophecy bridge
-- [Generell] Added Style-CI configuration
+- [General] Added Style-CI configuration
 
 0.7.0
 -----------
