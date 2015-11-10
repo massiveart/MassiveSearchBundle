@@ -10,42 +10,25 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Converter;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * Implements basic converter manager.
  */
 class ConverterManager implements ConverterManagerInterface
 {
     /**
-     * @var string[]
-     */
-    private $converter = [];
-
-    /**
      * @var ConverterInterface[]
      */
-    private $serviceMap = [];
-
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
+    private $converter = [];
 
     /**
      * Add a converter to the manager.
      *
      * @param string $from source format.
-     * @param string $converterId
+     * @param ConverterInterface $converter
      */
-    public function addConverter($from, $converterId)
+    public function addConverter($from, ConverterInterface $converter)
     {
-        $this->converter[$from] = $converterId;
+        $this->converter[$from] = $converter;
     }
 
     /**
@@ -57,7 +40,7 @@ class ConverterManager implements ConverterManagerInterface
             throw new NoConverterFoundException($from);
         }
 
-        return $this->getConverter($this->converter[$from])->convert($value);
+        return $this->converter[$from]->convert($value);
     }
 
     /**
@@ -66,21 +49,5 @@ class ConverterManager implements ConverterManagerInterface
     public function hasConverter($from)
     {
         return array_key_exists($from, $this->converter);
-    }
-
-    /**
-     * Returns converter for id.
-     *
-     * @param string $id service id.
-     *
-     * @return ConverterInterface
-     */
-    private function getConverter($id)
-    {
-        if (array_key_exists($id, $this->serviceMap)) {
-            return $this->serviceMap[$id];
-        }
-
-        return $this->serviceMap[$id] = $this->container->get($id);
     }
 }

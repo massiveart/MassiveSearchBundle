@@ -12,6 +12,7 @@ namespace Massive\Bundle\SearchBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Collects all converter with tagged services.
@@ -37,7 +38,7 @@ class ConverterPass implements CompilerPassInterface
             foreach ($tags as $attributes) {
                 $definition->addMethodCall(
                     'addConverter',
-                    [$attributes['from'], $id]
+                    [$attributes['from'], new Reference($id)]
                 );
             }
         }

@@ -21,7 +21,6 @@
 
         <!-- Converter -->
         <service id="massive_search.converter" class="Massive\Bundle\SearchBundle\Search\Converter\ConverterManager">
-            <argument type="service" id="service_container"/>
         </service>
 
         <!-- Adapters -->

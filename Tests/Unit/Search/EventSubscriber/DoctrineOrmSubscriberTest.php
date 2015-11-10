@@ -12,63 +12,90 @@
 namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Massive\Bundle\SearchBundle\Search\Event\DeindexEvent;
+use Massive\Bundle\SearchBundle\Search\Event\IndexEvent;
 use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Prophecy\Argument;
+use stdClass;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DoctrineOrmSubscriberTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var SearchManager
-     */
-    private $searchManager;
-
-    /**
-     * @var object
-     */
-    private $entity;
-
-    /**
-     * @var LifecycleEventArgs
-     */
-    private $event;
-
-    /**
-     * @var DoctrineOrmSubscriber
-     */
-    private $subscriber;
-
-    public function setUp()
-    {
-        $this->searchManager = $this->prophesize('Massive\Bundle\SearchBundle\Search\SearchManager');
-        $this->entity = new \stdClass();
-        $this->event = $this->prophesize('Doctrine\ORM\Event\LifecycleEventArgs');
-        $this->event->getEntity()->willReturn($this->entity);
-
-        $this->subscriber = new DoctrineOrmSubscriber($this->searchManager->reveal());
-    }
-
     public function testMapping()
     {
-        foreach ($this->subscriber->getSubscribedEvents() as $eventName) {
-            $this->subscriber->{$eventName}($this->event->reveal());
+        $eventArgs = $this->prophesize(LifecycleEventArgs::class);
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
+
+        foreach ($subscriber->getSubscribedEvents() as $eventName) {
+            $subscriber->{$eventName}($eventArgs->reveal());
         }
     }
 
     public function testPostRemove()
     {
-        $this->searchManager->deindex($this->entity)->shouldBeCalled();
-        $this->subscriber->preRemove($this->event->reveal());
+        $entity = new stdClass();
+        $eventArgs = $this->prophesize(LifecycleEventArgs::class);
+        $eventArgs->getEntity()->willReturn($entity);
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
+
+        $subscriber->preRemove($eventArgs->reveal());
+
+        $eventDispatcher->dispatch(
+            SearchEvents::DEINDEX,
+            Argument::that(
+                function (DeindexEvent $event) use($entity) {
+                    $this->assertEquals($entity, $event->getSubject());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalledTimes(1);
     }
 
     public function testPostUpdate()
     {
-        $this->searchManager->index($this->entity)->shouldBeCalled();
-        $this->subscriber->postUpdate($this->event->reveal());
+        $entity = new stdClass();
+        $eventArgs = $this->prophesize(LifecycleEventArgs::class);
+        $eventArgs->getEntity()->willReturn($entity);
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
+
+        $subscriber->postUpdate($eventArgs->reveal());
+
+        $eventDispatcher->dispatch(
+            SearchEvents::INDEX,
+            Argument::that(
+                function (IndexEvent $event) use($entity) {
+                    $this->assertEquals($entity, $event->getSubject());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalledTimes(1);
     }
 
     public function testPostPersist()
     {
-        $this->searchManager->index($this->entity)->shouldBeCalled();
-        $this->subscriber->postPersist($this->event->reveal());
+        $entity = new stdClass();
+        $eventArgs = $this->prophesize(LifecycleEventArgs::class);
+        $eventArgs->getEntity()->willReturn($entity);
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
+
+        $subscriber->postPersist($eventArgs->reveal());
+
+        $eventDispatcher->dispatch(
+            SearchEvents::INDEX,
+            Argument::that(
+                function (IndexEvent $event) use($entity) {
+                    $this->assertEquals($entity, $event->getSubject());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalledTimes(1);
     }
 }

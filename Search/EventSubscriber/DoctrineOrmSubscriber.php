@@ -14,9 +14,9 @@ namespace Massive\Bundle\SearchBundle\Search\EventSubscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Massive\Bundle\SearchBundle\Search\Event\DeindexEvent;
+use Massive\Bundle\SearchBundle\Search\Event\IndexEvent;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Search\Event\DeindexEvent;
-use Search\Event\IndexEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
