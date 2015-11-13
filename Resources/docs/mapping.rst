@@ -62,6 +62,10 @@ Types:
 - ``string``: Store as a string
 - ``complex``: Apply mapping to an array of values
 
+Additionally you can define your own types with custom converters (see
+:doc:`extending`). These converters convert the value into a indexable
+format (currently string or array).
+
 Complex mapping
 ~~~~~~~~~~~~~~~
 

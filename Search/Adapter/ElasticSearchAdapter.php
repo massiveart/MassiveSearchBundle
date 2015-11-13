@@ -50,14 +50,11 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     private $indexListLoaded;
 
-    /*
+    /**
      * @var array
      */
     private $indexList;
 
-    /**
-     * @param string $basePath Base filesystem path for the index
-     */
     public function __construct(
         Factory $factory,
         ElasticSearchClient $client
@@ -73,15 +70,22 @@ class ElasticSearchAdapter implements AdapterInterface
     {
         $fields = [];
         foreach ($document->getFields() as $massiveField) {
-            switch ($massiveField->getType()) {
+            $type = $massiveField->getType();
+            $value = $massiveField->getValue();
+
+            switch ($type) {
                 case Field::TYPE_STRING:
-                    $fields[$massiveField->getName()] = $massiveField->getValue();
+                case Field::TYPE_ARRAY:
+                    $fields[$massiveField->getName()] = $value;
                     break;
                 default:
-                    throw new \InvalidArgumentException(sprintf(
-                        'Search field type "%s" is not known. Known types are: %s',
-                        $massiveField->getType(), implode(', ', Field::getValidTypes())
-                    ));
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Search field type "%s" is not known. Known types are: %s',
+                            $massiveField->getType(),
+                            implode(', ', Field::getValidTypes())
+                        )
+                    );
             }
         }
 
@@ -244,10 +248,12 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function flush(array $indexNames)
     {
-        $this->client->indices()->flush([
-            'index' => implode(', ', $indexNames),
-            'full' => true,
-        ]);
+        $this->client->indices()->flush(
+            [
+                'index' => implode(', ', $indexNames),
+                'full' => true,
+            ]
+        );
     }
 
     /**

@@ -5,7 +5,8 @@
 
     <services>
         <service id="massive_search.search.event_subscriber.doctrine_orm" class="Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber">
-            <argument type="service" id="massive_search.search_manager" />
+            <argument type="service" id="event_dispatcher" />
+
             <tag name="doctrine.event_subscriber" />
         </service>
 
