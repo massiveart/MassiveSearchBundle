@@ -18,8 +18,6 @@ use Symfony\Component\EventDispatcher\Event;
 class IndexEvent extends Event
 {
     /**
-     * The object, which should be indexed.
-     *
      * @var object
      */
     private $subject;
@@ -30,6 +28,8 @@ class IndexEvent extends Event
     }
 
     /**
+     * The object, which should be indexed.
+     * 
      * @return object
      */
     public function getSubject()

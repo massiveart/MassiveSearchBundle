@@ -37,7 +37,7 @@ class ConverterManager implements ConverterManagerInterface
     public function convert($value, $from)
     {
         if (!$this->hasConverter($from)) {
-            throw new NoConverterFoundException($from);
+            throw new ConverterNotFoundException($from);
         }
 
         return $this->converter[$from]->convert($value);

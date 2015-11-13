@@ -16,7 +16,8 @@ namespace Massive\Bundle\SearchBundle\Search\Converter;
 interface ConverterManagerInterface
 {
     /**
-     * Converts value from a source format to a target format.s.
+     * Converts value from a source format to a
+     * indexable format.
      *
      * @param mixed $value
      * @param string $from source format.
@@ -26,7 +27,8 @@ interface ConverterManagerInterface
     public function convert($value, $from);
 
     /**
-     * Returns true if a converter exists which converts from source to target format.
+     * Returns true if a converter exists which
+     * converts from source to a indexable format.
      *
      * @param string $from source format.
      *

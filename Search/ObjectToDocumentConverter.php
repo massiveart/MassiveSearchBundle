@@ -194,7 +194,7 @@ class ObjectToDocumentConverter
             if ($value !== null && false === is_scalar($value) && false === is_array($value)) {
                 throw new \InvalidArgumentException(
                     sprintf(
-                        'Search field "%s" resolved to non-scalar value with type "%s". Only scalar (single) values can be indexed.',
+                        'Search field "%s" resolved to not supported type "%s". Only scalar (single) or array values can be indexed.',
                         $fieldName,
                         gettype($value)
                     )

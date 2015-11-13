@@ -15,7 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Exception\SearchException;
 /**
  * Indicates missing converter.
  */
-class NoConverterFoundException extends SearchException
+class ConverterNotFoundException extends SearchException
 {
     /**
      * @var string
