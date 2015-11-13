@@ -63,7 +63,7 @@ Types:
 - ``complex``: Apply mapping to an array of values
 
 Additionally you can define your own types with custom converters (see
-:doc:`extending`). This converters converts the value into a indexable
+:doc:`extending`). These converters convert the value into a indexable
 format (currently string or array).
 
 Complex mapping

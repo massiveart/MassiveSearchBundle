@@ -82,7 +82,7 @@ Converters
 ----------
 
 Massive Search allows you to implement custom types. This types can be defined
-with custom converters which converts the value of a field into a indexable
+with custom converters, which converts the value of a fields into an indexable
 format (currently only string or array).
 
 A converter is a simple class which implements the interface
