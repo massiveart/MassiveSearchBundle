@@ -78,6 +78,11 @@ class ElasticSearchAdapter implements AdapterInterface
                 case Field::TYPE_ARRAY:
                     $fields[$massiveField->getName()] = $value;
                     break;
+                case Field::TYPE_DATE:
+                    if ($value !== null) {
+                        $fields[$massiveField->getName()] = $value->format('Y-m-d\TH:i:sP');
+                    }
+                    break;
                 default:
                     throw new \InvalidArgumentException(
                         sprintf(
