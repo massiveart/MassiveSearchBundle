@@ -2,6 +2,10 @@ framework:
     router:
         resource: %kernel.root_dir%/config/routing.yml
 
+# necessary for the doctrine services to be instantiated
+doctrine:
+    orm:
+
 massive_search:
     # use the test search adapter
     adapter: test
