@@ -68,17 +68,11 @@ class Field
      */
     const TYPE_ARRAY = 'array';
 
-    /**
-     * Store the field as date object.
-     */
-    const TYPE_DATE = 'date';
-
     public static function getValidTypes()
     {
         return [
             self::TYPE_STRING,
             self::TYPE_ARRAY,
-            self::TYPE_DATE,
         ];
     }
 

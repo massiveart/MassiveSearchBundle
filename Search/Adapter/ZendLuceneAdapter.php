@@ -108,7 +108,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
-            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY && $type !== Field::TYPE_DATE) {
+            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Search field type "%s" is not known. Known types are: %s',
@@ -121,10 +121,6 @@ class ZendLuceneAdapter implements AdapterInterface
             // handle array values
             if (is_array($value)) {
                 $value = '|' . implode('|', $value) . '|';
-            }
-
-            if ($type == Field::TYPE_DATE) {
-                $value = $value != null ? $value->format('Y-m-d\TH:i:sP') : '';
             }
 
             $luceneFieldType = $this->getFieldType($field);

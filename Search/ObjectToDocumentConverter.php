@@ -185,17 +185,13 @@ class ObjectToDocumentConverter
             $type = $mapping['type'];
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
 
-            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY && $type !== Field::TYPE_DATE) {
+            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
                 $value = $this->converterManager->convert($value, $type);
 
                 $type = is_array($value) ? Field::TYPE_ARRAY : Field::TYPE_STRING;
             }
 
-            if ($value !== null &&
-                false === is_scalar($value) &&
-                false === is_array($value) &&
-                get_class($value) != \DateTime::class
-            ) {
+            if ($value !== null && false === is_scalar($value) && false === is_array($value)) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Search field "%s" resolved to not supported type "%s". Only scalar (single) or array values can be indexed.',
