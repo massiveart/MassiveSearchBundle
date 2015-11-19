@@ -12,6 +12,9 @@ namespace Massive\Bundle\SearchBundle\Search\Converter\Types;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
 
+/**
+ * Converts DateTime into string using format method
+ */
 class DateConverter implements ConverterInterface
 {
     /**
@@ -19,6 +22,6 @@ class DateConverter implements ConverterInterface
      */
     public function convert($value)
     {
-        return is_null($value) ? '' : $value->format('Y-m-d\TH:i:sP');
+        return is_null($value) ? '' : $value->format(DATE_RFC3339);
     }
 }
