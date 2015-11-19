@@ -15,7 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
 class DateConverter implements ConverterInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function convert($value)
     {
