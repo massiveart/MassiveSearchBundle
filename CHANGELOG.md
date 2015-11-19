@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* dev-develop
+* 0.10.0 (2015-11-19)
     * FEATURE #66 [Converter] Added support for date
     * FEATURE #60 [Converter] Added support for custom type converter
     * FEATURE #60 [General]   Added support for arrays
