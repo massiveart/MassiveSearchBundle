@@ -13,7 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\Converter\Types;
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
 
 /**
- * Converts DateTime into string using format method
+ * Converts DateTime into string using format method.
  */
 class DateConverter implements ConverterInterface
 {
