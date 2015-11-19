@@ -11,11 +11,22 @@
         <parameter key="massive_search.search.adapter.test.class">Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter</parameter>
         <parameter key="massive_search.factory_default.class">Massive\Bundle\SearchBundle\Search\Factory</parameter>
         <parameter key="massive_search.controller.rest.class">Massive\Bundle\SearchBundle\Controller\SearchController</parameter>
+        <parameter type="constant" key="massive_search.events.index">Massive\Bundle\SearchBundle\Search\SearchEvents::INDEX</parameter>
+        <parameter type="constant" key="massive_search.events.deindex">Massive\Bundle\SearchBundle\Search\SearchEvents::DEINDEX</parameter>
     </parameters>
 
     <services>
         <!-- Factory -->
         <service id="massive_search.factory_default" class="%massive_search.factory_default.class%" />
+
+        <!-- Converter -->
+        <service id="massive_search.converter" class="Massive\Bundle\SearchBundle\Search\Converter\ConverterManager">
+        </service>
+
+        <service id="massive_search.converter.date_converter"
+                 class="Massive\Bundle\SearchBundle\Search\Converter\Types\DateConverter">
+            <tag name="massive_search.converter" from="date"/>
+        </service>
 
         <!-- Adapters -->
         <service id="massive_search.adapter.test" class="%massive_search.search.adapter.test.class%">
@@ -36,10 +47,22 @@
         <service id="massive_search.object_to_document_converter" class="%massive_search.object_to_document_converter.class%">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.metadata.field_evaluator" />
+            <argument type="service" id="massive_search.converter" />
         </service>
 
         <!-- Expression language -->
         <service id="massive_search.expression_language" class="%massive_search.expression_language.class%" />
 
+        <!-- De/Index event listener -->
+        <service id="massive_search.events.index_listener" class="Massive\Bundle\SearchBundle\Search\EventListener\IndexListener">
+            <argument type="service" id="massive_search.search_manager"/>
+
+            <tag name="kernel.event_listener" event="%massive_search.events.index%" method="onIndex"/>
+        </service>
+        <service id="massive_search.events.deindex_listener" class="Massive\Bundle\SearchBundle\Search\EventListener\DeindexListener">
+            <argument type="service" id="massive_search.search_manager"/>
+
+            <tag name="kernel.event_listener" event="%massive_search.events.deindex%" method="onDeindex"/>
+        </service>
     </services>
 </container>

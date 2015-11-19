@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
+use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
@@ -30,13 +31,18 @@ class ObjectToDocumentConverter
     private $factory;
 
     /**
-     * @param Factory $factory
-     * @param FieldEvaluator $fieldEvaluator
+     * @var ConverterManagerInterface
      */
-    public function __construct(Factory $factory, FieldEvaluator $fieldEvaluator)
-    {
+    private $converterManager;
+
+    public function __construct(
+        Factory $factory,
+        FieldEvaluator $fieldEvaluator,
+        ConverterManagerInterface $converterManager
+    ) {
         $this->factory = $factory;
         $this->fieldEvaluator = $fieldEvaluator;
+        $this->converterManager = $converterManager;
     }
 
     /**
@@ -128,18 +134,24 @@ class ObjectToDocumentConverter
 
             foreach ($requiredMappings as $requiredMapping) {
                 if (!isset($mapping[$requiredMapping])) {
-                    throw new \RuntimeException(sprintf(
-                        'Mapping for "%s" does not have "%s" key',
-                        get_class($document), $requiredMapping
-                    ));
+                    throw new \RuntimeException(
+                        sprintf(
+                            'Mapping for "%s" does not have "%s" key',
+                            get_class($document),
+                            $requiredMapping
+                        )
+                    );
                 }
             }
 
-            $mapping = array_merge([
-                'stored' => true,
-                'aggregate' => false,
-                'indexed' => true,
-            ], $mapping);
+            $mapping = array_merge(
+                [
+                    'stored' => true,
+                    'aggregate' => false,
+                    'indexed' => true,
+                ],
+                $mapping
+            );
 
             if ($mapping['type'] == 'complex') {
                 if (!isset($mapping['mapping'])) {
@@ -170,21 +182,31 @@ class ObjectToDocumentConverter
                 continue;
             }
 
+            $type = $mapping['type'];
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
 
-            if ($value !== null && false === is_scalar($value)) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Search field "%s" resolved to non-scalar value with type "%s". Only scalar (single) values can be indexed.',
-                    $fieldName, gettype($value)
-                ));
+            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
+                $value = $this->converterManager->convert($value, $type);
+
+                $type = is_array($value) ? Field::TYPE_ARRAY : Field::TYPE_STRING;
             }
 
-            if (!is_array($value)) {
+            if ($value !== null && false === is_scalar($value) && false === is_array($value)) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Search field "%s" resolved to not supported type "%s". Only scalar (single) or array values can be indexed.',
+                        $fieldName,
+                        gettype($value)
+                    )
+                );
+            }
+
+            if ($mapping['type'] !== 'complex') {
                 $document->addField(
                     $this->factory->createField(
                         $prefix . $fieldName,
                         $value,
-                        $mapping['type'],
+                        $type,
                         $mapping['stored'],
                         $mapping['indexed'],
                         $mapping['aggregate']

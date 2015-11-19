@@ -14,8 +14,10 @@ namespace Massive\Bundle\SearchBundle\Search\EventSubscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
-use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Massive\Bundle\SearchBundle\Search\Event\DeindexEvent;
+use Massive\Bundle\SearchBundle\Search\Event\IndexEvent;
+use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Index mapped doctrine ORM documents.
@@ -23,16 +25,13 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 class DoctrineOrmSubscriber implements EventSubscriber
 {
     /**
-     * @var SearchManagerInterface
+     * @var EventDispatcherInterface
      */
-    private $searchManager;
+    private $eventDispatcher;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     */
-    public function __construct(SearchManagerInterface $searchManager)
+    public function __construct(EventDispatcherInterface $eventDispatcher)
     {
-        $this->searchManager = $searchManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -54,8 +53,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
      */
     public function postPersist(LifecycleEventArgs $event)
     {
-        $entity = $event->getEntity();
-        $this->indexEntity($entity);
+        $this->indexEntity($event->getEntity());
     }
 
     /**
@@ -65,8 +63,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
      */
     public function postUpdate(LifecycleEventArgs $event)
     {
-        $entity = $event->getEntity();
-        $this->indexEntity($entity);
+        $this->indexEntity($event->getEntity());
     }
 
     /**
@@ -76,13 +73,8 @@ class DoctrineOrmSubscriber implements EventSubscriber
      */
     public function preRemove(LifecycleEventArgs $event)
     {
-        $entity = $event->getEntity();
-
-        try {
-            $this->searchManager->deindex($entity);
-        } catch (MetadataNotFoundException $e) {
-            return;
-        }
+        $event = new DeindexEvent($event->getEntity());
+        $this->eventDispatcher->dispatch(SearchEvents::DEINDEX, $event);
     }
 
     /**
@@ -90,10 +82,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
      */
     private function indexEntity($entity)
     {
-        try {
-            $this->searchManager->index($entity);
-        } catch (MetadataNotFoundException $e) {
-            return;
-        }
+        $event = new IndexEvent($entity);
+        $this->eventDispatcher->dispatch(SearchEvents::INDEX, $event);
     }
 }

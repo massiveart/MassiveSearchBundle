@@ -78,6 +78,23 @@ definition.
     Adding new metadata providers is non-trivial, you should check the
     existing code for implementation details.
 
+Converters
+----------
+
+Massive Search allows you to implement custom types. This types can be defined
+with custom converters, which converts the value of a fields into an indexable
+format (currently only string or array).
+
+A converter is a simple class which implements the interface
+``Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface``. To add
+the converter to the system you simply add a tag to your custom service.
+
+.. code-block:: xml
+
+    <service id="massive_search.converter.foo_converter" class="Vendor\\Search\\FooConverter">
+        <tag type="massive_search.converter" from="foo" />
+    </service>
+
 Events
 ------
 

@@ -55,6 +55,11 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     private $lastException = null;
 
     /**
+     * @var bool
+     */
+    private $exceptionAsserted = false;
+
+    /**
      * @param string $adapterId
      */
     public function __construct($adapterId)
@@ -219,6 +224,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     {
         Assert::assertNotNull($this->lastException, 'An exception has been thrown');
         Assert::assertContains($message, $this->lastException->getMessage());
+        $this->exceptionAsserted = true;
     }
 
     /**

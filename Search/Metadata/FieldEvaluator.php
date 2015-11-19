@@ -46,7 +46,7 @@ class FieldEvaluator
      * Evaluate the value from the given object and field.
      *
      * @param mixed $object
-     * @param mixed $field
+     * @param FieldInterface $field
      */
     public function getValue($object, FieldInterface $field)
     {

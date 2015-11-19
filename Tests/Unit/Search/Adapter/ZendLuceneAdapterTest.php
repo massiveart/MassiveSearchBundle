@@ -89,9 +89,11 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
 
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
-        $this->document->getFields()->willReturn([
-            $this->field1,
-        ]);
+        $this->document->getFields()->willReturn(
+            [
+                $this->field1,
+            ]
+        );
         $this->document->getIndex()->willReturn('foo');
 
         $this->field1->getName()->wilLReturn('hallo');
@@ -142,10 +144,12 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         $adapter = $this->createAdapter($this->dataPath);
         $this->document->getId()->willReturn(12);
         $this->document->getIndex()->willReturn('foo');
-        $this->document->getFields()->willReturn([
-            $this->field1,
-            $this->field2,
-        ]);
+        $this->document->getFields()->willReturn(
+            [
+                $this->field1,
+                $this->field2,
+            ]
+        );
 
         foreach (['field1', 'field2'] as $fieldName) {
             $this->$fieldName->getName()->wilLReturn('hallo');

@@ -77,8 +77,8 @@ class ZendLuceneAdapter implements AdapterInterface
         $hideIndexException = false,
         $encoding = null
     ) {
-        $this->basePath = $basePath;
         $this->factory = $factory;
+        $this->basePath = $basePath;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
 
@@ -103,9 +103,12 @@ class ZendLuceneAdapter implements AdapterInterface
 
         $aggregateValues = [];
         foreach ($document->getFields() as $field) {
+            $type = $field->getType();
+            $value = $field->getValue();
+
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
-            if ($field->getType() !== Field::TYPE_STRING) {
+            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Search field type "%s" is not known. Known types are: %s',
@@ -115,15 +118,20 @@ class ZendLuceneAdapter implements AdapterInterface
                 );
             }
 
+            // handle array values
+            if (is_array($value)) {
+                $value = '|' . implode('|', $value) . '|';
+            }
+
             $luceneFieldType = $this->getFieldType($field);
             $luceneField = Lucene\Document\Field::$luceneFieldType(
                 $field->getName(),
-                $field->getValue(),
+                $value,
                 $this->encoding
             );
 
             if ($field->isAggregate()) {
-                $aggregateValues[] = $field->getValue();
+                $aggregateValues[] = $value;
             }
 
             $luceneDocument->addField($luceneField);
@@ -132,10 +140,14 @@ class ZendLuceneAdapter implements AdapterInterface
         // add meta fields - used internally for showing the search results, etc.
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::INDEX_FIELDNAME, $document->getIndex()));
-        $luceneDocument->addField(Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues)));
+        $luceneDocument->addField(
+            Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues))
+        );
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription()));
+        $luceneDocument->addField(
+            Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription())
+        );
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::LOCALE_FIELDNAME, $document->getLocale()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::CLASS_TAG, $document->getClass()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::IMAGE_URL, $document->getImageUrl()));
@@ -220,13 +232,16 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         // The MultiSearcher does not support sorting, so we do it here.
-        usort($hits, function (QueryHit $documentA, QueryHit $documentB) {
-            if ($documentA->getScore() < $documentB->getScore()) {
-                return true;
-            }
+        usort(
+            $hits,
+            function (QueryHit $documentA, QueryHit $documentB) {
+                if ($documentA->getScore() < $documentB->getScore()) {
+                    return true;
+                }
 
-            return false;
-        });
+                return false;
+            }
+        );
 
         return $hits;
     }
@@ -404,9 +419,11 @@ class ZendLuceneAdapter implements AdapterInterface
             return 'unIndexed';
         }
 
-        throw new \InvalidArgumentException(sprintf(
-            'Field "%s" cannot be both not indexed and not stored',
-            $field->getName()
-        ));
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Field "%s" cannot be both not indexed and not stored',
+                $field->getName()
+            )
+        );
     }
 }
