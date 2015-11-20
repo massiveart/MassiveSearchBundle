@@ -98,15 +98,15 @@ Feature: Search Manager
         Then the result at position "<position>" should be "<id>"
 
         Examples:
-            | search | position | id  | order | field |
-            | Car    | 0        | 123 | asc   | title |
-            | Car    | 1        | 321 | asc   | title |
-            | Car    | 1        | 123 | desc  | title |
-            | Car    | 0        | 321 | desc  | title |
-            | Car    | 0        | 321 | asc   | body  |
-            | Car    | 1        | 123 | asc   | body  |
-            | Car    | 1        | 321 | desc  | body  |
-            | Car    | 0        | 123 | desc  | body  |
+            | search | field | order | position | id  |
+            | Car    | title | asc   | 0        | 123 |
+            | Car    | title | asc   | 1        | 321 |
+            | Car    | title | desc  | 1        | 123 |
+            | Car    | title | desc  | 0        | 321 |
+            | Car    | body  | asc   | 0        | 321 |
+            | Car    | body  | asc   | 1        | 123 |
+            | Car    | body  | desc  | 1        | 321 |
+            | Car    | body  | desc  | 0        | 123 |
 
     Scenario: Search for unknown index
         Given the following "Car" objects have been indexed
