@@ -16,6 +16,10 @@ namespace Massive\Bundle\SearchBundle\Search;
  */
 class SearchQuery
 {
+    // constants for search order
+    const SEARCH_ORDER_ASC = 'desc';
+    const SEARCH_ORDER_DESC = 'desc';
+
     /**
      * @var string
      */
@@ -25,6 +29,16 @@ class SearchQuery
      * @var string
      */
     private $locale;
+
+    /**
+     * @var string
+     */
+    private $order = self::SEARCH_ORDER_ASC;
+
+    /**
+     * @var string
+     */
+    private $sort;
 
     /**
      * @var array
@@ -84,5 +98,37 @@ class SearchQuery
     public function setIndexes($indexes)
     {
         $this->indexes = $indexes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param string $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
+    /**
+     * @param string $sort
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
     }
 }
