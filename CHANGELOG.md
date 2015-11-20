@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 * dev-develop
-    * FEATURE #67 [General] Added support for sort/order
+    * FEATURE #67 [General] Added support for sort/order for elastic search
     * FEATURE #66 [Converter] Added support for date
     * FEATURE #60 [Converter] Added support for custom type converter
     * FEATURE #60 [General]   Added support for arrays
