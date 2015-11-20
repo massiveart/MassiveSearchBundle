@@ -185,9 +185,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
             $searcher->addIndex($this->getIndex($indexPath, false));
         }
-        if ($searchQuery->getSort() !== null) {
 
-        }
         $query = Lucene\Search\QueryParser::parse($queryString);
 
         try {
