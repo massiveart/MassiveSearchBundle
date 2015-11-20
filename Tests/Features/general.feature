@@ -86,6 +86,28 @@ Feature: Search Manager
             | roomba 870 | 0 |
             | Car | 2 |
 
+    Scenario Outline: Sorting
+        Given the following "Car" objects have been indexed
+        """
+        [
+            { "id": 123, "url": "/url/to", "title": "Carone", "body": "Hello", "image": "foo.jpg"},
+            { "id": 321, "url": "/url/to", "title": "Cartwo", "body": "Bello", "image": "foo.jpg"}
+        ]
+        """
+        When I search for "<search>" with sort "<field>" and order "<order>"
+        Then the result at position "<position>" should be "<id>"
+
+        Examples:
+            | search | position | id  | order | field |
+            | Car    | 0        | 123 | asc   | title |
+            | Car    | 1        | 321 | asc   | title |
+            | Car    | 1        | 123 | desc  | title |
+            | Car    | 0        | 321 | desc  | title |
+            | Car    | 0        | 321 | asc   | body  |
+            | Car    | 1        | 123 | asc   | body  |
+            | Car    | 1        | 321 | desc  | body  |
+            | Car    | 0        | 123 | desc  | body  |
+
     Scenario: Search for unknown index
         Given the following "Car" objects have been indexed
         """

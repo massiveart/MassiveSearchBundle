@@ -194,6 +194,18 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @When I search for :query with sort :sort and order :order
+     */
+    public function iSearchForWithSort($query, $sort, $order)
+    {
+        $this->lastResult = $this->getSearchManager()
+            ->createSearch($query)
+            ->indexes($this->getSearchManager()->getIndexNames())
+            ->addSorting($sort, $order)
+            ->execute();
+    }
+
+    /**
      * @Given I search for :query in locale :locale
      */
     public function iSearchForInLocale($query, $locale)
@@ -278,6 +290,14 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function theResultShouldBeAnArray()
     {
         Assert::assertInternalType('array', $this->lastResult);
+    }
+
+    /**
+     * @Then the result at position :position should be :id
+     */
+    public function theResultAtPositionShouldBe($position, $id)
+    {
+        Assert::assertEquals($this->lastResult[$position]->getId(), $id);
     }
 
     /**
