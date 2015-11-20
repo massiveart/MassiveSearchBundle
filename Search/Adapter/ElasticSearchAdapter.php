@@ -144,10 +144,10 @@ class ElasticSearchAdapter implements AdapterInterface
             ],
         ];
 
-        if ($searchQuery->getSort() !== null) {
-            $params['body']['sort'] = [
-                $searchQuery->getSort() => [
-                    'order' => $searchQuery->getOrder(),
+        foreach ($searchQuery->getSortings() as $sort => $order) {
+            $params['body']['sort'][] = [
+                $sort => [
+                    'order' => $order,
                 ],
             ];
         }

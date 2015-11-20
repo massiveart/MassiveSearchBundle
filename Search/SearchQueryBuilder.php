@@ -78,26 +78,13 @@ class SearchQueryBuilder
      * Set the sort Field.
      *
      * @param string $sort
-     *
-     * @return SearchQueryBuilder
-     */
-    public function sort($sort)
-    {
-        $this->searchQuery->setSort($sort);
-
-        return $this;
-    }
-
-    /**
-     * Set the order.
-     *
      * @param string $order
      *
      * @return SearchQueryBuilder
      */
-    public function order($order)
+    public function addSorting($sort, $order = SearchQuery::SORT_ASC)
     {
-        $this->searchQuery->setOrder($order);
+        $this->searchQuery->addSorting($sort, $order);
 
         return $this;
     }
