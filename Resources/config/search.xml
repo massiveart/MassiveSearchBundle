@@ -33,13 +33,18 @@
             <argument type="service" id="massive_search.factory" />
         </service>
 
+        <!-- Decorators -->
+        <service id="massive_search.localization_decorator" class="Massive\Bundle\SearchBundle\Search\Decorator\LocalizationDecorator">
+            <argument type="service" id="massive_search.metadata.field_evaluator"/>
+        </service>
+
         <!-- Search manager -->
         <service id="massive_search.search_manager" class="%massive_search.search_manager.class%">
             <argument type="service" id="massive_search.adapter" />
             <argument type="service" id="massive_search.metadata.provider.chain" />
             <argument type="service" id="massive_search.object_to_document_converter" />
             <argument type="service" id="event_dispatcher" />
-            <argument type="service" id="massive_search.localization_strategy" />
+            <argument type="service" id="massive_search.localization_decorator" />
             <argument type="service" id="massive_search.metadata.field_evaluator" />
         </service>
 

@@ -223,7 +223,7 @@ class Document implements \JsonSerializable
      *
      * @return Field
      *
-     * @throws InvalidArgumentException When it doesn't exist
+     * @throws \InvalidArgumentException When it doesn't exist
      */
     public function getField($name)
     {

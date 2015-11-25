@@ -12,8 +12,9 @@
 namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
+use Massive\Bundle\SearchBundle\Search\Decorator\IndexNameDecoratorInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
-use Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
@@ -21,7 +22,6 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
-use Metadata\ClassMetadata;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -73,9 +73,9 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
     private $document;
 
     /**
-     * @var LocalizationStrategyInterface
+     * @var IndexNameDecoratorInterface
      */
-    private $localizationStrategy;
+    private $indexNameDecorator;
 
     /**
      * @var Product
@@ -84,26 +84,26 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->adapter = $this->prophesize('Massive\Bundle\SearchBundle\Search\AdapterInterface');
-        $this->provider = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface');
-        $this->indexMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
-        $this->metadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');
+        $this->adapter = $this->prophesize(AdapterInterface::class);
+        $this->provider = $this->prophesize(ProviderInterface::class);
+        $this->indexMetadata = $this->prophesize(IndexMetadata::class);
+        $this->metadata = $this->prophesize(ClassMetadata::class);
         $this->metadata->getIndexMetadatas()->willReturn([
             $this->indexMetadata->reveal(),
         ]);
 
-        $this->eventDispatcher = $this->prophesize('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-        $this->converter = $this->prophesize('Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter');
-        $this->document = $this->prophesize('Massive\Bundle\SearchBundle\Search\Document');
-        $this->fieldEvaluator = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator');
-        $this->localizationStrategy = $this->prophesize('Massive\Bundle\SearchBundle\Search\LocalizationStrategyInterface');
+        $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->converter = $this->prophesize(ObjectToDocumentConverter::class);
+        $this->document = $this->prophesize(Document::class);
+        $this->fieldEvaluator = $this->prophesize(FieldEvaluator::class);
+        $this->indexNameDecorator = $this->prophesize(IndexNameDecoratorInterface::class);
 
         $this->searchManager = new SearchManager(
             $this->adapter->reveal(),
             $this->provider->reveal(),
             $this->converter->reveal(),
             $this->eventDispatcher->reveal(),
-            $this->localizationStrategy->reveal(),
+            $this->indexNameDecorator->reveal(),
             $this->fieldEvaluator->reveal()
         );
 
@@ -122,7 +122,7 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException
-     * @expectedExceptionMessage There is no search mappin
+     * @expectedExceptionMessage There is no search mapping
      */
     public function testIndexNoMetadata()
     {
