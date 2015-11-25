@@ -11,7 +11,6 @@
 namespace Massive\Bundle\SearchBundle\Search\Decorator;
 
 use Massive\Bundle\SearchBundle\Search\Document;
-use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 
 /**
@@ -20,13 +19,13 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 class LocalizationDecorator implements IndexNameDecoratorInterface
 {
     /**
-     * @var FieldEvaluator
+     * @var IndexNameDecoratorInterface
      */
-    private $fieldEvaluator;
+    private $decorator;
 
-    public function __construct(FieldEvaluator $fieldEvaluator)
+    public function __construct(IndexNameDecoratorInterface $decorator)
     {
-        $this->fieldEvaluator = $fieldEvaluator;
+        $this->decorator = $decorator;
     }
 
     /**
@@ -34,7 +33,7 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
      */
     public function decorate(IndexMetadataInterface $indexMetadata, Document $document)
     {
-        $indexName = $this->fieldEvaluator->getValue($document, $indexMetadata->getIndexName());
+        $indexName = $this->decorator->decorate($indexMetadata, $document);
         $locale = $document->getLocale();
 
         if (!$locale) {
@@ -49,11 +48,7 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
      */
     public function undecorate($decoratedIndexName)
     {
-        if (preg_match('/(.*)(-.*-i18n)/', $decoratedIndexName, $matches) === 0) {
-            return $decoratedIndexName;
-        }
-
-        return $matches[1];
+        return $this->decorator->undecorate($this->removeLocale($decoratedIndexName));
     }
 
     /**
@@ -61,6 +56,10 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
      */
     public function isVariant($indexName, $decoratedIndexName, array $options = [])
     {
+        if (!$this->decorator->isVariant($indexName, $this->removeLocale($decoratedIndexName), $options)) {
+            return false;
+        }
+
         if ($indexName == $decoratedIndexName) {
             return true;
         }
@@ -75,5 +74,21 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
             $indexName,
             $locale
         ), $decoratedIndexName);
+    }
+
+    /**
+     * Removes the locale from the decorated index name.
+     *
+     * @param string $decoratedIndexName
+     *
+     * @return string
+     */
+    private function removeLocale($decoratedIndexName)
+    {
+        if (preg_match('/(.*)(-.*-i18n)/', $decoratedIndexName, $matches) === 0) {
+            return $decoratedIndexName;
+        }
+
+        return $matches[1];
     }
 }

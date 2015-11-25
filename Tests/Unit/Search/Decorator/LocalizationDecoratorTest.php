@@ -12,15 +12,16 @@ namespace Massive\Bundle\SearchBundle\Search\Decorator;
 
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
-use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use Prophecy\Argument;
 
 class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
-     * @var FieldEvaluator
+     * @var IndexNameDecorator
      */
-    private $fieldEvaluator;
+    private $otherDecorator;
 
     /**
      * @var LocalizationDecorator
@@ -29,9 +30,9 @@ class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->fieldEvaluator = $this->prophesize(FieldEvaluator::class);
+        $this->otherDecorator = $this->prophesize(IndexNameDecorator::class);
 
-        $this->localizationDecorator = new LocalizationDecorator($this->fieldEvaluator->reveal());
+        $this->localizationDecorator = new LocalizationDecorator($this->otherDecorator->reveal());
     }
 
     public function provideDecorate()
@@ -52,12 +53,10 @@ class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
         $document = $this->prophesize(Document::class);
         $document->getLocale()->willReturn($locale);
 
-        $indexField = new Value($indexName);
-        $this->fieldEvaluator->getValue($document, $indexField)->willReturn($indexName);
-
         /** @var IndexMetadataInterface $indexMetadata */
         $indexMetadata = $this->prophesize(IndexMetadataInterface::class);
-        $indexMetadata->getIndexName()->willReturn($indexField);
+
+        $this->otherDecorator->decorate($indexMetadata, $document)->willReturn($indexName);
 
         $this->assertEquals(
             $expectedResult,
@@ -79,6 +78,7 @@ class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testUndecorate($decoratedIndexName, $expectedResult)
     {
+        $this->otherDecorator->undecorate($expectedResult)->willReturn($expectedResult)->shouldBeCalled();
         $this->assertEquals($expectedResult, $this->localizationDecorator->undecorate($decoratedIndexName));
     }
 
@@ -135,9 +135,25 @@ class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsVariant($decoratedIndexName, $indexName, $locale, $expectedResult)
     {
+        $reflectionMethod = new \ReflectionMethod(LocalizationDecorator::class, 'removeLocale');
+        $reflectionMethod->setAccessible(true);
+
+        $options = ['locale' => $locale];
+        $this->otherDecorator->isVariant(
+            $indexName,
+            $reflectionMethod->invoke($this->localizationDecorator, $decoratedIndexName),
+            $options
+        )->willReturn(true);
+
         $this->assertSame(
             $expectedResult,
-            $this->localizationDecorator->isVariant($indexName, $decoratedIndexName, ['locale' => $locale])
+            $this->localizationDecorator->isVariant($indexName, $decoratedIndexName, $options)
         );
+    }
+
+    public function testIsVariantWithNegativeOtherDecorator()
+    {
+        $this->otherDecorator->isVariant(Argument::any(), Argument::any(), Argument::any())->willReturn(false);
+        $this->assertFalse($this->localizationDecorator->isVariant('my_index', 'my_index-de-i18n'));
     }
 }

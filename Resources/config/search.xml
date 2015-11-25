@@ -34,8 +34,12 @@
         </service>
 
         <!-- Decorators -->
-        <service id="massive_search.localization_decorator" class="Massive\Bundle\SearchBundle\Search\Decorator\LocalizationDecorator">
+        <service id="massive_search.index_name_decorator" class="Massive\Bundle\SearchBundle\Search\Decorator\IndexNameDecorator">
             <argument type="service" id="massive_search.metadata.field_evaluator"/>
+        </service>
+
+        <service id="massive_search.localization_decorator" class="Massive\Bundle\SearchBundle\Search\Decorator\LocalizationDecorator">
+            <argument type="service" id="massive_search.index_name_decorator"/>
         </service>
 
         <!-- Search manager -->
