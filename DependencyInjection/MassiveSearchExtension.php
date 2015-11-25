@@ -94,6 +94,7 @@ class MassiveSearchExtension extends Extension
                 throw new \RuntimeException(sprintf('Could not create cache directory "%s".', $dir));
             }
         }
+        $container->setParameter('massive_search.metadata.prefix', $config['prefix']);
         $container->setParameter('massive_search.metadata.cache_dir', $config['cache_dir']);
         $container->setParameter('massive_search.metadata.debug', $config['debug']);
 

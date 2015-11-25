@@ -31,9 +31,9 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
     /**
      * {@inheritdoc}
      */
-    public function decorate(IndexMetadataInterface $indexMetadata, Document $document)
+    public function decorate(IndexMetadataInterface $indexMetadata, $object, Document $document)
     {
-        $indexName = $this->decorator->decorate($indexMetadata, $document);
+        $indexName = $this->decorator->decorate($indexMetadata, $object, $document);
         $locale = $document->getLocale();
 
         if (!$locale) {

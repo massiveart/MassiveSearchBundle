@@ -60,6 +60,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('metadata')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->scalarNode('prefix')->defaultValue('massive')->end()
                         ->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/massive-search')->end()
                         ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
                     ->end()

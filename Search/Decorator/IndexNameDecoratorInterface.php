@@ -26,7 +26,7 @@ interface IndexNameDecoratorInterface
      *
      * @return string
      */
-    public function decorate(IndexMetadataInterface $indexMetadata, Document $document);
+    public function decorate(IndexMetadataInterface $indexMetadata, $object, Document $document);
 
     /**
      * Removes the added decoration from the decorate method.

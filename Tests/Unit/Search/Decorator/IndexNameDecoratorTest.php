@@ -44,11 +44,11 @@ class IndexNameDecoratorTest extends \PHPUnit_Framework_TestCase
         /** @var IndexMetadataInterface $indexMetadata */
         $indexMetadata = $this->prophesize(IndexMetadataInterface::class);
         $indexMetadata->getIndexName()->willReturn($indexField);
-        $this->fieldEvaluator->getValue($document->reveal(), $indexField)->willReturn('my_index');
+        $this->fieldEvaluator->getValue(null, $indexField)->willReturn('my_index');
 
         $this->assertEquals(
             'my_index',
-            $this->indexNameDecorator->decorate($indexMetadata->reveal(), $document->reveal())
+            $this->indexNameDecorator->decorate($indexMetadata->reveal(), null, $document->reveal())
         );
     }
 

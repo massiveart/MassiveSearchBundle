@@ -133,16 +133,11 @@ class SearchManager implements SearchManagerInterface
         $indexMetadata = $this->getMetadata($object);
 
         foreach ($indexMetadata->getIndexMetadatas() as $indexMetadata) {
-            $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            $document = $this->converter->objectToDocument($indexMetadata, $object);
+            $indexName = $this->indexNameDecorator->decorate($indexMetadata, $object, $document);
             $this->markIndexToFlush($indexName);
 
-            $document = $this->converter->objectToDocument($indexMetadata, $object);
             $evaluator = $this->converter->getFieldEvaluator();
-
-            // if the index is locale aware, localize the index name
-            if ($indexMetadata->getLocaleField()) {
-                $indexName = $this->indexNameDecorator->decorate($indexMetadata, $document);
-            }
 
             $this->eventDispatcher->dispatch(
                 SearchEvents::PRE_INDEX,

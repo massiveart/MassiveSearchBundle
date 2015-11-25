@@ -11,13 +11,11 @@
 namespace Massive\Bundle\SearchBundle\Search\Decorator;
 
 use Massive\Bundle\SearchBundle\Search\Document;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Prophecy\Argument;
 
 class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var IndexNameDecorator
      */
@@ -56,11 +54,11 @@ class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
         /** @var IndexMetadataInterface $indexMetadata */
         $indexMetadata = $this->prophesize(IndexMetadataInterface::class);
 
-        $this->otherDecorator->decorate($indexMetadata, $document)->willReturn($indexName);
+        $this->otherDecorator->decorate($indexMetadata, null, $document)->willReturn($indexName);
 
         $this->assertEquals(
             $expectedResult,
-            $this->localizationDecorator->decorate($indexMetadata->reveal(), $document->reveal())
+            $this->localizationDecorator->decorate($indexMetadata->reveal(), null, $document->reveal())
         );
     }
 

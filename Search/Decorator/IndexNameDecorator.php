@@ -27,24 +27,15 @@ class IndexNameDecorator implements IndexNameDecoratorInterface
     }
 
     /**
-     * Adds some decoration to the index name.
-     *
-     * @param IndexMetadataInterface $indexMetadata The metadata for the index
-     * @param Document $document The document for which the decoration is done
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function decorate(IndexMetadataInterface $indexMetadata, Document $document)
+    public function decorate(IndexMetadataInterface $indexMetadata, $object, Document $document)
     {
-        return $this->fieldEvaluator->getValue($document, $indexMetadata->getIndexName());
+        return $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
     }
 
     /**
-     * Removes the added decoration from the decorate method.
-     *
-     * @param string $decoratedIndexName The decorated index name
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function undecorate($decoratedIndexName)
     {
@@ -52,13 +43,7 @@ class IndexNameDecorator implements IndexNameDecoratorInterface
     }
 
     /**
-     * Checks if the index name can be decorated to the decorated index name by this decorator.
-     *
-     * @param string $indexName The undecorated index name
-     * @param string $decoratedIndexName The given, decorated index name
-     * @param array $options Additional options
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function isVariant($indexName, $decoratedIndexName, array $options = [])
     {
