@@ -2,57 +2,58 @@ CHANGELOG
 =========
 
 * dev-develop
-    * FEATURE #67 [General] Added support for sort/order for elastic search
-    * FEATURE #66 [Converter] Added support for date
-    * FEATURE #60 [Converter] Added support for custom type converter
-    * FEATURE #60 [General]   Added support for arrays
+    * FEATURE #67 Added support for sort/order for elastic search
+    * FEATURE #68 Introduce decorators for index names and introduce prefixes
+    * FEATURE #66 Added support for date
+    * FEATURE #60 Added support for custom type converter
+    * FEATURE #60 Added support for arrays
      
 * 0.9.0
-    * FEATURE [Configuration] Index name can now also be created using expression language
-    * FEATURE [Configuration] Search categories have been removed
+    * FEATURE Index name can now also be created using expression language
+    * FEATURE Search categories have been removed
 
 * 0.8.0
-    * FEATURE [Rebuild] Added reindex directive
-    * FEATURE [Tests]   Removed prophecy bridge
-    * FEATURE [General] Added Style-CI configuration
+    * FEATURE Added reindex directive
+    * FEATURE Removed prophecy bridge
+    * FEATURE Added Style-CI configuration
 
 * 0.7.0
-    * BUGFIX [Metadata] Added scalar check
+    * BUGFIX Added scalar check
 
 * 0.6.0
-    * BUGFIX [Configuraiton] Undefined index when elastic search is used without
-                             configuration
-    * BUGFIX [Search]        If not localized managed indexes exist then a global search is
-                             performed: https://github.com/massiveart/MassiveSearchBundle/issues/38
-    * BUGFIX [Metadata]      Removed index strategies, replaced with explicit `stored` and
-                             `indexed` and `aggregate` flags (**BC BREAK**).
-    * BUGFIX [Metadata]      Added metadata cache
-    * BUGFIX [Metadata]      Added metadata providers
+    * BUGFIX  Undefined index when elastic search is used without
+              configuration
+    * BUGFIX  If not localized managed indexes exist then a global search is
+              performed: https://github.com/massiveart/MassiveSearchBundle/issues/38
+    * BUGFIX  Removed index strategies, replaced with explicit `stored` and
+              `indexed` and `aggregate` flags (**BC BREAK**).
+    * BUGFIX  Added metadata cache
+    * BUGFIX  Added metadata providers
 
 * 0.5.1
-    * FEATURE [ZendLucene] Add index strategy 'INDEX_STORED_INDEXED'
+    * FEATURE Add index strategy 'INDEX_STORED_INDEXED'
 
 * 0.5.0
-    * FEATURE [TestAdapter]  Supports indexes
-    * FEATURE [Mapping]      Expression language
-    * FEATURE [Persistence]  Doctrine ORM event subscriber
-    * FEATURE [Elastic]      Elasticsearch adapter
-    * FEATURE [Localization] Localization strategy support
-    * ENHANCEMENT [Config]   Renamed `adapter_id` to `adapter` in configuration. See UPGRADE.md
-    * ENHANCEMENT [Rebuild]  Added core support for rebuilding indexes via
+    * FEATURE     Supports indexes
+    * FEATURE     Expression language
+    * FEATURE     Doctrine ORM event subscriber
+    * FEATURE     Elasticsearch adapter
+    * FEATURE     Localization strategy support
+    * ENHANCEMENT Renamed `adapter_id` to `adapter` in configuration. See UPGRADE.md
+    * ENHANCEMENT Added core support for rebuilding indexes via
                              massive:search:index:rebuild command
 
 * 0.4.1
-    * BUGFIX [TestAdapter] Fixed deindexing
+    * BUGFIX Fixed deindexing
 
 * 0.4.0
-    * FEATURE [TestAdapter] Test (memory storage) adapter now uses regex when searching
+    * FEATURE Test (memory storage) adapter now uses regex when searching
 
 0.3.2
-    * BUGFIX [ZendSearch] Catch "non-wildcard characters" exception and return 0 results
+    * BUGFIX Catch "non-wildcard characters" exception and return 0 results
 
 0.3.1
-    * BUGFIX [ZendSeach] Added workaround to avoid Fatal errors after a test suite run caused by
+    * BUGFIX Added workaround to avoid Fatal errors after a test suite run caused by
                          the Lucene\Index `__destruct()` method. You can now configure the adapter to hide Exceptions
                          from the Index class.
 

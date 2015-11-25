@@ -14,6 +14,9 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 
+/**
+ * The basic decorator, which just reads the values from the metadata.
+ */
 class IndexNameDecorator implements IndexNameDecoratorInterface
 {
     /**
