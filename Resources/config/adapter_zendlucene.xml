@@ -9,8 +9,14 @@
             <argument>%massive_search.adapter.zend_lucene.basepath%</argument>
             <argument>%massive_search.adapter.zend_lucene.hide_index_exception%</argument>
             <argument>%massive_search.adapter.zend_lucene.encoding%</argument>
+        </service>
+
+        <service id="massive_search.events.zend_rebuild"
+                 class="Massive\Bundle\SearchBundle\Search\EventListener\ZendRebuildSubscriber">
+            <argument type="service" id="massive_search.adapter.zend_lucene"/>
+            <argument type="service" id="massive_search.index_name_decorator.default"/>
             <tag name="kernel.event_listener" event="massive_search.index_rebuild"
-                 method="optimizeIndexAfterRebuild"
+                 method="onIndexRebuild"
                  priority="-999"/>
         </service>
     </services>

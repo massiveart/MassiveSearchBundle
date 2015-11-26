@@ -68,8 +68,7 @@ class SearchManager implements SearchManagerInterface
         EventDispatcherInterface $eventDispatcher,
         IndexNameDecoratorInterface $indexNameDecorator,
         FieldEvaluator $fieldEvaluator
-    )
-    {
+    ) {
         $this->adapter = $adapter;
         $this->metadataProvider = $metadataProvider;
         $this->eventDispatcher = $eventDispatcher;
@@ -244,8 +243,9 @@ class SearchManager implements SearchManagerInterface
                     function ($indexName) {
                         $undecoratedIndexName = $this->indexNameDecorator->undecorate($indexName);
                         if (!$this->indexNameDecorator->isVariant($undecoratedIndexName, $indexName)) {
-                            return null;
+                            return;
                         }
+
                         return $undecoratedIndexName;
                     },
                     $this->adapter->listIndexes()
