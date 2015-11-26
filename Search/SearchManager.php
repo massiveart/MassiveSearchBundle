@@ -242,7 +242,11 @@ class SearchManager implements SearchManagerInterface
             array_filter(
                 array_map(
                     function ($indexName) {
-                        return $this->indexNameDecorator->undecorate($indexName);
+                        $undecoratedIndexName = $this->indexNameDecorator->undecorate($indexName);
+                        if (!$this->indexNameDecorator->isVariant($undecoratedIndexName, $indexName)) {
+                            return null;
+                        }
+                        return $undecoratedIndexName;
                     },
                     $this->adapter->listIndexes()
                 )

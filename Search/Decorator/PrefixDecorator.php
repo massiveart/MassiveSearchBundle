@@ -59,6 +59,11 @@ class PrefixDecorator implements IndexNameDecoratorInterface
      */
     public function isVariant($indexName, $decoratedIndexName, array $options = [])
     {
+        if ($indexName === $decoratedIndexName && $this->prefix) {
+            // if both names are the same, and a prefix is set the name was not decorated by this decorator
+            return false;
+        }
+
         $undecoratedIndexName = $this->removePrefix($decoratedIndexName);
         if (!$this->decorator->isVariant($indexName, $undecoratedIndexName)) {
             return false;
