@@ -1,3 +1,4 @@
+@zend_lucene @elastic @test
 Feature: Search Manager
     In order to manage the search indexing of objects
     As a developer
@@ -85,28 +86,6 @@ Feature: Search Manager
             | one    | 1         |
             | roomba 870 | 0 |
             | Car | 2 |
-
-    Scenario Outline: Sorting
-        Given the following "Car" objects have been indexed
-        """
-        [
-            { "id": 123, "url": "/url/to", "title": "Carone", "body": "Hello", "image": "foo.jpg"},
-            { "id": 321, "url": "/url/to", "title": "Cartwo", "body": "Bello", "image": "foo.jpg"}
-        ]
-        """
-        When I search for "<search>" with sort "<field>" and order "<order>"
-        Then the result at position "<position>" should be "<id>"
-
-        Examples:
-            | search | field | order | position | id  |
-            | Car    | title | asc   | 0        | 123 |
-            | Car    | title | asc   | 1        | 321 |
-            | Car    | title | desc  | 1        | 123 |
-            | Car    | title | desc  | 0        | 321 |
-            | Car    | body  | asc   | 0        | 321 |
-            | Car    | body  | asc   | 1        | 123 |
-            | Car    | body  | desc  | 1        | 321 |
-            | Car    | body  | desc  | 0        | 123 |
 
     Scenario: Search for unknown index
         Given the following "Car" objects have been indexed

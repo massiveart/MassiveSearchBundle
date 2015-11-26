@@ -1,3 +1,4 @@
+@zend_lucene @elastic @test
 Feature: Contexts
     In order to be able to have different indexes for the back and front office
     The MassiveSearchBundle should provide a method to map different contexts
