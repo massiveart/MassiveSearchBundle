@@ -144,6 +144,14 @@ class ElasticSearchAdapter implements AdapterInterface
             ],
         ];
 
+        foreach ($searchQuery->getSortings() as $sort => $order) {
+            $params['body']['sort'][] = [
+                $sort => [
+                    'order' => $order,
+                ],
+            ];
+        }
+
         $res = $this->client->search($params);
         $elasticHits = $res['hits']['hits'];
 

@@ -24,6 +24,7 @@ Feature: Indexing
         """
         And I purge the index "car"
 
+    @zend_lucene @elastic
     Scenario: Basic indexing
         Given that the following mapping for "IndexingCar" exists:
         """
@@ -72,6 +73,7 @@ Feature: Indexing
         And I search for "Jackson"
         Then there should be 1 results
 
+    @zend_lucene @elastic @test
     Scenario: Invalid mapping, unknown field type
         Given that the following mapping for "IndexingCar" exists:
         """
