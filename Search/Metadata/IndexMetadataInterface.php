@@ -33,7 +33,7 @@ interface IndexMetadataInterface
     /**
      * Return the search index name to use for the mapped class.
      *
-     * @return string
+     * @return FieldInterface
      */
     public function getIndexName();
 

@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
+use Massive\Bundle\SearchBundle\Search\Decorator\IndexNameDecoratorInterface;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
@@ -46,9 +47,9 @@ class SearchManager implements SearchManagerInterface
     protected $converter;
 
     /**
-     * @var LocalizationStrategyInterface
+     * @var IndexNameDecoratorInterface
      */
-    protected $localizationStrategy;
+    protected $indexNameDecorator;
 
     /**
      * @var FieldEvaluator
@@ -65,14 +66,14 @@ class SearchManager implements SearchManagerInterface
         MetadataProviderInterface $metadataProvider,
         ObjectToDocumentConverter $converter,
         EventDispatcherInterface $eventDispatcher,
-        LocalizationStrategyInterface $localizationStrategy,
+        IndexNameDecoratorInterface $indexNameDecorator,
         FieldEvaluator $fieldEvaluator
     ) {
         $this->adapter = $adapter;
         $this->metadataProvider = $metadataProvider;
         $this->eventDispatcher = $eventDispatcher;
         $this->converter = $converter;
-        $this->localizationStrategy = $localizationStrategy;
+        $this->indexNameDecorator = $indexNameDecorator;
         $this->fieldEvaluator = $fieldEvaluator;
     }
 
@@ -115,7 +116,7 @@ class SearchManager implements SearchManagerInterface
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
             $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
             $this->markIndexToFlush($indexName);
-            $indexNames = $this->getLocalizedIndexNamesFor($indexName);
+            $indexNames = $this->getDecoratedIndexNames($indexName);
 
             foreach ($indexNames as $indexName) {
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
@@ -132,16 +133,11 @@ class SearchManager implements SearchManagerInterface
         $indexMetadata = $this->getMetadata($object);
 
         foreach ($indexMetadata->getIndexMetadatas() as $indexMetadata) {
-            $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            $document = $this->converter->objectToDocument($indexMetadata, $object);
+            $indexName = $this->indexNameDecorator->decorate($indexMetadata, $object, $document);
             $this->markIndexToFlush($indexName);
 
-            $document = $this->converter->objectToDocument($indexMetadata, $object);
             $evaluator = $this->converter->getFieldEvaluator();
-
-            // if the index is locale aware, localize the index name
-            if ($indexMetadata->getLocaleField()) {
-                $indexName = $this->localizationStrategy->localizeIndexName($indexName, $document->getLocale());
-            }
 
             $this->eventDispatcher->dispatch(
                 SearchEvents::PRE_INDEX,
@@ -221,7 +217,7 @@ class SearchManager implements SearchManagerInterface
     public function purge($indexName)
     {
         $this->markIndexToFlush($indexName);
-        $indexes = $this->getLocalizedIndexNamesFor($indexName);
+        $indexes = $this->getDecoratedIndexNames($indexName);
         foreach ($indexes as $indexName) {
             $this->adapter->purge($indexName);
         }
@@ -242,11 +238,18 @@ class SearchManager implements SearchManagerInterface
     public function getIndexNames()
     {
         return array_unique(
-            array_map(
-                function ($indexName) {
-                    return $this->localizationStrategy->delocalizeIndexName($indexName);
-                },
-                $this->adapter->listIndexes()
+            array_filter(
+                array_map(
+                    function ($indexName) {
+                        $undecoratedIndexName = $this->indexNameDecorator->undecorate($indexName);
+                        if (!$this->indexNameDecorator->isVariant($undecoratedIndexName, $indexName)) {
+                            return;
+                        }
+
+                        return $undecoratedIndexName;
+                    },
+                    $this->adapter->listIndexes()
+                )
             )
         );
     }
@@ -260,13 +263,13 @@ class SearchManager implements SearchManagerInterface
      *
      * @return string[]
      */
-    private function getLocalizedIndexNamesFor($indexName, $locale = null)
+    private function getDecoratedIndexNames($indexName, $locale = null)
     {
         $adapterIndexNames = $this->adapter->listIndexes();
         $indexNames = [];
 
         foreach ($adapterIndexNames as $adapterIndexName) {
-            if ($this->localizationStrategy->isIndexVariantOf($indexName, $adapterIndexName, $locale)) {
+            if ($this->indexNameDecorator->isVariant($indexName, $adapterIndexName, ['locale' => $locale])) {
                 $indexNames[] = $adapterIndexName;
             }
         }
@@ -288,7 +291,7 @@ class SearchManager implements SearchManagerInterface
         $expandedIndexes = [];
 
         foreach ($query->getIndexes() as $index) {
-            foreach ($this->getLocalizedIndexNamesFor($index, $query->getLocale()) as $expandedIndex) {
+            foreach ($this->getDecoratedIndexNames($index, $query->getLocale()) as $expandedIndex) {
                 $expandedIndexes[$expandedIndex] = $expandedIndex;
             }
         }
@@ -298,6 +301,8 @@ class SearchManager implements SearchManagerInterface
 
     /**
      * Mark an index to be flushed when "flush" is called.
+     *
+     * @param string $indexName
      */
     private function markIndexToFlush($indexName)
     {
