@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* dev-develop
+* 0.11.0 (2015-12-01)
     * BUGFIX  #71 Fixed caching of repository method
     * BUGFIX  #70 Added missing passing of options to PrefixDecorator
     * FEATURE #67 Added support for sort/order for elastic search
@@ -9,6 +9,11 @@ CHANGELOG
     * FEATURE #66 Added support for date
     * FEATURE #60 Added support for custom type converter
     * FEATURE #60 Added support for arrays
+
+* 0.10.0 (2015-11-19)
+    * FEATURE #66 [Converter] Added support for date
+    * FEATURE #60 [Converter] Added support for custom type converter
+    * FEATURE #60 [General]   Added support for arrays
      
 * 0.9.0
     * FEATURE Index name can now also be created using expression language
