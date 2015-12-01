@@ -1,7 +1,7 @@
 MassiveSearchBundle
 ===================
 
-.. image:: https://travis-ci.org/massiveart/MassiveSearchBundle.svg?branch=master
+.. image:: https://travis-ci.org/massiveart/MassiveSearchBundle.svg?branch=develop
     :target: https://travis-ci.org/massiveart/MassiveSearchBundle
 
 The purpose of this bundle is to provide flexible **site search** functionality.
