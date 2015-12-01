@@ -13,7 +13,7 @@ Contents
     mapping
     searching
     search_adapters
-    localization
+    index_name_decorators
     web_api
     extending
     commands

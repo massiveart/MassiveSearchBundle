@@ -96,7 +96,7 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         );
         $this->document->getIndex()->willReturn('foo');
 
-        $this->field1->getName()->wilLReturn('hallo');
+        $this->field1->getName()->willReturn('hallo');
         $this->field1->getValue()->willReturn('goodbye');
         $this->field1->getType()->willReturn(Field::TYPE_STRING);
         $this->field1->isStored()->willReturn($store);

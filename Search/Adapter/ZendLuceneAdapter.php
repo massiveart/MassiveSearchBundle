@@ -14,7 +14,6 @@ namespace Massive\Bundle\SearchBundle\Search\Adapter;
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
-use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
@@ -44,16 +43,16 @@ class ZendLuceneAdapter implements AdapterInterface
     const IMAGE_URL = '__image_url';
 
     /**
+     * @var \Massive\Bundle\SearchBundle\Search\Factory
+     */
+    private $factory;
+
+    /**
      * The base directory for the search indexes.
      *
      * @var string
      */
     private $basePath;
-
-    /**
-     * @var \Massive\Bundle\SearchBundle\Search\Factory
-     */
-    private $factory;
 
     /**
      * @var bool
@@ -320,19 +319,14 @@ class ZendLuceneAdapter implements AdapterInterface
     }
 
     /**
-     * Optimize the search indexes after the index rebuild event has been fired.
-     * Should have a priority low enough in order for it to be executed after all
-     * the actual index builders.
+     * Optimizes the index with the given name (that's zend lucene specific).
      *
-     * @param IndexRebuildEvent $event
+     * @param string $indexName
      */
-    public function optimizeIndexAfterRebuild(IndexRebuildEvent $event)
+    public function optimize($indexName)
     {
-        foreach ($this->listIndexes() as $indexName) {
-            $event->getOutput()->writeln(sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
-            $index = $this->getLuceneIndex($indexName);
-            $index->optimize();
-        }
+        $index = $this->getLuceneIndex($indexName);
+        $index->optimize();
     }
 
     /**

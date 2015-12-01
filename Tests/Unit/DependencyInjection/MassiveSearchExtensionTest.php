@@ -41,39 +41,6 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->load();
     }
 
-    public function provideLocalizationStrategy()
-    {
-        return [
-            [
-                [
-                ],
-                'noop',
-                [
-                    'localization_strategy' => 'noop',
-                ],
-                'noop',
-                [
-                    'localization_strategy' => 'index',
-                ],
-                'index',
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider provideLocalizationStrategy
-     */
-    public function testLocalizationStrategy($config, $expectedStrategy)
-    {
-        $this->load($config);
-
-        $aliasTarget = $this->container->getAlias('massive_search.localization_strategy');
-        $this->assertEquals(
-            'massive_search.localization_strategy.' . $expectedStrategy,
-            $aliasTarget
-        );
-    }
-
     public function provideAdapterConfig()
     {
         return [

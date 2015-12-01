@@ -194,6 +194,18 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @When I search for :query with sort :sort and order :order
+     */
+    public function iSearchForWithSort($query, $sort, $order)
+    {
+        $this->lastResult = $this->getSearchManager()
+            ->createSearch($query)
+            ->indexes($this->getSearchManager()->getIndexNames())
+            ->addSorting($sort, $order)
+            ->execute();
+    }
+
+    /**
      * @Given I search for :query in locale :locale
      */
     public function iSearchForInLocale($query, $locale)
@@ -281,6 +293,14 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @Then the result at position :position should be :id
+     */
+    public function theResultAtPositionShouldBe($position, $id)
+    {
+        Assert::assertEquals($this->lastResult[$position]->getId(), $id);
+    }
+
+    /**
      * Return the search manager using the configured adapter ID.
      */
     protected function getSearchManager()
@@ -290,7 +310,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
             $this->kernel->getContainer()->get('massive_search.metadata.provider.chain'),
             $this->kernel->getContainer()->get('massive_search.object_to_document_converter'),
             $this->kernel->getContainer()->get('event_dispatcher'),
-            $this->kernel->getContainer()->get('massive_search.localization_strategy'),
+            $this->kernel->getContainer()->get('massive_search.index_name_decorator.default'),
             $this->kernel->getContainer()->get('massive_search.metadata.field_evaluator')
         );
     }

@@ -35,7 +35,6 @@ class MassiveSearchExtension extends Extension
 
         $container->setAlias('massive_search.factory', $config['services']['factory']);
 
-        $this->loadLocalization($config, $loader, $container);
         $this->loadSearch($config, $loader, $container);
         $this->loadMetadata($config['metadata'], $loader, $container);
         $this->loadPersistence($config['persistence'], $loader);
@@ -50,23 +49,6 @@ class MassiveSearchExtension extends Extension
 
             $loader->load($persistenceName . '.xml');
         }
-    }
-
-    private function loadLocalization($config, $loader, $container)
-    {
-        $loader->load('localization.xml');
-        $strategy = $config['localization_strategy'];
-
-        switch ($strategy) {
-            case 'noop':
-                $strategyId = 'massive_search.localization_strategy.noop';
-                break;
-            case 'index':
-                $strategyId = 'massive_search.localization_strategy.index';
-                break;
-        }
-
-        $container->setAlias('massive_search.localization_strategy', $strategyId);
     }
 
     private function loadSearch($config, $loader, $container)
@@ -112,6 +94,7 @@ class MassiveSearchExtension extends Extension
                 throw new \RuntimeException(sprintf('Could not create cache directory "%s".', $dir));
             }
         }
+        $container->setParameter('massive_search.metadata.prefix', $config['prefix']);
         $container->setParameter('massive_search.metadata.cache_dir', $config['cache_dir']);
         $container->setParameter('massive_search.metadata.debug', $config['debug']);
 

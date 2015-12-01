@@ -1,3 +1,4 @@
+@zend_lucene @elastic @test
 Feature: Search Manager
     In order to manage the search indexing of objects
     As a developer
@@ -51,7 +52,8 @@ Feature: Search Manager
             { "id": 1, "title": "Giraffe", "body": "Long neck", "date": "2015-01-01", "url": "http://foo", "locale": "fr", "image": "foo.png" },
             { "id": 2, "title": "Lion", "body": "Big mane", "date": "2015-01-01", "url": "http://lion.com", "locale": "fr", "image": "foo.png" },
             { "id": 4, "title": "Lion 2", "body": "Big mane", "date": "2015-01-01", "url": "http://lion.com", "locale": "fr", "image": "foo.png" },
-            { "id": 6, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" }
+            { "id": 6, "title": "German Hyena", "body": "Laughs", "date": "2015-01-01", "url": "http://hyena.com", "locale": "de", "image": "foo.png" },
+            { "id": 7, "title": "Giraffe", "body": "Long neck", "date": "2015-01-01", "url": "http://foo", "locale": "de", "image": "foo.png" }
         ]
         """
         When I search for "<animal>" in locale "<locale>"

@@ -6,18 +6,24 @@ default:
                 - Massive\Bundle\SearchBundle\Behat\SearchManagerContext:
                     adapterId: massive_search.adapter.zend_lucene
             bundle: MassiveSearchBundle
+            filters:
+                tags: @zend_lucene
         elastic:
             type: symfony_bundle
             contexts:
                 - Massive\Bundle\SearchBundle\Behat\SearchManagerContext:
                     adapterId: massive_search.adapter.elastic
             bundle: MassiveSearchBundle
+            filters:
+                tags: @elastic
         test:
             type: symfony_bundle
             contexts:
                 - Massive\Bundle\SearchBundle\Behat\SearchManagerContext:
                     adapterId: massive_search.adapter.test
             bundle: MassiveSearchBundle
+            filters:
+                tags: @test
     extensions:
         Behat\Symfony2Extension:
             kernel:
