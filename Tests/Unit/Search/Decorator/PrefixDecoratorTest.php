@@ -67,9 +67,10 @@ class PrefixDecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIsVariant()
     {
-        $this->otherDecorator->isVariant('my_index', 'my_index')->willReturn(true);
+        $options = ['option' => 'value'];
+        $this->otherDecorator->isVariant('my_index', 'my_index', $options)->willReturn(true);
         $this->otherDecorator->undecorate('my_index')->willReturn('my_index');
-        $this->assertTrue($this->prefixDecorator->isVariant('my_index', 'prefix_my_index'));
+        $this->assertTrue($this->prefixDecorator->isVariant('my_index', 'prefix_my_index', $options));
     }
 
     public function testIsVariantWithWrongPrefix()

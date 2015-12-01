@@ -65,7 +65,7 @@ class PrefixDecorator implements IndexNameDecoratorInterface
         }
 
         $undecoratedIndexName = $this->removePrefix($decoratedIndexName);
-        if (!$this->decorator->isVariant($indexName, $undecoratedIndexName)) {
+        if (!$this->decorator->isVariant($indexName, $undecoratedIndexName, $options)) {
             return false;
         }
 
