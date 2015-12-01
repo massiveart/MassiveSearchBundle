@@ -12,10 +12,18 @@
 namespace Unit\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
 class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var IndexMetadata
+     */
     private $indexMetadata;
+
+    /**
+     * @var ClassMetadata
+     */
     private $classMetadata;
 
     public function setUp()
@@ -55,5 +63,12 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
 
         $indexMetadatas = $this->classMetadata->getIndexMetadatas();
         $this->assertEquals(['foo_context', 'foo_bar'], array_keys($indexMetadatas));
+    }
+
+    public function testSerializeUnserialize()
+    {
+        $this->classMetadata->setReindexRepositoryMethod('findSpecificEntities');
+
+        $this->assertEquals($this->classMetadata, unserialize(serialize($this->classMetadata)));
     }
 }

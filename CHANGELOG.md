@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 * dev-develop
+    * BUGFIX  #71 Fixed caching of repository method
     * BUGFIX  #70 Added missing passing of options to PrefixDecorator
     * FEATURE #67 Added support for sort/order for elastic search
     * FEATURE #68 Introduce decorators for index names and introduce prefixes
