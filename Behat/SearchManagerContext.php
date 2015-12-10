@@ -171,6 +171,9 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         foreach ($objectsData as $objectData) {
             $object = new $this->entityClasses[$className]();
             foreach ($objectData as $key => $value) {
+                if (is_string($value) && ($date = \DateTime::createFromFormat('Y-m-d', $value)) !== false) {
+                    $value = $date;
+                }
                 $object->$key = $value;
             }
             $this->entities[$object->id] = $object;

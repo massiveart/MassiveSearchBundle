@@ -68,11 +68,17 @@ class Field
      */
     const TYPE_ARRAY = 'array';
 
+    /**
+     * Null value should be ignored by adapter.
+     */
+    const TYPE_NULL = 'null';
+
     public static function getValidTypes()
     {
         return [
             self::TYPE_STRING,
             self::TYPE_ARRAY,
+            self::TYPE_NULL,
         ];
     }
 
