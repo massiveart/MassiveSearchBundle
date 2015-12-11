@@ -37,6 +37,7 @@ Feature: Contexts
                 <fields>
                     <field name="title" type="string" />
                     <field name="body" type="string" />
+                    <field name="date" type="date" />
                 </fields>
 
                 <context name="admin">
@@ -55,7 +56,8 @@ Feature: Contexts
         """
         [
             { "id": 1, "title": "Giraffe", "body": "Long neck", "date": "2015-01-01", "url": "http://foo", "locale": "fr", "image": "foo.png" },
-            { "id": 2, "title": "Lion", "body": "Big mane", "date": "2015-01-01", "url": "http://lion.com", "locale": "fr", "image": "foo.png" }
+            { "id": 2, "title": "Lion", "body": "Big mane", "date": "2015-01-01", "url": "http://lion.com", "locale": "fr", "image": "foo.png" },
+            { "id": 3, "title": "Lion", "body": "Big mane", "date": null, "url": "http://lion.com", "locale": "fr", "image": "foo.png" }
         ]
         """
         When I search for "<animal>" in locale "<locale>" with index "<index>"

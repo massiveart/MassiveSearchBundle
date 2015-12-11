@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* dev-master
+    * HOTFIX  #72 Fixed null date-value
+
 * 0.11.0 (2015-12-01)
     * BUGFIX  #71 Fixed caching of repository method
     * BUGFIX  #70 Added missing passing of options to PrefixDecorator

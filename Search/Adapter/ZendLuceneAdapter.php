@@ -105,6 +105,10 @@ class ZendLuceneAdapter implements AdapterInterface
             $type = $field->getType();
             $value = $field->getValue();
 
+            if ($type === Field::TYPE_NULL) {
+                continue;
+            }
+
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
             if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {

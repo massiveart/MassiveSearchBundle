@@ -170,6 +170,33 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * If the field is aggregate, its value should be aggregated into the aggregate field.
+     */
+    public function testIndexWithNullValues()
+    {
+        $adapter = $this->createAdapter($this->dataPath);
+        $this->document->getId()->willReturn(12);
+        $this->document->getIndex()->willReturn('foo');
+        $this->document->getFields()->willReturn(
+            [
+                $this->field1,
+                $this->field2,
+            ]
+        );
+
+        foreach (['field1', 'field2'] as $fieldName) {
+            $this->$fieldName->getName()->wilLReturn($fieldName);
+            $this->$fieldName->getValue()->willReturn(null);
+            $this->$fieldName->getType()->willReturn(Field::TYPE_NULL);
+        }
+
+        $luceneDocument = $adapter->index($this->document->reveal(), 'foo');
+
+        $this->assertNotContains('field1', $luceneDocument->getFieldNames());
+        $this->assertNotContains('field2', $luceneDocument->getFieldNames());
+    }
+
     private function createAdapter($basePath)
     {
         $adapter = new ZendLuceneAdapter(
