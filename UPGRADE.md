@@ -1,6 +1,6 @@
 # UPGRADE
 
-## dev-develop
+## 0.11.0
 
 ### IndexName decorators
 
