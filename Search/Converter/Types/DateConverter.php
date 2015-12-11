@@ -22,6 +22,6 @@ class DateConverter implements ConverterInterface
      */
     public function convert($value)
     {
-        return is_null($value) ? '' : $value->format(DATE_RFC3339);
+        return is_null($value) ? null : $value->format(DATE_RFC3339);
     }
 }

@@ -25,7 +25,7 @@ Feature: Indexing
         And I purge the index "car"
 
     @zend_lucene @elastic
-    Scenario: Basic indexing
+    Scenario Outline: Basic indexing
         Given that the following mapping for "IndexingCar" exists:
         """
         <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
@@ -56,22 +56,19 @@ Feature: Indexing
             { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg", "passengers": ["Jack"] }
         ]
         """
-        When I search for "My car"
-        Then there should be 2 results
-        And I search for "jac*"
-        Then there should be 2 results
-        And I search for "Jac*"
-        Then there should be 2 results
-        And I search for "jill"
-        Then there should be 1 results
-        And I search for "Jill"
-        Then there should be 1 results
-        And I search for "john"
-        Then there should be 0 results
-        And I search for "jac"
-        Then there should be 0 results
-        And I search for "Jackson"
-        Then there should be 1 results
+        When I search for "<search>"
+        Then there should be <nbResults> results
+
+        Examples:
+            | search | nbResults |
+            | My Car | 2 |
+            | jac* | 2 |
+            | Jac* | 2 |
+            | jill | 1 |
+            | Jill | 1 |
+            | john | 0 |
+            | jac | 0 |
+            | Jackson | 1 |
 
     @zend_lucene @elastic @test
     Scenario: Invalid mapping, unknown field type

@@ -78,6 +78,9 @@ class ElasticSearchAdapter implements AdapterInterface
                 case Field::TYPE_ARRAY:
                     $fields[$massiveField->getName()] = $value;
                     break;
+                case Field::TYPE_NULL:
+                    // ignore it
+                    break;
                 default:
                     throw new \InvalidArgumentException(
                         sprintf(

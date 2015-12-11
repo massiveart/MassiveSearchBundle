@@ -188,7 +188,13 @@ class ObjectToDocumentConverter
             if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
                 $value = $this->converterManager->convert($value, $type);
 
-                $type = is_array($value) ? Field::TYPE_ARRAY : Field::TYPE_STRING;
+                $type = (is_null($value) ?
+                    Field::TYPE_NULL :
+                    (is_array($value) ?
+                        Field::TYPE_ARRAY :
+                        Field::TYPE_STRING
+                    )
+                );
             }
 
             if ($value !== null && false === is_scalar($value) && false === is_array($value)) {
