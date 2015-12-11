@@ -31,6 +31,7 @@ class IndexRebuildCommand extends ContainerAwareCommand
         $this->setName('massive:search:index:rebuild');
         $this->addOption('filter', null, InputOption::VALUE_OPTIONAL, 'Filter classes which will be indexed (regex)');
         $this->addOption('purge', null, InputOption::VALUE_NONE, 'Purge the index before reindexing');
+        $this->addOption('debug', null, InputOption::VALUE_NONE, 'Write doctrine debug messages to log');
     }
 
     /**
@@ -41,6 +42,15 @@ class IndexRebuildCommand extends ContainerAwareCommand
         $eventDispatcher = $this->getContainer()->get('event_dispatcher');
         $purge = $input->getOption('purge');
         $filter = $input->getOption('filter');
+        $debug = $input->getOption('debug');
+
+        if (!$debug) {
+            $this->getContainer()
+                ->get('doctrine.orm.default_entity_manager')
+                ->getConnection()
+                ->getConfiguration()
+                ->setSQLLogger(null);
+        }
 
         $event = new IndexRebuildEvent($filter, $purge, $output);
         $eventDispatcher->dispatch(SearchEvents::INDEX_REBUILD, $event);

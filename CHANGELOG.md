@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 * dev-master
+    * HOTFIX  #69 Improve memory usage of rebuilding search indexes
     * HOTFIX  #72 Fixed null date-value
 
 * 0.11.0 (2015-12-01)
