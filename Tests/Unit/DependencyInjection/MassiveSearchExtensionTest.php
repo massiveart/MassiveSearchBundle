@@ -132,7 +132,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     /**
      * @dataProvider providePersistence
      */
-    public function testPersistence($persistenceName = null, $expectedServices)
+    public function testPersistence($persistenceName, $expectedServices)
     {
         $config = [];
 

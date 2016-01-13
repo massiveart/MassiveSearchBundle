@@ -165,7 +165,7 @@ class Field
      *
      * @param bool $stored
      */
-    public function setStored(bool $stored)
+    public function setStored($stored)
     {
         $this->stored = $stored;
     }
@@ -195,7 +195,7 @@ class Field
      *
      * @param bool $aggregate
      */
-    public function setAggregate(bool $aggregate)
+    public function setAggregate($aggregate)
     {
         $this->aggregate = $aggregate;
     }

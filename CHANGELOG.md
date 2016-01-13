@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* dev-develop
+    * BUGFIX  #73 Removed typehint to avoid failing testcases in php7
+
 * 0.12.0 (2015-12-11)
     * HOTFIX  #69 Improve memory usage of rebuilding search indexes
     * HOTFIX  #72 Fixed null date-value
