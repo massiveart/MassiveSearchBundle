@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu.
+ * This file is part of the MassiveSearchBundle
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -69,7 +70,7 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
             $locale = $options['locale'];
         }
 
-        return (boolean) preg_match(sprintf(
+        return (bool) preg_match(sprintf(
             '/^%s-%s-i18n$/',
             $indexName,
             $locale

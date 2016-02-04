@@ -35,6 +35,7 @@ class MassiveSearchExtension extends Extension
 
         $container->setAlias('massive_search.factory', $config['services']['factory']);
 
+        $loader->load('command.xml');
         $this->loadSearch($config, $loader, $container);
         $this->loadMetadata($config['metadata'], $loader, $container);
         $this->loadPersistence($config['persistence'], $loader);

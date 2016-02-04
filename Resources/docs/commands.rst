@@ -48,3 +48,15 @@ Options:
 - ``purge``: Purge each affected index before reindexing.
 - ``filter``: Only apply rebuild to classes matching the given regex pattern,
   e.g. ``.*Contact$``.
+
+.. warning::
+
+    Rebuilding the search index is a memory intensive task and it will leak
+    memory over time. You can mitigate this effect by running this command
+    with ``--env=prod`` which should remove unnecessary overhead from logging
+    systems etc.
+
+.. note::
+
+    If a reindexing command is interupted it will, on the next execution, ask
+    if it should resume from its last checkpoint.

@@ -11,7 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,8 +22,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command to execute a query on the configured search engine.
  */
-class QueryCommand extends ContainerAwareCommand
+class QueryCommand extends Command
 {
+    /**
+     * @var SearchManagerInterface
+     */
+    private $searchManager;
+
+    public function __construct(
+        SearchManagerInterface $searchManager
+    ) {
+        parent::__construct();
+        $this->searchManager = $searchManager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -33,7 +46,7 @@ class QueryCommand extends ContainerAwareCommand
         $this->addOption('index', 'I', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Index to search');
         $this->addOption('locale', 'l', InputOption::VALUE_REQUIRED, 'Index to search');
         $this->setDescription('Search the using a given query');
-        $this->setHelp(<<<EOT
+        $this->setHelp(<<<'EOT'
 The %command.name_full% command will search the configured repository and present
 the results.
 
@@ -51,9 +64,8 @@ EOT
         $indexes = $input->getOption('index');
         $locale = $input->getOption('locale');
 
-        $searchManager = $this->getContainer()->get('massive_search.search_manager');
         $start = microtime(true);
-        $hits = $searchManager->createSearch($query)->indexes($indexes)->locale($locale)->execute();
+        $hits = $this->searchManager->createSearch($query)->indexes($indexes)->locale($locale)->execute();
         $timeElapsed = microtime(true) - $start;
 
         $table = new Table($output);

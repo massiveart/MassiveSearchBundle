@@ -80,5 +80,7 @@
 
             <tag name="kernel.event_listener" event="%massive_search.events.deindex%" method="onDeindex"/>
         </service>
+
+        <service id="massive_search.reindex.resume_manager" class="Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManager"/>
     </services>
 </container>

@@ -11,26 +11,14 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Massive\Bundle\SearchBundle\Command\StatusCommand;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
-
 class StatusCommandTest extends BaseTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        $command = new StatusCommand();
-        $application = new Application($this->getContainer()->get('kernel'));
-        $command->setApplication($application);
-        $this->tester = new CommandTester($command);
-    }
-
     public function testCommand()
     {
-        $this->tester->execute([
+        $command = $this->getCommand('phpcr', 'massive:search:status');
+        $command->execute([
         ]);
 
-        $this->assertEquals(0, $this->tester->getStatusCode());
+        $this->assertEquals(0, $command->getStatusCode());
     }
 }
