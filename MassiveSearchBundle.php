@@ -14,6 +14,7 @@ namespace Massive\Bundle\SearchBundle;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\ConverterPass;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataDriverPass;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataProviderPass;
+use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\ReIndexProviderPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -25,5 +26,6 @@ class MassiveSearchBundle extends Bundle
         $container->addCompilerPass(new MetadataDriverPass());
         $container->addCompilerPass(new MetadataProviderPass());
         $container->addCompilerPass(new ConverterPass());
+        $container->addCompilerPass(new ReIndexProviderPass());
     }
 }

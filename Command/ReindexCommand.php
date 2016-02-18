@@ -22,7 +22,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
  * Comand to build (or rebuild) the search index.
@@ -30,18 +32,24 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ReindexCommand extends Command
 {
     private $env;
-    private $eventDispatcher;
     private $resumeManager;
+    private $searchManager;
+    private $providerRegistry;
+    private $questionHelper;
 
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
         ResumeManagerInterface $resumeManager,
-        $env
+        SearchManager $searchManager,
+        ReIndexProviderRegistry $providerRegistry,
+        $env,
+        QuestionHelper $questionHelper = null
     ) {
         parent::__construct();
-        $this->eventDispatcher = $eventDispatcher;
         $this->resumeManager = $resumeManager;
+        $this->searchManager = $searchManager;
+        $this->providerRegistry = $providerRegistry;
         $this->env = $env;
+        $this->questionHelper = $questionHelper ?: new QuestionHelper();
     }
 
     /**
@@ -57,8 +65,10 @@ on all "drivers" which support reindexing. Each driver will index all of
 the entities/documents which it manages.
 EOT
         );
-        $this->addOption('filter', null, InputOption::VALUE_OPTIONAL, 'Filter classes which will be indexed (regex)');
-        $this->addOption('purge', null, InputOption::VALUE_NONE, 'Purge the index before reindexing');
+        //$this->addOption('filter', null, InputOption::VALUE_OPTIONAL, 'Filter classes which will be indexed (regex)');
+        //$this->addOption('purge', null, InputOption::VALUE_NONE, 'Purge the index before reindexing');
+        $this->addOption('batch-size', null, InputOption::VALUE_REQUIRED, 'Batch size', 50);
+
     }
 
     /**
@@ -67,7 +77,6 @@ EOT
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $formatterHelper = new FormatterHelper();
-        $questionHelper = new QuestionHelper();
 
         $startTime = microtime(true);
 
@@ -84,27 +93,71 @@ EOT
             );
         }
 
-        $purge = $input->getOption('purge');
-        $filter = $input->getOption('filter');
+        //$purge = $input->getOption('purge');
+        //$filter = $input->getOption('filter');
+        $batchSize = $input->getOption('batch-size');
 
-        $checkpoints = $this->resumeManager->getCheckpoints();
+        $providerNames = $this->resumeManager->getUnfinishedProviders();
 
-        if (count($checkpoints) > 0) {
-            foreach ($checkpoints as $name => $value) {
+        if (count($providerNames) > 0) {
+            foreach ($providerNames as $providerName) {
                 $question = new ConfirmationQuestion(sprintf(
-                    '<question>Checkpoint found for "%s", do you wish to resume from %d?</question> ',
-                    $name, $value
+                    '<question>Provider "%s" did not finish. Do you wish to resume?</question> ',
+                    $providerName
                 ));
-                $response = $questionHelper->ask($input, $output, $question, true);
+                $response = $this->questionHelper->ask($input, $output, $question, true);
 
                 if (false === $response) {
-                    $this->resumeManager->removeCheckpoint($name);
+                    $this->resumeManager->removeCheckpoint($providerName);
                 }
             }
         }
 
-        $event = new IndexRebuildEvent($filter, $purge, $output);
-        $this->eventDispatcher->dispatch(SearchEvents::INDEX_REBUILD, $event);
+        foreach ($this->providerRegistry->getProviders() as $providerName => $provider) {
+            $output->writeln(sprintf('provider "%s"', $providerName));
+            $output->write(PHP_EOL);
+
+            foreach ($provider->getClassFqns() as $classFqn) {
+                $count = $provider->getCount($classFqn);
+                $checkpoint = $this->resumeManager->getCheckpoint($providerName, $classFqn);
+                $offset = $checkpoint ?: 0;
+
+                // If the offset is the same as the count then the job was already completed.
+                // If more objects are in the database than before, then we will just index a couple
+                // of more documents than normal.
+                if ($offset === $count - 1) {
+                    continue;
+                }
+
+                $realCount = $count - $offset;
+
+                $output->writeln(sprintf(
+                    '-- reindexing "%s" instances of "%s"', 
+                    $realCount, 
+                    $classFqn
+                ));
+
+                $progress = new ProgressBar($output);
+                $progress->start($realCount);
+
+                // index in batches
+                while ($objects = $provider->provide($classFqn, $offset, $batchSize)) {
+                    $this->resumeManager->setCheckpoint($providerName, $classFqn, $offset);
+
+                    foreach ($objects as $object) {
+                        $progress->advance();
+                        $output->write(' Mem: ' . number_format(memory_get_usage()) . 'b');
+                        $this->searchManager->index($object);
+                    }
+
+                    $offset += $batchSize;
+                }
+
+                $output->write(PHP_EOL . PHP_EOL);
+            }
+
+            $this->resumeManager->removeCheckpoints($providerName);
+        }
 
         $output->write(PHP_EOL);
         $output->writeln(sprintf(

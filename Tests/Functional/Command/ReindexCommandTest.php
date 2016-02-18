@@ -11,15 +11,17 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-class IndexRebuildCommandTest extends BaseTestCase
+class ReindexCommandTest extends BaseTestCase
 {
     /**
      * This command just fires an event.
      */
     public function testCommand()
     {
+        $this->generateIndex(10);
         $tester = $this->getCommand('prod', 'massive:search:reindex');
         $tester->execute([], ['interactive' => false]);
+        var_dump($tester->getDisplay());die();;
 
         $this->assertEquals(0, $tester->getStatusCode());
     }

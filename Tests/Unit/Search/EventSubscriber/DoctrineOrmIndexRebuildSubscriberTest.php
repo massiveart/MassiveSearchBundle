@@ -12,7 +12,6 @@
 namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata as OrmMetadata;
-use Doctrine\Common\Persistence\ObjectManager;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmIndexRebuildSubscriber;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
@@ -21,6 +20,7 @@ use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
 use Prophecy\Argument;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,7 +30,7 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
     private $output;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $objectManager;
 
@@ -72,7 +72,7 @@ class DoctrineOrmIndexRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->output = new BufferedOutput();
-        $this->objectManager = $this->prophesize('Doctrine\Common\Persistence\ObjectManager');
+        $this->objectManager = $this->prophesize('Doctrine\ORM\EntityManagerInterface');
         $this->ormMetadataFactory = $this->prophesize('Doctrine\Common\Persistence\Mapping\ClassMetadataFactory');
         $this->ormMetadata = $this->prophesize('Doctrine\Common\Persistence\Mapping\ClassMetadata');
         $this->searchMetadataFactory = $this->prophesize('Metadata\MetadataFactory');

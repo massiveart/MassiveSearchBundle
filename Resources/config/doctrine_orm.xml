@@ -10,16 +10,15 @@
             <tag name="doctrine.event_subscriber" />
         </service>
 
-        <service id="massive_search.search.event_subscriber.doctrine_orm_index_rebuild" class="Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmIndexRebuildSubscriber">
-            <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="service" id="massive_search.metadata.factory" />
+        <service id="massive_search.search.event_subscriber.purge_subscriber" class="Massive\Bundle\SearchBundle\Search\EventSubscriber\PurgeSubscriber">
             <argument type="service" id="massive_search.search_manager" />
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="massive_search.search.event_subscriber.purge_subscriber" class="Massive\Bundle\SearchBundle\Search\EventSubscriber\PurgeSubscriber">
-            <argument type="service" id="massive_search.search_manager" />
-            <tag name="kernel.event_subscriber" />
+        <service id="massive_search.reindex.provider.doctrine_orm" class="Massive\Bundle\SearchBundle\Search\ReIndex\Provider\DoctrineOrmProvider">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="massive_search.metadata.factory" />
+            <tag name="massive_search.reindex.provider" id="doctrine_orm"/>
         </service>
     </services>
 </container>

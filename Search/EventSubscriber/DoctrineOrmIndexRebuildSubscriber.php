@@ -11,7 +11,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\EventSubscriber;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
@@ -20,16 +19,18 @@ use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Metadata\MetadataFactory;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 
 /**
- * Rebuilds the indexes which relate to Doctrine ORM entities.
+ * Rebuilds the indexes which relate to Doctrine ORM query.
  */
 class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
 {
     /**
      * @var ClassMetadataFactory
      */
-    private $objectManager;
+    private $entityManager;
 
     /**
      * @var MetadataFactory
@@ -42,16 +43,16 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
     private $searchManager;
 
     /**
-     * @param ObjectManager $objectManager
+     * @param EntityManager $entityManager
      * @param MetadataFactory $searchMetadataFactory
      * @param SearchManager $searchManager
      */
     public function __construct(
-        ObjectManager $objectManager,
+        EntityManagerInterface $entityManager,
         MetadataFactory $searchMetadataFactory,
         SearchManager $searchManager
     ) {
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
         $this->searchMetadataFactory = $searchMetadataFactory;
         $this->searchManager = $searchManager;
     }
@@ -76,7 +77,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         $output = $event->getOutput();
         $filter = $event->getFilter();
 
-        $metadataFactory = $this->objectManager->getMetadataFactory();
+        $metadataFactory = $this->entityManager->getMetadataFactory();
         $metadatas = $metadataFactory->getAllMetadata();
 
         foreach ($metadatas as $class) {
@@ -110,7 +111,7 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
         $repositoryMethod = $class->getReindexRepositoryMethod();
         $repositoryMethod = $repositoryMethod ?: 'findAll';
 
-        $repository = $this->objectManager->getRepository($class->name);
+        $repository = $this->entityManager->getRepository($class->name);
 
         if (!method_exists($repository, $repositoryMethod)) {
             throw new \InvalidArgumentException(sprintf(
@@ -119,16 +120,34 @@ class DoctrineOrmIndexRebuildSubscriber implements EventSubscriberInterface
             ));
         }
 
-        $objects = $repository->$repositoryMethod();
+        $query = $repository->$repositoryMethod();
 
-        $count = 0;
-        foreach ($objects as $object) {
-            $this->searchManager->index($object);
-            ++$count;
+        if (!$query instanceof Query) {
+            @trigger_error('The repository method should reutrn a Doctrine\ORM\Query, not a collection of query.', E_USER_DEPRECATED);
+            return $this->indexEntities($output, $query);
         }
+
+        do {
+            $entities = $query->execute();
+            $this->indexEntities($output, $entities);
         $output->writeln(sprintf(
-            ' <info>[OK]</info> %s entities indexed',
             $count
         ));
+        } while ($entities);
+    }
+
+    private function indexEntities(OutputInterface $output, $entities)
+    {
+        if (!$entities) {
+            return;
+        }
+
+        $count = 0;
+        foreach ($entities as $entity) {
+            $this->searchManager->index($entity);
+            ++$count;
+        }
+
+        return $count;
     }
 }
