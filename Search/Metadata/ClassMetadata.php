@@ -99,13 +99,11 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     }
 
     /**
-     * When reindexing, the repository method will be used to retrieve all of
-     * the entities which should be reindexed.
+     * If specified, the reindex repsoitory method will be used to indicate a method
+     * which can be used to modify the query builder (e.g. to exclude certain objects
+     * from the index).
      *
-     * NULL may be returned if the implementation should use a default method
-     * name. (e.g. `findAll` in Doctrine ORM).
-     *
-     * @return string|null
+     * @deprecated Returning anything from this method is deprecated. It will be passed a query builder.
      */
     public function getReindexRepositoryMethod()
     {

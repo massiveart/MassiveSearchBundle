@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\ReIndex;
+namespace Massive\Bundle\SearchBundle\Search\Reindex;
 
 /**
  * Allow the storage of "checkpoints" which indicate how far
@@ -23,7 +23,7 @@ class ResumeManager implements ResumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setCheckpoint($name, $value)
+    public function setCheckpoint($providerName, $classFqn, $value)
     {
         if (!is_scalar($value)) {
             throw new \InvalidArgumentException(sprintf(
@@ -34,33 +34,38 @@ class ResumeManager implements ResumeManagerInterface
 
         $data = $this->getCheckpoints();
 
-        $data[$name] = $value;
+        if (!isset($data[$providerName])) {
+            $data[$providerName] = [];
+        }
+
+        $data[$providerName][$classFqn] = $value;
+
         $this->saveCheckpoints($data);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCheckpoint($name, $default = null)
+    public function getCheckpoint($providerName, $classFqn)
     {
         $data = $this->getCheckpoints();
 
-        if (isset($data[$name])) {
-            return $data[$name];
+        if (isset($data[$providerName][$classFqn])) {
+            return $data[$providerName][$classFqn];
         }
 
-        return $default;
+        return;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removeCheckpoint($name)
+    public function removeCheckpoints($providerName)
     {
         $data = $this->getCheckpoints();
 
-        if (isset($data[$name])) {
-            unset($data[$name]);
+        if (isset($data[$providerName])) {
+            unset($data[$providerName]);
             $this->saveCheckpoints($data);
         }
     }
@@ -79,20 +84,9 @@ class ResumeManager implements ResumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getCheckpoints()
+    public function getUnfinishedProviders()
     {
-        $filename = $this->getCheckpointFile();
-        $data = [];
-
-        if (file_exists($filename)) {
-            $data = unserialize(file_get_contents($filename));
-        }
-
-        if (!$data || !is_array($data)) {
-            $data = [];
-        }
-
-        return $data;
+        return array_keys($this->getCheckpoints());
     }
 
     /**
@@ -108,5 +102,21 @@ class ResumeManager implements ResumeManagerInterface
     private function saveCheckpoints(array $data)
     {
         file_put_contents($this->getCheckpointFile(), serialize($data));
+    }
+
+    private function getCheckpoints()
+    {
+        $filename = $this->getCheckpointFile();
+        $data = [];
+
+        if (file_exists($filename)) {
+            $data = unserialize(file_get_contents($filename));
+        }
+
+        if (!$data || !is_array($data)) {
+            $data = [];
+        }
+
+        return $data;
     }
 }

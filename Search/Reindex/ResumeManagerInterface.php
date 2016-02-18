@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\ReIndex;
+namespace Massive\Bundle\SearchBundle\Search\Reindex;
 
 /**
  * Resume managers persist and retrieve checkpoints which record
@@ -24,7 +24,7 @@ interface ResumeManagerInterface
      * @param mixed $name
      * @param mixed $value
      */
-    public function setCheckpoint($name, $value);
+    public function setCheckpoint($providerName, $classFqn, $value);
 
     /**
      * Return the previously stored checkpoint or the default
@@ -33,14 +33,14 @@ interface ResumeManagerInterface
      * @param string $name
      * @param mixed $value
      */
-    public function getCheckpoint($name, $default = null);
+    public function getCheckpoint($providerName, $classFqn);
 
     /**
-     * Remove the named checkpoint.
+     * Remove all checkpoints for the given provider name.
      *
      * @param string $name
      */
-    public function removeCheckpoint($name);
+    public function removeCheckpoints($providerName);
 
     /**
      * Purge all checkpoint.
@@ -48,9 +48,9 @@ interface ResumeManagerInterface
     public function purgeCheckpoints();
 
     /**
-     * Return all checkpoints.
+     * Return all provider names that have unfinished jobs.
      *
-     * @return array
+     * @return string[]
      */
-    public function getCheckpoints();
+    public function getUnfinishedProviders();
 }

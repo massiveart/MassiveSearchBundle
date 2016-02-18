@@ -95,6 +95,20 @@ the converter to the system you simply add a tag to your custom service.
         <tag type="massive_search.converter" from="foo" />
     </service>
 
+Reindex Providers
+-----------------
+
+When you implement a new driver you will most likely want to be able to
+*re-index* objects which fall within the scope of this driver. In order to do
+this you must create a class implementing ``ReindexProviderInterface`` and
+add it to your service configutation with the ``massive_search.reindex.provider`` tag::
+
+.. code-block:: xml
+
+    <service id="massive_search.reindex.provider.foo_provider" class="Vendor\\Search\\Reindex\\FooProvider">
+        <tag name="massive_search.reindex.provider" id="foo"/>
+    </service>
+
 Events
 ------
 
