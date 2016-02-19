@@ -35,7 +35,7 @@ class ResumeManager implements ResumeManagerInterface
         $data = $this->getCheckpoints();
 
         if (!isset($data[$providerName])) {
-            $data[$providerName] = array();
+            $data[$providerName] = [];
         }
 
         $data[$providerName][$classFqn] = $value;
@@ -54,7 +54,7 @@ class ResumeManager implements ResumeManagerInterface
             return $data[$providerName][$classFqn];
         }
 
-        return null;
+        return;
     }
 
     /**

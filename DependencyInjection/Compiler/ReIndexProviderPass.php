@@ -43,8 +43,7 @@ class ReIndexProviderPass implements CompilerPassInterface
                 ));
             }
 
-            $registry->addMethodCall('addProvider', array($attributes[0]['id'], new Reference($id)));
+            $registry->addMethodCall('addProvider', [$attributes[0]['id'], new Reference($id)]);
         }
     }
 }
-

@@ -14,8 +14,7 @@
             <tag name="console.command" />
         </service>
 
-        <service id="massive_search.command.index_reindex" class="Massive\Bundle\SearchBundle\Command\ReindexCommand">
-            <argument type="service" id="event_dispatcher" />
+        <service id="massive_search.command.reindex" class="Massive\Bundle\SearchBundle\Command\ReindexCommand">
             <argument type="service" id="massive_search.reindex.resume_manager" />
             <argument type="service" id="massive_search.search_manager" />
             <argument type="service" id="massive_search.reindex.provider_registry" />
@@ -24,11 +23,15 @@
         </service>
 
         <service id="massive_search.command.index_rebuild_deprecated" class="Massive\Bundle\SearchBundle\Command\IndexRebuildCommand">
-            <argument type="service" id="event_dispatcher" />
             <argument type="service" id="massive_search.reindex.resume_manager" />
             <argument type="service" id="massive_search.search_manager" />
             <argument type="service" id="massive_search.reindex.provider_registry" />
             <argument>%kernel.environment%</argument>
+            <tag name="console.command" />
+        </service>
+
+        <service id="massive_search.command.purge" class="Massive\Bundle\SearchBundle\Command\PurgeCommand">
+            <argument type="service" id="massive_search.search_manager" />
             <tag name="console.command" />
         </service>
     </services>

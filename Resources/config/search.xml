@@ -82,5 +82,10 @@
         </service>
 
         <service id="massive_search.reindex.resume_manager" class="Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManager"/>
+
+        <!-- ReIndex -->
+        <service id="massive_search.reindex.provider_registry" class="Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry" />
+        <service id="massive_search.reindex.resume_manager" class="Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManager"/>
+
     </services>
 </container>

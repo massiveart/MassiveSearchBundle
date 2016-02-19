@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * This file is part of the MassiveSearchBundle
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Massive\Bundle\SearchBundle\Search\ReIndex\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Metadata\MetadataFactory;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
+use Metadata\MetadataFactory;
 
 class DoctrineOrmProvider implements ReIndexProviderInterface
 {
@@ -20,10 +28,12 @@ class DoctrineOrmProvider implements ReIndexProviderInterface
     private $searchMetadataFactory;
 
     /**
-     * @param EntityManager $entityManager
-     * @param MetadataFactory $searchMetadataFactory
-     * @param SearchManager $searchManager
+     * @deprecated BC hack. @see this::provide().
+     *
+     * @var object[]
      */
+    private $cachedEntities = [];
+
     public function __construct(
         EntityManagerInterface $entityManager,
         MetadataFactory $searchMetadataFactory
@@ -38,7 +48,7 @@ class DoctrineOrmProvider implements ReIndexProviderInterface
     public function getClassFqns()
     {
         $metadataFactory = $this->entityManager->getMetadataFactory();
-        $classFqns = array();
+        $classFqns = [];
 
         foreach ($metadataFactory->getAllMetadata() as $classMetadata) {
             if (null === $this->searchMetadataFactory->getMetadataForClass($classMetadata->name)) {
@@ -51,18 +61,45 @@ class DoctrineOrmProvider implements ReIndexProviderInterface
     }
 
     /**
+     * BC Note: Previous versions of the MassiveSearchBundle expected a collection of entities to
+     *          be returned from the repository via. a custom repository method. The expected behavior
+     *          now is that a query builder will be passed and NOTHING should be returned.
+     *
      * {@inheritdoc}
      */
     public function provide($classFqn, $offset, $maxResults)
     {
+        if (!empty($this->cachedEntities)) {
+            return $this->sliceEntities($offset, $maxResults);
+        }
+
         $repository = $this->entityManager->getRepository($classFqn);
-        $queryBuilder = $repository->createQueryBuilder('d')
-            ->setFirstResult($offset)
-            ->setMaxResults($maxResults);
+        $metadata = $this->searchMetadataFactory->getMetadataForClass($classFqn);
+
+        $repositoryMethod = $metadata->getOutsideClassMetadata()->getReindexRepositoryMethod();
+
+        $queryBuilder = $repository->createQueryBuilder('d');
+
+        if ($repositoryMethod) {
+            $result = $repository->$repositoryMethod($queryBuilder);
+
+            if (is_array($result)) {
+                @trigger_error('Reindex repository methods should NOT return anything. Use the passed query builder instead.');
+                $this->cachedEntities = $result;
+
+                return $this->sliceEntities($offset, $maxResults);
+            }
+        }
+
+        $queryBuilder->setFirstResult($offset);
+        $queryBuilder->setMaxResults($maxResults);
 
         return $queryBuilder->getQuery()->execute();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCount($classFqn)
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
@@ -70,5 +107,16 @@ class DoctrineOrmProvider implements ReIndexProviderInterface
         $queryBuilder->from($classFqn, 'a');
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    private function sliceEntities($offset, $maxResults)
+    {
+        $entities = array_slice($this->cachedEntities, $offset, $maxResults);
+
+        if (count($entities) < $maxResults) {
+            $this->cachedEntities = [];
+        }
+
+        return $entities;
     }
 }

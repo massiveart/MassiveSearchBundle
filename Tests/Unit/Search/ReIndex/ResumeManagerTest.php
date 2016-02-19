@@ -33,14 +33,12 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should store and retrieve checkpoints.
+     * It should store and retrieve checkpoints for a given provider.
      */
     public function testStoreRetrieve()
     {
-        $this->manager->setCheckpoint('sulu_structure', 50);
-        $this->assertEquals([
-            'sulu_structure' => 50,
-        ], $this->manager->getCheckpoints());
+        $this->manager->setCheckpoint('sulu_structure', 'Foobar', 50);
+        $this->assertEquals(50, $this->manager->getCheckpoint('sulu_structure', 'Foobar'));
     }
 
     /**
@@ -48,11 +46,9 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdate()
     {
-        $this->manager->setCheckpoint('sulu_structure', 50);
-        $this->manager->setCheckpoint('sulu_structure', 100);
-        $this->assertEquals([
-            'sulu_structure' => 100,
-        ], $this->manager->getCheckpoints());
+        $this->manager->setCheckpoint('sulu_structure', 'BarFoo', 50);
+        $this->manager->setCheckpoint('sulu_structure', 'BarFoo', 100);
+        $this->assertEquals(100, $this->manager->getCheckpoint('sulu_structure', 'BarFoo'));
     }
 
     /**
@@ -60,12 +56,10 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testStoreMany()
     {
-        $this->manager->setCheckpoint('Sulu Structure', 50);
-        $this->manager->setCheckpoint('Doctrine ORM Entity', 100);
-        $this->assertEquals([
-            'Sulu Structure' => 50,
-            'Doctrine ORM Entity' => 100,
-        ], $this->manager->getCheckpoints());
+        $this->manager->setCheckpoint('Sulu Structure', 'Foobar', 50);
+        $this->manager->setCheckpoint('Doctrine ORM Entity', 'BarFoo', 100);
+        $this->assertEquals(50, $this->manager->getCheckpoint('Sulu Structure', 'Foobar'));
+        $this->assertEquals(100, $this->manager->getCheckpoint('Doctrine ORM Entity', 'BarFoo'));
     }
 
     /**
@@ -73,25 +67,23 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPurge()
     {
-        $this->manager->setCheckpoint('Sulu Structure', 50);
-        $this->manager->setCheckpoint('Doctrine ORM Entity', 100);
+        $this->manager->setCheckpoint('Sulu Structure', 'Foobar', 50);
+        $this->manager->setCheckpoint('Doctrine ORM Entity', 'Foobar', 100);
         $this->manager->purgeCheckpoints();
 
-        $this->assertEquals([], $this->manager->getCheckpoints());
+        $this->assertEquals([], $this->manager->getUnfinishedProviders());
     }
 
     /**
-     * It should remove specific checkpoints.
+     * It should remove checkpoints for a given provider.
      */
     public function testRemove()
     {
-        $this->manager->setCheckpoint('Sulu Structure', 50);
-        $this->manager->setCheckpoint('Doctrine ORM Entity', 100);
-        $this->manager->removeCheckpoint('Sulu Structure');
+        $this->manager->setCheckpoint('Sulu Structure', 'Foobar', 50);
+        $this->manager->setCheckpoint('Doctrine ORM Entity', 'BarFoo', 100);
+        $this->manager->removeCheckpoints('Sulu Structure');
 
-        $this->assertEquals([
-            'Doctrine ORM Entity' => 100,
-        ], $this->manager->getCheckpoints());
+        $this->assertEquals(['Doctrine ORM Entity'], $this->manager->getUnfinishedProviders());
     }
 
     /**
@@ -99,10 +91,10 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCheckpoint()
     {
-        $this->manager->setCheckpoint('Sulu Structure', 50);
-        $this->manager->setCheckpoint('Doctrine ORM Entity', 100);
+        $this->manager->setCheckpoint('Sulu Structure', 'Foobar', 50);
+        $this->manager->setCheckpoint('Doctrine ORM Entity', 'BarFoo', 100);
 
-        $this->assertEquals(50, $this->manager->getCheckpoint('Sulu Structure'));
+        $this->assertEquals(50, $this->manager->getCheckpoint('Sulu Structure', 'Foobar'));
     }
 
     /**
@@ -113,7 +105,7 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnlyScalar()
     {
-        $this->manager->setCheckpoint('ha', new \stdClass());
+        $this->manager->setCheckpoint('ha', 'Fa', new \stdClass());
     }
 
     private function cleanUp()

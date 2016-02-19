@@ -21,7 +21,6 @@ class ReindexCommandTest extends BaseTestCase
         $this->generateIndex(10);
         $tester = $this->getCommand('prod', 'massive:search:reindex');
         $tester->execute([], ['interactive' => false]);
-        var_dump($tester->getDisplay());die();;
 
         $this->assertEquals(0, $tester->getStatusCode());
     }
