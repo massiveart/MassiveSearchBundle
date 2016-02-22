@@ -12,6 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Command;
 
 use Massive\Bundle\SearchBundle\Command\ReindexCommand;
+use Massive\Bundle\SearchBundle\Search\ReIndex\LocalizedReIndexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManagerInterface;
@@ -51,6 +52,11 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
      */
     private $provider1;
 
+    /**
+     * @var LocalizedReIndexProviderInterface
+     */
+    private $localizedProvider1;
+
     public function setUp()
     {
         $this->resumeManager = $this->prophesize(ResumeManagerInterface::class);
@@ -59,6 +65,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $this->questionHelper = $this->prophesize(QuestionHelper::class);
 
         $this->provider1 = $this->prophesize(ReIndexProviderInterface::class);
+        $this->localizedProvider1 = $this->prophesize(LocalizedReIndexProviderInterface::class);
     }
 
     /**
@@ -118,6 +125,47 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $this->resumeManager->getCheckpoint($providerName, $classFqn)->willReturn(null);
         $this->resumeManager->setCheckpoint($providerName, $classFqn, 0)->shouldBeCalled();
         $this->resumeManager->setCheckpoint($providerName, $classFqn, 50)->shouldBeCalled();
+        $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
+
+        $tester = $this->execute('prod', []);
+
+        $this->assertContains(
+            'reindexing "100" instances of "stdClass"',
+            $tester->getDisplay()
+        );
+    }
+
+    /**
+     * It should index all translations of objects when a localized provider is used.
+     */
+    public function testIndexLocalized()
+    {
+        $classFqn = 'stdClass';
+        $count = 100;
+        $providerName = 'provider';
+        $batch = array_fill(0, 2, new \stdClass());
+
+        $this->resumeManager->getUnfinishedProviders()->willReturn([]);
+        $this->providerRegistry->getProviders()->willReturn([
+            $providerName => $this->localizedProvider1->reveal(),
+        ]);
+        $this->localizedProvider1->getClassFqns()->willReturn([$classFqn]);
+        $this->localizedProvider1->getCount('stdClass')->willReturn($count);
+        $this->localizedProvider1->provide('stdClass', 0, 50)->willReturn($batch);
+        $this->localizedProvider1->provide('stdClass', 50, 50)->willReturn([]);
+
+        foreach ($batch as $object) {
+            $this->localizedProvider1->getLocalesForObject($object)->willReturn(['de', 'fr']);
+            $this->localizedProvider1->translateObject($object, 'de')
+                ->shouldBeCalled()
+                ->willReturn($object);
+            $this->localizedProvider1->translateObject($object, 'fr')
+                ->shouldBeCalled()
+                ->willReturn($object);
+        }
+
+        $this->resumeManager->getCheckpoint($providerName, $classFqn)->willReturn(null);
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 0)->shouldBeCalled();
         $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
 
         $tester = $this->execute('prod', []);

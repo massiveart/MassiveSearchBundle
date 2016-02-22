@@ -12,6 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Command;
 
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
+use Massive\Bundle\SearchBundle\Search\ReIndex\LocalizedReIndexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManagerInterface;
@@ -202,8 +203,20 @@ EOT
             $this->resumeManager->setCheckpoint($providerName, $classFqn, $offset);
 
             foreach ($objects as $object) {
+                $locales = [null];
+
+                if ($provider instanceof LocalizedReIndexProviderInterface) {
+                    $locales = $provider->getLocalesForObject($object);
+                }
+
                 try {
-                    $this->searchManager->index($object);
+                    foreach ($locales as $locale) {
+                        if (null !== $locale) {
+                            $object = $provider->translateObject($object, $locale);
+                        }
+
+                        $this->searchManager->index($object, $locale);
+                    }
                     $progress->advance();
                     $output->write(' Mem: ' . number_format(memory_get_usage()) . 'b');
                 } catch (MetadataNotFoundException $e) {

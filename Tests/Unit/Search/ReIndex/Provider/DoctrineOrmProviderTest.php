@@ -25,11 +25,34 @@ use Metadata\MetadataFactory;
 
 class DoctrineOrmProviderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
+
+    /**
+     * @var MetadataFactory
+     */
     private $searchMetadataFactory;
+
+    /**
+     * @var SearchClassMetadata
+     */
     private $searchMetadata;
+
+    /**
+     * @var OrmClassMetadata
+     */
     private $ormMetadata;
+
+    /**
+     * @var ClassMetadataFactory
+     */
     private $ormMetadataFactory;
+
+    /**
+     * @var DoctrineOrmProvider
+     */
     private $provider;
 
     public function setUp()

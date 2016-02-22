@@ -20,6 +20,16 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class PurgeCommandTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var SearchManagerInterface
+     */
+    private $searchManager;
+
+    /**
+     * @var QuestionHelper
+     */
+    private $questionHelper;
+
     public function setUp()
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);

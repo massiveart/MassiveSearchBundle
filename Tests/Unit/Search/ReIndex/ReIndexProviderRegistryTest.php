@@ -16,7 +16,20 @@ use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry;
 
 class ReIndexProviderRegistryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ReIndexProviderRegistry
+     */
     private $registry;
+
+    /**
+     * @var ReIndexProviderInterface
+     */
+    private $provider1;
+
+    /**
+     * @var ReIndexProviderInterface
+     */
+    private $provider2;
 
     public function setUp()
     {
