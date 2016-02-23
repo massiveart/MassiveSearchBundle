@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Compiler pass to register metadata providers.
  */
-class ReIndexProviderPass implements CompilerPassInterface
+class ReindexProviderPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {

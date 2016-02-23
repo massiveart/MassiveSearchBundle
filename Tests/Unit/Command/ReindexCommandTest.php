@@ -12,10 +12,10 @@
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Command;
 
 use Massive\Bundle\SearchBundle\Command\ReindexCommand;
-use Massive\Bundle\SearchBundle\Search\ReIndex\LocalizedReIndexProviderInterface;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManagerInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
+use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Prophecy\Argument;
 use Symfony\Component\Console\Application;
@@ -38,7 +38,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
     private $searchManager;
 
     /**
-     * @var ReIndexProviderRegistry
+     * @var ReindexProviderRegistry
      */
     private $providerRegistry;
 
@@ -48,12 +48,12 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
     private $questionHelper;
 
     /**
-     * @var ReIndexProviderInterface
+     * @var ReindexProviderInterface
      */
     private $provider1;
 
     /**
-     * @var LocalizedReIndexProviderInterface
+     * @var LocalizedReindexProviderInterface
      */
     private $localizedProvider1;
 
@@ -61,11 +61,11 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->resumeManager = $this->prophesize(ResumeManagerInterface::class);
         $this->searchManager = $this->prophesize(SearchManager::class);
-        $this->providerRegistry = $this->prophesize(ReIndexProviderRegistry::class);
+        $this->providerRegistry = $this->prophesize(ReindexProviderRegistry::class);
         $this->questionHelper = $this->prophesize(QuestionHelper::class);
 
-        $this->provider1 = $this->prophesize(ReIndexProviderInterface::class);
-        $this->localizedProvider1 = $this->prophesize(LocalizedReIndexProviderInterface::class);
+        $this->provider1 = $this->prophesize(ReindexProviderInterface::class);
+        $this->localizedProvider1 = $this->prophesize(LocalizedReindexProviderInterface::class);
     }
 
     /**

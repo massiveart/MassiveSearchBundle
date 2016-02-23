@@ -8,15 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\ReIndex;
+namespace Massive\Bundle\SearchBundle\Search\Reindex;
 
 /**
  * Registry for reindex providers.
  */
-class ReIndexProviderRegistry
+class ReindexProviderRegistry
 {
     /**
-     * @var ReIndexProviderInterface
+     * @var ReindexProviderInterface
      */
     private $providers = [];
 
@@ -24,15 +24,15 @@ class ReIndexProviderRegistry
      * Add a reindex provider to the registry.
      *
      * @param string $name
-     * @param ReIndexProviderInterface $provider
+     * @param ReindexProviderInterface $provider
      *
      * @throws \InvalidArgumentException
      */
-    public function addProvider($name, ReIndexProviderInterface $provider)
+    public function addProvider($name, ReindexProviderInterface $provider)
     {
         if (isset($this->providers[$name])) {
             throw new \InvalidArgumentException(sprintf(
-                'ReIndex provider with name "%s" has already been registered.',
+                'Reindex provider with name "%s" has already been registered.',
                 $name
             ));
         }
@@ -43,7 +43,7 @@ class ReIndexProviderRegistry
     /**
      * Return the registered providers.
      *
-     * @return ReIndexProviderInterface[]
+     * @return ReindexProviderInterface[]
      */
     public function getProviders()
     {

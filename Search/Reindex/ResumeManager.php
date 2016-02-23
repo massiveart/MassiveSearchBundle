@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\ReIndex;
+namespace Massive\Bundle\SearchBundle\Search\Reindex;
 
 /**
  * Allow the storage of "checkpoints" which indicate how far

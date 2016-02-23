@@ -9,34 +9,34 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\ReIndex;
+namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Reindex;
 
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry;
+use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
 
-class ReIndexProviderRegistryTest extends \PHPUnit_Framework_TestCase
+class ReindexProviderRegistryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ReIndexProviderRegistry
+     * @var ReindexProviderRegistry
      */
     private $registry;
 
     /**
-     * @var ReIndexProviderInterface
+     * @var ReindexProviderInterface
      */
     private $provider1;
 
     /**
-     * @var ReIndexProviderInterface
+     * @var ReindexProviderInterface
      */
     private $provider2;
 
     public function setUp()
     {
-        $this->registry = new ReIndexProviderRegistry();
+        $this->registry = new ReindexProviderRegistry();
 
-        $this->provider1 = $this->prophesize(ReIndexProviderInterface::class);
-        $this->provider2 = $this->prophesize(ReIndexProviderInterface::class);
+        $this->provider1 = $this->prophesize(ReindexProviderInterface::class);
+        $this->provider2 = $this->prophesize(ReindexProviderInterface::class);
     }
 
     /**

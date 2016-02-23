@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\ReIndex;
+namespace Massive\Bundle\SearchBundle\Search\Reindex;
 
 /**
- * ReIndexProviders provide objects that should be reindexed.
+ * ReindexProviders provide objects that should be reindexed.
  *
- * They are used by the ReIndexCommand.
+ * They are used by the ReindexCommand.
  */
-interface ReIndexProviderInterface
+interface ReindexProviderInterface
 {
     /**
      * Return a $maxResults of objects from $offset for the given
@@ -30,7 +30,7 @@ interface ReIndexProviderInterface
     public function provide($classFqn, $offset, $maxResults);
 
     /**
-     * Return the total number of objects that that need to be reindexed.
+     * Return the total number of objects that need to be reindexed.
      *
      * @param string $classFqn
      *

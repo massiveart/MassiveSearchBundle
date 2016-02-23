@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\ReIndex;
+namespace Massive\Bundle\SearchBundle\Search\Reindex;
 
 /**
  * To be implemented by providers that provide localized objects for reindexing.
  */
-interface LocalizedReIndexProviderInterface extends ReIndexProviderInterface
+interface LocalizedReindexProviderInterface extends ReindexProviderInterface
 {
     /**
      * Return available locale codes for the given object.

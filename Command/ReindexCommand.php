@@ -12,10 +12,10 @@
 namespace Massive\Bundle\SearchBundle\Command;
 
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
-use Massive\Bundle\SearchBundle\Search\ReIndex\LocalizedReIndexProviderInterface;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderRegistry;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManagerInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
+use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -48,7 +48,7 @@ class ReindexCommand extends Command
     private $searchManager;
 
     /**
-     * @var ReIndexProviderRegistry
+     * @var ReindexProviderRegistry
      */
     private $providerRegistry;
 
@@ -60,7 +60,7 @@ class ReindexCommand extends Command
     public function __construct(
         ResumeManagerInterface $resumeManager,
         SearchManager $searchManager,
-        ReIndexProviderRegistry $providerRegistry,
+        ReindexProviderRegistry $providerRegistry,
         $env,
         QuestionHelper $questionHelper = null
     ) {
@@ -164,7 +164,7 @@ EOT
 
     private function reindexClass(
         OutputInterface $output,
-        ReIndexProviderInterface $provider,
+        ReindexProviderInterface $provider,
         $providerName,
         $classFqn,
         $batchSize
@@ -205,7 +205,7 @@ EOT
             foreach ($objects as $object) {
                 $locales = [null];
 
-                if ($provider instanceof LocalizedReIndexProviderInterface) {
+                if ($provider instanceof LocalizedReindexProviderInterface) {
                     $locales = $provider->getLocalesForObject($object);
                 }
 

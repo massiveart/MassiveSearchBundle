@@ -43,8 +43,7 @@ Rebuild the search index.
 Options:
 
 - ``provider``: Specify a specific reindex provider (can be specified
-  multiple).
-  times).
+  multiple times).
 - ``batch-size``: Specify the size of the batches.
 
 .. warning::

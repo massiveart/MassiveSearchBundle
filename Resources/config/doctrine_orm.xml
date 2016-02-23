@@ -15,7 +15,7 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="massive_search.reindex.provider.doctrine_orm" class="Massive\Bundle\SearchBundle\Search\ReIndex\Provider\DoctrineOrmProvider">
+        <service id="massive_search.reindex.provider.doctrine_orm" class="Massive\Bundle\SearchBundle\Search\Reindex\Provider\DoctrineOrmProvider">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="massive_search.metadata.factory" />
             <tag name="massive_search.reindex.provider" id="doctrine_orm"/>

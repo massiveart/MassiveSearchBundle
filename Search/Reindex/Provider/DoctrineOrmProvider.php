@@ -9,13 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Search\ReIndex\Provider;
+namespace Massive\Bundle\SearchBundle\Search\Reindex\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Metadata\MetadataFactory;
 
-class DoctrineOrmProvider implements ReIndexProviderInterface
+/**
+ * Provides Doctrine ORM entities for reindexing.
+ */
+class DoctrineOrmProvider implements ReindexProviderInterface
 {
     /**
      * @var ClassMetadataFactory
