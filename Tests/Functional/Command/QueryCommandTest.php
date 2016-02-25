@@ -11,8 +11,6 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
-
 class QueryCommandTest extends BaseTestCase
 {
     public function setUp()

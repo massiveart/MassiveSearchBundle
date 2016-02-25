@@ -55,6 +55,26 @@ class DoctrineOrmProviderTest extends \PHPUnit_Framework_TestCase
      */
     private $provider;
 
+    /**
+     * @var ClassHierarchyMetadata
+     */
+    private $hierarchyMetadata;
+
+    /**
+     * @var QueryBuilder
+     */
+    private $repository;
+
+    /**
+     * @var QueryBuilder
+     */
+    private $queryBuilder;
+
+    /**
+     * @var AbstractQuery
+     */
+    private $query;
+
     public function setUp()
     {
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);

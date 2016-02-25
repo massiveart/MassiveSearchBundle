@@ -52,7 +52,7 @@ class MassiveSearchExtension extends Extension
         }
     }
 
-    private function loadSearch($config, $loader, $container)
+    private function loadSearch($config, Loader\XmlFileLoader $loader, ContainerBuilder $container)
     {
         $container->setAlias('massive_search.adapter', 'massive_search.adapter.' . $config['adapter']);
         $loader->load('search.xml');
@@ -67,7 +67,7 @@ class MassiveSearchExtension extends Extension
         }
     }
 
-    private function loadZendSearch($config, $loader, $container)
+    private function loadZendSearch($config, Loader\XmlFileLoader $loader, ContainerBuilder $container)
     {
         $container->setParameter('massive_search.adapter.zend_lucene.basepath', $config['basepath']);
         $container->setParameter('massive_search.adapter.zend_lucene.hide_index_exception', $config['hide_index_exception']);
@@ -75,7 +75,7 @@ class MassiveSearchExtension extends Extension
         $loader->load('adapter_zendlucene.xml');
     }
 
-    private function loadElasticSearch($config, $loader, $container)
+    private function loadElasticSearch($config, Loader\XmlFileLoader $loader, ContainerBuilder $container)
     {
         $container->setParameter('massive_search.adapter.elastic.hosts', $config['hosts']);
         $loader->load('adapter_elastic.xml');
@@ -87,7 +87,7 @@ class MassiveSearchExtension extends Extension
         }
     }
 
-    private function loadMetadata($config, $loader, $container)
+    private function loadMetadata($config, Loader\XmlFileLoader $loader, ContainerBuilder $container)
     {
         $dir = $container->getParameterBag()->resolveValue($config['cache_dir']);
         if (!file_exists($dir)) {

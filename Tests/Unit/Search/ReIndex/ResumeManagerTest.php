@@ -100,7 +100,7 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * It should throw an exception if a non-scalar value is passed to setCheckpoint.
      *
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Only scalar
      */
     public function testOnlyScalar()

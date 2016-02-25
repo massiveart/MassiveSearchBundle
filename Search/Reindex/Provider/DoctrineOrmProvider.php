@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Reindex\Provider;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Metadata\MetadataFactory;

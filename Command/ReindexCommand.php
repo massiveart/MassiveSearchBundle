@@ -17,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
 use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\ProgressBar;

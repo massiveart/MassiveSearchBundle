@@ -29,6 +29,11 @@ class PurgeCommand extends Command
      */
     private $searchManager;
 
+    /**
+     * @var QuestionHelper
+     */
+    private $questionHelper;
+
     public function __construct(
         SearchManagerInterface $searchManager,
         QuestionHelper $questionHelper = null

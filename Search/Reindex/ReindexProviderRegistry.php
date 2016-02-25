@@ -16,7 +16,7 @@ namespace Massive\Bundle\SearchBundle\Search\Reindex;
 class ReindexProviderRegistry
 {
     /**
-     * @var ReindexProviderInterface
+     * @var ReindexProviderInterface[]
      */
     private $providers = [];
 

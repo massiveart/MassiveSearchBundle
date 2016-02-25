@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Command;
 
+use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;

@@ -91,9 +91,11 @@ EOT
      *
      * See: https://github.com/symfony/symfony/issues/11977
      *
-     * @param string Text to truncate
-     * @param int Length
-     * @param string Suffix to append
+     * @param string $text Text to truncate
+     * @param int $length Length
+     * @param string $suffix Suffix to append
+     *
+     * @return string
      */
     private function truncate($text, $length, $suffix = '...')
     {
