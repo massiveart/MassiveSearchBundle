@@ -2,6 +2,11 @@ CHANGELOG
 =========
 
 * dev-develop
+    * FEATURE #74 Added support for resuming interupted reindexing tasks
+    * FEATURE #74 Deprecated `massive:search:index:rebuild` command in favor
+                  of `massive:search:reindex`
+    * FEATURE #74 [BC BREAK] Removed REINDEX event. Reindex providers must be
+      used instead.
     * BUGFIX  #73 Removed typehint to avoid failing testcases in php7
 
 * 0.12.0 (2015-12-11)

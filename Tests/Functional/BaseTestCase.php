@@ -13,10 +13,13 @@ namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
 use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
-use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
-abstract class BaseTestCase extends SymfonyCmfBaseTestCase
+abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
+    private $kernels = [];
+
     public function setUp()
     {
         AppKernel::resetEnvironment();
@@ -53,5 +56,35 @@ abstract class BaseTestCase extends SymfonyCmfBaseTestCase
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
 
         return $searchManager;
+    }
+
+    protected function getContainer($env = 'phpcr')
+    {
+        return $this->getKernel($env)->getContainer();
+    }
+
+    protected function getKernel($env = 'phpcr')
+    {
+        if (isset($this->kernels[$env])) {
+            return $this->kernels[$env];
+        }
+
+        $this->kernels[$env] = new AppKernel($env, true);
+        $this->kernels[$env]->boot();
+
+        return $this->kernels[$env];
+    }
+
+    protected function getCommand($env, $name)
+    {
+        $kernel = $this->getKernel($env);
+        $container = $kernel->getContainer();
+        $application = new Application($kernel);
+
+        foreach ($container->getParameter('console.command.ids') as $id) {
+            $application->add($container->get($id));
+        }
+
+        return new CommandTester($application->get($name));
     }
 }
