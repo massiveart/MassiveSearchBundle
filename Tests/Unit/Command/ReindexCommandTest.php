@@ -136,6 +136,53 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * It should skip already completed classes.
+     */
+    public function testAlreadyCompletedClasses()
+    {
+        $classFqn1 = 'stdClass';
+        $classFqn2 = 'bstClass';
+        $count = 100;
+        $providerName = 'provider';
+
+        $objects = [];
+        for ($i = 0; $i <= 100; ++$i) {
+            $objects[] = new \stdClass();
+        }
+        $batch1 = array_slice($objects, 0, 50);
+        $batch2 = array_slice($objects, 50);
+
+        $this->resumeManager->getUnfinishedProviders()->willReturn([]);
+        $this->providerRegistry->getProviders()->willReturn([
+            $providerName => $this->provider1->reveal(),
+        ]);
+        $this->provider1->getClassFqns()->willReturn([$classFqn1, $classFqn2]);
+        $this->provider1->getCount($classFqn1)->willReturn($count);
+        $this->provider1->getCount($classFqn2)->willReturn($count);
+        $this->provider1->provide($classFqn2, 0, 50)->willReturn($batch1);
+        $this->provider1->provide($classFqn2, 50, 50)->willReturn($batch2);
+        $this->provider1->provide($classFqn2, 100, 50)->willReturn([]);
+
+        $this->resumeManager->getCheckpoint($providerName, $classFqn1)->willReturn(99);
+        $this->resumeManager->getCheckpoint($providerName, $classFqn2)->willReturn(null);
+        $this->resumeManager->setCheckpoint($providerName, $classFqn2, 0)->shouldBeCalled();
+        $this->resumeManager->setCheckpoint($providerName, $classFqn2, 50)->shouldBeCalled();
+
+        $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
+
+        $tester = $this->execute('prod', []);
+
+        $this->assertContains(
+            'reindexing "100" instances of "bstClass"',
+            $tester->getDisplay()
+        );
+        $this->assertNotContains(
+            'stdClass',
+            $tester->getDisplay()
+        );
+    }
+
+    /**
      * It should index all translations of objects when a localized provider is used.
      */
     public function testIndexLocalized()

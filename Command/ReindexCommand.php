@@ -174,10 +174,11 @@ EOT
         $checkpoint = $this->resumeManager->getCheckpoint($providerName, $classFqn);
         $offset = $checkpoint ?: 0;
 
-        // If the offset is the same as the count then the job was already completed.
-        // If more objects are in the database than before, then we will just index a couple
-        // of more documents than normal.
-        if ($offset === $count) {
+        // If the offset (which starts at 0) is the same as the count then the
+        // job was already completed.  If more objects are in the database than
+        // before, then we will just index a couple of more documents than
+        // normal.
+        if ($offset + 1 === $count) {
             return;
         }
 
