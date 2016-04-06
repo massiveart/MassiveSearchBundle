@@ -11,11 +11,13 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
+use Doctrine\ORM\Query;
 use Elasticsearch\Client as ElasticSearchClient;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\QueryHits;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 /**
@@ -145,6 +147,8 @@ class ElasticSearchAdapter implements AdapterInterface
                     'query' => $queryString,
                 ],
             ],
+            'from' => $searchQuery->getOffset(),
+            'size' => $searchQuery->getLimit(),
         ];
 
         foreach ($searchQuery->getSortings() as $sort => $order) {
@@ -201,7 +205,7 @@ class ElasticSearchAdapter implements AdapterInterface
             $hits[] = $hit;
         }
 
-        return $hits;
+        return new QueryHits($hits, $res['hits']['total']);
     }
 
     /**
