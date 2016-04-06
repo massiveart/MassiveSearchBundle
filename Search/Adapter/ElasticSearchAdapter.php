@@ -11,7 +11,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
-use Doctrine\ORM\Query;
 use Elasticsearch\Client as ElasticSearchClient;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
