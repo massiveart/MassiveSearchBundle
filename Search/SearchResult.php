@@ -11,7 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Search;
 
-class QueryHits extends \ArrayIterator
+class SearchResult extends \ArrayIterator
 {
     /**
      * @var int

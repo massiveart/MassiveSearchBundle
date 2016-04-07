@@ -120,7 +120,7 @@ class SearchQueryBuilder
     /**
      * Execute the search.
      *
-     * @return array
+     * @return SearchResult
      */
     public function execute()
     {

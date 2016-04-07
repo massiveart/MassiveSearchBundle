@@ -17,7 +17,7 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
-use Massive\Bundle\SearchBundle\Search\QueryHits;
+use Massive\Bundle\SearchBundle\Search\SearchResult;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -210,9 +210,11 @@ class ZendLuceneAdapter implements AdapterInterface
             $luceneHits = [];
         }
 
-        $hits = [];
+        $startPos = $searchQuery->getOffset();
+        $endPos = min(count($luceneHits), $startPos + $searchQuery->getLimit());
 
-        for ($pos = $searchQuery->getOffset(); $pos < $searchQuery->getLimit(); $pos++) {
+        $hits = [];
+        for ($pos = $startPos; $pos < $endPos; $pos++) {
             /* @var Lucene\Search\QueryHit $luceneHit */
 
             $luceneHit = $luceneHits[$pos];
@@ -241,6 +243,7 @@ class ZendLuceneAdapter implements AdapterInterface
                     $this->factory->createField($fieldName, $luceneDocument->getFieldValue($fieldName))
                 );
             }
+
             $hits[] = $hit;
         }
 
@@ -256,7 +259,7 @@ class ZendLuceneAdapter implements AdapterInterface
             }
         );
 
-        return new QueryHits($hits, count($luceneHits));
+        return new SearchResult($hits, count($luceneHits));
     }
 
     /**

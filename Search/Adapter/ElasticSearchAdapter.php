@@ -16,7 +16,7 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
-use Massive\Bundle\SearchBundle\Search\QueryHits;
+use Massive\Bundle\SearchBundle\Search\SearchResult;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 
 /**
@@ -204,7 +204,7 @@ class ElasticSearchAdapter implements AdapterInterface
             $hits[] = $hit;
         }
 
-        return new QueryHits($hits, $res['hits']['total']);
+        return new SearchResult($hits, $res['hits']['total']);
     }
 
     /**
