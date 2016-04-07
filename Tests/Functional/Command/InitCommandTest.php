@@ -11,11 +11,11 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-class StatusCommandTest extends BaseTestCase
+class InitCommandTest extends BaseTestCase
 {
     public function testCommand()
     {
-        $command = $this->getCommand('phpcr', 'massive:search:status');
+        $command = $this->getCommand('phpcr', 'massive:search:init');
         $command->execute([]);
 
         $this->assertEquals(0, $command->getStatusCode());

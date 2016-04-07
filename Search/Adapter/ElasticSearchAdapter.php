@@ -285,4 +285,13 @@ class ElasticSearchAdapter implements AdapterInterface
 
         return substr(str_replace('\\', '_', $class), 1);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initialize()
+    {
+        // currently the elastic search adapter does not need any initialization
+        // might make sense to create some schema stuff here
+    }
 }

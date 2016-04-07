@@ -44,12 +44,18 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
      */
     private $field2;
 
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     public function setUp()
     {
         $this->factory = $this->prophesize(Factory::class);
         $this->document = $this->prophesize(Document::class);
         $this->field1 = $this->prophesize(Field::class);
         $this->field2 = $this->prophesize(Field::class);
+        $this->filesystem = $this->prophesize(Filesystem::class);
         $filesystem = new Filesystem();
         $this->dataPath = __DIR__ . '/../../../Resources/app/data';
         if (file_exists($this->dataPath)) {
@@ -197,11 +203,38 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertNotContains('field2', $luceneDocument->getFieldNames());
     }
 
+    /**
+     * It should create the folder for the path if it does not exist.
+     */
+    public function testInitialize()
+    {
+        $adapter = $this->createAdapter($this->dataPath);
+
+        $this->filesystem->exists($this->dataPath)->willReturn(false);
+        $this->filesystem->mkdir($this->dataPath)->shouldBeCalled();
+
+        $adapter->initialize();
+    }
+
+    /**
+     * It should not create the folder for the path if it does not exist.
+     */
+    public function testInitializeWithExistingFolder()
+    {
+        $adapter = $this->createAdapter($this->dataPath);
+
+        $this->filesystem->exists($this->dataPath)->willReturn(true);
+        $this->filesystem->mkdir($this->dataPath)->shouldNotBeCalled();
+
+        $adapter->initialize();
+    }
+
     private function createAdapter($basePath)
     {
         $adapter = new ZendLuceneAdapter(
             $this->factory->reveal(),
-            $basePath
+            $basePath,
+            $this->filesystem->reveal()
         );
 
         return $adapter;
