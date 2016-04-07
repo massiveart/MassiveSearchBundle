@@ -4,6 +4,11 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="massive_search.command.init" class="Massive\Bundle\SearchBundle\Command\InitCommand">
+            <argument type="service" id="massive_search.adapter" />
+            <tag name="console.command" />
+        </service>
+
         <service id="massive_search.command.status" class="Massive\Bundle\SearchBundle\Command\StatusCommand">
             <argument type="service" id="massive_search.search_manager" />
             <tag name="console.command" />

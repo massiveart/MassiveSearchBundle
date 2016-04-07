@@ -26,10 +26,11 @@
         "behat/behat": "~3.0.0",
         "behat/web-api-extension": "~1.0@dev",
         "behat/symfony2-extension": "~2.0@dev",
-        "phpbench/phpbench": "~1.0@dev",
+        "phpbench/phpbench": "~0.10.0",
         "phpbench/tabular": "@dev"
     },
     "suggest": {
+        "sensio/distribution-bundle": "Required if the SearchScriptHandler is used",
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "zendframework/zend-stdlib": "(dependency of zendsearch)",
         "elasticsearch/elasticsearch": "To use Elasticsearch"

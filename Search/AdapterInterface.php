@@ -65,4 +65,9 @@ interface AdapterInterface
      * {@inheritdoc}
      */
     public function flush(array $indexNames);
+
+    /**
+     * Initializes whatever is required for this adapter.
+     */
+    public function initialize();
 }

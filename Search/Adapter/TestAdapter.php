@@ -145,4 +145,12 @@ class TestAdapter implements AdapterInterface
     {
         return [];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initialize()
+    {
+        // nothing to do here
+    }
 }
