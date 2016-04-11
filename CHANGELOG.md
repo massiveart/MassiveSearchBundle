@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* dev-develop
+* 0.13.0 (2016-04-11)
     * FEATURE #80 Added composer handler for creating zend lucene directory
     * FEATURE #74 Added support for resuming interupted reindexing tasks
     * FEATURE #74 Deprecated `massive:search:index:rebuild` command in favor
