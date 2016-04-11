@@ -22,6 +22,21 @@ use Symfony\Component\EventDispatcher\Event;
 class IndexRebuildEvent extends Event
 {
     /**
+     * @var string
+     */
+    private $filter;
+
+    /**
+     * @var bool
+     */
+    private $purge;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
+    /**
      * @param mixed $filter Regex filter for the object class
      * @param mixed $purge If the indexes should be purged
      * @param OutputInterface $output

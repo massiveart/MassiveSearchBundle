@@ -29,7 +29,7 @@ class IndexEvent extends Event
 
     /**
      * The object, which should be indexed.
-     * 
+     *
      * @return object
      */
     public function getSubject()

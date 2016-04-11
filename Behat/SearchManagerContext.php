@@ -255,7 +255,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function thereShouldBeResults($nbResults)
     {
-        Assert::assertCount((integer) $nbResults, $this->lastResult);
+        Assert::assertCount((int) $nbResults, $this->lastResult);
     }
 
     /**

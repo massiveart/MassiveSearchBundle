@@ -11,27 +11,22 @@
 
 namespace Massive\Bundle\SearchBundle\Command;
 
-use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
-use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Comand to build (or rebuild) the search index.
+ * @deprecated use ReindexCommand
  */
-class IndexRebuildCommand extends ContainerAwareCommand
+class IndexRebuildCommand extends ReindexCommand
 {
     /**
      * {@inheritdoc}
      */
     public function configure()
     {
+        parent::configure();
         $this->setName('massive:search:index:rebuild');
-        $this->addOption('filter', null, InputOption::VALUE_OPTIONAL, 'Filter classes which will be indexed (regex)');
-        $this->addOption('purge', null, InputOption::VALUE_NONE, 'Purge the index before reindexing');
-        $this->addOption('debug', null, InputOption::VALUE_NONE, 'Write doctrine debug messages to log');
     }
 
     /**
@@ -39,20 +34,14 @@ class IndexRebuildCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $eventDispatcher = $this->getContainer()->get('event_dispatcher');
-        $purge = $input->getOption('purge');
-        $filter = $input->getOption('filter');
-        $debug = $input->getOption('debug');
+        $formatterHelper = new FormatterHelper();
+        $output->writeln(
+            $formatterHelper->formatBlock(sprintf(
+                'DEPRECATED: The `%s` command is deprecated, use `massive:search:reindex` instead.',
+                $this->getName()
+            ), 'comment', true)
+        );
 
-        if (!$debug) {
-            $this->getContainer()
-                ->get('doctrine.orm.default_entity_manager')
-                ->getConnection()
-                ->getConfiguration()
-                ->setSQLLogger(null);
-        }
-
-        $event = new IndexRebuildEvent($filter, $purge, $output);
-        $eventDispatcher->dispatch(SearchEvents::INDEX_REBUILD, $event);
+        return parent::execute($input, $output);
     }
 }

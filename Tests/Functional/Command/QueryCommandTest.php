@@ -11,36 +11,23 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
-use Massive\Bundle\SearchBundle\Command\QueryCommand;
-use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
-
 class QueryCommandTest extends BaseTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
-
     public function setUp()
     {
         parent::setUp();
-        $command = new QueryCommand();
-        $application = new Application($this->getContainer()->get('kernel'));
-        $command->setApplication($application);
-        $this->tester = new CommandTester($command);
         $this->generateIndex(10);
     }
 
     public function testCommand()
     {
-        $this->tester->execute([
+        $command = $this->getCommand('phpcr', 'massive:search:query');
+        $command->execute([
             'query' => 'Hello',
             '--index' => ['product'],
         ]);
 
-        $display = $this->tester->getDisplay();
+        $display = $command->getDisplay();
         $display = explode("\n", $display);
         $this->assertCount(16, $display);
     }

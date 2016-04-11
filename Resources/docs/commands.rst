@@ -33,18 +33,56 @@ Display status information for the current search implementation::
 ``massive:search:index:rebuild``
 --------------------------------
 
-Rebuild the search index. This command issues an event which instructs any
-listeners to rebuild all of the mapped classes.
+Rebuild the search index.
 
 .. code-block:: bash
 
 
-    $ php app/console massive:search:index:rebuild
-    Rebuilding: Acme\Bundle\ContactBundle\Entity\Contact [OK] 1 entities indexed
-    Rebuilding: Acme\Bundle\ContactBundle\Entity\Account [OK] 0 entities indexed
+    $ php app/console massive:search:reindex
 
 Options:
 
-- ``purge``: Purge each affected index before reindexing.
-- ``filter``: Only apply rebuild to classes matching the given regex pattern,
-  e.g. ``.*Contact$``.
+- ``provider``: Specify a specific reindex provider (can be specified
+  multiple times).
+- ``batch-size``: Specify the size of the batches.
+
+.. warning::
+
+    Rebuilding the search index is a memory intensive task and it will leak
+    memory over time. You can mitigate this effect by running this command
+    with ``--env=prod`` which should remove unnecessary overhead from logging
+    systems etc.
+
+.. note::
+
+    If a reindexing command is interupted it will, on the next execution, ask
+    if it should resume from its last checkpoint.
+
+``massive:search:purge``
+------------------------
+
+Purge one or more or all indexes.
+
+.. code-block:: bash
+
+    $ php app/console massive:search:purge
+
+Execute without arguments in order to see a list of current indexes.
+
+Specify indexes with the ``--index`` option:
+
+.. code-block:: bash
+
+    $ php app/console massive:search:purge --index=index_1 --index=index_2
+
+You can purge all indexes:
+
+.. code-block:: bash
+
+    $ php app/console massive:search:purge --all
+
+Options:
+
+ - ``index``: Specify index to purge
+ - ``all``: Purge all indexes.
+ - ``force``: Do not ask for confirmation.

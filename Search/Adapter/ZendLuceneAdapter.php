@@ -55,6 +55,11 @@ class ZendLuceneAdapter implements AdapterInterface
     private $basePath;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var bool
      */
     private $hideIndexException;
@@ -67,17 +72,20 @@ class ZendLuceneAdapter implements AdapterInterface
     /**
      * @param Factory $factory
      * @param string $basePath Base filesystem path for the index
+     * @param Filesystem $filesystem
      * @param bool $hideIndexException
      * @param null $encoding
      */
     public function __construct(
         Factory $factory,
         $basePath,
+        Filesystem $filesystem,
         $hideIndexException = false,
         $encoding = null
     ) {
         $this->factory = $factory;
         $this->basePath = $basePath;
+        $this->filesystem = $filesystem;
         $this->hideIndexException = $hideIndexException;
         $this->encoding = $encoding;
 
@@ -423,5 +431,15 @@ class ZendLuceneAdapter implements AdapterInterface
                 $field->getName()
             )
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initialize()
+    {
+        if (!$this->filesystem->exists($this->basePath)) {
+            $this->filesystem->mkdir($this->basePath);
+        }
     }
 }

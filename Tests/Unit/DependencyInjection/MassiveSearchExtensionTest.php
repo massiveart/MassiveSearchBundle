@@ -12,7 +12,10 @@
 namespace Massive\Bundle\SearchBundle\Unit\DependencyInjection;
 
 use Massive\Bundle\SearchBundle\DependencyInjection\MassiveSearchExtension;
+use Massive\Bundle\SearchBundle\MassiveSearchBundle;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Filesystem\Filesystem;
 
 class MassiveSearchExtensionTest extends AbstractExtensionTestCase
 {
@@ -23,12 +26,13 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->container->setParameter('kernel.root_dir', '/some/path');
         $this->container->setParameter('kernel.cache_dir', __DIR__ . '/../../Resources/app/cache');
         $this->container->setParameter('kernel.debug', false);
-        $this->container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
+        $this->container->register('event_dispatcher', EventDispatcher::class);
+        $this->container->register('filesystem', Filesystem::class);
     }
 
     protected function getContainerExtensions()
     {
-        $this->container->setParameter('kernel.bundles', ['Massive\Bundle\SearchBundle\MassiveSearchBundle']);
+        $this->container->setParameter('kernel.bundles', [MassiveSearchBundle::class]);
         $this->container->setParameter('kernel.root_dir', __DIR__ . '/../../Resources/app');
 
         return [
@@ -132,7 +136,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     /**
      * @dataProvider providePersistence
      */
-    public function testPersistence($persistenceName = null, $expectedServices)
+    public function testPersistence($persistenceName, $expectedServices)
     {
         $config = [];
 
