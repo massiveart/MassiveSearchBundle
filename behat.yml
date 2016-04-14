@@ -7,7 +7,7 @@ default:
                     adapterId: massive_search.adapter.zend_lucene
             bundle: MassiveSearchBundle
             filters:
-                tags: @zend_lucene
+                tags: '@zend_lucene'
         elastic:
             type: symfony_bundle
             contexts:
@@ -15,7 +15,7 @@ default:
                     adapterId: massive_search.adapter.elastic
             bundle: MassiveSearchBundle
             filters:
-                tags: @elastic
+                tags: '@elastic'
         test:
             type: symfony_bundle
             contexts:
@@ -23,7 +23,7 @@ default:
                     adapterId: massive_search.adapter.test
             bundle: MassiveSearchBundle
             filters:
-                tags: @test
+                tags: '@test'
     extensions:
         Behat\Symfony2Extension:
             kernel:
