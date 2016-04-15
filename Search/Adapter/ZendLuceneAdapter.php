@@ -17,8 +17,8 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
-use Massive\Bundle\SearchBundle\Search\SearchResult;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\SearchResult;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZendSearch\Lucene;
@@ -210,11 +210,15 @@ class ZendLuceneAdapter implements AdapterInterface
             $luceneHits = [];
         }
 
+        $endPos = count($luceneHits);
         $startPos = $searchQuery->getOffset();
-        $endPos = min(count($luceneHits), $startPos + $searchQuery->getLimit());
+
+        if (null !== $searchQuery->getLimit()) {
+            $endPos = min(count($luceneHits), $startPos + $searchQuery->getLimit());
+        }
 
         $hits = [];
-        for ($pos = $startPos; $pos < $endPos; $pos++) {
+        for ($pos = $startPos; $pos < $endPos; ++$pos) {
             /* @var Lucene\Search\QueryHit $luceneHit */
 
             $luceneHit = $luceneHits[$pos];

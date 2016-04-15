@@ -105,7 +105,7 @@ class SearchQueryBuilder
 
     /**
      * Set the offset.
-     * 
+     *
      * @param int $offset
      *
      * @return SearchQueryBuilder
