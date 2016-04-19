@@ -114,7 +114,7 @@ Feature: Search Manager
                 "description": "Hello",
                 "class": "Massive\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Car",
                 "url": "foobar",
-                "image_url": "",
+                "image_url": "foo.jpg",
                 "locale": "fr"
             }
         ]
