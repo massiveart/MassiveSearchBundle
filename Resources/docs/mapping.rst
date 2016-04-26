@@ -44,7 +44,7 @@ literal value passed
 
 PropertyAccess allows you to access properties of an object by path, e.g.
 ``title``, or ``parent.title``. The expression allows you to build expressions
-which can be evaluated, e.g. ``'/this/is/' ~ object.id ~ '/a/path'``.
+which can be evaluated, e.g. ``'/this/is/' ~ object.getId() ~ '/a/path'``.
 
 Fields
 ------
@@ -88,7 +88,7 @@ language.
     <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <!-- ... -->
-            <url expr="'/path/to/' ~ article.title'" />
+            <url expr="'/path/to/' ~ article.getTitle()'" />
             <!-- ... -->
         </mapping>
     </massive-search-mapping>
@@ -159,13 +159,13 @@ The following example uses all the mapping options:
 
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <reindex repository-method="findOnlySomethings" />
-            <index name="product" />
+            <index value="product" />
             <id property="id" />
             <locale property="locale" />
             <title property="title" />
-            <url expr="'/path/to/' ~ object.id" />
+            <url expr="'/path/to/' ~ object.getId()" />
             <description property="body" />
-            <image expr="'/assets/images/' ~ object.type" />
+            <image expr="'/assets/images/' ~ object.getType()" />
             <fields>
                 <field name="title" type="string" />
                 <field name="body" type="string" />

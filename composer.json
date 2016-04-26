@@ -10,20 +10,22 @@
     ],
     "require": {
         "jms/metadata": "~1.5",
-        "symfony/property-access": "~2.4",
+        "symfony/property-access": "~2.7||~3.0",
         "php": ">=5.4.0"
     },
     "require-dev": {
+        "phpunit/phpunit": "^4.5",
+
         "zendframework/zend-stdlib": "2.3.1 as 2.0.0rc5",
         "zendframework/zendsearch": "2.*@dev",
         "elasticsearch/elasticsearch": "~1.3",
         "symfony-cmf/testing": "dev-master",
-        "symfony/symfony": "~2.6",
-        "matthiasnoback/symfony-dependency-injection-test": "0.7.1",
-        "doctrine/doctrine-bundle": "~1.3",
-        "doctrine/orm": "~2.4",
+        "symfony/symfony": "~2.7||~3.0",
+        "matthiasnoback/symfony-dependency-injection-test": "0.7.*",
+        "doctrine/doctrine-bundle": "~1.4",
+        "doctrine/orm": "~2.5",
 
-        "behat/behat": "~3.0.0",
+        "behat/behat": "~3.1.0",
         "behat/web-api-extension": "~1.0@dev",
         "behat/symfony2-extension": "~2.0@dev",
         "phpbench/phpbench": "~0.10.0",
