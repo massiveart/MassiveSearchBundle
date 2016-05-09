@@ -10,7 +10,9 @@
 
     <services>
         <service id="massive_search.adapter.elastic.client" class="%massive_search.search.adapter.elastic.client.class%">
-            <argument type="collection">%massive_search.adapter.elastic.hosts%</argument>
+            <argument type="collection">
+                <argument key="hosts">%massive_search.adapter.elastic.hosts%</argument>
+            </argument>
         </service>
         <service id="massive_search.adapter.elastic" class="%massive_search.search.adapter.elastic.class%">
             <argument type="service" id="massive_search.factory" />
