@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* dev-master
+* 0.13.1 (2016-05-09)
     * BUGFIX  #90 Fixed elastic search params array
 
 * 0.13.0 (2016-04-11)
