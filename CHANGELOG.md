@@ -4,6 +4,9 @@ CHANGELOG
 * dev-develop
     * BUGFIX  #87 Added missing support for image field in XML document.
 
+* 0.13.1 (2016-05-09)
+    * BUGFIX  #90 Fixed elastic search params array
+
 * 0.13.0 (2016-04-11)
     * FEATURE #80 Added composer handler for creating zend lucene directory
     * FEATURE #74 Added support for resuming interupted reindexing tasks
