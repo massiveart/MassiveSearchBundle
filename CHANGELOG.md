@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* dev-master
+    * HOTFIX  #92 Fixed memory usage for reindex
+
 * 0.13.1 (2016-05-09)
     * BUGFIX  #90 Fixed elastic search params array
 

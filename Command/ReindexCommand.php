@@ -26,7 +26,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Command to build (or rebuild) the search index.
@@ -142,7 +141,7 @@ EOT
         }
 
         foreach ($providers as $providerName => $provider) {
-            $output->writeln(sprintf('<info>provider "</>%s<info>"</>', $providerName));
+            $output->writeln(sprintf('<info>provider "</info>%s<info>"</info>', $providerName));
             $output->write(PHP_EOL);
 
             foreach ($provider->getClassFqns() as $classFqn) {
@@ -157,7 +156,7 @@ EOT
         }
 
         $output->writeln(sprintf(
-            '<info>Index rebuild completed (</>%ss %sb</><info>)</>',
+            '<info>Index rebuild completed (</info>%ss %sb</info><info>)</info>',
             number_format(microtime(true) - $startTime, 2),
             number_format(memory_get_usage())
         ));
@@ -184,7 +183,7 @@ EOT
         $realCount = $count - $offset;
 
         $output->writeln(sprintf(
-            '<comment>-- reindexing "</>%s<comment>" instances of "</>%s<comment>"</>',
+            '<comment>-- reindexing "</comment>%s<comment>" instances of "</comment>%s<comment>"</comment>',
             $realCount,
             $classFqn
         ));
@@ -192,16 +191,19 @@ EOT
 
         $progress = new ProgressBar($output);
         $progress->start($realCount);
+        $progress->setFormat('debug');
 
         // index in batches
         while (true) {
             $objects = $provider->provide($classFqn, $offset, $batchSize);
 
             if (count($objects) === 0) {
+                $provider->cleanUp($classFqn);
+                $this->resumeManager->setCheckpoint($providerName, $classFqn, $count);
+                $progress->finish();
+
                 break;
             }
-
-            $this->resumeManager->setCheckpoint($providerName, $classFqn, $offset);
 
             foreach ($objects as $object) {
                 $locales = [null];
@@ -219,7 +221,6 @@ EOT
                         $this->searchManager->index($object, $locale);
                     }
                     $progress->advance();
-                    $output->write(' Mem: ' . number_format(memory_get_usage()) . 'b');
                 } catch (MetadataNotFoundException $e) {
                     $output->write(' No search mapping for this object');
 
@@ -228,6 +229,9 @@ EOT
             }
 
             $offset += $batchSize;
+            $this->resumeManager->setCheckpoint($providerName, $classFqn, $offset);
+
+            $provider->cleanUp($classFqn);
         }
 
         $output->write(PHP_EOL . PHP_EOL);
