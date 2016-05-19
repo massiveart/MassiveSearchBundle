@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 * dev-develop
+    * BUGFIX  #93 Fixed composer-events
     * BUGFIX  #87 Added missing support for image field in XML document.
 
 * 0.13.1 (2016-05-09)
