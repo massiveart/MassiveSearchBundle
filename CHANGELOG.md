@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* dev-master
+* 0.13.2 (2016-06-01)
     * HOTFIX  #95 Fixed prefix is-variant when index has wrong prefix 
     * HOTFIX  #92 Fixed memory usage for reindex
 
