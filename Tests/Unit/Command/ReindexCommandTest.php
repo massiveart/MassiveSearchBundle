@@ -121,10 +121,11 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $this->provider1->provide('stdClass', 0, 50)->willReturn($batch1);
         $this->provider1->provide('stdClass', 50, 50)->willReturn($batch2);
         $this->provider1->provide('stdClass', 100, 50)->willReturn([]);
+        $this->provider1->cleanUp('stdClass')->shouldBeCalledTimes(3);
 
         $this->resumeManager->getCheckpoint($providerName, $classFqn)->willReturn(null);
-        $this->resumeManager->setCheckpoint($providerName, $classFqn, 0)->shouldBeCalled();
         $this->resumeManager->setCheckpoint($providerName, $classFqn, 50)->shouldBeCalled();
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 100)->shouldBeCalled();
         $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
 
         $tester = $this->execute('prod', []);
@@ -153,6 +154,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $this->localizedProvider1->getCount('stdClass')->willReturn($count);
         $this->localizedProvider1->provide('stdClass', 0, 50)->willReturn($batch);
         $this->localizedProvider1->provide('stdClass', 50, 50)->willReturn([]);
+        $this->localizedProvider1->cleanUp('stdClass')->shouldBeCalledTimes(2);
 
         foreach ($batch as $object) {
             $this->localizedProvider1->getLocalesForObject($object)->willReturn(['de', 'fr']);
@@ -165,7 +167,8 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->resumeManager->getCheckpoint($providerName, $classFqn)->willReturn(null);
-        $this->resumeManager->setCheckpoint($providerName, $classFqn, 0)->shouldBeCalled();
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 50)->shouldBeCalled();
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 100)->shouldBeCalled();
         $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
 
         $tester = $this->execute('prod', []);
@@ -193,9 +196,11 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $this->provider1->getCount('stdClass')->willReturn($count);
         $this->provider1->provide('stdClass', 23, 50)->willReturn([new \stdClass()]);
         $this->provider1->provide('stdClass', 73, 50)->willReturn([]);
+        $this->provider1->cleanUp('stdClass')->shouldBeCalledTimes(2);
 
         $this->resumeManager->getCheckpoint($providerName, $classFqn)->willReturn(23);
-        $this->resumeManager->setCheckpoint($providerName, $classFqn, 23)->shouldBeCalled();
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 73)->shouldBeCalled();
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 100)->shouldBeCalled();
         $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
 
         $this->execute('prod', []);

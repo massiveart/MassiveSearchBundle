@@ -30,6 +30,13 @@ interface ReindexProviderInterface
     public function provide($classFqn, $offset, $maxResults);
 
     /**
+     * Cleanup memory for given $classFqn.
+     *
+     * @param string $classFqn
+     */
+    public function cleanUp($classFqn);
+
+    /**
      * Return the total number of objects that need to be reindexed.
      *
      * @param string $classFqn

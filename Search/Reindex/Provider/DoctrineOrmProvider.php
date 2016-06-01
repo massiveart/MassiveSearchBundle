@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\Reindex\Provider;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Metadata\MetadataFactory;
 
@@ -104,11 +105,39 @@ class DoctrineOrmProvider implements ReindexProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function cleanUp($classFqn)
+    {
+        if (count($this->cachedEntities) > 0) {
+            return;
+        }
+
+        $this->entityManager->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getCount($classFqn)
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('count(a.id)');
-        $queryBuilder->from($classFqn, 'a');
+        $repository = $this->entityManager->getRepository($classFqn);
+        $metadata = $this->searchMetadataFactory->getMetadataForClass($classFqn);
+        $repositoryMethod = $metadata->getOutsideClassMetadata()->getReindexRepositoryMethod();
+        $queryBuilder = $repository->createQueryBuilder('d');
+
+        if ($repositoryMethod) {
+            $queryBuilder = $repository->$repositoryMethod($queryBuilder);
+        }
+
+        if (!$queryBuilder instanceof QueryBuilder) {
+            @trigger_error(
+                'Reindex repository methods should NOT return anything. Use the passed query builder instead.'
+            );
+
+            $queryBuilder = $this->entityManager->createQueryBuilder()
+                ->from($classFqn, 'd');
+        }
+
+        $queryBuilder->select('count(d.id)');
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
