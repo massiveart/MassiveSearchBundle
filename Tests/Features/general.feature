@@ -70,6 +70,17 @@ Feature: Search Manager
         And I search for "My car"
         Then there should be 1 results
 
+    Scenario: Deindex not existing object
+        Given the following "Car" objects have been indexed
+        """
+        [
+            { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
+        ]
+        """
+        When I deindex a not existing "Car" object with id "321"
+        And I search for "My car"
+        Then there should be 1 results
+
     Scenario Outline: Searching
         Given the following "Car" objects have been indexed
         """

@@ -280,6 +280,19 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @Given I deindex a not existing ":className" object with id :id
+     */
+    public function iDeindexNotExistingObjectWithId($className, $id)
+    {
+        $object = new $this->entityClasses[$className]();
+        $object->id = $id;
+
+        $this->getSearchManager()->deindex($object);
+        $this->getSearchManager()->flush();
+        $this->pause();
+    }
+
+    /**
      * @Given I get the status
      */
     public function iGetTheStatus()

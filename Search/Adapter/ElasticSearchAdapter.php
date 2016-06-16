@@ -12,6 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Elasticsearch\Client as ElasticSearchClient;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
@@ -123,10 +124,13 @@ class ElasticSearchAdapter implements AdapterInterface
             'type' => $this->documentToType($document),
             'id' => $document->getId(),
             'refresh' => true,
-            'ignore' => 404,
         ];
 
-        $this->client->delete($params);
+        try {
+            $this->client->delete($params);
+        } catch (Missing404Exception $e) {
+            // ignore 404 exceptions
+        }
     }
 
     /**
