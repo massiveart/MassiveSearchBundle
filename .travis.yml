@@ -8,13 +8,21 @@ sudo: false
 matrix:
   include:
     - php: 5.5
-      env: PREFER="--prefer-lowest"
+      env:
+        - PREFER="--prefer-lowest"
+        - SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.5
-      env: PREFER=""
+      env:
+        - PREFER=""
+        - SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.6
-      env: PREFER=""
+      env:
+        - PREFER=""
+        - SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 7.0
-      env: PREFER=""
+      env:
+        - PREFER=""
+        - SYMFONY_DEPRECATIONS_HELPER=weak
 
 before_script:
     - composer selfupdate
