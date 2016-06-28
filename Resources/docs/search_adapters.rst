@@ -86,5 +86,9 @@ change this, or configure more severs as follows:
             elastic:
                 hosts: [ 192.168.0.63:9200, 192.168.0.63:9200 ]
 
+.. note::
+
+    Elasticsearch has a default result limit of 10.
+
 .. _`Elasticsearch`: http://www.elasticsearch.org
 .. _`Zend Lucene`: http://framework.zend.com/manual/1.12/en/zend.search.lucene.html

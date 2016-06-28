@@ -30,7 +30,7 @@ interface SearchManagerInterface
      *
      * @param SearchQuery
      *
-     * @return QueryHit[]
+     * @return SearchResult
      *
      * @throws \Exception
      */
