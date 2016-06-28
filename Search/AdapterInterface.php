@@ -44,7 +44,7 @@ interface AdapterInterface
      *
      * @param SearchQuery $searchQuery
      *
-     * @return QueryHits
+     * @return SearchResult
      */
     public function search(SearchQuery $searchQuery);
 

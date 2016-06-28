@@ -170,7 +170,7 @@ class SearchManager implements SearchManagerInterface
         //
         // See: https://github.com/massiveart/MassiveSearchBundle/issues/38
         if (0 === count($query->getIndexes())) {
-            return [];
+            return new SearchResult([], 0);
         }
 
         $this->eventDispatcher->dispatch(
