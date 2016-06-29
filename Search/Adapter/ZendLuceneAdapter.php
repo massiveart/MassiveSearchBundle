@@ -12,6 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
+use Massive\Bundle\SearchBundle\Search\Adapter\Zend\MatchAllQuery;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
@@ -198,7 +199,11 @@ class ZendLuceneAdapter implements AdapterInterface
             $searcher->addIndex($this->getIndex($indexPath, false));
         }
 
-        $query = Lucene\Search\QueryParser::parse($queryString);
+        if (0 === strlen($queryString)) {
+            $query = new MatchAllQuery();
+        } else {
+            $query = Lucene\Search\QueryParser::parse($queryString);
+        }
 
         try {
             $luceneHits = $searcher->find($query);

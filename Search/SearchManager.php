@@ -115,10 +115,10 @@ class SearchManager implements SearchManagerInterface
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
             $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
-            $this->markIndexToFlush($indexName);
             $indexNames = $this->getDecoratedIndexNames($indexName);
 
             foreach ($indexNames as $indexName) {
+                $this->markIndexToFlush($indexName);
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
                 $this->adapter->deindex($document, $indexName);
             }
@@ -216,9 +216,9 @@ class SearchManager implements SearchManagerInterface
      */
     public function purge($indexName)
     {
-        $this->markIndexToFlush($indexName);
         $indexes = $this->getDecoratedIndexNames($indexName);
         foreach ($indexes as $indexName) {
+            $this->markIndexToFlush($indexName);
             $this->adapter->purge($indexName);
         }
     }
