@@ -12,13 +12,14 @@
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Massive\Bundle\SearchBundle\Search\Adapter\Zend\Index;
+use Massive\Bundle\SearchBundle\Search\Adapter\Zend\MatchAllQuery;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
-use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\SearchResult;
+use Massive\Bundle\SearchBundle\Util\SortUtils;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZendSearch\Lucene;
@@ -198,7 +199,11 @@ class ZendLuceneAdapter implements AdapterInterface
             $searcher->addIndex($this->getIndex($indexPath, false));
         }
 
-        $query = Lucene\Search\QueryParser::parse($queryString);
+        if (0 === strlen($queryString)) {
+            $query = new MatchAllQuery();
+        } else {
+            $query = Lucene\Search\QueryParser::parse($queryString);
+        }
 
         try {
             $luceneHits = $searcher->find($query);
@@ -251,17 +256,22 @@ class ZendLuceneAdapter implements AdapterInterface
             $hits[] = $hit;
         }
 
-        // The MultiSearcher does not support sorting, so we do it here.
-        usort(
-            $hits,
-            function (QueryHit $documentA, QueryHit $documentB) {
-                if ($documentA->getScore() < $documentB->getScore()) {
-                    return true;
-                }
+        // default sortings
+        $sortings = ['getScore'];
+        $direction = 'desc';
 
-                return false;
-            }
-        );
+        $querySortings = $searchQuery->getSortings();
+        if (0 < count($querySortings)) {
+            $direction = reset($querySortings);
+            $sortings = array_map(
+                function ($sorting) {
+                    return sprintf('getDocument.%s', $sorting);
+                },
+                array_keys($querySortings)
+            );
+        }
+
+        $hits = SortUtils::multisort($hits, $sortings, $direction);
 
         return new SearchResult($hits, count($luceneHits));
     }

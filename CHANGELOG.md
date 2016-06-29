@@ -2,6 +2,8 @@ CHANGELOG
 =========
 
 * dev-develop
+    * FEATURE     #97 Implemented sorting for zend-lucene-adapter
+    * FEATURE     #79 Consider limit + offset for searching
     * ENHANCEMENT #96 Updated elasticsearch dependency
     * BUGFIX      #93 Fixed composer-events
     * BUGFIX      #87 Added missing support for image field in XML document.

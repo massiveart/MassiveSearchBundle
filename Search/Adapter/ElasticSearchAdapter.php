@@ -145,14 +145,17 @@ class ElasticSearchAdapter implements AdapterInterface
 
         $params['index'] = implode(',', $indexNames);
         $params['body'] = [
-            'query' => [
-                'query_string' => [
-                    'query' => $queryString,
-                ],
-            ],
             'from' => $searchQuery->getOffset(),
             'size' => $searchQuery->getLimit(),
         ];
+
+        if (0 < strlen($queryString)) {
+            $params['body']['query'] = [
+                'query_string' => [
+                    'query' => $queryString,
+                ],
+            ];
+        }
 
         foreach ($searchQuery->getSortings() as $sort => $order) {
             $params['body']['sort'][] = [
@@ -266,12 +269,16 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function flush(array $indexNames)
     {
-        $this->client->indices()->flush(
-            [
-                'index' => implode(', ', $indexNames),
-                'full' => true,
-            ]
-        );
+        try {
+            $this->client->indices()->flush(
+                [
+                    'index' => implode(', ', $indexNames),
+                    'full' => true,
+                ]
+            );
+        } catch (Missing404Exception $e) {
+            // ignore 404 exceptions
+        }
     }
 
     /**

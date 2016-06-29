@@ -134,3 +134,14 @@ Feature: Search Manager
     Scenario: Return the status
         When I get the status
         Then the result should be an array
+
+    Scenario: Match all
+        Given the following "Car" objects have been indexed
+        """
+        [
+            { "id": 123, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"},
+            { "id": 321, "url": "/url/to", "title": "My car", "body": "Hello", "image": "foo.jpg"}
+        ]
+        """
+        When I search for "Car"
+        Then there should be 2 results

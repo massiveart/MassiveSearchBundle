@@ -238,6 +238,18 @@ class Document implements \JsonSerializable
     }
 
     /**
+     * Returns the named field.
+     *
+     * @param string $name
+     *
+     * @return Field
+     */
+    public function __get($name)
+    {
+        return $this->getField($name);
+    }
+
+    /**
      * Return true if the field exists.
      *
      * @return bool
