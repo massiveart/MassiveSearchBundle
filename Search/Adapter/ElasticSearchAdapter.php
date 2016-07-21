@@ -12,11 +12,13 @@
 namespace Massive\Bundle\SearchBundle\Search\Adapter;
 
 use Elasticsearch\Client as ElasticSearchClient;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\SearchResult;
 
 /**
  * ElasticSearch adapter using official client:.
@@ -123,10 +125,13 @@ class ElasticSearchAdapter implements AdapterInterface
             'type' => $this->documentToType($document),
             'id' => $document->getId(),
             'refresh' => true,
-            'ignore' => 404,
         ];
 
-        $this->client->delete($params);
+        try {
+            $this->client->delete($params);
+        } catch (Missing404Exception $e) {
+            // ignore 404 exceptions
+        }
     }
 
     /**
@@ -145,6 +150,8 @@ class ElasticSearchAdapter implements AdapterInterface
                     'query' => $queryString,
                 ],
             ],
+            'from' => $searchQuery->getOffset(),
+            'size' => $searchQuery->getLimit(),
         ];
 
         foreach ($searchQuery->getSortings() as $sort => $order) {
@@ -201,7 +208,7 @@ class ElasticSearchAdapter implements AdapterInterface
             $hits[] = $hit;
         }
 
-        return $hits;
+        return new SearchResult($hits, $res['hits']['total']);
     }
 
     /**

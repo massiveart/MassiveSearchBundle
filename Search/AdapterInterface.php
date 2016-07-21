@@ -42,7 +42,9 @@ interface AdapterInterface
     /**
      * Search using the given query string.
      *
-     * @param string $queryString
+     * @param SearchQuery $searchQuery
+     *
+     * @return SearchResult
      */
     public function search(SearchQuery $searchQuery);
 

@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+* dev-develop
+    * ENHANCEMENT #96 Updated elasticsearch dependency
+    * BUGFIX      #93 Fixed composer-events
+    * BUGFIX      #87 Added missing support for image field in XML document.
+
 * 0.13.2 (2016-06-01)
     * HOTFIX  #95 Fixed prefix is-variant when index has wrong prefix 
     * HOTFIX  #92 Fixed memory usage for reindex

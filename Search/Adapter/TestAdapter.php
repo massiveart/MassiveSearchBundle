@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use Massive\Bundle\SearchBundle\Search\SearchResult;
 
 /**
  * Test adapter for testing scenarios.
@@ -120,7 +121,7 @@ class TestAdapter implements AdapterInterface
             }
         }
 
-        return $hits;
+        return new SearchResult($hits, count($hits));
     }
 
     /**

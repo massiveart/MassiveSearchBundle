@@ -90,9 +90,37 @@ class SearchQueryBuilder
     }
 
     /**
+     * Set the limit.
+     *
+     * @param int $limit
+     *
+     * @return SearchQueryBuilder
+     */
+    public function setLimit($limit)
+    {
+        $this->searchQuery->setLimit($limit);
+
+        return $this;
+    }
+
+    /**
+     * Set the offset.
+     *
+     * @param int $offset
+     *
+     * @return SearchQueryBuilder
+     */
+    public function setOffset($offset)
+    {
+        $this->searchQuery->setOffset($offset);
+
+        return $this;
+    }
+
+    /**
      * Execute the search.
      *
-     * @return array
+     * @return SearchResult
      */
     public function execute()
     {

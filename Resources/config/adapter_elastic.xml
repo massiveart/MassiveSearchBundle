@@ -9,7 +9,10 @@
     </parameters>
 
     <services>
-        <service id="massive_search.adapter.elastic.client" class="%massive_search.search.adapter.elastic.client.class%">
+        <service id="massive_search.adapter.elastic.client"
+                 class="%massive_search.search.adapter.elastic.client.class%">
+            <factory class="Massive\Bundle\SearchBundle\Search\Adapter\Elastic\ClientFactory" method="create"/>
+
             <argument type="collection">
                 <argument key="hosts">%massive_search.adapter.elastic.hosts%</argument>
             </argument>

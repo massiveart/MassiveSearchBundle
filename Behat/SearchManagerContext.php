@@ -209,6 +209,19 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     }
 
     /**
+     * @When I search for :query with limit :limit and offset :offset
+     */
+    public function iSearchForWithLimitAndOffset($query, $limit, $offset)
+    {
+        $this->lastResult = $this->getSearchManager()
+            ->createSearch($query)
+            ->indexes($this->getSearchManager()->getIndexNames())
+            ->setLimit(intval($limit))
+            ->setOffset(intval($offset))
+            ->execute();
+    }
+
+    /**
      * @Given I search for :query in locale :locale
      */
     public function iSearchForInLocale($query, $locale)
@@ -275,6 +288,19 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         Assert::arrayHasKey($id, $this->entities);
         $entity = $this->entities[$id];
         $this->getSearchManager()->deindex($entity);
+        $this->getSearchManager()->flush();
+        $this->pause();
+    }
+
+    /**
+     * @Given I deindex a not existing ":className" object with id :id
+     */
+    public function iDeindexNotExistingObjectWithId($className, $id)
+    {
+        $object = new $this->entityClasses[$className]();
+        $object->id = $id;
+
+        $this->getSearchManager()->deindex($object);
         $this->getSearchManager()->flush();
         $this->pause();
     }

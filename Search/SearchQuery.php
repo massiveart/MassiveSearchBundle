@@ -40,6 +40,16 @@ class SearchQuery
      */
     private $indexes = [];
 
+    /**
+     * @var int
+     */
+    private $limit;
+
+    /**
+     * @var int
+     */
+    private $offset = 0;
+
     public function __construct($queryString)
     {
         $this->queryString = $queryString;
@@ -118,5 +128,37 @@ class SearchQuery
     public function addSorting($sort, $order = self::SORT_ASC)
     {
         $this->sortings[$sort] = $order;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param int $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @param int $offset
+     */
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
     }
 }
