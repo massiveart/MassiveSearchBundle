@@ -14,15 +14,15 @@ namespace Massive\Bundle\SearchBundle\Search\Converter\Types;
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
 
 /**
- * Converts DateTime into string using format method.
+ * Converts objects/arrays into string using json_encode method.
  */
-class DateConverter implements ConverterInterface
+class JsonConverter implements ConverterInterface
 {
     /**
      * {@inheritdoc}
      */
     public function convert($value)
     {
-        return is_null($value) ? null : $value->format(DATE_RFC3339);
+        return json_encode($value);
     }
 }

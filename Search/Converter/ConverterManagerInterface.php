@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the MassiveSearchBundle
  *
@@ -20,7 +21,7 @@ interface ConverterManagerInterface
      * indexable format.
      *
      * @param mixed $value
-     * @param string $from source format.
+     * @param string $from source format
      *
      * @return mixed
      */
@@ -30,7 +31,7 @@ interface ConverterManagerInterface
      * Returns true if a converter exists which
      * converts from source to a indexable format.
      *
-     * @param string $from source format.
+     * @param string $from source format
      *
      * @return bool
      */

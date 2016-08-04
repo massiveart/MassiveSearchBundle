@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* dev-develop
+    * FEATURE     #98 Added json converter
+
 * 0.14.0 (2016-07-21)
     * ENHANCEMENT #96 Updated elasticsearch dependency
     * BUGFIX      #93 Fixed composer-events

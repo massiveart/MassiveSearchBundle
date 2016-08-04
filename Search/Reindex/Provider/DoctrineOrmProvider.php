@@ -33,7 +33,7 @@ class DoctrineOrmProvider implements ReindexProviderInterface
     private $searchMetadataFactory;
 
     /**
-     * @deprecated BC hack. @see this::provide().
+     * @deprecated BC hack. @see this::provide()
      *
      * @var object[]
      */

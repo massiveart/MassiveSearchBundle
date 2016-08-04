@@ -103,7 +103,7 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
      * which can be used to modify the query builder (e.g. to exclude certain objects
      * from the index).
      *
-     * @deprecated Returning anything from this method is deprecated. It will be passed a query builder.
+     * @deprecated Returning anything from this method is deprecated. It will be passed a query builder
      */
     public function getReindexRepositoryMethod()
     {

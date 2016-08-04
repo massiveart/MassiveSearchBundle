@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the MassiveSearchBundle
  *
@@ -23,7 +24,7 @@ class ConverterManager implements ConverterManagerInterface
     /**
      * Add a converter to the manager.
      *
-     * @param string $from source format.
+     * @param string $from source format
      * @param ConverterInterface $converter
      */
     public function addConverter($from, ConverterInterface $converter)
