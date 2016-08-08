@@ -20,12 +20,16 @@
         <service id="massive_search.factory_default" class="%massive_search.factory_default.class%" />
 
         <!-- Converter -->
-        <service id="massive_search.converter" class="Massive\Bundle\SearchBundle\Search\Converter\ConverterManager">
-        </service>
+        <service id="massive_search.converter" class="Massive\Bundle\SearchBundle\Search\Converter\ConverterManager"/>
 
         <service id="massive_search.converter.date_converter"
                  class="Massive\Bundle\SearchBundle\Search\Converter\Types\DateConverter">
             <tag name="massive_search.converter" from="date"/>
+        </service>
+
+        <service id="massive_search.converter.json_converter"
+                 class="Massive\Bundle\SearchBundle\Search\Converter\Types\JsonConverter">
+            <tag name="massive_search.converter" from="json"/>
         </service>
 
         <!-- Adapters -->
