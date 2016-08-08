@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* dev-develop
+* 0.15.0 (2016-08-08)
     * FEATURE     #98 Added json converter
 
 * 0.14.0 (2016-07-21)
