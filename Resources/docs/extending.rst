@@ -70,7 +70,7 @@ definition.
 
     <service id="massive_search.metadata.driver.xml" class="%massive_search.metadata.driver.xml.class%">
         <argument type="service" id="massive_search.metadata.file_locator" />
-        <tag type="massive_search.metadata.driver" />
+        <tag name="massive_search.metadata.driver" />
     </service>
 
 .. note::
@@ -92,7 +92,7 @@ the converter to the system you simply add a tag to your custom service.
 .. code-block:: xml
 
     <service id="massive_search.converter.foo_converter" class="Vendor\\Search\\FooConverter">
-        <tag type="massive_search.converter" from="foo" />
+        <tag name="massive_search.converter" from="foo" />
     </service>
 
 Reindex Providers
