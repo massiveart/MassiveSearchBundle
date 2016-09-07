@@ -20,6 +20,7 @@
         <service id="massive_search.adapter.elastic" class="%massive_search.search.adapter.elastic.class%">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.adapter.elastic.client" />
+            <argument type="string">%massive_search.adapter.elastic.version%</argument>
         </service>
     </services>
 </container>

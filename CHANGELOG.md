@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* dev-develop
+    * ENHANCEMENT #103 Added elasticsearch version config parameter
+
 * 0.15.0 (2016-08-08)
     * FEATURE     #98 Added json converter
 
