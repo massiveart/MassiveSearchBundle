@@ -57,12 +57,21 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     private $indexList;
 
-    public function __construct(
-        Factory $factory,
-        ElasticSearchClient $client
-    ) {
+    /**
+     * @var string
+     */
+    private $version;
+
+    /**
+     * @param Factory $factory
+     * @param ElasticSearchClient $client
+     * @param string $version
+     */
+    public function __construct(Factory $factory, ElasticSearchClient $client, $version)
+    {
         $this->factory = $factory;
         $this->client = $client;
+        $this->version = $version;
     }
 
     /**
@@ -216,9 +225,7 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function getStatus()
     {
-        $indexes = $this->listIndexes();
-
-        $indices = $this->client->indices()->status(['index' => '_all']);
+        $indices = $this->getIndexStatus();
         $indexes = $indices['indices'];
         $status = [];
 
@@ -249,7 +256,7 @@ class ElasticSearchAdapter implements AdapterInterface
     public function listIndexes()
     {
         if (!$this->indexListLoaded) {
-            $indices = $this->client->indices()->status(['index' => '_all']);
+            $indices = $this->getIndexStatus();
             $indexes = $indices['indices'];
             $this->indexList = array_combine(
                 array_keys($indexes),
@@ -300,5 +307,19 @@ class ElasticSearchAdapter implements AdapterInterface
     {
         // currently the elastic search adapter does not need any initialization
         // might make sense to create some schema stuff here
+    }
+
+    /**
+     * Returns index-status.
+     *
+     * @return array
+     */
+    private function getIndexStatus()
+    {
+        if (version_compare($this->version, '2.2', '>')) {
+            return $this->client->indices()->stats(['index' => '_all']);
+        }
+
+        return $this->client->indices()->status(['index' => '_all']);
     }
 }

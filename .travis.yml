@@ -24,6 +24,10 @@ matrix:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=weak
 
+before_install:
+  - phpenv config-add Tests/travis.php.ini
+  - composer self-update
+
 before_script:
     - composer selfupdate
     - composer update $PREFER
