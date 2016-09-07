@@ -87,9 +87,9 @@ change this, or configure more severs as follows:
                 version: 2.2
                 hosts: [ 192.168.0.63:9200, 192.168.0.63:9200 ]
 
-Elasticsearch has removed an endpoint in 2.3 so we introduced a configuration which
-indicates the version of the hosts. If you user a newer version than 2.2 you should
-provide it in the config.
+Elasticsearch has removed some deprecations in 2.3 so we introduced a configuration
+which indicates the version of the hosts. If you user a newer version than 2.2 you
+should provide it in the config.
 
 .. note::
 
