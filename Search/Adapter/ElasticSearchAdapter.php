@@ -103,6 +103,7 @@ class ElasticSearchAdapter implements AdapterInterface
             }
         }
 
+        $fields[self::ID_FIELDNAME] = $document->getId();
         $fields[self::INDEX_FIELDNAME] = $document->getIndex();
         $fields[self::URL_FIELDNAME] = $document->getUrl();
         $fields[self::TITLE_FIELDNAME] = $document->getTitle();
