@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 * dev-develop
-    * BUGFIX      #104 Added __id field for compatability reasons
+    * BUGFIX      #104 Added `__id` field for compatability reasons
     * ENHANCEMENT #103 Added elasticsearch version config parameter
 
 * 0.15.0 (2016-08-08)
