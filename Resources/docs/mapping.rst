@@ -31,7 +31,7 @@ The possible mappings are:
 - **index**: Name of the index in which to insert the record
 - **title**: Title to use in search results
 - **description**: A description for the search result
-- **url**: The URL to which the search resolt should link to
+- **url**: The URL to which the search result should link to
 - **image**: An image to associate with the search result
 - **fields**: List of ``<field />`` elements detailing which fields should be
   indexed (i.e. used when finding search results).
@@ -40,7 +40,7 @@ Each mapping can use either a ``property``, ``expr`` attribute or an ``value``
 attribute. These attributes determine how the value is retrieved. ``property``
 will use the Symfony `PropertyAccess`_ component, and ``expr`` will use
 `ExpressionLanguage`_. ``value`` is the easiest one, which just uses the
-literal value passed
+literal value passed.
 
 PropertyAccess allows you to access properties of an object by path, e.g.
 ``title``, or ``parent.title``. The expression allows you to build expressions
@@ -88,10 +88,12 @@ language.
     <massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
         <mapping class="Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product">
             <!-- ... -->
-            <url expr="'/path/to/' ~ article.getTitle()'" />
+            <url expr="'/path/to/' ~ object.getTitle()'" />
             <!-- ... -->
         </mapping>
     </massive-search-mapping>
+
+Processed entity is passed to the expression evaluator as `object` variable.
 
 Functions:
 

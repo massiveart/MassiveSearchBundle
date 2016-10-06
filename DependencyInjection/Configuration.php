@@ -49,6 +49,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('elastic')
                             ->addDefaultsifNotSet()
                             ->children()
+                                ->scalarNode('version')->defaultValue('2.2')->end()
                                 ->arrayNode('hosts')
                                     ->defaultValue(['localhost:9200'])
                                     ->prototype('scalar')->end()

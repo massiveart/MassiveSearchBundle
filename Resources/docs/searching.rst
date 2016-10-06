@@ -26,7 +26,7 @@ is passed directly to the search library:
     <?php
     $hits = $searchManager->createSearch('My Product')->execute();
 
-    foreach ($hits as $hit) s with the following data:
+    foreach ($hits as $hit)
     {
         echo $hit->getScore();
 
