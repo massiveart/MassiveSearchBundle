@@ -87,7 +87,7 @@ class ElasticSearchAdapter implements AdapterInterface
             switch ($type) {
                 case Field::TYPE_STRING:
                 case Field::TYPE_ARRAY:
-                    $fields[$massiveField->getName()] = $value;
+                    $fields[$this->encodeFieldName($massiveField->getName())] = $value;
                     break;
                 case Field::TYPE_NULL:
                     // ignore it
@@ -213,7 +213,7 @@ class ElasticSearchAdapter implements AdapterInterface
             $hit->setId($document->getId());
 
             foreach ($elasticSource as $fieldName => $fieldValue) {
-                $document->addField($this->factory->createField($fieldName, $fieldValue));
+                $document->addField($this->factory->createField($this->decodeFieldName($fieldName), $fieldValue));
             }
             $hits[] = $hit;
         }
@@ -322,5 +322,29 @@ class ElasticSearchAdapter implements AdapterInterface
         }
 
         return $this->client->indices()->status(['index' => '_all']);
+    }
+
+    /**
+     * Returns encoded field-name.
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    private function encodeFieldName($fieldName)
+    {
+        return str_replace('.', '#', $fieldName);
+    }
+
+    /**
+     * Returns decoded field-name.
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    private function decodeFieldName($fieldName)
+    {
+        return str_replace('#', '.', $fieldName);
     }
 }
