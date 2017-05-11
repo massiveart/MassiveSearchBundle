@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* 0.16.1 (2017-05-11)
+    * HOTFIX      #107 Added encode and decode field-name to elasticsearch adapter
+
 * 0.16.0 (2016-10-06)
     * BUGFIX      #104 Added `__id` field for compatability reasons
     * ENHANCEMENT #103 Added elasticsearch version config parameter
