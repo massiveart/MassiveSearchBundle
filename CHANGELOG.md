@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* 0.16.2 (2017-06-14)
+    * HOTFIX      #3406 (Sulu) Modified ElasticSearchAdapter search function, removed size paramter once limit is empty
+    
 * 0.16.1 (2017-05-11)
     * HOTFIX      #107 Added encode and decode field-name to elasticsearch adapter
 
