@@ -160,9 +160,12 @@ class ElasticSearchAdapter implements AdapterInterface
                     'query' => $queryString,
                 ],
             ],
-            'from' => $searchQuery->getOffset(),
-            'size' => $searchQuery->getLimit(),
+            'from' => $searchQuery->getOffset()
         ];
+        
+        if(!empty($searchQuery->getLimit())) {
+            $params['body']['size'] = $searchQuery->getLimit();
+        }
 
         foreach ($searchQuery->getSortings() as $sort => $order) {
             $params['body']['sort'][] = [
