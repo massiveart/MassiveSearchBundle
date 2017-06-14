@@ -160,10 +160,10 @@ class ElasticSearchAdapter implements AdapterInterface
                     'query' => $queryString,
                 ],
             ],
-            'from' => $searchQuery->getOffset()
+            'from' => $searchQuery->getOffset(),
         ];
         
-        if(!empty($searchQuery->getLimit())) {
+        if (!empty($searchQuery->getLimit())) {
             $params['body']['size'] = $searchQuery->getLimit();
         }
 
