@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-* 0.16.2 (2017-06-14)
+* dev-master
     * HOTFIX      #3406 (Sulu) Modified ElasticSearchAdapter search function, removed size paramter once limit is empty
     
 * 0.16.1 (2017-05-11)
