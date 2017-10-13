@@ -62,6 +62,11 @@ class Document implements \JsonSerializable
     protected $index;
 
     /**
+     * @var array
+     */
+    protected $highlight;
+
+    /**
      * @param Field $field
      */
     public function addField(Field $field)
@@ -248,6 +253,22 @@ class Document implements \JsonSerializable
     }
 
     /**
+     * @return array
+     */
+    public function getHighlight()
+    {
+        return $this->highlight;
+    }
+
+    /**
+     * @param array $highlight
+     */
+    public function setHighlight($highlight)
+    {
+        $this->highlight = $highlight;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function jsonSerialize()
@@ -260,6 +281,7 @@ class Document implements \JsonSerializable
             'url' => $this->url,
             'image_url' => $this->imageUrl,
             'locale' => $this->locale,
+            'highlight' => $this->highlight
         ];
     }
 }

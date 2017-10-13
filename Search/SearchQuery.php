@@ -50,6 +50,11 @@ class SearchQuery
      */
     private $offset = 0;
 
+    /**
+     * @var array
+     */
+    private $highlightFields = [];
+
     public function __construct($queryString)
     {
         $this->queryString = $queryString;
@@ -160,5 +165,21 @@ class SearchQuery
     public function setOffset($offset)
     {
         $this->offset = $offset;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHighlightFields()
+    {
+        return $this->highlightFields;
+    }
+
+    /**
+     * @param array $highlightFields
+     */
+    public function setHighlightFields($highlightFields)
+    {
+        $this->highlightFields = $highlightFields;
     }
 }

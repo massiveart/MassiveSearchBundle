@@ -118,6 +118,19 @@ class SearchQueryBuilder
     }
 
     /**
+     * Set which fields should be highlighted with search hits
+     * @param array $highlight
+     *
+     * @return SearchQueryBuilder
+     */
+    public function highlight($highlight)
+    {
+        $this->searchQuery->setHighlightFields($highlight);
+
+        return $this;
+    }
+
+    /**
      * Execute the search.
      *
      * @return SearchResult

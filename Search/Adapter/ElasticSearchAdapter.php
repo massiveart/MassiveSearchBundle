@@ -165,7 +165,16 @@ class ElasticSearchAdapter implements AdapterInterface
         if (!empty($searchQuery->getLimit())) {
             $params['body']['size'] = $searchQuery->getLimit();
         }
+        if (!empty($searchQuery->getHighlightFields())) {
+            $params['body']['highlight'] = [
+                "require_field_match" => false,
+                "fields" => []
+            ];
 
+            foreach ($searchQuery->getHighlightFields() as $field) {
+                $params['body']['highlight']['fields'][$field] = new \stdClass();
+            }
+        }
         foreach ($searchQuery->getSortings() as $sort => $order) {
             $params['body']['sort'][] = [
                 $sort => [
@@ -173,6 +182,8 @@ class ElasticSearchAdapter implements AdapterInterface
                 ],
             ];
         }
+
+        error_log(json_encode($params));
 
         $res = $this->client->search($params);
         $elasticHits = $res['hits']['hits'];
@@ -210,6 +221,9 @@ class ElasticSearchAdapter implements AdapterInterface
             }
             if (isset($elasticSource[self::IMAGE_URL])) {
                 $document->setImageUrl($elasticSource[self::IMAGE_URL]);
+            }
+            if (array_key_exists('highlight', $elasticHit)) {
+                $document->setHighlight($elasticHit['highlight']);
             }
 
             $hit->setId($document->getId());
