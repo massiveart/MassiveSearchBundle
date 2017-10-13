@@ -183,8 +183,6 @@ class ElasticSearchAdapter implements AdapterInterface
             ];
         }
 
-        error_log(json_encode($params));
-
         $res = $this->client->search($params);
         $elasticHits = $res['hits']['hits'];
 
