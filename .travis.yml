@@ -1,9 +1,11 @@
 language: php
 
-services:
-  - elasticsearch
-
 sudo: false
+
+env:
+    global:
+      - ES_VERSION="2.4.4"
+      - ES_DOWNLOAD_URL="https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.zip"
 
 matrix:
   include:
@@ -25,6 +27,10 @@ matrix:
         - SYMFONY_DEPRECATIONS_HELPER=weak
 
 before_install:
+  - curl -L -o elasticsearch.zip ${ES_DOWNLOAD_URL}
+  - ls -lah
+  - unzip elasticsearch.zip
+  - elasticsearch-*/bin/elasticsearch -d
   - phpenv config-add Tests/travis.php.ini
   - composer self-update
 
