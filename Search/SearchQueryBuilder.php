@@ -118,7 +118,8 @@ class SearchQueryBuilder
     }
 
     /**
-     * Set which fields should be highlighted with search hits
+     * Set which fields should be highlighted with search hits.
+     *
      * @param array $highlight
      *
      * @return SearchQueryBuilder

@@ -281,7 +281,7 @@ class Document implements \JsonSerializable
             'url' => $this->url,
             'image_url' => $this->imageUrl,
             'locale' => $this->locale,
-            'highlight' => $this->highlight
+            'highlight' => $this->highlight,
         ];
     }
 }

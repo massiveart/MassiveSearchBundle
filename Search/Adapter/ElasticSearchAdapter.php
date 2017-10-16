@@ -168,7 +168,7 @@ class ElasticSearchAdapter implements AdapterInterface
         if (!empty($searchQuery->getHighlightFields())) {
             $params['body']['highlight'] = [
                 "require_field_match" => false,
-                "fields" => []
+                "fields" => [],
             ];
 
             foreach ($searchQuery->getHighlightFields() as $field) {
