@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* dev-master
+    * ENHANCEMENT  #111 Increased php memory_limit and fixed elasticsearch-installation for travis
+
 * 0.16.2 (2017-06-16)
     * HOTFIX      #3406 (Sulu) Modified ElasticSearchAdapter search function, removed size paramter once limit is empty
     
