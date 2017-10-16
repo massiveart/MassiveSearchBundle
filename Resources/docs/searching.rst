@@ -80,6 +80,18 @@ when represented as JSON:
         "score": 0.39123123123123
     }
 
+Search results are paged. By default, only the first page is returned and a page contains 10 results. This can be
+controlled on the SearchQuery like this:
+
+.. code-block:: php
+
+    <?php
+    $hits = $searchManager
+      ->createSearch('My Article')
+      ->setLimit(100) // A page now contains 100 results
+      ->setOffset(1) // Return the second page of results
+      ->execute();
+
 Indexing and deindexing
 -----------------------
 
