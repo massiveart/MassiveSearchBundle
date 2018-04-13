@@ -33,7 +33,7 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Context name "foo_context" has already been registered
      */
     public function testAddIndexExisting()

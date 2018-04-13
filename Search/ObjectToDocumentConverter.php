@@ -153,7 +153,7 @@ class ObjectToDocumentConverter
                 $mapping
             );
 
-            if ($mapping['type'] == 'complex') {
+            if ('complex' == $mapping['type']) {
                 if (!isset($mapping['mapping'])) {
                     throw new \InvalidArgumentException(
                         sprintf(
@@ -185,7 +185,7 @@ class ObjectToDocumentConverter
             $type = $mapping['type'];
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
 
-            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
+            if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 $value = $this->converterManager->convert($value, $type);
 
                 if (is_null($value)) {
@@ -197,7 +197,7 @@ class ObjectToDocumentConverter
                 }
             }
 
-            if ($value !== null && false === is_scalar($value) && false === is_array($value)) {
+            if (null !== $value && false === is_scalar($value) && false === is_array($value)) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Search field "%s" resolved to not supported type "%s". Only scalar (single) or array values can be indexed.',
@@ -207,7 +207,7 @@ class ObjectToDocumentConverter
                 );
             }
 
-            if ($mapping['type'] !== 'complex') {
+            if ('complex' !== $mapping['type']) {
                 $document->addField(
                     $this->factory->createField(
                         $prefix . $fieldName,

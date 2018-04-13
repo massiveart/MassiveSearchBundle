@@ -98,7 +98,7 @@ EOT
 
         $startTime = microtime(true);
 
-        if ($this->env !== 'prod') {
+        if ('prod' !== $this->env) {
             $output->writeln(
                 $formatterHelper->formatBlock(
                     sprintf(
@@ -197,7 +197,7 @@ EOT
         while (true) {
             $objects = $provider->provide($classFqn, $offset, $batchSize);
 
-            if (count($objects) === 0) {
+            if (0 === count($objects)) {
                 $provider->cleanUp($classFqn);
                 $this->resumeManager->setCheckpoint($providerName, $classFqn, $count);
                 $progress->finish();

@@ -18,6 +18,7 @@ class SearchQuery
 {
     // constants for search order
     const SORT_ASC = 'asc';
+
     const SORT_DESC = 'desc';
 
     /**

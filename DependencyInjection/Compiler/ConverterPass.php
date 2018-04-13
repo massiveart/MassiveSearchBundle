@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class ConverterPass implements CompilerPassInterface
 {
     const SERVICE_ID = 'massive_search.converter';
+
     const TAG_NAME = 'massive_search.converter';
 
     /**

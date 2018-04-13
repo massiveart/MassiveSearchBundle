@@ -18,6 +18,7 @@ use Symfony\Component\EventDispatcher\Event;
 class HitEvent extends Event
 {
     protected $hit;
+
     protected $metadata;
 
     public function __construct(QueryHit $hit, ClassMetadata $metadata)
