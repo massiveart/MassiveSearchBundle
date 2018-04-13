@@ -17,9 +17,14 @@ namespace Massive\Bundle\SearchBundle\Search;
 class SearchEvents
 {
     const SEARCH = 'massive_search.search';
+
     const HIT = 'massive_search.hit';
+
     const PRE_INDEX = 'massive_search.pre_index';
+
     const INDEX_REBUILD = 'massive_search.index_rebuild';
+
     const INDEX = 'massive_search.index';
+
     const DEINDEX = 'massive_search.deindex';
 }

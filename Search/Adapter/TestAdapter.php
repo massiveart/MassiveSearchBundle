@@ -23,6 +23,7 @@ use Massive\Bundle\SearchBundle\Search\SearchResult;
 class TestAdapter implements AdapterInterface
 {
     protected $documents = [];
+
     protected $factory;
 
     public function __construct(Factory $factory)

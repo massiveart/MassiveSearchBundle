@@ -14,11 +14,17 @@ namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle;
 class Product
 {
     public $id;
+
     public $title;
+
     public $body;
+
     public $date;
+
     public $url;
+
     public $locale;
+
     public $image;
 
     public function getId()

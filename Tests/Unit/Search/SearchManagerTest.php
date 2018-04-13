@@ -121,7 +121,7 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException
+     * @expectedException \Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException
      * @expectedExceptionMessage There is no search mapping
      */
     public function testIndexNoMetadata()

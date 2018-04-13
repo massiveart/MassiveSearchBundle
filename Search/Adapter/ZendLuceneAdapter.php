@@ -33,14 +33,21 @@ use ZendSearch\Lucene;
 class ZendLuceneAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
+
     const INDEX_FIELDNAME = '__index';
+
     const CLASS_TAG = '__class';
+
     const AGGREGATED_INDEXED_CONTENT = '__content';
 
     const URL_FIELDNAME = '__url';
+
     const TITLE_FIELDNAME = '__title';
+
     const LOCALE_FIELDNAME = '__locale';
+
     const DESCRIPTION_FIELDNAME = '__description';
+
     const IMAGE_URL = '__image_url';
 
     /**
@@ -114,13 +121,13 @@ class ZendLuceneAdapter implements AdapterInterface
             $type = $field->getType();
             $value = $field->getValue();
 
-            if ($type === Field::TYPE_NULL) {
+            if (Field::TYPE_NULL === $type) {
                 continue;
             }
 
             // Zend Lucene does not support "types". We should allow other "types" once they
             // are properly implemented in at least one other adapter.
-            if ($type !== Field::TYPE_STRING && $type !== Field::TYPE_ARRAY) {
+            if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Search field type "%s" is not known. Known types are: %s',

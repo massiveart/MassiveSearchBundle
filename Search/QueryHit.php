@@ -17,7 +17,9 @@ namespace Massive\Bundle\SearchBundle\Search;
 class QueryHit implements \JsonSerializable
 {
     protected $document;
+
     protected $score;
+
     protected $id;
 
     /**

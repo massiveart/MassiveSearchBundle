@@ -13,7 +13,6 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata\Provider;
 
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
-use Metadata\MetadataFactory;
 use Metadata\MetadataFactoryInterface;
 
 /**

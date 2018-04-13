@@ -64,7 +64,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             ));
         }
 
-        if (count($xml->children()) == 0) {
+        if (0 == count($xml->children())) {
             throw new \InvalidArgumentException(sprintf('No mapping in file "%s"', $file));
         }
 

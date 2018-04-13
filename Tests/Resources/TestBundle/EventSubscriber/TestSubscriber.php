@@ -19,10 +19,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class TestSubscriber implements EventSubscriberInterface
 {
     public $hitDocument;
+
     public $documentReflection;
+
     public $nbHits = 0;
 
     public $preIndexDocument;
+
     public $preIndexMetadata;
 
     public static function getSubscribedEvents()

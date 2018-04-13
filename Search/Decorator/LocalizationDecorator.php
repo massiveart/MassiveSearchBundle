@@ -86,7 +86,7 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
      */
     private function removeLocale($decoratedIndexName)
     {
-        if (preg_match('/(.*)(-.*-i18n)/', $decoratedIndexName, $matches) === 0) {
+        if (0 === preg_match('/(.*)(-.*-i18n)/', $decoratedIndexName, $matches)) {
             return $decoratedIndexName;
         }
 

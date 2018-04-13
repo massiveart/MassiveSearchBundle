@@ -28,13 +28,19 @@ use Massive\Bundle\SearchBundle\Search\SearchResult;
 class ElasticSearchAdapter implements AdapterInterface
 {
     const ID_FIELDNAME = '__id';
+
     const INDEX_FIELDNAME = '__index';
+
     const CLASS_TAG = '__class';
 
     const URL_FIELDNAME = '__url';
+
     const TITLE_FIELDNAME = '__title';
+
     const DESCRIPTION_FIELDNAME = '__description';
+
     const LOCALE_FIELDNAME = '__locale';
+
     const IMAGE_URL = '__image_url';
 
     /**

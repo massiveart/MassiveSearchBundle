@@ -82,7 +82,7 @@ class PrefixDecorator implements IndexNameDecoratorInterface
      */
     private function removePrefix($decoratedIndexName)
     {
-        if (strpos($decoratedIndexName, $this->prefix . '_') === 0) {
+        if (0 === strpos($decoratedIndexName, $this->prefix . '_')) {
             $decoratedIndexName = substr($decoratedIndexName, strlen($this->prefix) + 1);
 
             return $decoratedIndexName;
