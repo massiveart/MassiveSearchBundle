@@ -306,7 +306,7 @@ class ElasticSearchAdapter implements AdapterInterface
             return 'massive_undefined';
         }
 
-        return substr(str_replace('\\', '_', $class), 1);
+        return ltrim(str_replace('\\', '_', $class), '_');
     }
 
     /**
