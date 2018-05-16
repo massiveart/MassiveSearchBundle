@@ -1,5 +1,18 @@
 # UPGRADE
 
+## develop
+
+### Zend lucene basepath was changed 
+
+The default basepath was set from `kernel.root_dir%/data` to  `%kernel.var_dir%/indexes`:
+
+```yml
+massive_search:
+    adapters:
+        zend_lucene:
+            basepath: "kernel.root_dir%/data"
+```
+
 ## 0.11.0
 
 ### IndexName decorators
