@@ -42,7 +42,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsifNotSet()
                             ->children()
                                 ->booleanNode('hide_index_exception')->defaultValue(false)->end()
-                                ->scalarNode('basepath')->defaultValue('%kernel.var_dir%/indexes')->end()
+                                ->scalarNode('basepath')->defaultValue('%kernel.root_dir%/../var/indexes')->end()
                                 ->scalarNode('encoding')->defaultValue('UTF-8')->end()
                             ->end()
                         ->end()
