@@ -94,6 +94,8 @@ class DoctrineOrmProvider implements ReindexProviderInterface
 
                 return $this->sliceEntities($offset, $maxResults);
             }
+            
+            $queryBuilder = $result;
         }
 
         $queryBuilder->setFirstResult($offset);
