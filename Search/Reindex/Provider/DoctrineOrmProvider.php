@@ -86,16 +86,14 @@ class DoctrineOrmProvider implements ReindexProviderInterface
         $queryBuilder = $repository->createQueryBuilder('d');
 
         if ($repositoryMethod) {
-            $result = $repository->$repositoryMethod($queryBuilder);
+            $queryBuilder = $repository->$repositoryMethod($queryBuilder);
 
-            if (is_array($result)) {
+            if (is_array($queryBuilder)) {
                 @trigger_error('Reindex repository methods should NOT return anything. Use the passed query builder instead.');
-                $this->cachedEntities = $result;
+                $this->cachedEntities = $queryBuilder;
 
                 return $this->sliceEntities($offset, $maxResults);
             }
-
-            $queryBuilder = $result;
         }
 
         $queryBuilder->setFirstResult($offset);
