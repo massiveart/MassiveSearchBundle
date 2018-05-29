@@ -149,6 +149,13 @@ You can specify a specific method to use on the repository as follows:
 
     </massive-search-mapping>
 
+.. important::
+
+    The method will receive an instance of `QueryBuilder` as the first argument,
+    which can be used to construct the query, with `d` used as an alias.
+    The method should **not** return anything
+    
+    
 Full example
 ------------
 
