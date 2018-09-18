@@ -93,4 +93,9 @@ class AppKernel extends TestKernel
         $loader->load(__DIR__ . '/../../../Resources/config/adapter_elastic.xml');
         $loader->load(__DIR__ . '/../../../Resources/config/adapter_zendlucene.xml');
     }
+
+    public function getCacheDir()
+    {
+        return __DIR__ . '/cache';
+    }
 }

@@ -54,7 +54,7 @@
         <service id="massive_search.index_name_decorator.default" alias="massive_search.prefix_decorator"/>
 
         <!-- Search manager -->
-        <service id="massive_search.search_manager" class="%massive_search.search_manager.class%">
+        <service id="massive_search.search_manager" class="%massive_search.search_manager.class%" public="true">
             <argument type="service" id="massive_search.adapter" />
             <argument type="service" id="massive_search.metadata.provider.chain" />
             <argument type="service" id="massive_search.object_to_document_converter" />

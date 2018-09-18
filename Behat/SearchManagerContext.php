@@ -336,11 +336,11 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     {
         return new SearchManager(
             $this->kernel->getContainer()->get($this->adapterId),
-            $this->kernel->getContainer()->get('massive_search.metadata.provider.chain'),
-            $this->kernel->getContainer()->get('massive_search.object_to_document_converter'),
+            $this->kernel->getContainer()->get('massive_search_test.metadata.provider.chain'),
+            $this->kernel->getContainer()->get('massive_search_test.object_to_document_converter'),
             $this->kernel->getContainer()->get('event_dispatcher'),
-            $this->kernel->getContainer()->get('massive_search.index_name_decorator.default'),
-            $this->kernel->getContainer()->get('massive_search.metadata.field_evaluator')
+            $this->kernel->getContainer()->get('massive_search_test.index_name_decorator.default'),
+            $this->kernel->getContainer()->get('massive_search_test.metadata.field_evaluator')
         );
     }
 

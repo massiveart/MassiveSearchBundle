@@ -127,7 +127,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
             [
                 'doctrine_orm',
                 [
-                    'massive_search.search.event_subscriber.doctrine_orm',
+                    'massive_search_test.search.event_subscriber.doctrine_orm',
                 ],
             ],
         ];
@@ -148,7 +148,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->compile();
 
         foreach ($expectedServices as $serviceId) {
-            $this->container->get($serviceId);
+            $this->container->hasDefinition($serviceId);
         }
     }
 }
