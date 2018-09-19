@@ -16,11 +16,11 @@ matrix:
     - php: 5.5
       env:
         - PREFER=""
-        - SYMFONY_DEPRECATIONS_HELPER=strong
+        - SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.6
       env:
         - PREFER=""
-        - SYMFONY_DEPRECATIONS_HELPER=strong
+        - SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 7.0
       env:
         - PREFER=""
@@ -30,14 +30,15 @@ before_install:
   - curl -L -o elasticsearch.zip ${ES_DOWNLOAD_URL}
   - ls -lah
   - unzip elasticsearch.zip
-  - elasticsearch-*/bin/elasticsearch -d
+  - phpenv config-rm xdebug.ini
   - phpenv config-add Tests/travis.php.ini
   - composer self-update
 
 before_script:
-    - composer selfupdate
     - composer require elasticsearch/elasticsearch:^2.1 --dev --no-update
     - composer update $PREFER
+    - elasticsearch-*/bin/elasticsearch -d
+    - wget -q --waitretry=2 --retry-connrefused -T 20 -O - http://127.0.0.1:9200
 
 script: 
     - vendor/bin/phpunit --coverage-text
