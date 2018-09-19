@@ -16,3 +16,20 @@ parameters:
     massive_search.adapter.zend_lucene.encoding: ISO8859-1
     massive_search.adapter.elastic.hosts: ["localhost:9200"]
     massive_search.adapter.elastic.version: "2.4"
+
+services:
+    massive_search_test.metadata.provider.chain:
+        alias: massive_search.metadata.provider.chain
+        public: true
+
+    massive_search_test.object_to_document_converter:
+        alias: massive_search.object_to_document_converter
+        public: true
+
+    massive_search_test.index_name_decorator.default:
+        alias: massive_search.index_name_decorator.default
+        public: true
+
+    massive_search_test.metadata.field_evaluator:
+        alias: massive_search.metadata.field_evaluator
+        public: true

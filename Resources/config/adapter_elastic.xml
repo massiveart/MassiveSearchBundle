@@ -17,7 +17,7 @@
                 <argument key="hosts">%massive_search.adapter.elastic.hosts%</argument>
             </argument>
         </service>
-        <service id="massive_search.adapter.elastic" class="%massive_search.search.adapter.elastic.class%">
+        <service id="massive_search.adapter.elastic" class="%massive_search.search.adapter.elastic.class%" public="true">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.adapter.elastic.client" />
             <argument type="string">%massive_search.adapter.elastic.version%</argument>

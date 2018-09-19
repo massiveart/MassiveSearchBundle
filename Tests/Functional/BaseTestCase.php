@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -81,10 +82,21 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
         $container = $kernel->getContainer();
         $application = new Application($kernel);
 
+        $this->addCommandsToApplication($container, $application);
+
+        return new CommandTester($application->get($name));
+    }
+
+    protected function addCommandsToApplication(ContainerInterface $container, Application $application)
+    {
+        if (method_exists($application, 'setCommandLoader')) {
+            $application->setCommandLoader($container->get('console.command_loader'));
+
+            return;
+        }
+
         foreach ($container->getParameter('console.command.ids') as $id) {
             $application->add($container->get($id));
         }
-
-        return new CommandTester($application->get($name));
     }
 }
