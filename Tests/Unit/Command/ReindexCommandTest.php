@@ -73,8 +73,10 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnvProdWarning()
     {
+        $this->resumeManager->getUnfinishedProviders()->willReturn([]);
         $this->providerRegistry->getProviders()->willReturn([]);
         $tester = $this->execute('dev', []);
+
         $this->assertContains('WARNING: You are running', $tester->getDisplay());
     }
 
