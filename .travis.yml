@@ -47,7 +47,7 @@ before_install:
 
 before_script:
     - composer require elasticsearch/elasticsearch:^2.1 --dev --no-update
-    - composer update $PREFER
+    - composer update --prefer-dist $PREFER
     - elasticsearch-*/bin/elasticsearch -d
     - wget -q --waitretry=2 --retry-connrefused -T 20 -O - http://127.0.0.1:9200
 
