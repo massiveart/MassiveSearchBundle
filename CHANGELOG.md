@@ -1,8 +1,8 @@
 CHANGELOG
 =========
 
-* dev-master
-    * BUGFIX       #126 Fix compatibility to php 7.2
+* 0.17.1 (2019-02-05)
+    * HOTFIX       #126 Fix compatibility to php 7.2
 
 * 0.17.0 (2018-09-25)
     * ENHANCEMENT  #124 Updated dependencies for symfony4 and fixed deprecations 
