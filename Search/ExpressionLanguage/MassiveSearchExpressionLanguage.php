@@ -69,7 +69,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 throw new \Exception('Map function does not support compilation');
             },
             function (array $values, $elements, $expression) {
-                if (0 === count($elements)) {
+                if (empty($elements)) {
                     return [];
                 }
 

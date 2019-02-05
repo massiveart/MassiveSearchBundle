@@ -21,7 +21,7 @@ matrix:
       env:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=weak
-    - php: 7.0
+    - php: 7.3
       env:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=strong
