@@ -13,14 +13,17 @@ matrix:
       env:
         - PREFER="--prefer-lowest"
         - SYMFONY_DEPRECATIONS_HELPER=weak
+        - ENABLE_SWAP=true
     - php: 5.5
       env:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=weak
+        - ENABLE_SWAP=true
     - php: 5.6
       env:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=weak
+        - ENABLE_SWAP=true
     - php: 7.3
       env:
         - PREFER=""
@@ -29,6 +32,14 @@ matrix:
 before_install:
   - curl -L -o elasticsearch.zip ${ES_DOWNLOAD_URL}
   - ls -lah
+  - | # enable swap
+    if [[ $ENABLE_SWAP == 'true' ]]; then
+        sudo fallocate -l 4G /swapfile
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile
+        sudo swapon /swapfile
+        sudo sysctl vm.swappiness=10
+    fi
   - unzip elasticsearch.zip
   - phpenv config-rm xdebug.ini
   - phpenv config-add Tests/travis.php.ini
