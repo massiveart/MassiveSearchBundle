@@ -125,16 +125,16 @@ class DoctrineOrmProvider implements ReindexProviderInterface
         $queryBuilder = $repository->createQueryBuilder('d');
 
         if ($repositoryMethod) {
-            $queryBuilder = $repository->$repositoryMethod($queryBuilder);
-        }
+            $result = $repository->$repositoryMethod($queryBuilder);
 
-        if (!$queryBuilder instanceof QueryBuilder) {
-            @trigger_error(
-                'Reindex repository methods should NOT return anything. Use the passed query builder instead.'
-            );
+            if ($result) {
+                @trigger_error(
+                    'Reindex repository methods should NOT return anything. Use the passed query builder instead.'
+                );
 
-            $queryBuilder = $this->entityManager->createQueryBuilder()
-                ->from($classFqn, 'd');
+                $queryBuilder = $this->entityManager->createQueryBuilder()
+                    ->from($classFqn, 'd');
+            }
         }
 
         $queryBuilder->select('count(d.id)');
