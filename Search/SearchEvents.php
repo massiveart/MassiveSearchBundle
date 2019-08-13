@@ -22,6 +22,8 @@ class SearchEvents
 
     const PRE_INDEX = 'massive_search.pre_index';
 
+    const PRE_DEINDEX = 'massive_search.pre_deindex';
+
     const INDEX_REBUILD = 'massive_search.index_rebuild';
 
     const INDEX = 'massive_search.index';
