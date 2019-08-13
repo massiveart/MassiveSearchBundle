@@ -16,26 +16,26 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Preindex event is fired before a document is indexed.
+ * PreDeindex event is fired before a document is deindexed.
  */
 class PreDeindexEvent extends Event
 {
     /**
-     * The object, which has been indexed.
+     * The object, which has been deindexed.
      *
      * @var object
      */
     private $subject;
 
     /**
-     * The search document, which is the result of the indexing.
+     * The search document, which is the result of the deindexing.
      *
      * @var Document
      */
     private $document;
 
     /**
-     * The metadata, on which the index process has been based.
+     * The metadata, on which the deindex process has been based.
      *
      * @var IndexMetadataInterface
      */
@@ -57,7 +57,7 @@ class PreDeindexEvent extends Event
     }
 
     /**
-     * Returns the indexed subject.
+     * Returns the deindexed subject.
      *
      * @return mixed
      */
@@ -67,7 +67,7 @@ class PreDeindexEvent extends Event
     }
 
     /**
-     * Returns the document, which is the result of the indexed object.
+     * Returns the document, which was the result of the deindexed object.
      *
      * @return Document
      */
@@ -77,7 +77,7 @@ class PreDeindexEvent extends Event
     }
 
     /**
-     * Returns the metadata based on which the indexing was done.
+     * Returns the metadata based on which the deindexing was done.
      *
      * @return IndexMetadataInterface
      */
