@@ -50,8 +50,7 @@ class PreDeindexEvent extends Event
         $subject,
         Document $document,
         IndexMetadataInterface $metadata
-    )
-    {
+    ) {
         $this->subject = $subject;
         $this->document = $document;
         $this->metadata = $metadata;
