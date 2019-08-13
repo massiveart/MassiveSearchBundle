@@ -3,7 +3,8 @@ CHANGELOG
 
 * dev-master
     * BUGFIX       #126 Fix compatibility to php 7.2
-
+    * ENHANCEMENT  #129 Added dispatching of pre-deindex event
+    
 * 0.17.0 (2018-09-25)
     * ENHANCEMENT  #124 Updated dependencies for symfony4 and fixed deprecations 
     * ENHANCEMENT  #114 Updated elasticsearch dependency

@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Decorator\IndexNameDecoratorInterface;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
+use Massive\Bundle\SearchBundle\Search\Event\PreDeindexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
 use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
@@ -120,6 +121,12 @@ class SearchManager implements SearchManagerInterface
 
             foreach ($indexNames as $indexName) {
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
+
+                $this->eventDispatcher->dispatch(
+                    SearchEvents::PRE_DEINDEX,
+                    new PreDeindexEvent($object, $document, $indexMetadata)
+                );
+
                 $this->adapter->deindex($document, $indexName);
             }
         }
