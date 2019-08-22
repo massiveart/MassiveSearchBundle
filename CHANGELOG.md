@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+* 0.17.3 (2019-08-22)
+    * ENHANCEMENT  #130 Add command default names
+
 * 0.17.2 (2019-08-20)
     * ENHANCEMENT  #129 Added dispatching of pre-deindex event
     * ENHANCEMENT  #127 Custom repository method bugfix

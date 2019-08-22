@@ -13,7 +13,7 @@ namespace Massive\Bundle\SearchBundle\Command;
 
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,8 +22,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  * This command returns some vendor specific information about
  * the currently configured search implementation.
  */
-class StatusCommand extends ContainerAwareCommand
+class StatusCommand extends Command
 {
+    protected static $defaultName = 'massive:search:status';
+
     /**
      * @var SearchManager
      */
@@ -31,13 +33,13 @@ class StatusCommand extends ContainerAwareCommand
 
     public function __construct(SearchManagerInterface $searchManager)
     {
-        parent::__construct();
+        parent::__construct(self::$defaultName);
+
         $this->searchManager = $searchManager;
     }
 
     public function configure()
     {
-        $this->setName('massive:search:status');
         $this->setDescription('Return the status of the configured search engine');
         $this->setHelp(<<<'EOT'
 Return detailed information about the current search implementation

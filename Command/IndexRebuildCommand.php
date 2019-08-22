@@ -20,13 +20,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class IndexRebuildCommand extends ReindexCommand
 {
-    /**
-     * {@inheritdoc}
-     */
+    protected static $defaultName = 'massive:search:index:rebuild';
+
     public function configure()
     {
         parent::configure();
-        $this->setName('massive:search:index:rebuild');
+
+        $this->setName(self::$defaultName);
     }
 
     /**

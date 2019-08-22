@@ -24,6 +24,8 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  */
 class PurgeCommand extends Command
 {
+    protected static $defaultName = 'massive:search:purge';
+
     /**
      * @var SearchManagerInterface
      */
@@ -38,14 +40,14 @@ class PurgeCommand extends Command
         SearchManagerInterface $searchManager,
         QuestionHelper $questionHelper = null
     ) {
-        parent::__construct();
+        parent::__construct(self::$defaultName);
+
         $this->searchManager = $searchManager;
         $this->questionHelper = $questionHelper ?: new QuestionHelper();
     }
 
     public function configure()
     {
-        $this->setName('massive:search:purge');
         $this->setDescription('Purge one, many or all indexes.');
         $this->setHelp(<<<'EOT'
 Purge one, many or all indexes:

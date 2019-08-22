@@ -24,15 +24,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class QueryCommand extends Command
 {
+    protected static $defaultName = 'massive:search:query';
+
     /**
      * @var SearchManagerInterface
      */
     private $searchManager;
 
-    public function __construct(
-        SearchManagerInterface $searchManager
-    ) {
-        parent::__construct();
+    public function __construct(SearchManagerInterface $searchManager)
+    {
+        parent::__construct(self::$defaultName);
+
         $this->searchManager = $searchManager;
     }
 
@@ -41,12 +43,12 @@ class QueryCommand extends Command
      */
     public function configure()
     {
-        $this->setName('massive:search:query');
         $this->addArgument('query', InputArgument::REQUIRED, 'Search query');
         $this->addOption('index', 'I', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Index to search');
         $this->addOption('locale', 'l', InputOption::VALUE_REQUIRED, 'Index to search');
         $this->setDescription('Search the using a given query');
-        $this->setHelp(<<<'EOT'
+        $this->setHelp(
+            <<<'EOT'
 The %command.name_full% command will search the configured repository and present
 the results.
 
@@ -72,15 +74,17 @@ EOT
         $table->setHeaders(['Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class']);
         foreach ($hits as $hit) {
             $document = $hit->getDocument();
-            $table->addRow([
-                $hit->getScore(),
-                $document->getId(),
-                $document->getTitle(),
-                $this->truncate($document->getDescription(), 50),
-                $document->getUrl(),
-                $document->getImageUrl(),
-                $document->getClass(),
-            ]);
+            $table->addRow(
+                [
+                    $hit->getScore(),
+                    $document->getId(),
+                    $document->getTitle(),
+                    $this->truncate($document->getDescription(), 50),
+                    $document->getUrl(),
+                    $document->getImageUrl(),
+                    $document->getClass(),
+                ]
+            );
         }
         $table->render();
         $output->writeln(sprintf('%s result(s) in %fs', count($hits), $timeElapsed));
