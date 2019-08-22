@@ -21,6 +21,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class InitCommand extends Command
 {
+    protected static $defaultName = 'massive:search:init';
+
     /**
      * @var AdapterInterface
      */
@@ -28,13 +30,13 @@ class InitCommand extends Command
 
     public function __construct(AdapterInterface $adapter)
     {
-        parent::__construct();
+        parent::__construct(self::$defaultName);
+
         $this->adapter = $adapter;
     }
 
     public function configure()
     {
-        $this->setName('massive:search:init');
         $this->setDescription('Initializes the search bundle');
         $this->setHelp('This command will simply call the initialize method of the currently active search adapter.');
     }
