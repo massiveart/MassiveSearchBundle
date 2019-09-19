@@ -1,6 +1,10 @@
 # UPGRADE
 
-## dev-develop
+## 1.0.0
+
+No breaking changes.
+
+## 0.17.0
 
 The _type field in Elasticsearch has been modified so it correctly reflects the fully qualified
 class name (FQCN) of the documents being indexed in snake case. When you are using Elasticsearch
@@ -9,7 +13,6 @@ and upgrade, you will have to rebuild the indexes using the following command :
 ```bash
 bin/console massive:search:reindex
 ```
-
 
 ## 0.11.0
 
