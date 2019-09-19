@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
+use Metadata\ClassMetadata;
 use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
 use Metadata\Driver\FileLocatorInterface;
@@ -43,7 +44,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function getExtension()
+    protected function getExtension(): string
     {
         return 'xml';
     }
@@ -51,7 +52,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function loadMetadataFromFile(\ReflectionClass $class, $file)
+    protected function loadMetadataFromFile(\ReflectionClass $class, string $file): ?ClassMetadata
     {
         $classMetadata = $this->factory->createClassMetadata($class->name);
 
