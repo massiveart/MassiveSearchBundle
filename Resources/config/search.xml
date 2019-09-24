@@ -33,7 +33,7 @@
         </service>
 
         <!-- Adapters -->
-        <service id="massive_search.adapter.test" class="%massive_search.search.adapter.test.class%">
+        <service id="massive_search.adapter.test" class="%massive_search.search.adapter.test.class%" public="true">
             <argument type="service" id="massive_search.factory" />
         </service>
 
