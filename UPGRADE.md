@@ -10,6 +10,7 @@ To update JMS/Metadata to 2.0 the following public functions were removed:
  - Massive\Bundle\SearchBundle\Search\Metadata\Driver::getExtension
 
 Because of the update we had to increase the required `php` version to `7.2`.
+Also the requirement of symfony packages where increased to `^4.3`.
 
 ## 1.0.0
 
