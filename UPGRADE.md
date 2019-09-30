@@ -1,6 +1,6 @@
 # UPGRADE
 
-## dev-develop
+## 2.0.0
 
 ## JMS/Metadata package update to 2.0
 
@@ -9,7 +9,7 @@ To update JMS/Metadata to 2.0 the following public functions were removed:
  - Massive\Bundle\SearchBundle\Search\Metadata\Driver::loadMetadataFromFile
  - Massive\Bundle\SearchBundle\Search\Metadata\Driver::getExtension
 
-In this case we alse needed to increase the required `php` version to `7.2`.
+Because of the update we had to increase the required `php` version to `7.2`.
 
 ## 1.0.0
 

@@ -49,7 +49,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->reflectionClass = $this->prophesize(\ReflectionClass::class);
         $this->reflectionClass->getName()->willReturn('Sulu\Bundle\ExampleBundle\Entity\Example');
-        $this->reflectionClass->__toString()->willReturn('what the hell');
+        $this->reflectionClass->__toString()->willReturn('Example');
 
         $that = $this;
 
