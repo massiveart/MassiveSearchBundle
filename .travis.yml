@@ -10,19 +10,9 @@ env:
 
 matrix:
   include:
-    - php: 5.5
+    - php: 7.2
       env:
         - PREFER="--prefer-lowest"
-        - SYMFONY_DEPRECATIONS_HELPER=weak
-        - ENABLE_SWAP=true
-    - php: 5.5
-      env:
-        - PREFER=""
-        - SYMFONY_DEPRECATIONS_HELPER=weak
-        - ENABLE_SWAP=true
-    - php: 5.6
-      env:
-        - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=weak
         - ENABLE_SWAP=true
     - php: 7.3
@@ -52,7 +42,7 @@ before_script:
     - elasticsearch-*/bin/elasticsearch -d
     - wget -q --waitretry=2 --retry-connrefused -T 20 -O - http://127.0.0.1:9200
 
-script: 
+script:
     - vendor/bin/phpunit --coverage-text
     - vendor/bin/behat --suite=zend_lucene
     - vendor/bin/behat --suite=elastic

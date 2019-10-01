@@ -1,6 +1,7 @@
 framework:
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
+    fragments: ~
 
 # necessary for the doctrine services to be instantiated
 doctrine:

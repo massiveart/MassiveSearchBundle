@@ -49,11 +49,12 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->reflectionClass = $this->prophesize(\ReflectionClass::class);
         $this->reflectionClass->getName()->willReturn('Sulu\Bundle\ExampleBundle\Entity\Example');
+        $this->reflectionClass->__toString()->willReturn('Example');
 
         $that = $this;
 
         $this->factory->createClassMetadata(Argument::cetera())->will(function ($arguments) use ($that) {
-            $classMetadata = new ClassMetadata($that->reflectionClass->getName());
+            $classMetadata = new ClassMetadata($that->reflectionClass->reveal()->getName());
 
             return $classMetadata;
         });
@@ -79,9 +80,13 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadMetadataFromFile()
     {
-        $metadata = $this->xmlDriver->loadMetadataFromFile(
+        $this->fileLocator->findFileForClass(
             $this->reflectionClass->reveal(),
-            __DIR__ . '/../../../../Resources/DataFixtures/Mapping/Example.xml'
+            'xml'
+        )->willReturn(__DIR__ . '/../../../../Resources/DataFixtures/Mapping/Example.xml');
+
+        $metadata = $this->xmlDriver->loadMetadataForClass(
+            $this->reflectionClass->reveal()
         );
 
         $indexMetadata = $metadata->getIndexMetadata('_default');
@@ -101,10 +106,12 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadMetadataFromFileWithEvaluatingIndex()
     {
-        $metadata = $this->xmlDriver->loadMetadataFromFile(
+        $this->fileLocator->findFileForClass(
             $this->reflectionClass->reveal(),
-            __DIR__ . '/../../../../Resources/DataFixtures/Mapping/ExampleWithEvaluatingIndex.xml'
-        );
+            'xml'
+        )->willReturn(__DIR__ . '/../../../../Resources/DataFixtures/Mapping/ExampleWithEvaluatingIndex.xml');
+
+        $metadata = $this->xmlDriver->loadMetadataForClass($this->reflectionClass->reveal());
 
         $indexMetadata = $metadata->getIndexMetadata('_default');
 
