@@ -26,12 +26,9 @@ Installation
 
 You can install the MassiveSearchBundle by adding it to `composer.json`:
 
-.. code-block:: javascript
+.. code-block:: bash
 
-    "require": {
-        ...
-        "massive/search-bundle": "~1.0@dev"
-    }
+    composer require massive/search-bundle
 
 And then include it in your ``AppKernel``:
 
