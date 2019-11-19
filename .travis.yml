@@ -19,6 +19,11 @@ matrix:
       env:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=strong
+    - php: 7.3
+      env:
+        - PREFER=""
+        - MINIMUM_STABILITY=dev
+        - SYMFONY_DEPRECATIONS_HELPER=strong
 
 before_install:
   - curl -L -o elasticsearch.zip ${ES_DOWNLOAD_URL}
@@ -37,6 +42,7 @@ before_install:
   - composer self-update
 
 before_script:
+    - if [[ "$MINIMUM_STABILITY" ]]; then composer config minimum-stability $MINIMUM_STABILITY ; fiy
     - composer require elasticsearch/elasticsearch:^2.1 --dev --no-update
     - composer update --prefer-dist $PREFER
     - elasticsearch-*/bin/elasticsearch -d
