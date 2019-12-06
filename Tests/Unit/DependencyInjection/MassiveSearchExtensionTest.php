@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Unit\DependencyInjection;
 
+use Doctrine\Orm\EntityManager;
 use Massive\Bundle\SearchBundle\DependencyInjection\MassiveSearchExtension;
 use Massive\Bundle\SearchBundle\MassiveSearchBundle;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -28,6 +29,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->container->setParameter('kernel.debug', false);
         $this->container->register('event_dispatcher', EventDispatcher::class);
         $this->container->register('filesystem', Filesystem::class);
+        $this->container->register('doctrine.orm.entity_manager', EntityManager::class);
     }
 
     protected function getContainerExtensions()

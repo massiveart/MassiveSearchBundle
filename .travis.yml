@@ -25,7 +25,7 @@ matrix:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=weak
         - ENABLE_SWAP=true
-    - php: 7.3
+    - php: 7.4
       env:
         - PREFER=""
         - SYMFONY_DEPRECATIONS_HELPER=strong
@@ -39,10 +39,10 @@ before_install:
         sudo chmod 600 /swapfile
         sudo mkswap /swapfile
         sudo swapon /swapfile
-        sudo sysctl vm.swappiness=10
+        sudo sysctl vm.swappiness=20
     fi
   - unzip elasticsearch.zip
-  - phpenv config-rm xdebug.ini
+  - phpenv config-rm xdebug.ini || true
   - phpenv config-add Tests/travis.php.ini
   - composer self-update
 
