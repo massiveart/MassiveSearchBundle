@@ -44,14 +44,14 @@ class DoctrineOrmSubscriberTest extends \PHPUnit_Framework_TestCase
         $subscriber->preRemove($eventArgs->reveal());
 
         $eventDispatcher->dispatch(
-            SearchEvents::DEINDEX,
             Argument::that(
                 function (DeindexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;
                 }
-            )
+            ),
+            SearchEvents::DEINDEX
         )->shouldBeCalledTimes(1);
     }
 
