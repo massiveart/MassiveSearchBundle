@@ -24,7 +24,8 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     {
         parent::setUp();
 
-        $this->container->setParameter('kernel.root_dir', '/some/path');
+        $this->container->setParameter('kernel.project_dir', __DIR__ . '/../../Resources/app');
+        $this->container->setParameter('kernel.root_dir', __DIR__ . '/../../Resources/app');
         $this->container->setParameter('kernel.cache_dir', __DIR__ . '/../../Resources/app/cache');
         $this->container->setParameter('kernel.debug', false);
         $this->container->register('event_dispatcher', EventDispatcher::class);
