@@ -103,6 +103,17 @@ class MassiveSearchExtension extends Extension
         $loader->load('metadata.xml');
 
         $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'));
+
+        $kernelProjectDir = $container->getParameter('kernel.project_dir');
+        foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
+            if (!file_exists($kernelProjectDir . '/src/' . $entityNamespace)) {
+                continue;
+            }
+
+            $namespace = 'App\\' . $entityNamespace;
+            $metadataPaths[$namespace] = $kernelProjectDir . '/config/massive-search';
+        }
+
         $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
         $fileLocator->replaceArgument(0, $metadataPaths);
     }
