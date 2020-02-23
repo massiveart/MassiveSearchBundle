@@ -98,4 +98,13 @@ class AppKernel extends TestKernel
     {
         return __DIR__ . '/cache';
     }
+
+    protected function getKernelParameters()
+    {
+        $parameters = parent::getKernelParameters();
+        $parameters['kernel.root_dir'] = __DIR__;
+        $parameters['kernel.project_dir'] = __DIR__;
+
+        return $parameters;
+    }
 }

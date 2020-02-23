@@ -1,7 +1,6 @@
 framework:
-    templating: false
     router:
-        resource: "%kernel.root_dir%/config/routing.yml"
+        resource: "%kernel.project_dir%/config/routing.yml"
     fragments: ~
 
 # necessary for the doctrine services to be instantiated
@@ -13,7 +12,7 @@ massive_search:
     adapter: test
 
 parameters:
-    massive_search.adapter.zend_lucene.basepath: "%kernel.root_dir%/cache/data"
+    massive_search.adapter.zend_lucene.basepath: "%kernel.project_dir%/cache/data"
     massive_search.adapter.zend_lucene.hide_index_exception: true
     massive_search.adapter.zend_lucene.encoding: ISO8859-1
     massive_search.adapter.elastic.hosts: ["localhost:9200"]
