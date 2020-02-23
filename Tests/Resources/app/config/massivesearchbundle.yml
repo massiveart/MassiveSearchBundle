@@ -1,4 +1,5 @@
 framework:
+    templating: false
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
     fragments: ~
