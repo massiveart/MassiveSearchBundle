@@ -1,37 +1,25 @@
 default:
+    translation:
+        locale: en
     suites:
         zend_lucene:
-            type: symfony_bundle
             contexts:
-                - Massive\Bundle\SearchBundle\Behat\SearchManagerContext:
-                    adapterId: massive_search.adapter.zend_lucene
-            bundle: MassiveSearchBundle
+                - Massive\Bundle\SearchBundle\Behat\ZendLuceneContext
+            paths:
+                - Tests/
             filters:
                 tags: '@zend_lucene'
         elastic:
-            type: symfony_bundle
             contexts:
-                - Massive\Bundle\SearchBundle\Behat\SearchManagerContext:
-                    adapterId: massive_search.adapter.elastic
-            bundle: MassiveSearchBundle
+                - Massive\Bundle\SearchBundle\Behat\ElasticContext
+            paths:
+                - Tests/
             filters:
                 tags: '@elastic'
         test:
-            type: symfony_bundle
             contexts:
-                - Massive\Bundle\SearchBundle\Behat\SearchManagerContext:
-                    adapterId: massive_search.adapter.test
-            bundle: MassiveSearchBundle
+                - Massive\Bundle\SearchBundle\Behat\TestContext
+            paths:
+                - Tests/
             filters:
                 tags: '@test'
-    extensions:
-        Behat\Symfony2Extension:
-            kernel:
-                path: Tests/Resources/app/AppKernel.php
-                class: Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel
-                bootstrap: vendor/symfony-cmf/testing/bootstrap/bootstrap.php
-                env: test
-            context:
-                path_suffix: Tests/Features
-        Behat\WebApiExtension:
-            base_url: http://localhost:8000/

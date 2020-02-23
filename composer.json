@@ -38,8 +38,6 @@
         "doctrine/orm": "^2.5",
 
         "behat/behat": "^3.4.2",
-        "behat/web-api-extension": "~1.0@dev",
-        "behat/symfony2-extension": "~2.1",
 
         "guzzlehttp/ringphp": ">= 1.0.7",
         "guzzlehttp/streams": "^3.0.0"
