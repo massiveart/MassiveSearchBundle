@@ -23,8 +23,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('massive_search')
+        $treeBuilder = new TreeBuilder('massive_search');
+        $treeBuilder->getRootNode()
             ->children()
                 ->arrayNode('services')
                     ->addDefaultsifNotSet()
