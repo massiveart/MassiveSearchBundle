@@ -11,12 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 /**
  * Will be fired to index given subject.
  */
-class IndexEvent extends Event
+class IndexEvent extends AbstractEvent
 {
     /**
      * @var object

@@ -13,9 +13,8 @@ namespace Massive\Bundle\SearchBundle\Search\Event;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
-use Symfony\Component\EventDispatcher\Event;
 
-class HitEvent extends Event
+class HitEvent extends AbstractEvent
 {
     protected $hit;
 

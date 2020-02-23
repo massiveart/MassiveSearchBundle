@@ -13,12 +13,11 @@ namespace Massive\Bundle\SearchBundle\Search\Event;
 
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * PreDeindex event is fired before a document is deindexed.
  */
-class PreDeindexEvent extends Event
+class PreDeindexEvent extends AbstractEvent
 {
     /**
      * The object, which has been deindexed.
