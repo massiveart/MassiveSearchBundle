@@ -59,5 +59,7 @@ EOT
         }
 
         $table->render();
+
+        return 0;
     }
 }

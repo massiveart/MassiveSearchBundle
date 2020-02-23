@@ -12,7 +12,7 @@ matrix:
   include:
     - php: 7.2
       env:
-        - PREFER="--prefer-lowest"
+        - PREFER="--prefer-lowest --prefer-stable"
         - SYMFONY_DEPRECATIONS_HELPER=weak
         - ENABLE_SWAP=true
     - php: 7.4

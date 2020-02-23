@@ -88,6 +88,8 @@ EOT
         }
         $table->render();
         $output->writeln(sprintf('%s result(s) in %fs', count($hits), $timeElapsed));
+
+        return 0;
     }
 
     /**

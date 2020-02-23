@@ -99,6 +99,8 @@ EOT
                 $this->searchManager->purge($indexName);
             }
         }
+
+        return 0;
     }
 
     private function listIndexes(OutputInterface $output, array $indexNames)
