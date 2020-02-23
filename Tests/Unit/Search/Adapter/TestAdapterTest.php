@@ -15,8 +15,9 @@ use Massive\Bundle\SearchBundle\Search\Adapter\TestAdapter;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
+use PHPUnit\Framework\TestCase;
 
-class TestAdapterTest extends \PHPUnit_Framework_TestCase
+class TestAdapterTest extends TestCase
 {
     public function setUp()
     {

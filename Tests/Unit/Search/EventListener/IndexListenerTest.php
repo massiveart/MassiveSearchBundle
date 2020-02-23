@@ -14,9 +14,10 @@ namespace Massive\Bundle\SearchBundle\Unit\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\Event\IndexEvent;
 use Massive\Bundle\SearchBundle\Search\EventListener\IndexListener;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class IndexListenerTest extends \PHPUnit_Framework_TestCase
+class IndexListenerTest extends TestCase
 {
     public function testOnIndex()
     {

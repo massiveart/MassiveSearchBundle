@@ -15,9 +15,10 @@ use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
+class ZendLuceneAdapterTest extends TestCase
 {
     /**
      * @var string

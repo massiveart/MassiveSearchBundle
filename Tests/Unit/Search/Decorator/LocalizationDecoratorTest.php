@@ -13,9 +13,10 @@ namespace Massive\Bundle\SearchBundle\Search\Decorator;
 
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
-class LocalizationDecoratorTest extends \PHPUnit_Framework_TestCase
+class LocalizationDecoratorTest extends TestCase
 {
     /**
      * @var IndexNameDecorator

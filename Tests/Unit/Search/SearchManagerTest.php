@@ -22,10 +22,11 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class SearchManagerTest extends \PHPUnit_Framework_TestCase
+class SearchManagerTest extends TestCase
 {
     /**
      * @var AdapterInterface

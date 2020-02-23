@@ -15,7 +15,7 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
-use PHPUnit_Framework_Assert as Assert;
+use Webmozart\Assert\Assert;
 
 /**
  * Behat context for search manager features.
@@ -118,7 +118,7 @@ abstract class AbstractSearchManagerContext implements Context
     public function theResultShouldBeTheFollowingArray(PyStringNode $string)
     {
         $expected = json_decode($string->getRaw(), true);
-        Assert::assertEquals($expected, $this->lastResult);
+        Assert::eq($expected, $this->lastResult);
     }
 
     /**
@@ -131,7 +131,7 @@ abstract class AbstractSearchManagerContext implements Context
         foreach ($this->lastResult as $hit) {
             $documents[] = $hit->getDocument()->jsonSerialize();
         }
-        Assert::assertEquals($expected, $documents);
+        Assert::eq($expected, $documents);
     }
 
     /**
@@ -157,8 +157,8 @@ abstract class AbstractSearchManagerContext implements Context
     private function doIndexTheFollowingObjects($className, PyStringNode $string)
     {
         $objectsData = json_decode($string->getRaw(), true);
-        Assert::assertArrayHasKey($className, $this->entityClasses, 'Entity exists');
-        Assert::assertNotNull($objectsData);
+        Assert::keyExists($this->entityClasses, $className, 'Entity exists');
+        Assert::notNull($objectsData);
 
         foreach ($objectsData as $objectData) {
             $object = new $this->entityClasses[$className]();
@@ -242,8 +242,8 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function thenAnExceptionWithMessageShouldBeThrown($message)
     {
-        Assert::assertNotNull($this->lastException, 'An exception has been thrown');
-        Assert::assertContains($message, $this->lastException->getMessage());
+        Assert::notNull($this->lastException, 'An exception has been thrown');
+        Assert::contains($message, $this->lastException->getMessage());
         $this->exceptionAsserted = true;
     }
 
@@ -260,7 +260,7 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function thereShouldBeResults($nbResults)
     {
-        Assert::assertCount((int) $nbResults, $this->lastResult);
+        Assert::count($this->lastResult, (int) $nbResults);
     }
 
     /**
@@ -277,7 +277,7 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function iDeindexTheObjectWithId($id)
     {
-        Assert::arrayHasKey($id, $this->entities);
+        Assert::keyExists($this->entities, $id);
         $entity = $this->entities[$id];
         $this->getSearchManager()->deindex($entity);
         $this->getSearchManager()->flush();
@@ -310,7 +310,7 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function theResultShouldBeAnArray()
     {
-        Assert::assertInternalType('array', $this->lastResult);
+        Assert::isArray($this->lastResult);
     }
 
     /**
@@ -318,7 +318,7 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function theResultAtPositionShouldBe($position, $id)
     {
-        Assert::assertEquals($this->lastResult[$position]->getId(), $id);
+        Assert::eq($this->lastResult[$position]->getId(), $id);
     }
 
     /**

@@ -13,8 +13,9 @@ namespace Massive\Bundle\SearchBundle\Unit\Search\Adapter\Elastic;
 
 use Elasticsearch\Client;
 use Massive\Bundle\SearchBundle\Search\Adapter\Elastic\ClientFactory;
+use PHPUnit\Framework\TestCase;
 
-class ClientFactoryTest extends \PHPUnit_Framework_TestCase
+class ClientFactoryTest extends TestCase
 {
     public function testCreate()
     {

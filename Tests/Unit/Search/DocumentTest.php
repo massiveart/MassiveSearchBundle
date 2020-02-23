@@ -13,8 +13,9 @@ namespace Massive\MassiveSearchBundle\Tests\Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Field;
+use PHPUnit\Framework\TestCase;
 
-class DocumentTest extends \PHPUnit_Framework_TestCase
+class DocumentTest extends TestCase
 {
     /**
      * @var Field

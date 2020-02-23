@@ -16,11 +16,12 @@ use Massive\Bundle\SearchBundle\Search\Event\DeindexEvent;
 use Massive\Bundle\SearchBundle\Search\Event\IndexEvent;
 use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class DoctrineOrmSubscriberTest extends \PHPUnit_Framework_TestCase
+class DoctrineOrmSubscriberTest extends TestCase
 {
     public function testMapping()
     {

@@ -18,12 +18,10 @@ matrix:
     - php: 7.4
       env:
         - PREFER=""
-        - SYMFONY_DEPRECATIONS_HELPER=strong
     - php: 7.3
       env:
         - PREFER=""
         - MINIMUM_STABILITY=dev
-        - SYMFONY_DEPRECATIONS_HELPER=strong
 
 before_install:
   - curl -L -o elasticsearch.zip ${ES_DOWNLOAD_URL}
@@ -42,14 +40,14 @@ before_install:
   - composer self-update
 
 before_script:
-    - if [[ "$MINIMUM_STABILITY" ]]; then composer config minimum-stability $MINIMUM_STABILITY ; fiy
+    - if [[ "$MINIMUM_STABILITY" ]]; then composer config minimum-stability $MINIMUM_STABILITY ; fi
     - composer require elasticsearch/elasticsearch:^2.1 --dev --no-update
     - composer update --prefer-dist $PREFER
     - elasticsearch-*/bin/elasticsearch -d
     - wget -q --waitretry=2 --retry-connrefused -T 20 -O - http://127.0.0.1:9200
 
 script:
-    - vendor/bin/phpunit --coverage-text
+    - vendor/bin/simple-phpunit --coverage-text
     - vendor/bin/behat --suite=zend_lucene
     - vendor/bin/behat --suite=elastic
 

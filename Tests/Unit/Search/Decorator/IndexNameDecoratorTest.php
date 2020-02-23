@@ -15,8 +15,9 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
+use PHPUnit\Framework\TestCase;
 
-class IndexNameDecoratorTest extends \PHPUnit_Framework_TestCase
+class IndexNameDecoratorTest extends TestCase
 {
     /**
      * @var FieldEvaluator

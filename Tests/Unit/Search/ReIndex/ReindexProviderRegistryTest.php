@@ -13,8 +13,9 @@ namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Reindex;
 
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
+use PHPUnit\Framework\TestCase;
 
-class ReindexProviderRegistryTest extends \PHPUnit_Framework_TestCase
+class ReindexProviderRegistryTest extends TestCase
 {
     /**
      * @var ReindexProviderRegistry

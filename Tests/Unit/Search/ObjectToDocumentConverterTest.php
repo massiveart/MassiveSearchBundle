@@ -20,8 +20,9 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
+use PHPUnit\Framework\TestCase;
 
-class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
+class ObjectToDocumentConverterTest extends TestCase
 {
     /**
      * @var IndexMetadata

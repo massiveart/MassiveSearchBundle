@@ -12,8 +12,9 @@
 namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\ExpressionLanguage\MassiveSearchExpressionLanguage;
+use PHPUnit\Framework\TestCase;
 
-class MassiveSearchExpressionLanguageTest extends \PHPUnit_Framework_TestCase
+class MassiveSearchExpressionLanguageTest extends TestCase
 {
     public function setUp()
     {

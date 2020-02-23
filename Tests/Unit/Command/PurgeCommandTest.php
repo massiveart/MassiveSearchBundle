@@ -13,12 +13,13 @@ namespace Massive\Bundle\SearchBundle\Tests\Unit\Command;
 
 use Massive\Bundle\SearchBundle\Command\PurgeCommand;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class PurgeCommandTest extends \PHPUnit_Framework_TestCase
+class PurgeCommandTest extends TestCase
 {
     /**
      * @var SearchManagerInterface

@@ -12,9 +12,10 @@
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Command;
 
 use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManager;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ResumeManagerTest extends \PHPUnit_Framework_TestCase
+class ResumeManagerTest extends TestCase
 {
     /**
      * @var ResumeManager
