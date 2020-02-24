@@ -18,9 +18,10 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\FileLocatorInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
-class XmlDriverTest extends \PHPUnit_Framework_TestCase
+class XmlDriverTest extends TestCase
 {
     /**
      * @var XmlDriver

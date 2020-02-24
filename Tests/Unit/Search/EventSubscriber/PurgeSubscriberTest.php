@@ -14,8 +14,9 @@ namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\EventSubscriber\PurgeSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use PHPUnit\Framework\TestCase;
 
-class PurgeSubscriberTest extends \PHPUnit_Framework_TestCase
+class PurgeSubscriberTest extends TestCase
 {
     /**
      * @var SearchManagerInterface

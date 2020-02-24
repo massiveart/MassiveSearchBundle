@@ -13,12 +13,13 @@ namespace Massive\Bundle\SearchBundle\Tests\Unit\Command;
 
 use Massive\Bundle\SearchBundle\Command\PurgeCommand;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class PurgeCommandTest extends \PHPUnit_Framework_TestCase
+class PurgeCommandTest extends TestCase
 {
     /**
      * @var SearchManagerInterface
@@ -45,8 +46,8 @@ class PurgeCommandTest extends \PHPUnit_Framework_TestCase
             'one', 'two',
         ]);
         $tester = $this->execute([]);
-        $this->assertContains('one', $tester->getDisplay());
-        $this->assertContains('two', $tester->getDisplay());
+        $this->assertStringContainsString('one', $tester->getDisplay());
+        $this->assertStringContainsString('two', $tester->getDisplay());
     }
 
     /**
@@ -56,7 +57,7 @@ class PurgeCommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->searchManager->getIndexNames()->willReturn([]);
         $tester = $this->execute([]);
-        $this->assertContains('No indexes', $tester->getDisplay());
+        $this->assertStringContainsString('No indexes', $tester->getDisplay());
     }
 
     /**
@@ -130,12 +131,12 @@ class PurgeCommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should list all possible indexes if an invalid index is given.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Unknown indexes "bambi", "ralph", known indexes: "foobar", "barfoo"
      */
     public function testInvalidIndex()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown indexes "bambi", "ralph", known indexes: "foobar", "barfoo"');
+
         $this->searchManager->getIndexNames()->willReturn([
             'foobar', 'barfoo',
         ]);

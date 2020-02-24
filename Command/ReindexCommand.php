@@ -162,6 +162,8 @@ EOT
             number_format(microtime(true) - $startTime, 2),
             number_format(memory_get_usage())
         ));
+
+        return 0;
     }
 
     private function reindexClass(

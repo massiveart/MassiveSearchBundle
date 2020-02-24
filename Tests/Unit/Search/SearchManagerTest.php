@@ -14,6 +14,7 @@ namespace Unit\Search;
 use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Decorator\IndexNameDecoratorInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
@@ -22,10 +23,11 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class SearchManagerTest extends \PHPUnit_Framework_TestCase
+class SearchManagerTest extends TestCase
 {
     /**
      * @var AdapterInterface
@@ -112,20 +114,19 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should throw an exception if a non-object is passed to be indexed.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testIndexNonObject()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->searchManager->index('asd');
     }
 
-    /**
-     * @expectedException \Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException
-     * @expectedExceptionMessage There is no search mapping
-     */
     public function testIndexNoMetadata()
     {
+        $this->expectException(MetadataNotFoundException::class);
+        $this->expectExceptionMessage('There is no search mapping');
+
         $this->provider
             ->getMetadataForObject($this->product)
             ->willReturn(null);
@@ -154,10 +155,14 @@ class SearchManagerTest extends \PHPUnit_Framework_TestCase
                 'type' => 'string',
             ],
         ]);
+
+        $this->eventDispatcher->dispatch(Argument::any(), Argument::any())
+            ->willReturnArgument(0);
         $this->indexMetadata->getIndexName()->willReturn(new Value('product'));
         $this->converter->objectToDocument($this->indexMetadata, $this->product)->willReturn($this->document);
         $this->converter->getFieldEvaluator()->willReturn($this->fieldEvaluator->reveal());
-        $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'));
+        $this->adapter->index(Argument::type('Massive\Bundle\SearchBundle\Search\Document'), null)
+            ->shouldBeCalled();
 
         $this->searchManager->index($this->product);
     }

@@ -12,12 +12,11 @@
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Provides data for search event.
  */
-class SearchEvent extends Event
+class SearchEvent extends AbstractEvent
 {
     /**
      * @var SearchQuery

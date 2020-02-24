@@ -15,9 +15,10 @@ use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
 use Massive\Bundle\SearchBundle\Search\Decorator\IndexNameDecoratorInterface;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\EventListener\ZendRebuildSubscriber;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ZendRebuildSubscriberTest extends \PHPUnit_Framework_TestCase
+class ZendRebuildSubscriberTest extends TestCase
 {
     /**
      * @var ZendLuceneAdapter

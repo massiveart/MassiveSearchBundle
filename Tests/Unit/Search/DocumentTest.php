@@ -13,8 +13,9 @@ namespace Massive\MassiveSearchBundle\Tests\Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Field;
+use PHPUnit\Framework\TestCase;
 
-class DocumentTest extends \PHPUnit_Framework_TestCase
+class DocumentTest extends TestCase
 {
     /**
      * @var Field
@@ -35,11 +36,9 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->document = new Document();
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testDocumentAddExistingField()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->document->addField($this->field1->reveal());
         $this->document->addField($this->field1->reveal());
     }
@@ -52,11 +51,9 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->field1->reveal(), $res);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testDocumentGetFieldNotExisting()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $res = $this->document->getField('field1');
     }
 

@@ -11,12 +11,10 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 /**
  * Will be fired to deindex given subject.
  */
-class DeindexEvent extends Event
+class DeindexEvent extends AbstractEvent
 {
     /**
      * @var object

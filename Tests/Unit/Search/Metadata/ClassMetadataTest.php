@@ -13,8 +13,9 @@ namespace Unit\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use PHPUnit\Framework\TestCase;
 
-class ClassMetadataTest extends \PHPUnit_Framework_TestCase
+class ClassMetadataTest extends TestCase
 {
     /**
      * @var IndexMetadata
@@ -32,12 +33,11 @@ class ClassMetadataTest extends \PHPUnit_Framework_TestCase
         $this->classMetadata = new ClassMetadata('\stdClass');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Context name "foo_context" has already been registered
-     */
     public function testAddIndexExisting()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Context name "foo_context" has already been registered');
+
         $this->classMetadata->addIndexMetadata(
             'foo_context',
             $this->indexMetadata->reveal()

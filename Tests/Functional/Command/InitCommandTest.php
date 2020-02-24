@@ -9,7 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Tests\Functional;
+namespace Massive\Bundle\SearchBundle\Tests\Functional\Command;
+
+use Massive\Bundle\SearchBundle\Tests\Functional\BaseTestCase;
 
 class InitCommandTest extends BaseTestCase
 {

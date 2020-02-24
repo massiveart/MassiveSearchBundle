@@ -15,8 +15,9 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Provider\ChainProvider;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use PHPUnit\Framework\TestCase;
 
-class ChainProviderTest extends \PHPUnit_Framework_TestCase
+class ChainProviderTest extends TestCase
 {
     /**
      * @var ProviderInterface

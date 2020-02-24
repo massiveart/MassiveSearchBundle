@@ -74,7 +74,7 @@ class DoctrineOrmSubscriber implements EventSubscriber
     public function preRemove(LifecycleEventArgs $event)
     {
         $event = new DeindexEvent($event->getEntity());
-        $this->eventDispatcher->dispatch(SearchEvents::DEINDEX, $event);
+        $this->eventDispatcher->dispatch($event, SearchEvents::DEINDEX);
     }
 
     /**
@@ -83,6 +83,6 @@ class DoctrineOrmSubscriber implements EventSubscriber
     private function indexEntity($entity)
     {
         $event = new IndexEvent($entity);
-        $this->eventDispatcher->dispatch(SearchEvents::INDEX, $event);
+        $this->eventDispatcher->dispatch($event, SearchEvents::INDEX);
     }
 }

@@ -12,8 +12,9 @@
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Converter;
 
 use Massive\Bundle\SearchBundle\Search\Converter\Types\JsonConverter;
+use PHPUnit\Framework\TestCase;
 
-class JsonConverterTest extends \PHPUnit_Framework_TestCase
+class JsonConverterTest extends TestCase
 {
     public function testConvert()
     {

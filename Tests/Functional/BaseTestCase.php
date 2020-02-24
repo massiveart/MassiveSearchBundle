@@ -13,11 +13,12 @@ namespace Massive\Bundle\SearchBundle\Tests\Functional;
 
 use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends TestCase
 {
     private $kernels = [];
 

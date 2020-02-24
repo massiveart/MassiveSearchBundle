@@ -14,9 +14,10 @@ namespace Massive\Bundle\SearchBundle\Unit\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\Event\DeindexEvent;
 use Massive\Bundle\SearchBundle\Search\EventListener\DeindexListener;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class DeindexListenerTest extends \PHPUnit_Framework_TestCase
+class DeindexListenerTest extends TestCase
 {
     public function testOnDeindex()
     {
