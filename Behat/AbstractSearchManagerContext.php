@@ -11,18 +11,16 @@
 
 namespace Massive\Bundle\SearchBundle\Behat;
 
-use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
 use PHPUnit_Framework_Assert as Assert;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Behat context for search manager features.
  */
-class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContext
+abstract class AbstractSearchManagerContext implements Context
 {
     /**
      * @var string
@@ -65,6 +63,8 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function __construct($adapterId)
     {
         $this->adapterId = $adapterId;
+        require_once __DIR__ . '/../vendor/symfony-cmf/testing/bootstrap/bootstrap.php';
+        $this->kernel = new AppKernel('test', true);
     }
 
     /**
@@ -82,14 +82,6 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         foreach ($indexNames as $indexName) {
             $this->getSearchManager()->purge($indexName);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setKernel(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
     }
 
     /**
