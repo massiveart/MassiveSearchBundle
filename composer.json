@@ -48,6 +48,9 @@
         "handcraftedinthealps/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "elasticsearch/elasticsearch": "To use Elasticsearch"
     },
+    "conflict": {
+        "doctrine/doctrine-cache-bundle": "<1.3.1"
+    },
     "autoload": {
         "psr-4": {
             "Massive\\Bundle\\SearchBundle\\": ""
