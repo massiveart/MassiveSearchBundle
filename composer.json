@@ -56,9 +56,9 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-release/1.x": "1.0-dev",
-            "dev-release/2.x": "2.1-dev",
-            "dev-master": "2.2-dev"
+            "dev-release/1.x": "1.x-dev",
+            "dev-release/2.x": "2.x-dev",
+            "dev-master": "3.x-dev"
         }
     }
 }
