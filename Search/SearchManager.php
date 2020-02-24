@@ -123,8 +123,8 @@ class SearchManager implements SearchManagerInterface
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
 
                 $this->eventDispatcher->dispatch(
-                    SearchEvents::PRE_DEINDEX,
-                    new PreDeindexEvent($object, $document, $indexMetadata)
+                    new PreDeindexEvent($object, $document, $indexMetadata),
+                    SearchEvents::PRE_DEINDEX
                 );
 
                 $this->adapter->deindex($document, $indexName);
@@ -147,8 +147,8 @@ class SearchManager implements SearchManagerInterface
             $evaluator = $this->converter->getFieldEvaluator();
 
             $this->eventDispatcher->dispatch(
-                SearchEvents::PRE_INDEX,
-                new PreIndexEvent($object, $document, $indexMetadata, $evaluator)
+                new PreIndexEvent($object, $document, $indexMetadata, $evaluator),
+                SearchEvents::PRE_INDEX
             );
 
             $this->adapter->index($document, $indexName);
@@ -181,8 +181,8 @@ class SearchManager implements SearchManagerInterface
         }
 
         $this->eventDispatcher->dispatch(
-            SearchEvents::SEARCH,
-            new SearchEvent($query)
+            new SearchEvent($query),
+            SearchEvents::SEARCH
         );
 
         $hits = $this->adapter->search($query);
@@ -199,8 +199,8 @@ class SearchManager implements SearchManagerInterface
             $metadata = $this->metadataProvider->getMetadataForDocument($document);
 
             $this->eventDispatcher->dispatch(
-                SearchEvents::HIT,
-                new HitEvent($hit, $metadata)
+                new HitEvent($hit, $metadata),
+                SearchEvents::HIT
             );
         }
 

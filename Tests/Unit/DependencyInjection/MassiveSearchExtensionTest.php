@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class MassiveSearchExtensionTest extends AbstractExtensionTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -33,7 +33,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->container->register('doctrine.orm.entity_manager', EntityManager::class);
     }
 
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         $this->container->setParameter('kernel.bundles', [MassiveSearchBundle::class]);
         $this->container->setParameter('kernel.root_dir', __DIR__ . '/../../Resources/app');
@@ -46,6 +46,9 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     public function testLoad()
     {
         $this->load();
+
+        $this->assertNotNull($this->container->get('massive_search.adapter.test'));
+        $this->assertNotNull($this->container->get('massive_search.adapter.zend_lucene'));
     }
 
     public function provideAdapterConfig()
@@ -120,18 +123,25 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         }
 
         $serviceId = 'massive_search.adapter.' . $adapter;
-        $this->container->get($serviceId);
+        $this->assertNotNull($this->container->get($serviceId));
     }
 
     public function providePersistence()
     {
         return [
-            [null, []],
+            [
+                null,
+                [],
+                [
+                    'massive_search.search.event_subscriber.doctrine_orm',
+                ],
+            ],
             [
                 'doctrine_orm',
                 [
-                    'massive_search_test.search.event_subscriber.doctrine_orm',
+                    'massive_search.search.event_subscriber.doctrine_orm',
                 ],
+                [],
             ],
         ];
     }
@@ -139,7 +149,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
     /**
      * @dataProvider providePersistence
      */
-    public function testPersistence($persistenceName, $expectedServices)
+    public function testPersistence($persistenceName, $expectedServices, $expectedNotExistServices)
     {
         $config = [];
 
@@ -151,7 +161,11 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->compile();
 
         foreach ($expectedServices as $serviceId) {
-            $this->container->hasDefinition($serviceId);
+            $this->assertTrue($this->container->hasDefinition($serviceId));
+        }
+
+        foreach ($expectedNotExistServices as $serviceId) {
+            $this->assertFalse($this->container->hasDefinition($serviceId));
         }
     }
 }

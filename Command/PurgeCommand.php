@@ -99,14 +99,16 @@ EOT
                 $this->searchManager->purge($indexName);
             }
         }
+
+        return 0;
     }
 
-    private function listIndexes(OutputInterface $output, array $indexNames)
+    private function listIndexes(OutputInterface $output, array $indexNames): int
     {
         if (!$indexNames) {
             $output->writeln('No indexes currently exist.');
 
-            return;
+            return 0;
         }
 
         $output->writeln('<info>Specify the option: </>--index=<index_name><info> where </><index_name><info> is one of the following:</>');
@@ -115,5 +117,7 @@ EOT
         foreach ($indexNames as $indexName) {
             $output->writeln('  ' . $indexName);
         }
+
+        return 0;
     }
 }

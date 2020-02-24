@@ -17,8 +17,9 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Provider\DefaultProvider;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
+use PHPUnit\Framework\TestCase;
 
-class DefaultProviderTest extends \PHPUnit_Framework_TestCase
+class DefaultProviderTest extends TestCase
 {
     /**
      * @var ProviderInterface

@@ -14,9 +14,10 @@ namespace Tests\Unit\Search\Converter;
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterManager;
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterNotFoundException;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
-class ConverterManagerTest extends \PHPUnit_Framework_TestCase
+class ConverterManagerTest extends TestCase
 {
     public function testConvert()
     {
@@ -34,7 +35,7 @@ class ConverterManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testConverterNotExists()
     {
-        $this->setExpectedException(ConverterNotFoundException::class);
+        $this->expectException(ConverterNotFoundException::class);
 
         $converterManager = new ConverterManager();
         $converterManager->convert([1, 2, 3], 'tags');

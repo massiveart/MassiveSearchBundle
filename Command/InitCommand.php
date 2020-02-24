@@ -44,5 +44,7 @@ class InitCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->adapter->initialize();
+
+        return 0;
     }
 }

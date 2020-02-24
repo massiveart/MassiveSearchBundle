@@ -12,9 +12,10 @@
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Command;
 
 use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManager;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ResumeManagerTest extends \PHPUnit_Framework_TestCase
+class ResumeManagerTest extends TestCase
 {
     /**
      * @var ResumeManager
@@ -99,12 +100,11 @@ class ResumeManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should throw an exception if a non-scalar value is passed to setCheckpoint.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Only scalar
      */
     public function testOnlyScalar()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Only scalar');
         $this->manager->setCheckpoint('ha', 'Fa', new \stdClass());
     }
 

@@ -14,12 +14,11 @@ namespace Massive\Bundle\SearchBundle\Search\Event;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Preindex event is fired before a document is indexed.
  */
-class PreIndexEvent extends Event
+class PreIndexEvent extends AbstractEvent
 {
     /**
      * The object, which has been indexed.

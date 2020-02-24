@@ -21,8 +21,9 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata as SearchClassMeta
 use Massive\Bundle\SearchBundle\Search\Reindex\Provider\DoctrineOrmProvider;
 use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
+use PHPUnit\Framework\TestCase;
 
-class DoctrineOrmProviderTest extends \PHPUnit_Framework_TestCase
+class DoctrineOrmProviderTest extends TestCase
 {
     /**
      * @var EntityManagerInterface

@@ -20,8 +20,9 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
+use PHPUnit\Framework\TestCase;
 
-class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
+class ObjectToDocumentConverterTest extends TestCase
 {
     /**
      * @var IndexMetadata
@@ -160,12 +161,12 @@ class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should throw an exception if an incomplete mapping is provided.
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage does not have
      */
     public function testMissingRequiredMapping()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('does not have');
+
         $this->indexMetadata->setIdField(new Field('id'));
         $this->indexMetadata->setIndexName(new Value('product'));
         $this->indexMetadata->setFieldMapping([
@@ -178,12 +179,12 @@ class ObjectToDocumentConverterTest extends \PHPUnit_Framework_TestCase
     /**
      * It should throw an exception if an incomplete mapping is provided for
      * a complex field.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage field mappings must have an additional
      */
     public function testMissingRequiredMappingComplex()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('field mappings must have an additional');
+
         $this->indexMetadata->setIdField(new Field('id'));
         $this->indexMetadata->setIndexName(new Value('product'));
         $this->indexMetadata->setFieldMapping([

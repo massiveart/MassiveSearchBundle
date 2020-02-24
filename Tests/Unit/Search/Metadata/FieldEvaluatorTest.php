@@ -18,9 +18,10 @@ use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
-class FieldEvaluatorTest extends \PHPUnit_Framework_TestCase
+class FieldEvaluatorTest extends TestCase
 {
     /**
      * @var ObjectToDocumentConverter

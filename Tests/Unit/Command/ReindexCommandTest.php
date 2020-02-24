@@ -17,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
 use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -25,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ReindexCommandTest extends \PHPUnit_Framework_TestCase
+class ReindexCommandTest extends TestCase
 {
     /**
      * @var ResumeManagerInterface
@@ -77,7 +78,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $this->providerRegistry->getProviders()->willReturn([]);
         $tester = $this->execute('dev', []);
 
-        $this->assertContains('WARNING: You are running', $tester->getDisplay());
+        $this->assertStringContainsString('WARNING: You are running', $tester->getDisplay());
     }
 
     /**
@@ -132,7 +133,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
 
         $tester = $this->execute('prod', []);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'reindexing "100" instances of "stdClass"',
             $tester->getDisplay()
         );
@@ -175,7 +176,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
 
         $tester = $this->execute('prod', []);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'reindexing "100" instances of "stdClass"',
             $tester->getDisplay()
         );

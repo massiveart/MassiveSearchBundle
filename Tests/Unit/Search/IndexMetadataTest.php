@@ -12,8 +12,9 @@
 namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use PHPUnit\Framework\TestCase;
 
-class IndexMetadataTest extends \PHPUnit_Framework_TestCase
+class IndexMetadataTest extends TestCase
 {
     /**
      * @var IndexMetadata

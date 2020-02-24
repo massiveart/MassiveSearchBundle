@@ -11,18 +11,16 @@
 
 namespace Massive\Bundle\SearchBundle\Behat;
 
-use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\app\AppKernel;
-use PHPUnit_Framework_Assert as Assert;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Behat context for search manager features.
  */
-class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContext
+abstract class AbstractSearchManagerContext implements Context
 {
     /**
      * @var string
@@ -65,6 +63,8 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function __construct($adapterId)
     {
         $this->adapterId = $adapterId;
+        require_once __DIR__ . '/../vendor/symfony-cmf/testing/bootstrap/bootstrap.php';
+        $this->kernel = new AppKernel('test', true);
     }
 
     /**
@@ -82,14 +82,6 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         foreach ($indexNames as $indexName) {
             $this->getSearchManager()->purge($indexName);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setKernel(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
     }
 
     /**
@@ -126,7 +118,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function theResultShouldBeTheFollowingArray(PyStringNode $string)
     {
         $expected = json_decode($string->getRaw(), true);
-        Assert::assertEquals($expected, $this->lastResult);
+        Assert::eq($expected, $this->lastResult);
     }
 
     /**
@@ -139,7 +131,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         foreach ($this->lastResult as $hit) {
             $documents[] = $hit->getDocument()->jsonSerialize();
         }
-        Assert::assertEquals($expected, $documents);
+        Assert::eq($expected, $documents);
     }
 
     /**
@@ -165,8 +157,8 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     private function doIndexTheFollowingObjects($className, PyStringNode $string)
     {
         $objectsData = json_decode($string->getRaw(), true);
-        Assert::assertArrayHasKey($className, $this->entityClasses, 'Entity exists');
-        Assert::assertNotNull($objectsData);
+        Assert::keyExists($this->entityClasses, $className, 'Entity exists');
+        Assert::notNull($objectsData);
 
         foreach ($objectsData as $objectData) {
             $object = new $this->entityClasses[$className]();
@@ -250,8 +242,8 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function thenAnExceptionWithMessageShouldBeThrown($message)
     {
-        Assert::assertNotNull($this->lastException, 'An exception has been thrown');
-        Assert::assertContains($message, $this->lastException->getMessage());
+        Assert::notNull($this->lastException, 'An exception has been thrown');
+        Assert::contains($message, $this->lastException->getMessage());
         $this->exceptionAsserted = true;
     }
 
@@ -268,7 +260,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function thereShouldBeResults($nbResults)
     {
-        Assert::assertCount((int) $nbResults, $this->lastResult);
+        Assert::count($this->lastResult, (int) $nbResults);
     }
 
     /**
@@ -285,7 +277,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function iDeindexTheObjectWithId($id)
     {
-        Assert::arrayHasKey($id, $this->entities);
+        Assert::keyExists($this->entities, $id);
         $entity = $this->entities[$id];
         $this->getSearchManager()->deindex($entity);
         $this->getSearchManager()->flush();
@@ -318,7 +310,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function theResultShouldBeAnArray()
     {
-        Assert::assertInternalType('array', $this->lastResult);
+        Assert::isArray($this->lastResult);
     }
 
     /**
@@ -326,7 +318,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function theResultAtPositionShouldBe($position, $id)
     {
-        Assert::assertEquals($this->lastResult[$position]->getId(), $id);
+        Assert::eq($this->lastResult[$position]->getId(), $id);
     }
 
     /**

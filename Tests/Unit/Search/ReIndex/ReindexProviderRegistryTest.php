@@ -13,8 +13,9 @@ namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Reindex;
 
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
+use PHPUnit\Framework\TestCase;
 
-class ReindexProviderRegistryTest extends \PHPUnit_Framework_TestCase
+class ReindexProviderRegistryTest extends TestCase
 {
     /**
      * @var ReindexProviderRegistry
@@ -55,12 +56,12 @@ class ReindexProviderRegistryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should throw an exception if a provider name has already been registered.'.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage has already been registered.
      */
     public function testAlreadyRegisteredProviderName()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('has already been registered.');
+
         $this->registry->addProvider('foo', $this->provider1->reveal());
         $this->registry->addProvider('foo', $this->provider1->reveal());
     }

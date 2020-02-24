@@ -22,8 +22,9 @@
     </filter>
 
     <php>
+        <env name="SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT" value="1"/>
+        <env name="SYMFONY_PHPUNIT_REMOVE" value="symfony/yaml"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
         <server name="KERNEL_DIR" value="Tests/Resources/app" />
     </php>
-
 </phpunit>
