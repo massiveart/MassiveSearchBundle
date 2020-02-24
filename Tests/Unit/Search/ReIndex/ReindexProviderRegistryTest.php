@@ -56,12 +56,12 @@ class ReindexProviderRegistryTest extends TestCase
 
     /**
      * It should throw an exception if a provider name has already been registered.'.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage has already been registered.
      */
     public function testAlreadyRegisteredProviderName()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('has already been registered.');
+
         $this->registry->addProvider('foo', $this->provider1->reveal());
         $this->registry->addProvider('foo', $this->provider1->reveal());
     }

@@ -36,11 +36,9 @@ class DocumentTest extends TestCase
         $this->document = new Document();
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testDocumentAddExistingField()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->document->addField($this->field1->reveal());
         $this->document->addField($this->field1->reveal());
     }
@@ -53,11 +51,9 @@ class DocumentTest extends TestCase
         $this->assertSame($this->field1->reveal(), $res);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testDocumentGetFieldNotExisting()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $res = $this->document->getField('field1');
     }
 

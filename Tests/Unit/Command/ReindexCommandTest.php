@@ -78,7 +78,7 @@ class ReindexCommandTest extends TestCase
         $this->providerRegistry->getProviders()->willReturn([]);
         $tester = $this->execute('dev', []);
 
-        $this->assertContains('WARNING: You are running', $tester->getDisplay());
+        $this->assertStringContainsString('WARNING: You are running', $tester->getDisplay());
     }
 
     /**
@@ -133,7 +133,7 @@ class ReindexCommandTest extends TestCase
 
         $tester = $this->execute('prod', []);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'reindexing "100" instances of "stdClass"',
             $tester->getDisplay()
         );
@@ -176,7 +176,7 @@ class ReindexCommandTest extends TestCase
 
         $tester = $this->execute('prod', []);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'reindexing "100" instances of "stdClass"',
             $tester->getDisplay()
         );

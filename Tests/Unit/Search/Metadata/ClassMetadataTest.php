@@ -33,12 +33,11 @@ class ClassMetadataTest extends TestCase
         $this->classMetadata = new ClassMetadata('\stdClass');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Context name "foo_context" has already been registered
-     */
     public function testAddIndexExisting()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Context name "foo_context" has already been registered');
+
         $this->classMetadata->addIndexMetadata(
             'foo_context',
             $this->indexMetadata->reveal()

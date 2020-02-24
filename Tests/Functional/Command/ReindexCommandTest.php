@@ -45,7 +45,7 @@ class ReindexCommandTest extends BaseTestCase
         $tester = $this->getCommand('dev', 'massive:search:reindex');
         $tester->execute([], ['interactive' => false]);
 
-        $this->assertContains('WARNING', $tester->getDisplay());
+        $this->assertStringContainsString('WARNING', $tester->getDisplay());
     }
 
     /**
@@ -56,7 +56,7 @@ class ReindexCommandTest extends BaseTestCase
         $tester = $this->getCommand('prod', 'massive:search:reindex');
         $tester->execute([], ['interactive' => false]);
 
-        $this->assertNotContains('WARNING', $tester->getDisplay());
+        $this->assertStringNotContainsString('WARNING', $tester->getDisplay());
     }
 
     /**
@@ -66,6 +66,6 @@ class ReindexCommandTest extends BaseTestCase
     {
         $tester = $this->getCommand('prod', 'massive:search:index:rebuild');
         $tester->execute([], ['interactive' => false]);
-        $this->assertContains('DEPRECATED: The `massive:search:index:rebuild` command is deprecated', $tester->getDisplay());
+        $this->assertStringContainsString('DEPRECATED: The `massive:search:index:rebuild` command is deprecated', $tester->getDisplay());
     }
 }

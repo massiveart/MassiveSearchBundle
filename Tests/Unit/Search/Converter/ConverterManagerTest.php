@@ -35,7 +35,7 @@ class ConverterManagerTest extends TestCase
 
     public function testConverterNotExists()
     {
-        $this->setExpectedException(ConverterNotFoundException::class);
+        $this->expectException(ConverterNotFoundException::class);
 
         $converterManager = new ConverterManager();
         $converterManager->convert([1, 2, 3], 'tags');

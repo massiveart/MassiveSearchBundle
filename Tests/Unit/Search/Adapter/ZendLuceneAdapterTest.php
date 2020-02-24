@@ -91,7 +91,7 @@ class ZendLuceneAdapterTest extends TestCase
     {
         if ($exception) {
             list($exceptionType, $exceptionMessage) = $exception;
-            $this->setExpectedException($exceptionType, $exceptionMessage);
+            $this->expectException($exceptionType, $exceptionMessage);
         }
 
         $adapter = $this->createAdapter($this->dataPath);

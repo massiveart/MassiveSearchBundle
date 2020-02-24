@@ -27,6 +27,9 @@ class DoctrineOrmSubscriberTest extends TestCase
     {
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::any(), Argument::any())
+            ->willReturnArgument(0)
+            ->shouldBeCalled();
         $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
 
         foreach ($subscriber->getSubscribedEvents() as $eventName) {
@@ -40,10 +43,6 @@ class DoctrineOrmSubscriberTest extends TestCase
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getEntity()->willReturn($entity);
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
-
-        $subscriber->preRemove($eventArgs->reveal());
-
         $eventDispatcher->dispatch(
             Argument::that(
                 function (DeindexEvent $event) use ($entity) {
@@ -53,7 +52,12 @@ class DoctrineOrmSubscriberTest extends TestCase
                 }
             ),
             SearchEvents::DEINDEX
-        )->shouldBeCalledTimes(1);
+        )->willReturnArgument(0)
+            ->shouldBeCalledTimes(1);
+
+        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
+
+        $subscriber->preRemove($eventArgs->reveal());
     }
 
     public function testPostUpdate()
@@ -62,20 +66,20 @@ class DoctrineOrmSubscriberTest extends TestCase
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getEntity()->willReturn($entity);
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
-
-        $subscriber->postUpdate($eventArgs->reveal());
-
         $eventDispatcher->dispatch(
-            SearchEvents::INDEX,
             Argument::that(
                 function (IndexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;
                 }
-            )
-        )->shouldBeCalledTimes(1);
+            ),
+            SearchEvents::INDEX
+        )->willReturnArgument(0)
+            ->shouldBeCalledTimes(1);
+        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
+
+        $subscriber->postUpdate($eventArgs->reveal());
     }
 
     public function testPostPersist()
@@ -84,19 +88,19 @@ class DoctrineOrmSubscriberTest extends TestCase
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getEntity()->willReturn($entity);
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
-
-        $subscriber->postPersist($eventArgs->reveal());
-
         $eventDispatcher->dispatch(
-            SearchEvents::INDEX,
             Argument::that(
                 function (IndexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;
                 }
-            )
-        )->shouldBeCalledTimes(1);
+            ),
+            SearchEvents::INDEX
+        )->willReturnArgument(0)
+            ->shouldBeCalledTimes(1);
+        $subscriber = new DoctrineOrmSubscriber($eventDispatcher->reveal());
+
+        $subscriber->postPersist($eventArgs->reveal());
     }
 }

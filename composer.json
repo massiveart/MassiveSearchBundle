@@ -33,7 +33,7 @@
         "symfony/twig-bundle": "^4.3 || ^5.0",
         "symfony/validator": "^4.3 || ^5.0",
         "symfony/phpunit-bridge": "^5.0.4",
-        "matthiasnoback/symfony-dependency-injection-test": "^1.0 || ^2.3 || ^3.0 || ^4.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.0",
         "doctrine/doctrine-bundle": "^1.10 || ^2.0",
         "doctrine/orm": "^2.5",
 

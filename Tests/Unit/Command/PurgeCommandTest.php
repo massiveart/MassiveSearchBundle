@@ -46,8 +46,8 @@ class PurgeCommandTest extends TestCase
             'one', 'two',
         ]);
         $tester = $this->execute([]);
-        $this->assertContains('one', $tester->getDisplay());
-        $this->assertContains('two', $tester->getDisplay());
+        $this->assertStringContainsString('one', $tester->getDisplay());
+        $this->assertStringContainsString('two', $tester->getDisplay());
     }
 
     /**
@@ -57,7 +57,7 @@ class PurgeCommandTest extends TestCase
     {
         $this->searchManager->getIndexNames()->willReturn([]);
         $tester = $this->execute([]);
-        $this->assertContains('No indexes', $tester->getDisplay());
+        $this->assertStringContainsString('No indexes', $tester->getDisplay());
     }
 
     /**
@@ -131,12 +131,12 @@ class PurgeCommandTest extends TestCase
 
     /**
      * It should list all possible indexes if an invalid index is given.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Unknown indexes "bambi", "ralph", known indexes: "foobar", "barfoo"
      */
     public function testInvalidIndex()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown indexes "bambi", "ralph", known indexes: "foobar", "barfoo"');
+
         $this->searchManager->getIndexNames()->willReturn([
             'foobar', 'barfoo',
         ]);
