@@ -106,7 +106,7 @@ Feature: Search Manager
         ]
         """
         When I search for "foo" in index "barbarbar"
-        Then an exception with message 'Search indexes "barbarbar" not known. Known indexes: "car"' should be thrown
+        Then an exception with message 'Search index or indexes "barbarbar" not known. Known indexes: "car"' should be thrown
 
     Scenario: Search returns documents
         Given the following "Car" objects have been indexed
