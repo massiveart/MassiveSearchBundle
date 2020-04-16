@@ -337,8 +337,8 @@ class SearchManager implements SearchManagerInterface
         if (false === empty($unknownIndexes)) {
             throw new Exception\SearchException(
                 sprintf(
-                    'Search indexes "%s" not known. Known indexes: "%s"',
-                    implode('", "', $queryIndexNames),
+                    'Search index or indexes "%s" not known. Known indexes: "%s"',
+                    implode('", "', $unknownIndexes),
                     implode('", "', $indexNames)
                 )
             );
