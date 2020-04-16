@@ -230,7 +230,8 @@ class Document implements \JsonSerializable
         if (!isset($this->fields[$name])) {
             throw new \InvalidArgumentException(sprintf(
                 'Trying to get undefined field "%s", defined fields are "%s"',
-                $name, implode(', ', array_keys($this->fields))
+                $name,
+                implode(', ', array_keys($this->fields))
             ));
         }
 

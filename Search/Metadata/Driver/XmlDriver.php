@@ -13,7 +13,6 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata\Driver;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Metadata\ClassMetadata;
 use Metadata\Driver\AbstractFileDriver;

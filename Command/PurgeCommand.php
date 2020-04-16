@@ -49,7 +49,8 @@ class PurgeCommand extends Command
     public function configure()
     {
         $this->setDescription('Purge one, many or all indexes.');
-        $this->setHelp(<<<'EOT'
+        $this->setHelp(
+            <<<'EOT'
 Purge one, many or all indexes:
 
     $ %command.full_name%
@@ -92,7 +93,8 @@ EOT
 
         foreach ($indexes as $indexName) {
             $question = new ConfirmationQuestion(sprintf(
-                'Are you sure you want to purge index "%s"? ', $indexName
+                'Are you sure you want to purge index "%s"? ',
+                $indexName
             ), false);
 
             if (true === $force || $this->questionHelper->ask($input, $output, $question)) {
