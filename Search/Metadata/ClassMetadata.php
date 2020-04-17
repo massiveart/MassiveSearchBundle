@@ -71,7 +71,8 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
         if (!isset($this->indexMetadatas[$contextName])) {
             throw new \InvalidArgumentException(sprintf(
                 'Context name "%s" not known, known contexts: "%s"',
-                $contextName, implode('", "', array_keys($this->indexMetadatas))
+                $contextName,
+                implode('", "', array_keys($this->indexMetadatas))
             ));
         }
 
