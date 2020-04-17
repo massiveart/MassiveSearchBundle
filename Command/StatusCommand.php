@@ -41,7 +41,8 @@ class StatusCommand extends Command
     public function configure()
     {
         $this->setDescription('Return the status of the configured search engine');
-        $this->setHelp(<<<'EOT'
+        $this->setHelp(
+            <<<'EOT'
 Return detailed information about the current search implementation
 EOT
         );

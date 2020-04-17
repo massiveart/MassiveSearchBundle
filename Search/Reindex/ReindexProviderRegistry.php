@@ -59,7 +59,8 @@ class ReindexProviderRegistry
         if (!isset($this->providers[$name])) {
             throw new \InvalidArgumentException(sprintf(
                 'Unknown provider "%s", registered reindex providers: "%s"',
-                $name, implode('", "', array_keys($this->providers))
+                $name,
+                implode('", "', array_keys($this->providers))
             ));
         }
 
