@@ -81,7 +81,8 @@ class ReindexCommand extends Command
     public function configure()
     {
         $this->setDescription('Rebuild search index');
-        $this->setHelp(<<<'EOT'
+        $this->setHelp(
+            <<<'EOT'
 This command will launch an event will trigger the search index to be rebuilt
 on all "drivers" which support reindexing. Each driver will index all of
 the entities/documents which it manages.
