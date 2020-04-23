@@ -40,7 +40,7 @@ class MetadataFileLocatorPass implements CompilerPassInterface
                 continue;
             }
 
-            $namespace = $projectNamespace .'\\' . $entityNamespace;
+            $namespace = $projectNamespace . '\\' . $entityNamespace;
             $metadataPaths[$namespace] = $kernelProjectDir . '/config/massive-search';
         }
 
