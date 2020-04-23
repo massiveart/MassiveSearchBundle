@@ -27,5 +27,6 @@ class MassiveSearchBundle extends Bundle
         $container->addCompilerPass(new MetadataProviderPass());
         $container->addCompilerPass(new ConverterPass());
         $container->addCompilerPass(new ReindexProviderPass());
+        $container->addCompilerPass(new MetadataFileLocatorPass());
     }
 }
