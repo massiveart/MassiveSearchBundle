@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle;
 
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\ConverterPass;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataDriverPass;
+use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataFileLocatorPass;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\MetadataProviderPass;
 use Massive\Bundle\SearchBundle\DependencyInjection\Compiler\ReindexProviderPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
