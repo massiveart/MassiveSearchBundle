@@ -33,10 +33,13 @@ class MetadataFileLocatorPass implements CompilerPassInterface
 
         $projectNamespace = substr($kernelClass, 0, strrpos($kernelClass, '\\'));
         $kernelProjectDir = $container->getParameter('kernel.project_dir');
+        $kernelDirectory = dirname((new \ReflectionClass($kernelClass))->getFileName());
+
         $fileLocator = $container->getDefinition('massive_search.metadata.file_locator');
         $metadataPaths = $fileLocator->getArgument(0);
+
         foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
-            if (!file_exists($kernelProjectDir . '/src/' . $entityNamespace)) {
+            if (!file_exists($kernelDirectory . '/' . $entityNamespace)) {
                 continue;
             }
 
