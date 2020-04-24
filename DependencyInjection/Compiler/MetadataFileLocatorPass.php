@@ -27,6 +27,9 @@ class MetadataFileLocatorPass implements CompilerPassInterface
             return;
         }
         $kernelClass = $container->getDefinition('kernel')->getClass();
+        if (empty($kernelClass)) {
+            return;
+        }
         if ('App\\Kernel' === $kernelClass) {
             return; // App paths already set in MassiveSearchExtension::loadMetadata
         }
