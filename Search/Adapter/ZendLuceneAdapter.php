@@ -162,8 +162,8 @@ class ZendLuceneAdapter implements AdapterInterface
         $luceneDocument->addField(
             Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues))
         );
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
-        $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
+        $luceneDocument->addField(Lucene\Document\Field::text(self::URL_FIELDNAME, $document->getUrl()));
+        $luceneDocument->addField(Lucene\Document\Field::text(self::TITLE_FIELDNAME, $document->getTitle()));
         $luceneDocument->addField(
             Lucene\Document\Field::unIndexed(self::DESCRIPTION_FIELDNAME, $document->getDescription())
         );
