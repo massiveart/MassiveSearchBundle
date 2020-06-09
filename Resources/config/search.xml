@@ -77,12 +77,12 @@
         <service id="massive_search.events.index_listener" class="Massive\Bundle\SearchBundle\Search\EventListener\IndexListener">
             <argument type="service" id="massive_search.search_manager"/>
 
-            <tag name="kernel.event_listener" event="%massive_search.events.index%" method="onIndex"/>
+            <tag name="kernel.event_listener" event="massive_search.index" method="onIndex"/>
         </service>
         <service id="massive_search.events.deindex_listener" class="Massive\Bundle\SearchBundle\Search\EventListener\DeindexListener">
             <argument type="service" id="massive_search.search_manager"/>
 
-            <tag name="kernel.event_listener" event="%massive_search.events.deindex%" method="onDeindex"/>
+            <tag name="kernel.event_listener" event="massive_search.deindex" method="onDeindex"/>
         </service>
 
         <!-- Reindex -->
