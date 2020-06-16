@@ -172,10 +172,24 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     public function search(SearchQuery $searchQuery)
     {
-        $indexNames = $searchQuery->getIndexes();
+        $params = $this->prepareSearch($searchQuery);
 
+        $res = $this->performSearch($params);
+
+        return $this->processSearch($res);
+    }
+
+
+    /**
+     * @param SearchQuery $searchQuery
+     * @return array
+     */
+    protected function prepareSearch(SearchQuery $searchQuery): array
+    {
+        $indexNames = $searchQuery->getIndexes();
         $queryString = $searchQuery->getQueryString();
 
+        $params = [];
         $params['index'] = implode(',', $indexNames);
         $params['body'] = [
             'query' => [
@@ -197,7 +211,26 @@ class ElasticSearchAdapter implements AdapterInterface
             ];
         }
 
+        return $params;
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    protected function performSearch(array $params)
+    {
         $res = $this->client->search($params);
+
+        return $res;
+    }
+
+    /**
+     * @param array $res
+     * @return SearchResult
+     */
+    protected function processSearch(array $res)
+    {
         $elasticHits = $res['hits']['hits'];
 
         $hits = [];
