@@ -22,6 +22,8 @@ use Massive\Bundle\SearchBundle\Search\SearchResult;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZendSearch\Lucene;
+use ZendSearch\Lucene\MultiSearcher;
+use ZendSearch\Lucene\Search\Query\AbstractQuery;
 
 /**
  * Adapter for the ZendSearch library.
@@ -191,11 +193,23 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     public function search(SearchQuery $searchQuery)
     {
-        $indexNames = $searchQuery->getIndexes();
-        $queryString = $searchQuery->getQueryString();
+        list($searcher, $query) = $this->prepareSearch($searchQuery);
 
+        $luceneHits = $this->performSearch($searcher, $query);
+
+        return $this->processSearch($luceneHits, $searchQuery);
+    }
+
+    /**
+     * @param SearchQuery $searchQuery
+     *
+     * @return array
+     */
+    protected function prepareSearch(SearchQuery $searchQuery): array
+    {
         $searcher = new Lucene\MultiSearcher();
 
+        $indexNames = $searchQuery->getIndexes();
         foreach ($indexNames as $indexName) {
             $indexPath = $this->getIndexPath($indexName);
             if (!file_exists($indexPath)) {
@@ -205,18 +219,39 @@ class ZendLuceneAdapter implements AdapterInterface
             $searcher->addIndex($this->getIndex($indexPath, false));
         }
 
+        $queryString = $searchQuery->getQueryString();
         $query = Lucene\Search\QueryParser::parse($queryString);
 
+        return [$searcher, $query];
+    }
+
+    /**
+     * @param MultiSearcher $searcher
+     * @param AbstractQuery $query
+     *
+     * @return array
+     */
+    protected function performSearch(MultiSearcher $searcher, AbstractQuery $query): array
+    {
         try {
-            $luceneHits = $searcher->find($query);
+            return $searcher->find($query);
         } catch (\RuntimeException $e) {
             if (!preg_match('&non-wildcard characters&', $e->getMessage())) {
                 throw $e;
             }
 
-            $luceneHits = [];
+            return [];
         }
+    }
 
+    /**
+     * @param array $luceneHits
+     * @param SearchQuery $searchQuery
+     *
+     * @return SearchResult
+     */
+    protected function processSearch(array $luceneHits, SearchQuery $searchQuery): SearchResult
+    {
         $endPos = count($luceneHits);
         $startPos = $searchQuery->getOffset();
 
