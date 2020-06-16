@@ -223,7 +223,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $queryString = $searchQuery->getQueryString();
         $query = Lucene\Search\QueryParser::parse($queryString);
 
-        return array($searcher, $query);
+        return [$searcher, $query];
     }
 
     /**
