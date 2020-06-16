@@ -200,7 +200,6 @@ class ZendLuceneAdapter implements AdapterInterface
         return $this->processSearch($luceneHits, $searchQuery);
     }
 
-
     /**
      * @param SearchQuery $searchQuery
      *
