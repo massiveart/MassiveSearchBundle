@@ -179,9 +179,9 @@ class ElasticSearchAdapter implements AdapterInterface
         return $this->processSearch($res);
     }
 
-
     /**
      * @param SearchQuery $searchQuery
+     *
      * @return array
      */
     protected function prepareSearch(SearchQuery $searchQuery): array
@@ -216,6 +216,7 @@ class ElasticSearchAdapter implements AdapterInterface
 
     /**
      * @param array $params
+     *
      * @return array
      */
     protected function performSearch(array $params)
@@ -227,6 +228,7 @@ class ElasticSearchAdapter implements AdapterInterface
 
     /**
      * @param array $res
+     *
      * @return SearchResult
      */
     protected function processSearch(array $res)
