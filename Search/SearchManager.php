@@ -109,16 +109,6 @@ class SearchManager implements SearchManagerInterface
 
     private function getMetadataForDocument(Document $document)
     {
-        if (!is_object($document)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'You must pass an object to the %s method, you passed: %s',
-                    __METHOD__,
-                    var_export($document, true)
-                )
-            );
-        }
-
         $metadata = $this->metadataProvider->getMetadataForDocument($document);
 
         if (null === $metadata) {
