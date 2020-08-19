@@ -107,23 +107,64 @@ class SearchManager implements SearchManagerInterface
         return $metadata;
     }
 
+    private function getMetadataForDocument(Document $document)
+    {
+        if (!is_object($document)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'You must pass an object to the %s method, you passed: %s',
+                    __METHOD__,
+                    var_export($document, true)
+                )
+            );
+        }
+
+        $metadata = $this->metadataProvider->getMetadataForDocument($document);
+
+        if (null === $metadata) {
+            throw new MetadataNotFoundException(
+                sprintf(
+                    'There is no search mapping for object with class "%s"',
+                    $document->getClass()
+                )
+            );
+        }
+
+        return $metadata;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function deindex($object)
     {
-        $metadata = $this->getMetadata($object);
+        $subject = null;
+        if ($object instanceof Document) {
+            $metadata = $this->getMetadataForDocument($object);
+        } else {
+            $subject = $object;
+            $metadata = $this->getMetadata($object);
+        }
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-            $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            if ($object instanceof Document) {
+                $indexName = $object->getIndex();
+            } else {
+                $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            }
+
             $this->markIndexToFlush($indexName);
             $indexNames = $this->getDecoratedIndexNames($indexName);
 
-            foreach ($indexNames as $indexName) {
+            if ($object instanceof Document) {
+                $document = $object;
+            } else {
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
+            }
 
+            foreach ($indexNames as $indexName) {
                 $this->eventDispatcher->dispatch(
-                    new PreDeindexEvent($object, $document, $indexMetadata),
+                    new PreDeindexEvent($subject, $document, $indexMetadata),
                     SearchEvents::PRE_DEINDEX
                 );
 
