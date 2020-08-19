@@ -331,8 +331,6 @@ class SearchManager implements SearchManagerInterface
      * If the query object has no indexes, then add all indexes (including
      * variants), otherwise expand the indexes the query does have to include
      * all of their variants.
-     *
-     * @param SearchQuery $query
      */
     private function expandQueryIndexes(SearchQuery $query)
     {
@@ -361,8 +359,6 @@ class SearchManager implements SearchManagerInterface
      * If query has indexes, ensure that they are known.
      *
      * @throws Exception\SearchException
-     *
-     * @param SearchQuery $query
      */
     private function validateQuery(SearchQuery $query)
     {
