@@ -107,23 +107,54 @@ class SearchManager implements SearchManagerInterface
         return $metadata;
     }
 
+    private function getMetadataForDocument(Document $document)
+    {
+        $metadata = $this->metadataProvider->getMetadataForDocument($document);
+
+        if (null === $metadata) {
+            throw new MetadataNotFoundException(
+                sprintf(
+                    'There is no search mapping for object with class "%s"',
+                    $document->getClass()
+                )
+            );
+        }
+
+        return $metadata;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function deindex($object)
     {
-        $metadata = $this->getMetadata($object);
+        $subject = null;
+        if ($object instanceof Document) {
+            $metadata = $this->getMetadataForDocument($object);
+        } else {
+            $subject = $object;
+            $metadata = $this->getMetadata($object);
+        }
 
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
-            $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            if ($object instanceof Document) {
+                $indexName = $object->getIndex();
+            } else {
+                $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+            }
+
             $this->markIndexToFlush($indexName);
             $indexNames = $this->getDecoratedIndexNames($indexName);
 
-            foreach ($indexNames as $indexName) {
+            if ($object instanceof Document) {
+                $document = $object;
+            } else {
                 $document = $this->converter->objectToDocument($indexMetadata, $object);
+            }
 
+            foreach ($indexNames as $indexName) {
                 $this->eventDispatcher->dispatch(
-                    new PreDeindexEvent($object, $document, $indexMetadata),
+                    new PreDeindexEvent($subject, $document, $indexMetadata),
                     SearchEvents::PRE_DEINDEX
                 );
 
@@ -290,8 +321,6 @@ class SearchManager implements SearchManagerInterface
      * If the query object has no indexes, then add all indexes (including
      * variants), otherwise expand the indexes the query does have to include
      * all of their variants.
-     *
-     * @param SearchQuery $query
      */
     private function expandQueryIndexes(SearchQuery $query)
     {
@@ -320,8 +349,6 @@ class SearchManager implements SearchManagerInterface
      * If query has indexes, ensure that they are known.
      *
      * @throws Exception\SearchException
-     *
-     * @param SearchQuery $query
      */
     private function validateQuery(SearchQuery $query)
     {

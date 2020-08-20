@@ -53,10 +53,10 @@ interface SearchManagerInterface
     public function index($object);
 
     /**
-     * Remove the given mapped objects entry from
+     * Remove the given mapped object entry or document from
      * its corresponding index.
      *
-     * @param object $object
+     * @param Document|object $object
      */
     public function deindex($object);
 
