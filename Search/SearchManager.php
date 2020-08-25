@@ -139,12 +139,14 @@ class SearchManager implements SearchManagerInterface
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
             if ($object instanceof Document) {
                 $indexName = $object->getIndex();
+                $locale = $object->getLocale();
             } else {
                 $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
+                $locale = $this->fieldEvaluator->getValue($object, $indexMetadata->getLocaleField());
             }
 
             $this->markIndexToFlush($indexName);
-            $indexNames = $this->getDecoratedIndexNames($indexName);
+            $indexNames = $this->getDecoratedIndexNames($indexName, $locale);
 
             if ($object instanceof Document) {
                 $document = $object;
