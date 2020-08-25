@@ -126,8 +126,10 @@ class SearchManager implements SearchManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function deindex($object, string $locale = null)
+    public function deindex($object/*, string $locale = null*/)
     {
+        $locale = func_num_args() >= 2 ? func_get_arg(1) : null;
+
         $subject = null;
         if ($object instanceof Document) {
             $metadata = $this->getMetadataForDocument($object);
