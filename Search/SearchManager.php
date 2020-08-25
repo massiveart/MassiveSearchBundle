@@ -126,7 +126,7 @@ class SearchManager implements SearchManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function deindex($object)
+    public function deindex($object, string $locale = null)
     {
         $subject = null;
         if ($object instanceof Document) {
@@ -139,10 +139,8 @@ class SearchManager implements SearchManagerInterface
         foreach ($metadata->getIndexMetadatas() as $indexMetadata) {
             if ($object instanceof Document) {
                 $indexName = $object->getIndex();
-                $locale = $object->getLocale();
             } else {
                 $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
-                $locale = $this->fieldEvaluator->getValue($object, $indexMetadata->getLocaleField());
             }
 
             $this->markIndexToFlush($indexName);
