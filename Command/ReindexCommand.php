@@ -219,11 +219,13 @@ EOT
 
                 try {
                     foreach ($locales as $locale) {
+                        $translatedObject = $object;
+
                         if (null !== $locale) {
-                            $object = $provider->translateObject($object, $locale);
+                            $translatedObject = $provider->translateObject($object, $locale);
                         }
 
-                        $this->searchManager->index($object, $locale);
+                        $this->searchManager->index($translatedObject, $locale);
                     }
                     $progress->advance();
                 } catch (MetadataNotFoundException $e) {
