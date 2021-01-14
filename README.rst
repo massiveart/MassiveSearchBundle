@@ -1,8 +1,8 @@
 MassiveSearchBundle
 ===================
 
-.. image:: https://travis-ci.org/massiveart/MassiveSearchBundle.svg?branch=develop
-    :target: https://travis-ci.org/massiveart/MassiveSearchBundle
+.. image:: https://img.shields.io/github/workflow/status/massiveart/MassiveSearchBundle/Test%20application?label=test-workflow
+    :target: https://github.com/massiveart/MassiveSearchBundle/actions
 
 The purpose of this bundle is to provide flexible **site search** functionality.
 
