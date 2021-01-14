@@ -20,16 +20,19 @@ jobs:
             matrix:
                 include:
                     - php-version: '7.2'
+                      minimum-stability: 'stable'
                       composer-flags: '--prefer-lowest --prefer-dist --no-interaction'
                       tools: 'composer:v1'
-                      env:
-                          SYMFONY_DEPRECATIONS_HELPER: weak
+
+                    - php-version: '7.3'
+                      minimum-stability: 'stable'
+                      composer-flags: ' --prefer-stable --prefer-dist --no-interaction'
+                      tools: 'composer:v2'
 
                     - php-version: '7.4'
+                      minimum-stability: 'dev'
                       composer-flags: '--prefer-dist --no-interaction'
                       tools: 'composer:v2'
-                      env:
-                          SYMFONY_DEPRECATIONS_HELPER: weak
 
         services:
             elasticsearch:
@@ -66,6 +69,7 @@ jobs:
             - name: Install dependencies
               run: |
                   composer validate --strict
+                  composer config minimum-stability ${{ matrix.minimum-stability }}
                   composer require elasticsearch/elasticsearch:^2.1 --dev --no-update
                   composer update ${{ matrix.composer-flags }}
 
