@@ -71,6 +71,6 @@ jobs:
 
             - name: Execute test cases
               run: |
-                  vendor/bin/phpunit --coverage-text
+                  vendor/bin/simple-phpunit --coverage-text
                   vendor/bin/behat --suite=zend_lucene
                   vendor/bin/behat --suite=elastic
