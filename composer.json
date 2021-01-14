@@ -63,12 +63,5 @@
         "psr-4": {
             "Massive\\Bundle\\SearchBundle\\Tests\\": "Tests"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-release/1.x": "1.x-dev",
-            "dev-release/2.x": "2.x-dev",
-            "dev-master": "3.x-dev"
-        }
     }
 }
