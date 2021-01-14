@@ -11,12 +11,12 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Reindex\Provider;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata as OrmClassMetadata;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata as SearchClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Reindex\Provider\DoctrineOrmProvider;
 use Metadata\ClassHierarchyMetadata;
