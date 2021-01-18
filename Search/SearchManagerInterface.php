@@ -57,7 +57,6 @@ interface SearchManagerInterface
      * its corresponding index.
      *
      * @param Document|object $object
-     * @param string|null $locale
      */
     public function deindex($object/*, string $locale = null*/);
 

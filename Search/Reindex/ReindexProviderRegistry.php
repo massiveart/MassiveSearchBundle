@@ -25,14 +25,13 @@ class ReindexProviderRegistry
      * Add a reindex provider to the registry.
      *
      * @param string $name
-     * @param ReindexProviderInterface $provider
      *
      * @throws \InvalidArgumentException
      */
     public function addProvider($name, ReindexProviderInterface $provider)
     {
         if (isset($this->providers[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Reindex provider with name "%s" has already been registered.',
                 $name
             ));
@@ -57,10 +56,10 @@ class ReindexProviderRegistry
     public function getProvider($name)
     {
         if (!isset($this->providers[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown provider "%s", registered reindex providers: "%s"',
                 $name,
-                implode('", "', array_keys($this->providers))
+                \implode('", "', \array_keys($this->providers))
             ));
         }
 

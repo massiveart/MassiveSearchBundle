@@ -71,8 +71,6 @@ class ElasticSearchAdapter implements AdapterInterface
     private $version;
 
     /**
-     * @param Factory $factory
-     * @param ElasticSearchClient $client
      * @param string $version
      */
     public function __construct(Factory $factory, ElasticSearchClient $client, $version)
@@ -82,9 +80,6 @@ class ElasticSearchAdapter implements AdapterInterface
         $this->version = $version;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function index(Document $document, $indexName)
     {
         $fields = [];
@@ -102,10 +97,10 @@ class ElasticSearchAdapter implements AdapterInterface
                     break;
                 default:
                     throw new \InvalidArgumentException(
-                        sprintf(
+                        \sprintf(
                             'Search field type "%s" is not known. Known types are: %s',
                             $massiveField->getType(),
-                            implode(', ', Field::getValidTypes())
+                            \implode(', ', Field::getValidTypes())
                         )
                     );
             }
@@ -135,16 +130,13 @@ class ElasticSearchAdapter implements AdapterInterface
 
         // for BC we still set for older elasticsearch versions the type attribute to the documentType
         // can be removed when min requirement of elasticsearch >= 6.0
-        if (version_compare($this->version, '6.0', '<')) {
+        if (\version_compare($this->version, '6.0', '<')) {
             $params['type'] = $documentType;
         }
 
         $this->client->index($params);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deindex(Document $document, $indexName)
     {
         $params = [
@@ -156,7 +148,7 @@ class ElasticSearchAdapter implements AdapterInterface
 
         // for BC we still set for older elasticsearch versions the type attribute to the documentType
         // can be removed when min requirement of elasticsearch >= 6.0
-        if (version_compare($this->version, '6.0', '<')) {
+        if (\version_compare($this->version, '6.0', '<')) {
             $params['type'] = $this->documentToType($document);
         }
 
@@ -167,9 +159,6 @@ class ElasticSearchAdapter implements AdapterInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function search(SearchQuery $searchQuery)
     {
         $params = $this->prepareSearch($searchQuery);
@@ -179,18 +168,13 @@ class ElasticSearchAdapter implements AdapterInterface
         return $this->processSearch($res);
     }
 
-    /**
-     * @param SearchQuery $searchQuery
-     *
-     * @return array
-     */
     protected function prepareSearch(SearchQuery $searchQuery): array
     {
         $indexNames = $searchQuery->getIndexes();
         $queryString = $searchQuery->getQueryString();
 
         $params = [];
-        $params['index'] = implode(',', $indexNames);
+        $params['index'] = \implode(',', $indexNames);
         $params['body'] = [
             'query' => [
                 'query_string' => [
@@ -215,8 +199,6 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * @param array $params
-     *
      * @return array
      */
     protected function performSearch(array $params)
@@ -227,8 +209,6 @@ class ElasticSearchAdapter implements AdapterInterface
     }
 
     /**
-     * @param array $res
-     *
      * @return SearchResult
      */
     protected function processSearch(array $res)
@@ -281,9 +261,6 @@ class ElasticSearchAdapter implements AdapterInterface
         return new SearchResult($hits, $res['hits']['total']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatus()
     {
         $indices = $this->getIndexStatus();
@@ -292,16 +269,13 @@ class ElasticSearchAdapter implements AdapterInterface
 
         foreach ($indexes as $indexName => $index) {
             foreach ($index as $field => $value) {
-                $status['idx:' . $indexName . '.' . $field] = substr(trim(json_encode($value)), 0, 100);
+                $status['idx:' . $indexName . '.' . $field] = \substr(\trim(\json_encode($value)), 0, 100);
             }
         }
 
         return $status;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($indexName)
     {
         try {
@@ -311,17 +285,14 @@ class ElasticSearchAdapter implements AdapterInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function listIndexes()
     {
         if (!$this->indexListLoaded) {
             $indices = $this->getIndexStatus();
             $indexes = $indices['indices'];
-            $this->indexList = array_combine(
-                array_keys($indexes),
-                array_keys($indexes)
+            $this->indexList = \array_combine(
+                \array_keys($indexes),
+                \array_keys($indexes)
             );
             $this->indexListLoaded = true;
         }
@@ -329,14 +300,11 @@ class ElasticSearchAdapter implements AdapterInterface
         return $this->indexList;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush(array $indexNames)
     {
         $this->client->indices()->flush(
             [
-                'index' => implode(', ', $indexNames),
+                'index' => \implode(', ', $indexNames),
                 'full' => true,
             ]
         );
@@ -345,8 +313,6 @@ class ElasticSearchAdapter implements AdapterInterface
     /**
      * Convert FQCN to a snake-case string to use as an
      * elastic search type.
-     *
-     * @param Document $document
      *
      * @return string
      */
@@ -358,12 +324,9 @@ class ElasticSearchAdapter implements AdapterInterface
             return 'massive_undefined';
         }
 
-        return ltrim(str_replace('\\', '_', $class), '_');
+        return \ltrim(\str_replace('\\', '_', $class), '_');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize()
     {
         // currently the elastic search adapter does not need any initialization
@@ -377,7 +340,7 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     private function getIndexStatus()
     {
-        if (version_compare($this->version, '2.2', '>')) {
+        if (\version_compare($this->version, '2.2', '>')) {
             return $this->client->indices()->stats(['index' => '_all']);
         }
 
@@ -393,7 +356,7 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     private function encodeFieldName($fieldName)
     {
-        return str_replace('.', '#', $fieldName);
+        return \str_replace('.', '#', $fieldName);
     }
 
     /**
@@ -405,6 +368,6 @@ class ElasticSearchAdapter implements AdapterInterface
      */
     private function decodeFieldName($fieldName)
     {
-        return str_replace('#', '.', $fieldName);
+        return \str_replace('#', '.', $fieldName);
     }
 }

@@ -19,6 +19,6 @@ class JsonConverterTest extends TestCase
     public function testConvert()
     {
         $converter = new JsonConverter();
-        $this->assertEquals(json_encode(['test-1' => 'test-2'], true), $converter->convert(['test-1' => 'test-2']));
+        $this->assertEquals(\json_encode(['test-1' => 'test-2'], true), $converter->convert(['test-1' => 'test-2']));
     }
 }

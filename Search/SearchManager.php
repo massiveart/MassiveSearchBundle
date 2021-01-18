@@ -78,17 +78,14 @@ class SearchManager implements SearchManagerInterface
         $this->fieldEvaluator = $fieldEvaluator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadata($object)
     {
-        if (!is_object($object)) {
+        if (!\is_object($object)) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'You must pass an object to the %s method, you passed: %s',
                     __METHOD__,
-                    var_export($object, true)
+                    \var_export($object, true)
                 )
             );
         }
@@ -97,9 +94,9 @@ class SearchManager implements SearchManagerInterface
 
         if (null === $metadata) {
             throw new MetadataNotFoundException(
-                sprintf(
+                \sprintf(
                     'There is no search mapping for object with class "%s"',
-                    get_class($object)
+                    \get_class($object)
                 )
             );
         }
@@ -113,7 +110,7 @@ class SearchManager implements SearchManagerInterface
 
         if (null === $metadata) {
             throw new MetadataNotFoundException(
-                sprintf(
+                \sprintf(
                     'There is no search mapping for object with class "%s"',
                     $document->getClass()
                 )
@@ -123,12 +120,9 @@ class SearchManager implements SearchManagerInterface
         return $metadata;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deindex($object/*, string $locale = null*/)
     {
-        $locale = func_num_args() >= 2 ? func_get_arg(1) : null;
+        $locale = \func_num_args() >= 2 ? \func_get_arg(1) : null;
 
         $subject = null;
         if ($object instanceof Document) {
@@ -165,9 +159,6 @@ class SearchManager implements SearchManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function index($object)
     {
         $indexMetadata = $this->getMetadata($object);
@@ -188,17 +179,11 @@ class SearchManager implements SearchManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createSearch($string)
     {
         return new SearchQueryBuilder($this, new SearchQuery($string));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function search(SearchQuery $query)
     {
         $this->validateQuery($query);
@@ -209,7 +194,7 @@ class SearchManager implements SearchManagerInterface
         // there is nothing to search for.
         //
         // See: https://github.com/massiveart/MassiveSearchBundle/issues/38
-        if (0 === count($query->getIndexes())) {
+        if (0 === \count($query->getIndexes())) {
             return new SearchResult([], 0);
         }
 
@@ -225,7 +210,7 @@ class SearchManager implements SearchManagerInterface
             $document = $hit->getDocument();
 
             // only throw events for existing documents
-            if (!class_exists($document->getClass())) {
+            if (!\class_exists($document->getClass())) {
                 continue;
             }
 
@@ -240,20 +225,14 @@ class SearchManager implements SearchManagerInterface
         return $hits;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatus()
     {
-        $data = ['Adapter' => get_class($this->adapter)];
+        $data = ['Adapter' => \get_class($this->adapter)];
         $data += $this->adapter->getStatus() ?: [];
 
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($indexName)
     {
         $this->markIndexToFlush($indexName);
@@ -263,24 +242,18 @@ class SearchManager implements SearchManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
-        $this->adapter->flush(array_keys($this->indexesToFlush));
+        $this->adapter->flush(\array_keys($this->indexesToFlush));
         $this->indexesToFlush = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIndexNames()
     {
-        return array_unique(
-            array_filter(
-                array_map(
-                    function ($indexName) {
+        return \array_unique(
+            \array_filter(
+                \array_map(
+                    function($indexName) {
                         $undecoratedIndexName = $this->indexNameDecorator->undecorate($indexName);
                         if (!$this->indexNameDecorator->isVariant($undecoratedIndexName, $indexName)) {
                             return;
@@ -358,17 +331,17 @@ class SearchManager implements SearchManagerInterface
         $queryIndexNames = $query->getIndexes();
 
         foreach ($queryIndexNames as $queryIndexName) {
-            if (!in_array($queryIndexName, $indexNames)) {
+            if (!\in_array($queryIndexName, $indexNames)) {
                 $unknownIndexes[] = $queryIndexName;
             }
         }
 
         if (false === empty($unknownIndexes)) {
             throw new Exception\SearchException(
-                sprintf(
+                \sprintf(
                     'Search index or indexes "%s" not known. Known indexes: "%s"',
-                    implode('", "', $unknownIndexes),
-                    implode('", "', $indexNames)
+                    \implode('", "', $unknownIndexes),
+                    \implode('", "', $indexNames)
                 )
             );
         }

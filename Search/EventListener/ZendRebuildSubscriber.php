@@ -37,8 +37,6 @@ class ZendRebuildSubscriber
      * Optimize the search indexes after the index rebuild event has been fired.
      * Should have a priority low enough in order for it to be executed after all
      * the actual index builders.
-     *
-     * @param IndexRebuildEvent $event
      */
     public function onIndexRebuild(IndexRebuildEvent $event)
     {
@@ -47,7 +45,7 @@ class ZendRebuildSubscriber
                 continue;
             }
 
-            $event->getOutput()->writeln(sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
+            $event->getOutput()->writeln(\sprintf('<info>Optimizing zend lucene index:</info> %s', $indexName));
             $this->adapter->optimize($indexName);
         }
     }

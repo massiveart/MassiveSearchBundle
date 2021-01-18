@@ -8,6 +8,7 @@ Tests/Resources/TestBundle/Entity/*
 !Tests/Resources/TestBundle/Entity/.gitkeep
 Resources/docs/build
 composer.lock
+.php_cs.cache
 vendor
 
 #intelij

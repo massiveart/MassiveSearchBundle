@@ -89,7 +89,7 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function thatTheFollowingMappingExists($mappingName, PyStringNode $mappingXml)
     {
-        file_put_contents(AppKernel::getMappingDir() . '/' . $mappingName . '.xml', $mappingXml->getRaw());
+        \file_put_contents(AppKernel::getMappingDir() . '/' . $mappingName . '.xml', $mappingXml->getRaw());
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class AbstractSearchManagerContext implements Context
     public function theFollowingEntityExists($name, PyStringNode $string)
     {
         $this->entityClasses[$name] = 'Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\\' . $name;
-        file_put_contents(AppKernel::getEntityDir() . '/' . $name . '.php', $string->getRaw());
+        \file_put_contents(AppKernel::getEntityDir() . '/' . $name . '.php', $string->getRaw());
         $this->pause();
     }
 
@@ -117,7 +117,7 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function theResultShouldBeTheFollowingArray(PyStringNode $string)
     {
-        $expected = json_decode($string->getRaw(), true);
+        $expected = \json_decode($string->getRaw(), true);
         Assert::eq($expected, $this->lastResult);
     }
 
@@ -126,7 +126,7 @@ abstract class AbstractSearchManagerContext implements Context
      */
     public function iShouldHaveTheFollowingDocuments(PyStringNode $string)
     {
-        $expected = json_decode($string->getRaw(), true);
+        $expected = \json_decode($string->getRaw(), true);
         $documents = [];
         foreach ($this->lastResult as $hit) {
             $documents[] = $hit->getDocument()->jsonSerialize();
@@ -156,14 +156,14 @@ abstract class AbstractSearchManagerContext implements Context
 
     private function doIndexTheFollowingObjects($className, PyStringNode $string)
     {
-        $objectsData = json_decode($string->getRaw(), true);
+        $objectsData = \json_decode($string->getRaw(), true);
         Assert::keyExists($this->entityClasses, $className, 'Entity exists');
         Assert::notNull($objectsData);
 
         foreach ($objectsData as $objectData) {
             $object = new $this->entityClasses[$className]();
             foreach ($objectData as $key => $value) {
-                if (is_string($value) && false !== ($date = \DateTime::createFromFormat('Y-m-d', $value))) {
+                if (\is_string($value) && false !== ($date = \DateTime::createFromFormat('Y-m-d', $value))) {
                     $value = $date;
                 }
                 $object->$key = $value;
@@ -208,8 +208,8 @@ abstract class AbstractSearchManagerContext implements Context
         $this->lastResult = $this->getSearchManager()
             ->createSearch($query)
             ->indexes($this->getSearchManager()->getIndexNames())
-            ->setLimit(intval($limit))
-            ->setOffset(intval($offset))
+            ->setLimit(\intval($limit))
+            ->setOffset(\intval($offset))
             ->execute();
     }
 
@@ -342,6 +342,6 @@ abstract class AbstractSearchManagerContext implements Context
      */
     protected function pause()
     {
-        usleep(50000);
+        \usleep(50000);
     }
 }

@@ -80,9 +80,7 @@ class ZendLuceneAdapter implements AdapterInterface
     private $encoding;
 
     /**
-     * @param Factory $factory
      * @param string $basePath Base filesystem path for the index
-     * @param Filesystem $filesystem
      * @param bool $hideIndexException
      * @param null $encoding
      */
@@ -106,9 +104,6 @@ class ZendLuceneAdapter implements AdapterInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function index(Document $document, $indexName)
     {
         $index = $this->getLuceneIndex($indexName);
@@ -131,17 +126,17 @@ class ZendLuceneAdapter implements AdapterInterface
             // are properly implemented in at least one other adapter.
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 throw new \InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'Search field type "%s" is not known. Known types are: %s',
                         $field->getType(),
-                        implode('", "', Field::getValidTypes())
+                        \implode('", "', Field::getValidTypes())
                     )
                 );
             }
 
             // handle array values
-            if (is_array($value)) {
-                $value = '|' . implode('|', $value) . '|';
+            if (\is_array($value)) {
+                $value = '|' . \implode('|', $value) . '|';
             }
 
             $luceneFieldType = $this->getFieldType($field);
@@ -162,7 +157,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::ID_FIELDNAME, $document->getId()));
         $luceneDocument->addField(Lucene\Document\Field::keyword(self::INDEX_FIELDNAME, $document->getIndex()));
         $luceneDocument->addField(
-            Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, implode(' ', $aggregateValues))
+            Lucene\Document\Field::unStored(self::AGGREGATED_INDEXED_CONTENT, \implode(' ', $aggregateValues))
         );
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::URL_FIELDNAME, $document->getUrl()));
         $luceneDocument->addField(Lucene\Document\Field::unIndexed(self::TITLE_FIELDNAME, $document->getTitle()));
@@ -178,9 +173,6 @@ class ZendLuceneAdapter implements AdapterInterface
         return $luceneDocument;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deindex(Document $document, $indexName)
     {
         $index = $this->getLuceneIndex($indexName);
@@ -188,9 +180,6 @@ class ZendLuceneAdapter implements AdapterInterface
         $index->commit();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function search(SearchQuery $searchQuery)
     {
         list($searcher, $query) = $this->prepareSearch($searchQuery);
@@ -200,11 +189,6 @@ class ZendLuceneAdapter implements AdapterInterface
         return $this->processSearch($luceneHits, $searchQuery);
     }
 
-    /**
-     * @param SearchQuery $searchQuery
-     *
-     * @return array
-     */
     protected function prepareSearch(SearchQuery $searchQuery): array
     {
         $searcher = new Lucene\MultiSearcher();
@@ -212,7 +196,7 @@ class ZendLuceneAdapter implements AdapterInterface
         $indexNames = $searchQuery->getIndexes();
         foreach ($indexNames as $indexName) {
             $indexPath = $this->getIndexPath($indexName);
-            if (!file_exists($indexPath)) {
+            if (!\file_exists($indexPath)) {
                 continue;
             }
 
@@ -225,18 +209,12 @@ class ZendLuceneAdapter implements AdapterInterface
         return [$searcher, $query];
     }
 
-    /**
-     * @param MultiSearcher $searcher
-     * @param AbstractQuery $query
-     *
-     * @return array
-     */
     protected function performSearch(MultiSearcher $searcher, AbstractQuery $query): array
     {
         try {
             return $searcher->find($query);
         } catch (\RuntimeException $e) {
-            if (!preg_match('&non-wildcard characters&', $e->getMessage())) {
+            if (!\preg_match('&non-wildcard characters&', $e->getMessage())) {
                 throw $e;
             }
 
@@ -244,19 +222,13 @@ class ZendLuceneAdapter implements AdapterInterface
         }
     }
 
-    /**
-     * @param array $luceneHits
-     * @param SearchQuery $searchQuery
-     *
-     * @return SearchResult
-     */
     protected function processSearch(array $luceneHits, SearchQuery $searchQuery): SearchResult
     {
-        $endPos = count($luceneHits);
+        $endPos = \count($luceneHits);
         $startPos = $searchQuery->getOffset();
 
         if (null !== $searchQuery->getLimit()) {
-            $endPos = min(count($luceneHits), $startPos + $searchQuery->getLimit());
+            $endPos = \min(\count($luceneHits), $startPos + $searchQuery->getLimit());
         }
 
         $hits = [];
@@ -294,9 +266,9 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         // The MultiSearcher does not support sorting, so we do it here.
-        usort(
+        \usort(
             $hits,
-            function (QueryHit $documentA, QueryHit $documentB) {
+            function(QueryHit $documentA, QueryHit $documentB) {
                 if ($documentA->getScore() < $documentB->getScore()) {
                     return true;
                 }
@@ -305,12 +277,9 @@ class ZendLuceneAdapter implements AdapterInterface
             }
         );
 
-        return new SearchResult($hits, count($luceneHits));
+        return new SearchResult($hits, \count($luceneHits));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatus()
     {
         $finder = new Finder();
@@ -322,7 +291,7 @@ class ZendLuceneAdapter implements AdapterInterface
 
             $indexFinder = new Finder();
             $files = $indexFinder->files()->name('*')->depth('== 0')->in($indexDir->getPathname());
-            $indexName = basename($indexDir);
+            $indexName = \basename($indexDir);
 
             $index = $this->getIndex($this->getIndexPath($indexName));
 
@@ -333,19 +302,16 @@ class ZendLuceneAdapter implements AdapterInterface
             ];
 
             foreach ($files as $file) {
-                $indexStats['size'] += filesize($file);
+                $indexStats['size'] += \filesize($file);
                 ++$indexStats['nb_files'];
             }
 
-            $status['idx:' . $indexName] = json_encode($indexStats);
+            $status['idx:' . $indexName] = \json_encode($indexStats);
         }
 
         return $status;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($indexName)
     {
         $indexPath = $this->getIndexPath($indexName);
@@ -353,12 +319,9 @@ class ZendLuceneAdapter implements AdapterInterface
         $fs->remove($indexPath);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function listIndexes()
     {
-        if (!file_exists($this->basePath)) {
+        if (!\file_exists($this->basePath)) {
             return [];
         }
 
@@ -374,9 +337,6 @@ class ZendLuceneAdapter implements AdapterInterface
         return $names;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush(array $indexNames)
     {
     }
@@ -403,7 +363,7 @@ class ZendLuceneAdapter implements AdapterInterface
     {
         $indexPath = $this->getIndexPath($indexName);
 
-        if (!file_exists($indexPath)) {
+        if (!\file_exists($indexPath)) {
             $this->getIndex($indexPath, true);
         }
 
@@ -419,7 +379,7 @@ class ZendLuceneAdapter implements AdapterInterface
      */
     private function getIndexPath($indexName)
     {
-        return sprintf('%s/%s', $this->basePath, $indexName);
+        return \sprintf('%s/%s', $this->basePath, $indexName);
     }
 
     /**
@@ -458,8 +418,6 @@ class ZendLuceneAdapter implements AdapterInterface
     /**
      * Return the zend lucene field type to use for the given field.
      *
-     * @param Field $field
-     *
      * @return string
      */
     private function getFieldType(Field $field)
@@ -477,16 +435,13 @@ class ZendLuceneAdapter implements AdapterInterface
         }
 
         throw new \InvalidArgumentException(
-            sprintf(
+            \sprintf(
                 'Field "%s" cannot be both not indexed and not stored',
                 $field->getName()
             )
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize()
     {
         if (!$this->filesystem->exists($this->basePath)) {

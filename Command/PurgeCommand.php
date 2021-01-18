@@ -81,18 +81,18 @@ EOT
             $indexes = $this->searchManager->getIndexNames();
         }
 
-        $unknownIndexes = array_diff($indexes, $allIndexes);
+        $unknownIndexes = \array_diff($indexes, $allIndexes);
 
         if ($unknownIndexes) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown indexes "%s", known indexes: "%s"',
-                implode('", "', $unknownIndexes),
-                implode('", "', $allIndexes)
+                \implode('", "', $unknownIndexes),
+                \implode('", "', $allIndexes)
             ));
         }
 
         foreach ($indexes as $indexName) {
-            $question = new ConfirmationQuestion(sprintf(
+            $question = new ConfirmationQuestion(\sprintf(
                 'Are you sure you want to purge index "%s"? ',
                 $indexName
             ), false);
@@ -114,7 +114,7 @@ EOT
         }
 
         $output->writeln('<info>Specify the option: </>--index=<index_name><info> where </><index_name><info> is one of the following:</>');
-        $output->write(PHP_EOL);
+        $output->write(\PHP_EOL);
 
         foreach ($indexNames as $indexName) {
             $output->writeln('  ' . $indexName);

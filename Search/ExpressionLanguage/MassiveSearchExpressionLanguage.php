@@ -19,9 +19,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  */
 class MassiveSearchExpressionLanguage extends ExpressionLanguage
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function registerFunctions()
     {
         parent::registerFunctions();
@@ -41,11 +38,11 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
     {
         return new ExpressionFunction(
             'join',
-            function ($glue, $elements) {
-                return sprintf('join(%s, %s)', $glue, $elements);
+            function($glue, $elements) {
+                return \sprintf('join(%s, %s)', $glue, $elements);
             },
-            function (array $values, $glue, $elements) {
-                return implode($glue, $elements);
+            function(array $values, $glue, $elements) {
+                return \implode($glue, $elements);
             }
         );
     }
@@ -65,10 +62,10 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
     {
         return new ExpressionFunction(
             'map',
-            function ($elements, $expression) {
+            function($elements, $expression) {
                 throw new \Exception('Map function does not support compilation');
             },
-            function (array $values, $elements, $expression) {
+            function(array $values, $elements, $expression) {
                 if (empty($elements)) {
                     return [];
                 }

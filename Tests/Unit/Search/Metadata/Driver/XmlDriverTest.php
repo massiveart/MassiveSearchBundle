@@ -54,25 +54,25 @@ class XmlDriverTest extends TestCase
 
         $that = $this;
 
-        $this->factory->createClassMetadata(Argument::cetera())->will(function ($arguments) use ($that) {
+        $this->factory->createClassMetadata(Argument::cetera())->will(function($arguments) use ($that) {
             $classMetadata = new ClassMetadata($that->reflectionClass->reveal()->getName());
 
             return $classMetadata;
         });
 
-        $this->factory->createMetadataProperty(Argument::cetera())->will(function ($arguments) use ($that) {
+        $this->factory->createMetadataProperty(Argument::cetera())->will(function($arguments) {
             return new Property($arguments[0]);
         });
 
-        $this->factory->createMetadataField(Argument::cetera())->will(function ($arguments) use ($that) {
+        $this->factory->createMetadataField(Argument::cetera())->will(function($arguments) {
             return new Field($arguments[0]);
         });
 
-        $this->factory->createIndexMetadata()->will(function () use ($that) {
+        $this->factory->createIndexMetadata()->will(function() {
             return new IndexMetadata();
         });
 
-        $this->factory->createMetadataExpression(Argument::cetera())->will(function ($arguments) use ($that) {
+        $this->factory->createMetadataExpression(Argument::cetera())->will(function($arguments) {
             return new Expression($arguments[0]);
         });
 

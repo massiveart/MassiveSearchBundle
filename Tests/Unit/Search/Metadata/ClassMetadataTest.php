@@ -62,13 +62,13 @@ class ClassMetadataTest extends TestCase
         $this->indexMetadata->setName('\stdClass')->shouldBeCalled();
 
         $indexMetadatas = $this->classMetadata->getIndexMetadatas();
-        $this->assertEquals(['foo_context', 'foo_bar'], array_keys($indexMetadatas));
+        $this->assertEquals(['foo_context', 'foo_bar'], \array_keys($indexMetadatas));
     }
 
     public function testSerializeUnserialize()
     {
         $this->classMetadata->setReindexRepositoryMethod('findSpecificEntities');
 
-        $this->assertEquals($this->classMetadata, unserialize(serialize($this->classMetadata)));
+        $this->assertEquals($this->classMetadata, \unserialize(\serialize($this->classMetadata)));
     }
 }

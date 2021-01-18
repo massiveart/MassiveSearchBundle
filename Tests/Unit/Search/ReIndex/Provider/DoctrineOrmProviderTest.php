@@ -11,12 +11,12 @@
 
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Reindex\Provider;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory as OldClassMetadataFactory;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata as OrmClassMetadata;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory as OldClassMetadataFactory;
 use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata as SearchClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Reindex\Provider\DoctrineOrmProvider;
@@ -82,7 +82,7 @@ class DoctrineOrmProviderTest extends TestCase
         $this->searchMetadataFactory = $this->prophesize(MetadataFactory::class);
 
         $this->ormMetadataFactory = $this->prophesize(
-            interface_exists(ClassMetadataFactory::class) ? ClassMetadataFactory::class : OldClassMetadataFactory::class
+            \interface_exists(ClassMetadataFactory::class) ? ClassMetadataFactory::class : OldClassMetadataFactory::class
         );
 
         $this->provider = new DoctrineOrmProvider(
@@ -173,7 +173,7 @@ class DoctrineOrmProviderTest extends TestCase
     {
         $class = 'stdClass';
         $entity = new \stdClass();
-        $entities = array_fill(0, 20, $entity);
+        $entities = \array_fill(0, 20, $entity);
 
         $this->entityManager->getRepository($class)->willReturn($this->repository->reveal());
         $this->searchMetadataFactory->getMetadataForClass('stdClass')->willReturn($this->hierarchyMetadata->reveal());

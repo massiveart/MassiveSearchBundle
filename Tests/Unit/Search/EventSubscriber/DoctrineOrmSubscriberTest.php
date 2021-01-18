@@ -45,7 +45,7 @@ class DoctrineOrmSubscriberTest extends TestCase
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $eventDispatcher->dispatch(
             Argument::that(
-                function (DeindexEvent $event) use ($entity) {
+                function(DeindexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;
@@ -68,7 +68,7 @@ class DoctrineOrmSubscriberTest extends TestCase
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $eventDispatcher->dispatch(
             Argument::that(
-                function (IndexEvent $event) use ($entity) {
+                function(IndexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;
@@ -90,7 +90,7 @@ class DoctrineOrmSubscriberTest extends TestCase
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $eventDispatcher->dispatch(
             Argument::that(
-                function (IndexEvent $event) use ($entity) {
+                function(IndexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;

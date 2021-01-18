@@ -29,9 +29,6 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
         $this->decorator = $decorator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decorate(IndexMetadataInterface $indexMetadata, $object, Document $document)
     {
         $indexName = $this->decorator->decorate($indexMetadata, $object, $document);
@@ -44,17 +41,11 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
         return $indexName . '-' . $locale . '-i18n';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function undecorate($decoratedIndexName)
     {
         return $this->decorator->undecorate($this->removeLocale($decoratedIndexName));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isVariant($indexName, $decoratedIndexName, array $options = [])
     {
         if (!$this->decorator->isVariant($indexName, $this->removeLocale($decoratedIndexName), $options)) {
@@ -70,7 +61,7 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
             $locale = $options['locale'];
         }
 
-        return (bool) preg_match(sprintf(
+        return (bool) \preg_match(\sprintf(
             '/^%s-%s-i18n$/',
             $indexName,
             $locale
@@ -86,7 +77,7 @@ class LocalizationDecorator implements IndexNameDecoratorInterface
      */
     private function removeLocale($decoratedIndexName)
     {
-        if (0 === preg_match('/(.*)(-.*-i18n)/', $decoratedIndexName, $matches)) {
+        if (0 === \preg_match('/(.*)(-.*-i18n)/', $decoratedIndexName, $matches)) {
             return $decoratedIndexName;
         }
 

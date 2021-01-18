@@ -32,8 +32,6 @@ class IndexListener
 
     /**
      * Index subject from event.
-     *
-     * @param IndexEvent $event
      */
     public function onIndex(IndexEvent $event)
     {

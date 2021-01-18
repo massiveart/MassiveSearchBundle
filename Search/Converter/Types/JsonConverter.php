@@ -18,11 +18,8 @@ use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
  */
 class JsonConverter implements ConverterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function convert($value)
     {
-        return json_encode($value);
+        return \json_encode($value);
     }
 }
