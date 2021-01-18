@@ -24,9 +24,6 @@ class ConverterPass implements CompilerPassInterface
 
     const TAG_NAME = 'massive_search.converter';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(self::SERVICE_ID)) {

@@ -32,8 +32,6 @@ class DeindexListener
 
     /**
      * Deindex subject from event.
-     *
-     * @param DeindexEvent $event
      */
     public function onDeindex(DeindexEvent $event)
     {

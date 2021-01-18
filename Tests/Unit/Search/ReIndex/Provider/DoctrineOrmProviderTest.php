@@ -168,7 +168,7 @@ class DoctrineOrmProviderTest extends \PHPUnit_Framework_TestCase
     {
         $class = 'stdClass';
         $entity = new \stdClass();
-        $entities = array_fill(0, 20, $entity);
+        $entities = \array_fill(0, 20, $entity);
 
         $this->entityManager->getRepository($class)->willReturn($this->repository->reveal());
         $this->searchMetadataFactory->getMetadataForClass('stdClass')->willReturn($this->hierarchyMetadata->reveal());

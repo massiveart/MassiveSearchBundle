@@ -13,7 +13,6 @@ namespace Massive\Bundle\SearchBundle\Search\Metadata\Driver;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
@@ -29,43 +28,32 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     private $factory;
 
-    /**
-     * @param Factory $factory
-     * @param FileLocatorInterface $locator
-     * @param mixed $context Context name. e.g. backend, frontend
-     */
     public function __construct(Factory $factory, FileLocatorInterface $locator)
     {
         parent::__construct($locator);
         $this->factory = $factory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtension()
     {
         return 'xml';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
         $classMetadata = $this->factory->createClassMetadata($class->name);
 
-        $xml = simplexml_load_file($file);
+        $xml = \simplexml_load_file($file);
 
-        if (count($xml->children()) > 1) {
-            throw new \InvalidArgumentException(sprintf(
+        if (\count($xml->children()) > 1) {
+            throw new \InvalidArgumentException(\sprintf(
                 'Only one mapping allowed per class in file "%s',
                 $file
             ));
         }
 
-        if (0 == count($xml->children())) {
-            throw new \InvalidArgumentException(sprintf('No mapping in file "%s"', $file));
+        if (0 == \count($xml->children())) {
+            throw new \InvalidArgumentException(\sprintf('No mapping in file "%s"', $file));
         }
 
         $mapping = $xml->children()->mapping;
@@ -73,7 +61,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $mappedClassName = (string) $mapping['class'];
 
         if ($class->getName() !== $mappedClassName) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Mapping in file "%s" does not correspond to class "%s", is a mapping for "%s"',
                 $file,
                 $class->getName(),
@@ -103,7 +91,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             }
         }
 
-        $indexMappings = array_merge(
+        $indexMappings = \array_merge(
             [
                 '_default' => $indexMapping,
             ],
@@ -162,7 +150,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     {
         foreach (['index', 'id', 'title'] as $required) {
             if (!$indexMapping[$required]) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'Required field for mapping is not present "%s" in "%s"',
                     $required,
                     $file
@@ -174,7 +162,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Return the value object for the mapping.
      *
-     * @param \SimpleXmlElement $mapping
      * @param mixed $field
      */
     private function getMapping(\SimpleXmlElement $mapping, $field)
@@ -191,7 +178,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     private function getField(\SimpleXmlElement $field)
     {
         if (isset($field['expr']) && isset($field['property'])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 '"expr" and "property" attributes are mutually exclusive in mapping for "%s"',
                 ($field)
             ));
@@ -214,7 +201,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             return $this->factory->createMetadataValue((string) $field['value']);
         }
 
-        throw new \InvalidArgumentException(sprintf(
+        throw new \InvalidArgumentException(\sprintf(
             'Mapping for "%s" must have one of either the "expr" or "property" attributes.',
             $field
         ));
@@ -223,15 +210,13 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Overwrite the default mapping if there exists a <context> section
      * which matches the context given in the constructor of this class.
-     *
-     * @param \SimpleXmlElement $mapping
      */
     private function extractContextMappings(\SimpleXmlElement $mapping, $indexMapping)
     {
         $contextMappings = [];
         foreach ($mapping->context as $context) {
             if (!isset($context['name'])) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'No name given to context in XML mapping file for "%s"',
                     $mapping['class']
                 ));
@@ -240,14 +225,14 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $contextName = (string) $context['name'];
 
             $contextMapping = $this->getIndexMapping($context);
-            $contextMapping = array_filter($contextMapping, function ($value) {
+            $contextMapping = \array_filter($contextMapping, function($value) {
                 if (null === $value) {
                     return false;
                 }
 
                 return true;
             });
-            $contextMappings[$contextName] = array_merge(
+            $contextMappings[$contextName] = \array_merge(
                 $indexMapping,
                 $contextMapping
             );

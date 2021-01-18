@@ -114,9 +114,6 @@ class SearchQuery
         return $this->sortings;
     }
 
-    /**
-     * @param array $sortings
-     */
     public function setSortings(array $sortings)
     {
         $this->sortings = $sortings;

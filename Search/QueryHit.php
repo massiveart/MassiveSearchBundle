@@ -30,9 +30,6 @@ class QueryHit implements \JsonSerializable
         return $this->document;
     }
 
-    /**
-     * @param Document $document
-     */
     public function setDocument(Document $document)
     {
         $this->document = $document;
@@ -70,9 +67,6 @@ class QueryHit implements \JsonSerializable
         $this->id = $id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [

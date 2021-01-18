@@ -24,9 +24,6 @@ class SearchEvent extends Event
      */
     protected $searchQuery;
 
-    /**
-     * @param SearchQuery $searchQuery
-     */
     public function __construct(SearchQuery $searchQuery)
     {
         $this->searchQuery = $searchQuery;

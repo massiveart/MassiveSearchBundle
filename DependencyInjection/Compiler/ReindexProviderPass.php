@@ -37,7 +37,7 @@ class ReindexProviderPass implements CompilerPassInterface
 
         foreach ($ids as $id => $attributes) {
             if (!isset($attributes[0]['id'])) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'All %s tags must include the "id" attribute.',
                     $tagName
                 ));

@@ -63,8 +63,6 @@ class SearchQueryBuilder
     /**
      * Set the indexes to search in.
      *
-     * @param array $indexes
-     *
      * @return SearchQueryBuilder
      */
     public function indexes(array $indexes)

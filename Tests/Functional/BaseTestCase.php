@@ -89,7 +89,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     protected function addCommandsToApplication(ContainerInterface $container, Application $application)
     {
-        if (method_exists($application, 'setCommandLoader')) {
+        if (\method_exists($application, 'setCommandLoader')) {
             $application->setCommandLoader($container->get('console.command_loader'));
 
             return;

@@ -34,9 +34,6 @@ class DoctrineOrmSubscriber implements EventSubscriber
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSubscribedEvents()
     {
         return [
@@ -48,8 +45,6 @@ class DoctrineOrmSubscriber implements EventSubscriber
 
     /**
      * Index entities after they have been persisted.
-     *
-     * @param LifecycleEventArgs $event
      */
     public function postPersist(LifecycleEventArgs $event)
     {
@@ -58,8 +53,6 @@ class DoctrineOrmSubscriber implements EventSubscriber
 
     /**
      * Index entites after the have been updated.
-     *
-     * @param LifecycleEventArgs $event
      */
     public function postUpdate(LifecycleEventArgs $event)
     {
@@ -68,8 +61,6 @@ class DoctrineOrmSubscriber implements EventSubscriber
 
     /**
      * Deindex entities after they have been removed.
-     *
-     * @param LifecycleEventArgs $event
      */
     public function preRemove(LifecycleEventArgs $event)
     {

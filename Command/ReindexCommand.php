@@ -75,9 +75,6 @@ class ReindexCommand extends Command
         $this->questionHelper = $questionHelper ?: new QuestionHelper();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->setDescription('Rebuild search index');
@@ -91,19 +88,16 @@ EOT
         $this->addOption('provider', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Provider name');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $formatterHelper = new FormatterHelper();
 
-        $startTime = microtime(true);
+        $startTime = \microtime(true);
 
         if ('prod' !== $this->env) {
             $output->writeln(
                 $formatterHelper->formatBlock(
-                    sprintf(
+                    \sprintf(
                         'WARNING: You are running this command in the `%s` environment - this may increase memory usage. Running in `prod` environment is generally better.',
                         $this->env
                     ),
@@ -117,9 +111,9 @@ EOT
 
         $providerNames = $this->resumeManager->getUnfinishedProviders();
 
-        if (count($providerNames) > 0) {
+        if (\count($providerNames) > 0) {
             foreach ($providerNames as $providerName) {
-                $question = new ConfirmationQuestion(sprintf(
+                $question = new ConfirmationQuestion(\sprintf(
                     '<question>Provider "%s" did not finish. Do you wish to resume?</question> ',
                     $providerName
                 ));
@@ -143,8 +137,8 @@ EOT
         }
 
         foreach ($providers as $providerName => $provider) {
-            $output->writeln(sprintf('<info>provider "</info>%s<info>"</info>', $providerName));
-            $output->write(PHP_EOL);
+            $output->writeln(\sprintf('<info>provider "</info>%s<info>"</info>', $providerName));
+            $output->write(\PHP_EOL);
 
             foreach ($provider->getClassFqns() as $classFqn) {
                 $return = $this->reindexClass($output, $provider, $providerName, $classFqn, $batchSize);
@@ -157,10 +151,10 @@ EOT
             $this->resumeManager->removeCheckpoints($providerName);
         }
 
-        $output->writeln(sprintf(
+        $output->writeln(\sprintf(
             '<info>Index rebuild completed (</info>%ss %sb</info><info>)</info>',
-            number_format(microtime(true) - $startTime, 2),
-            number_format(memory_get_usage())
+            \number_format(\microtime(true) - $startTime, 2),
+            \number_format(\memory_get_usage())
         ));
     }
 
@@ -184,12 +178,12 @@ EOT
 
         $realCount = $count - $offset;
 
-        $output->writeln(sprintf(
+        $output->writeln(\sprintf(
             '<comment>-- reindexing "</comment>%s<comment>" instances of "</comment>%s<comment>"</comment>',
             $realCount,
             $classFqn
         ));
-        $output->write(PHP_EOL);
+        $output->write(\PHP_EOL);
 
         $progress = new ProgressBar($output);
         $progress->start($realCount);
@@ -199,7 +193,7 @@ EOT
         while (true) {
             $objects = $provider->provide($classFqn, $offset, $batchSize);
 
-            if (0 === count($objects)) {
+            if (0 === \count($objects)) {
                 $provider->cleanUp($classFqn);
                 $this->resumeManager->setCheckpoint($providerName, $classFqn, $count);
                 $progress->finish();
@@ -238,6 +232,6 @@ EOT
             $provider->cleanUp($classFqn);
         }
 
-        $output->write(PHP_EOL . PHP_EOL);
+        $output->write(\PHP_EOL . \PHP_EOL);
     }
 }

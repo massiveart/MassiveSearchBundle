@@ -26,9 +26,6 @@ class ChainProvider implements ProviderInterface
         $this->providers = $providers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForObject($object)
     {
         foreach ($this->providers as $provider) {
@@ -42,9 +39,6 @@ class ChainProvider implements ProviderInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAllMetadata()
     {
         $metadatas = [];
@@ -57,9 +51,6 @@ class ChainProvider implements ProviderInterface
         return $metadatas;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForDocument(Document $document)
     {
         foreach ($this->providers as $provider) {

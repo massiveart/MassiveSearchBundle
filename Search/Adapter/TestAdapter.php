@@ -31,17 +31,11 @@ class TestAdapter implements AdapterInterface
         $this->factory = $factory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function index(Document $document, $indexName)
     {
         $this->documents[$indexName][$document->getId()] = $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deindex(Document $document, $indexName)
     {
         if (!$indexName) {
@@ -54,12 +48,9 @@ class TestAdapter implements AdapterInterface
             }
         }
 
-        $this->documents[$indexName] = array_values($this->documents[$indexName]);
+        $this->documents[$indexName] = \array_values($this->documents[$indexName]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($indexName)
     {
         unset($this->documents[$indexName]);
@@ -84,9 +75,6 @@ class TestAdapter implements AdapterInterface
         return $documents;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function search(SearchQuery $searchQuery)
     {
         $hits = [];
@@ -104,11 +92,11 @@ class TestAdapter implements AdapterInterface
 
                 foreach ($document->getFields() as $field) {
                     $fieldValue = $field->getValue();
-                    if (is_array($fieldValue)) {
-                        $fieldValue = implode(' ', $fieldValue);
+                    if (\is_array($fieldValue)) {
+                        $fieldValue = \implode(' ', $fieldValue);
                     }
 
-                    if (preg_match('{' . trim(preg_quote($searchQuery->getQueryString())) . '}i', $fieldValue)) {
+                    if (\preg_match('{' . \trim(\preg_quote($searchQuery->getQueryString())) . '}i', $fieldValue)) {
                         $isHit = true;
                         break;
                     }
@@ -122,35 +110,23 @@ class TestAdapter implements AdapterInterface
             }
         }
 
-        return new SearchResult($hits, count($hits));
+        return new SearchResult($hits, \count($hits));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function listIndexes()
     {
-        return array_keys($this->documents);
+        return \array_keys($this->documents);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush(array $indexNames)
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatus()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize()
     {
         // nothing to do here

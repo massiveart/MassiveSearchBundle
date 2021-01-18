@@ -29,14 +29,11 @@ class IndexRebuildCommand extends ReindexCommand
         $this->setName(self::$defaultName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $formatterHelper = new FormatterHelper();
         $output->writeln(
-            $formatterHelper->formatBlock(sprintf(
+            $formatterHelper->formatBlock(\sprintf(
                 'DEPRECATED: The `%s` command is deprecated, use `massive:search:reindex` instead.',
                 $this->getName()
             ), 'comment', true)

@@ -61,13 +61,10 @@ class Document implements \JsonSerializable
      */
     protected $index;
 
-    /**
-     * @param Field $field
-     */
     public function addField(Field $field)
     {
         if ($this->hasField($field->getName())) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Field "%s" already exists in search document',
                 $field->getName()
             ));
@@ -228,9 +225,9 @@ class Document implements \JsonSerializable
     public function getField($name)
     {
         if (!isset($this->fields[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Trying to get undefined field "%s", defined fields are "%s"',
-                $name, implode(', ', array_keys($this->fields))
+                $name, \implode(', ', \array_keys($this->fields))
             ));
         }
 
@@ -247,9 +244,6 @@ class Document implements \JsonSerializable
         return isset($this->fields[$name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [

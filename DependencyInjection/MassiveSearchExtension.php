@@ -23,9 +23,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class MassiveSearchExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -81,7 +78,7 @@ class MassiveSearchExtension extends Extension
         $container->setParameter('massive_search.adapter.elastic.version', $config['version']);
         $loader->load('adapter_elastic.xml');
 
-        if (!class_exists($container->getParameter('massive_search.search.adapter.elastic.client.class'))) {
+        if (!\class_exists($container->getParameter('massive_search.search.adapter.elastic.client.class'))) {
             throw new \RuntimeException(
                 'Cannot find elastic search client class -- have you installed the elasticsearch/elasticsearch package?'
             );
@@ -91,9 +88,9 @@ class MassiveSearchExtension extends Extension
     private function loadMetadata($config, Loader\XmlFileLoader $loader, ContainerBuilder $container)
     {
         $dir = $container->getParameterBag()->resolveValue($config['cache_dir']);
-        if (!file_exists($dir)) {
-            if (!@mkdir($dir, 0777, true)) {
-                throw new \RuntimeException(sprintf('Could not create cache directory "%s".', $dir));
+        if (!\file_exists($dir)) {
+            if (!@\mkdir($dir, 0777, true)) {
+                throw new \RuntimeException(\sprintf('Could not create cache directory "%s".', $dir));
             }
         }
         $container->setParameter('massive_search.metadata.prefix', $config['prefix']);
@@ -112,16 +109,16 @@ class MassiveSearchExtension extends Extension
         $metadataPaths = [];
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
-            $path = dirname($refl->getFilename());
+            $path = \dirname($refl->getFilename());
 
             foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
-                if (!file_exists($path . '/' . $entityNamespace)) {
+                if (!\file_exists($path . '/' . $entityNamespace)) {
                     continue;
                 }
 
                 $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $finalPath = implode('/', [$path, 'Resources', 'config', 'massive-search']);
-                if (!file_exists($finalPath)) {
+                $finalPath = \implode('/', [$path, 'Resources', 'config', 'massive-search']);
+                if (!\file_exists($finalPath)) {
                     continue;
                 }
 

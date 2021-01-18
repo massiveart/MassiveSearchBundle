@@ -36,26 +36,26 @@ class AppKernel extends TestKernel
     {
         $fs = new Filesystem();
 
-        if (file_exists(self::getMappingDir())) {
+        if (\file_exists(self::getMappingDir())) {
             $fs->remove(self::getMappingDir());
         }
         $fs->mkdir(self::getMappingDir());
 
-        if (file_exists(self::getEntityDir())) {
+        if (\file_exists(self::getEntityDir())) {
             $fs->remove(self::getEntityDir());
         }
         $fs->mkdir(self::getEntityDir());
 
-        if (file_exists(self::getTempConfig())) {
+        if (\file_exists(self::getTempConfig())) {
             $fs->remove(self::getTempConfig());
         }
         $massiveCacheDir = __DIR__ . '/cache/massive-search';
 
         $fs->remove(__DIR__ . '/cache/jms_serializer');
 
-        if (file_exists($massiveCacheDir)) {
+        if (\file_exists($massiveCacheDir)) {
             $fs->remove($massiveCacheDir);
-            mkdir($massiveCacheDir);
+            \mkdir($massiveCacheDir);
         }
     }
 

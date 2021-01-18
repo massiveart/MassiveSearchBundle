@@ -84,9 +84,6 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setKernel(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
@@ -97,7 +94,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function thatTheFollowingMappingExists($mappingName, PyStringNode $mappingXml)
     {
-        file_put_contents(AppKernel::getMappingDir() . '/' . $mappingName . '.xml', $mappingXml->getRaw());
+        \file_put_contents(AppKernel::getMappingDir() . '/' . $mappingName . '.xml', $mappingXml->getRaw());
     }
 
     /**
@@ -106,7 +103,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
     public function theFollowingEntityExists($name, PyStringNode $string)
     {
         $this->entityClasses[$name] = 'Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\\' . $name;
-        file_put_contents(AppKernel::getEntityDir() . '/' . $name . '.php', $string->getRaw());
+        \file_put_contents(AppKernel::getEntityDir() . '/' . $name . '.php', $string->getRaw());
         $this->pause();
     }
 
@@ -125,7 +122,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function theResultShouldBeTheFollowingArray(PyStringNode $string)
     {
-        $expected = json_decode($string->getRaw(), true);
+        $expected = \json_decode($string->getRaw(), true);
         Assert::assertEquals($expected, $this->lastResult);
     }
 
@@ -134,7 +131,7 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     public function iShouldHaveTheFollowingDocuments(PyStringNode $string)
     {
-        $expected = json_decode($string->getRaw(), true);
+        $expected = \json_decode($string->getRaw(), true);
         $documents = [];
         foreach ($this->lastResult as $hit) {
             $documents[] = $hit->getDocument()->jsonSerialize();
@@ -164,14 +161,14 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
 
     private function doIndexTheFollowingObjects($className, PyStringNode $string)
     {
-        $objectsData = json_decode($string->getRaw(), true);
+        $objectsData = \json_decode($string->getRaw(), true);
         Assert::assertArrayHasKey($className, $this->entityClasses, 'Entity exists');
         Assert::assertNotNull($objectsData);
 
         foreach ($objectsData as $objectData) {
             $object = new $this->entityClasses[$className]();
             foreach ($objectData as $key => $value) {
-                if (is_string($value) && false !== ($date = \DateTime::createFromFormat('Y-m-d', $value))) {
+                if (\is_string($value) && false !== ($date = \DateTime::createFromFormat('Y-m-d', $value))) {
                     $value = $date;
                 }
                 $object->$key = $value;
@@ -216,8 +213,8 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
         $this->lastResult = $this->getSearchManager()
             ->createSearch($query)
             ->indexes($this->getSearchManager()->getIndexNames())
-            ->setLimit(intval($limit))
-            ->setOffset(intval($offset))
+            ->setLimit(\intval($limit))
+            ->setOffset(\intval($offset))
             ->execute();
     }
 
@@ -350,6 +347,6 @@ class SearchManagerContext implements SnippetAcceptingContext, KernelAwareContex
      */
     protected function pause()
     {
-        usleep(50000);
+        \usleep(50000);
     }
 }

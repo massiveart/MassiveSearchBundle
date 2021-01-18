@@ -111,8 +111,8 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         for ($i = 0; $i <= 100; ++$i) {
             $objects[] = new \stdClass();
         }
-        $batch1 = array_slice($objects, 0, 50);
-        $batch2 = array_slice($objects, 50);
+        $batch1 = \array_slice($objects, 0, 50);
+        $batch2 = \array_slice($objects, 50);
 
         $this->resumeManager->getUnfinishedProviders()->willReturn([]);
         $this->providerRegistry->getProviders()->willReturn([
@@ -146,7 +146,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $classFqn = 'stdClass';
         $count = 100;
         $providerName = 'provider';
-        $batch = array_fill(0, 2, new \stdClass());
+        $batch = \array_fill(0, 2, new \stdClass());
 
         $this->resumeManager->getUnfinishedProviders()->willReturn([]);
         $this->providerRegistry->getProviders()->willReturn([

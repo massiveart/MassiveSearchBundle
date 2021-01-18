@@ -46,9 +46,6 @@ class DoctrineOrmProvider implements ReindexProviderInterface
         $this->searchMetadataFactory = $searchMetadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getClassFqns()
     {
         $metadataFactory = $this->entityManager->getMetadataFactory();
@@ -87,8 +84,8 @@ class DoctrineOrmProvider implements ReindexProviderInterface
         if ($repositoryMethod) {
             $result = $repository->$repositoryMethod($queryBuilder);
 
-            if (is_array($result)) {
-                @trigger_error('Reindex repository methods should NOT return anything. Use the passed query builder instead.');
+            if (\is_array($result)) {
+                @\trigger_error('Reindex repository methods should NOT return anything. Use the passed query builder instead.');
                 $this->cachedEntities = $result;
 
                 return $this->sliceEntities($offset, $maxResults);
@@ -101,21 +98,15 @@ class DoctrineOrmProvider implements ReindexProviderInterface
         return $queryBuilder->getQuery()->execute();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function cleanUp($classFqn)
     {
-        if (count($this->cachedEntities) > 0) {
+        if (\count($this->cachedEntities) > 0) {
             return;
         }
 
         $this->entityManager->clear();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCount($classFqn)
     {
         $repository = $this->entityManager->getRepository($classFqn);
@@ -127,7 +118,7 @@ class DoctrineOrmProvider implements ReindexProviderInterface
             $result = $repository->$repositoryMethod($queryBuilder);
 
             if ($result) {
-                @trigger_error(
+                @\trigger_error(
                     'Reindex repository methods should NOT return anything. Use the passed query builder instead.'
                 );
 
@@ -143,9 +134,9 @@ class DoctrineOrmProvider implements ReindexProviderInterface
 
     private function sliceEntities($offset, $maxResults)
     {
-        $entities = array_slice($this->cachedEntities, $offset, $maxResults);
+        $entities = \array_slice($this->cachedEntities, $offset, $maxResults);
 
-        if (count($entities) < $maxResults) {
+        if (\count($entities) < $maxResults) {
             $this->cachedEntities = [];
         }
 

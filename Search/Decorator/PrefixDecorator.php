@@ -35,9 +35,6 @@ class PrefixDecorator implements IndexNameDecoratorInterface
         $this->prefix = $prefix;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decorate(IndexMetadataInterface $indexMetadata, $object, Document $document)
     {
         $indexName = $this->decorator->decorate($indexMetadata, $object, $document);
@@ -45,9 +42,6 @@ class PrefixDecorator implements IndexNameDecoratorInterface
         return $this->prefix . '_' . $indexName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function undecorate($decoratedIndexName)
     {
         $decoratedIndexName = $this->removePrefix($decoratedIndexName);
@@ -55,12 +49,9 @@ class PrefixDecorator implements IndexNameDecoratorInterface
         return $this->decorator->undecorate($decoratedIndexName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isVariant($indexName, $decoratedIndexName, array $options = [])
     {
-        if (($indexName === $decoratedIndexName && $this->prefix) || 0 !== strpos($decoratedIndexName, $this->prefix)) {
+        if (($indexName === $decoratedIndexName && $this->prefix) || 0 !== \strpos($decoratedIndexName, $this->prefix)) {
             // if both names are the same, and a prefix is set the name was not decorated by this decorator
             return false;
         }
@@ -82,8 +73,8 @@ class PrefixDecorator implements IndexNameDecoratorInterface
      */
     private function removePrefix($decoratedIndexName)
     {
-        if (0 === strpos($decoratedIndexName, $this->prefix . '_')) {
-            $decoratedIndexName = substr($decoratedIndexName, strlen($this->prefix) + 1);
+        if (0 === \strpos($decoratedIndexName, $this->prefix . '_')) {
+            $decoratedIndexName = \substr($decoratedIndexName, \strlen($this->prefix) + 1);
 
             return $decoratedIndexName;
         }
