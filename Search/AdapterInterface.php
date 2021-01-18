@@ -29,7 +29,6 @@ interface AdapterInterface
     /**
      * Remove the given Document from the index.
      *
-     * @param Document $document
      * @param string $indexName
      */
     public function deindex(Document $document, $indexName);
@@ -41,8 +40,6 @@ interface AdapterInterface
 
     /**
      * Search using the given query string.
-     *
-     * @param SearchQuery $searchQuery
      *
      * @return SearchResult
      */

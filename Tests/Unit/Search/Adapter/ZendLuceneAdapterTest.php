@@ -58,7 +58,7 @@ class ZendLuceneAdapterTest extends \PHPUnit_Framework_TestCase
         $this->filesystem = $this->prophesize(Filesystem::class);
         $filesystem = new Filesystem();
         $this->dataPath = __DIR__ . '/../../../Resources/app/data';
-        if (file_exists($this->dataPath)) {
+        if (\file_exists($this->dataPath)) {
             $filesystem->remove($this->dataPath);
         }
 

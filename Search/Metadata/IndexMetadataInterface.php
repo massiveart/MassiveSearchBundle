@@ -167,8 +167,6 @@ interface IndexMetadataInterface
 
     /**
      * Set the class metadata to which this index applies.
-     *
-     * @param ClassMetadata $classMetadata
      */
     public function setClassMetadata(ClassMetadata $classMetadata);
 }

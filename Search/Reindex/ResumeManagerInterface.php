@@ -22,7 +22,6 @@ interface ResumeManagerInterface
      * from where the reindexer can subsequently resume its
      * task.
      *
-     * @param mixed $name
      * @param mixed $value
      */
     public function setCheckpoint($providerName, $classFqn, $value);
@@ -30,16 +29,11 @@ interface ResumeManagerInterface
     /**
      * Return the previously stored checkpoint or the default
      * value.
-     *
-     * @param string $name
-     * @param mixed $value
      */
     public function getCheckpoint($providerName, $classFqn);
 
     /**
      * Remove all checkpoints for the given provider name.
-     *
-     * @param string $name
      */
     public function removeCheckpoints($providerName);
 

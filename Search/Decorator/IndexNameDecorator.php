@@ -30,25 +30,16 @@ class IndexNameDecorator implements IndexNameDecoratorInterface
         $this->fieldEvaluator = $fieldEvaluator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decorate(IndexMetadataInterface $indexMetadata, $object, Document $document)
     {
         return $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function undecorate($decoratedIndexName)
     {
         return $decoratedIndexName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isVariant($indexName, $decoratedIndexName, array $options = [])
     {
         return $indexName === $decoratedIndexName;

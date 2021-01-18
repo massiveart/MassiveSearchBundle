@@ -33,12 +33,11 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
      * Add an index metadata for the given context name.
      *
      * @param mixed $contextName
-     * @param IndexMetadata $indexMetadata
      */
     public function addIndexMetadata($contextName, IndexMetadata $indexMetadata)
     {
         if (isset($this->indexMetadatas[$contextName])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Context name "%s" has already been registered',
                 $contextName
             ));
@@ -69,33 +68,27 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     public function getIndexMetadata($contextName)
     {
         if (!isset($this->indexMetadatas[$contextName])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Context name "%s" not known, known contexts: "%s"',
-                $contextName, implode('", "', array_keys($this->indexMetadatas))
+                $contextName, \implode('", "', \array_keys($this->indexMetadatas))
             ));
         }
 
         return $this->indexMetadatas[$contextName];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function serialize()
     {
         $data = parent::serialize();
 
-        return serialize([$data, serialize($this->indexMetadatas), $this->repositoryMethod]);
+        return \serialize([$data, \serialize($this->indexMetadatas), $this->repositoryMethod]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unserialize($data)
     {
-        list($data, $indexMetadata, $this->repositoryMethod) = unserialize($data);
+        list($data, $indexMetadata, $this->repositoryMethod) = \unserialize($data);
         parent::unserialize($data);
-        $this->indexMetadatas = unserialize($indexMetadata);
+        $this->indexMetadatas = \unserialize($indexMetadata);
     }
 
     /**

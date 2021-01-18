@@ -43,8 +43,6 @@ class PreDeindexEvent extends Event
 
     /**
      * @param mixed $subject
-     * @param Document $document
-     * @param IndexMetadataInterface $metadata
      */
     public function __construct(
         $subject,

@@ -46,7 +46,7 @@ class DoctrineOrmSubscriberTest extends \PHPUnit_Framework_TestCase
         $eventDispatcher->dispatch(
             SearchEvents::DEINDEX,
             Argument::that(
-                function (DeindexEvent $event) use ($entity) {
+                function(DeindexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;
@@ -68,7 +68,7 @@ class DoctrineOrmSubscriberTest extends \PHPUnit_Framework_TestCase
         $eventDispatcher->dispatch(
             SearchEvents::INDEX,
             Argument::that(
-                function (IndexEvent $event) use ($entity) {
+                function(IndexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;
@@ -90,7 +90,7 @@ class DoctrineOrmSubscriberTest extends \PHPUnit_Framework_TestCase
         $eventDispatcher->dispatch(
             SearchEvents::INDEX,
             Argument::that(
-                function (IndexEvent $event) use ($entity) {
+                function(IndexEvent $event) use ($entity) {
                     $this->assertEquals($entity, $event->getSubject());
 
                     return true;

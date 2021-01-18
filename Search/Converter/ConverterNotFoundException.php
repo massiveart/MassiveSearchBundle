@@ -25,7 +25,7 @@ class ConverterNotFoundException extends SearchException
 
     public function __construct($from)
     {
-        parent::__construct(sprintf('No converter found to convert value from type "%s"', $from));
+        parent::__construct(\sprintf('No converter found to convert value from type "%s"', $from));
 
         $this->from = $from;
     }

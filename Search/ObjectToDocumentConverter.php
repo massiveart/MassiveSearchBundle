@@ -59,7 +59,6 @@ class ObjectToDocumentConverter
      * Map the given object to a new document using the
      * given metadata.
      *
-     * @param IndexMetadata $metadata
      * @param object $object
      *
      * @return Document
@@ -135,16 +134,16 @@ class ObjectToDocumentConverter
             foreach ($requiredMappings as $requiredMapping) {
                 if (!isset($mapping[$requiredMapping])) {
                     throw new \RuntimeException(
-                        sprintf(
+                        \sprintf(
                             'Mapping for "%s" does not have "%s" key',
-                            get_class($document),
+                            \get_class($document),
                             $requiredMapping
                         )
                     );
                 }
             }
 
-            $mapping = array_merge(
+            $mapping = \array_merge(
                 [
                     'stored' => true,
                     'aggregate' => false,
@@ -156,10 +155,10 @@ class ObjectToDocumentConverter
             if ('complex' == $mapping['type']) {
                 if (!isset($mapping['mapping'])) {
                     throw new \InvalidArgumentException(
-                        sprintf(
+                        \sprintf(
                             '"complex" field mappings must have an additional array key "mapping" ' .
                             'which contains the mapping for the complex structure in mapping: %s',
-                            print_r($mapping, true)
+                            \print_r($mapping, true)
                         )
                     );
                 }
@@ -188,21 +187,21 @@ class ObjectToDocumentConverter
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 $value = $this->converterManager->convert($value, $type);
 
-                if (is_null($value)) {
+                if (\is_null($value)) {
                     $type = Field::TYPE_NULL;
-                } elseif (is_array($value)) {
+                } elseif (\is_array($value)) {
                     $type = Field::TYPE_ARRAY;
                 } else {
                     $type = Field::TYPE_STRING;
                 }
             }
 
-            if (null !== $value && false === is_scalar($value) && false === is_array($value)) {
+            if (null !== $value && false === \is_scalar($value) && false === \is_array($value)) {
                 throw new \InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'Search field "%s" resolved to not supported type "%s". Only scalar (single) or array values can be indexed.',
                         $fieldName,
-                        gettype($value)
+                        \gettype($value)
                     )
                 );
             }

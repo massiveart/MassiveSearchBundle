@@ -28,9 +28,6 @@ class PurgeSubscriber implements EventSubscriberInterface
         $this->searchManager = $searchManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -40,8 +37,6 @@ class PurgeSubscriber implements EventSubscriberInterface
 
     /**
      * Purges all indexes, if the purge option is set.
-     *
-     * @param IndexRebuildEvent $event
      */
     public function purgeIndexes(IndexRebuildEvent $event)
     {

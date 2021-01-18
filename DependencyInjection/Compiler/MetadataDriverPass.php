@@ -35,7 +35,7 @@ class MetadataDriverPass implements CompilerPassInterface
         $ids = $container->findTaggedServiceIds('massive_search.metadata.driver');
         $serviceRefs = [];
 
-        foreach (array_keys($ids) as $id) {
+        foreach (\array_keys($ids) as $id) {
             $serviceRefs[] = new Reference($id);
         }
 

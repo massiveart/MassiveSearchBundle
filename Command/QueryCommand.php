@@ -38,9 +38,6 @@ class QueryCommand extends Command
         $this->searchManager = $searchManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->addArgument('query', InputArgument::REQUIRED, 'Search query');
@@ -57,18 +54,15 @@ EOT
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $query = $input->getArgument('query');
         $indexes = $input->getOption('index');
         $locale = $input->getOption('locale');
 
-        $start = microtime(true);
+        $start = \microtime(true);
         $hits = $this->searchManager->createSearch($query)->indexes($indexes)->locale($locale)->execute();
-        $timeElapsed = microtime(true) - $start;
+        $timeElapsed = \microtime(true) - $start;
 
         $table = new Table($output);
         $table->setHeaders(['Score', 'ID', 'Title', 'Description', 'Url', 'Image', 'Class']);
@@ -87,7 +81,7 @@ EOT
             );
         }
         $table->render();
-        $output->writeln(sprintf('%s result(s) in %fs', count($hits), $timeElapsed));
+        $output->writeln(\sprintf('%s result(s) in %fs', \count($hits), $timeElapsed));
     }
 
     /**
@@ -103,8 +97,8 @@ EOT
      */
     private function truncate($text, $length, $suffix = '...')
     {
-        $computedLength = $length - strlen($suffix);
+        $computedLength = $length - \strlen($suffix);
 
-        return strlen($text) > $computedLength ? substr($text, 0, $computedLength) . $suffix : $text;
+        return \strlen($text) > $computedLength ? \substr($text, 0, $computedLength) . $suffix : $text;
     }
 }

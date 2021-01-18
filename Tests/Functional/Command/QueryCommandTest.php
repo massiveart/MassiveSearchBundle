@@ -28,7 +28,7 @@ class QueryCommandTest extends BaseTestCase
         ]);
 
         $display = $command->getDisplay();
-        $display = explode("\n", $display);
+        $display = \explode("\n", $display);
         $this->assertCount(16, $display);
     }
 }

@@ -32,10 +32,6 @@ class FieldEvaluator
      */
     private $accessor;
 
-    /**
-     * @param Factory $factory
-     * @param ExpressionLanguage $expressionLanguage
-     */
     public function __construct(ExpressionLanguage $expressionLanguage)
     {
         $this->expressionLanguage = $expressionLanguage;
@@ -46,12 +42,11 @@ class FieldEvaluator
      * Evaluate the value from the given object and field.
      *
      * @param mixed $object
-     * @param FieldInterface $field
      */
     public function getValue($object, FieldInterface $field)
     {
         try {
-            switch (get_class($field)) {
+            switch (\get_class($field)) {
                 case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Property':
                     return $this->getPropertyValue($object, $field);
                 case 'Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression':
@@ -62,16 +57,16 @@ class FieldEvaluator
                     return $field->getValue();
             }
         } catch (\Exception $e) {
-            throw new \Exception(sprintf(
+            throw new \Exception(\sprintf(
                 'Error encountered when trying to determine value from object "%s"',
-                get_class($object)
+                \get_class($object)
             ), null, $e);
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new \RuntimeException(\sprintf(
             'Unknown field type "%s" when trying to convert "%s" into a search document',
-            get_class($field),
-            get_class($object)
+            \get_class($field),
+            \get_class($object)
         ));
     }
 
@@ -79,7 +74,6 @@ class FieldEvaluator
      * Evaluate a property (using PropertyAccess).
      *
      * @param mixed $object
-     * @param Property $field
      */
     private function getPropertyValue($object, Property $field)
     {
@@ -93,11 +87,10 @@ class FieldEvaluator
      * If the object is an array, then force the array syntax.
      *
      * @param mixed $object
-     * @param Field $field
      */
     private function getFieldValue($object, Field $field)
     {
-        if (is_array($object)) {
+        if (\is_array($object)) {
             $path = '[' . $field->getName() . ']';
         } else {
             $path = $field->getName();
@@ -110,7 +103,6 @@ class FieldEvaluator
      * Evaluate an expression (ExpressionLanguage).
      *
      * @param mixed $object
-     * @param Expression $field
      */
     private function getExpressionValue($object, Expression $field)
     {
@@ -119,7 +111,7 @@ class FieldEvaluator
                 'object' => $object,
             ]);
         } catch (\Exception $e) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Error encountered when evaluating expression "%s"',
                 $field->getExpression()
             ), null, $e);

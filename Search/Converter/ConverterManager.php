@@ -25,16 +25,12 @@ class ConverterManager implements ConverterManagerInterface
      * Add a converter to the manager.
      *
      * @param string $from source format
-     * @param ConverterInterface $converter
      */
     public function addConverter($from, ConverterInterface $converter)
     {
         $this->converter[$from] = $converter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convert($value, $from)
     {
         if (!$this->hasConverter($from)) {
@@ -44,11 +40,8 @@ class ConverterManager implements ConverterManagerInterface
         return $this->converter[$from]->convert($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasConverter($from)
     {
-        return array_key_exists($from, $this->converter);
+        return \array_key_exists($from, $this->converter);
     }
 }
