@@ -186,13 +186,13 @@ The following example uses all the mapping options:
 
 Note:
 
-- This file **MUST** be located in ``YourBundle/Resources/config/massive-search``
+- This file **MUST** be located in ``config/massive-search``/``YourBundle/Resources/config/massive-search``
 - It must be named after the name of your class (without the namespace) e.g.
   ``Product.xml``
 - Your ``Product`` class MUST be located in one of the following folders:
-  - ``YourBundle/Document``
-  - ``YourBundle/Entity``
-  - ``YourBundle/Model``
+  - ``src/Document``/``YourBundle/Document``
+  - ``src/Entity``/``YourBundle/Entity``
+  - ``src/Model``/``YourBundle/Model``
 
 .. note::
 
