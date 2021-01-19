@@ -9,7 +9,7 @@ on:
 
 jobs:
     test:
-        name: 'Run tests with php ${{ matrix.php-version }}'
+        name: 'PHP ${{ matrix.php-version }} (${{ matrix.dependency-versions }})'
         runs-on: ubuntu-latest
 
         env:
@@ -21,19 +21,19 @@ jobs:
                 include:
                     - php-version: '7.2'
                       minimum-stability: 'stable'
-                      composer-flags: '--prefer-lowest --prefer-dist --no-interaction'
+                      dependency-versions: 'lowest'
                       tools: 'composer:v1'
                       php-cs-fixer: false
 
                     - php-version: '7.3'
                       minimum-stability: 'stable'
-                      composer-flags: ' --prefer-stable --prefer-dist --no-interaction'
+                      dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
 
                     - php-version: '7.4'
                       minimum-stability: 'dev'
-                      composer-flags: '--prefer-dist --no-interaction'
+                      dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: true
 
@@ -57,17 +57,16 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   tools: ${{ matrix.tools }}
 
-            - name: Get composer cache directory
-              id: composer-cache-dir
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+            - name: Require elasticsearch dependency
+              run: composer require --dev elasticsearch/elasticsearch:^2.1 --no-interaction --no-update
 
-            - name: Cache dependencies
-              uses: actions/cache@v2
+            - name: Configure composer minimum-stability
+              run: composer config minimum-stability ${{ matrix.minimum-stability }}
+
+            - name: Install composer dependencies
+              uses: ramsey/composer-install@v1
               with:
-                  path: ${{ steps.composer-cache-dir.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('composer.json', 'composer.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-composer-
+                  dependency-versions: ${{matrix.dependency-versions}}
 
             - name: Run php-cs-fixer
               if: ${{ matrix.php-cs-fixer }}
@@ -76,12 +75,8 @@ jobs:
                   GLOBAL_BIN_DIR=$(composer global config bin-dir --absolute --quiet)
                   $GLOBAL_BIN_DIR/php-cs-fixer fix --dry-run --diff
 
-            - name: Install dependencies
-              run: |
-                  composer validate --strict
-                  composer config minimum-stability ${{ matrix.minimum-stability }}
-                  composer require elasticsearch/elasticsearch:^2.1 --dev --no-update
-                  composer update ${{ matrix.composer-flags }}
+            - name: Lint code
+              run: composer validate --strict
 
             - name: Execute test cases
               run: |
