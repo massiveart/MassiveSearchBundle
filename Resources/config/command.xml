@@ -14,6 +14,11 @@
             <tag name="console.command" />
         </service>
 
+        <service id="massive_search.command.optimize" class="Massive\Bundle\SearchBundle\Command\OptimizeCommand">
+            <argument type="service" id="massive_search.adapter" />
+            <tag name="console.command" />
+        </service>
+
         <service id="massive_search.command.query" class="Massive\Bundle\SearchBundle\Command\QueryCommand">
             <argument type="service" id="massive_search.search_manager" />
             <tag name="console.command" />
