@@ -86,3 +86,9 @@ Options:
  - ``index``: Specify index to purge
  - ``all``: Purge all indexes.
  - ``force``: Do not ask for confirmation.
+
+``massive:search:optimize``
+---------------------------
+
+Will optimize the index, this is recommended to be configured as a cronjob when
+using the ``zend_lucene`` adapter.

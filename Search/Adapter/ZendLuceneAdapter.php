@@ -16,6 +16,7 @@ use Massive\Bundle\SearchBundle\Search\AdapterInterface;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\OptimizeableAdapterInterface;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use Massive\Bundle\SearchBundle\Search\SearchResult;
@@ -30,7 +31,7 @@ use ZendSearch\Lucene;
  * http://framework.zend.com/manual/1.12/en/zend.search.lucene.html
  *   (docs for 1.2 version apply equally to 2.0)
  */
-class ZendLuceneAdapter implements AdapterInterface
+class ZendLuceneAdapter implements AdapterInterface, OptimizeableAdapterInterface
 {
     const ID_FIELDNAME = '__id';
 
