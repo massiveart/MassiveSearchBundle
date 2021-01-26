@@ -35,7 +35,7 @@ class OptimizeCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Optimize all search indices.');
+        $this->setDescription('Optimize all search indices. Currently only relevant when using the `zend_lucene` adapter.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)

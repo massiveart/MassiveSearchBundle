@@ -91,7 +91,8 @@ Options:
 ---------------------------
 
 Will optimize the index, this is recommended to be configured as a cronjob when
-using the ``zend_lucene`` adapter.
+using the ``zend_lucene`` adapter, for the other adapters this command does current
+do nothing.
 
 .. code-block:: bash
 
