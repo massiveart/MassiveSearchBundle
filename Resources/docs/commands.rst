@@ -92,3 +92,7 @@ Options:
 
 Will optimize the index, this is recommended to be configured as a cronjob when
 using the ``zend_lucene`` adapter.
+
+.. code-block:: bash
+
+    $ php app/console massive:search:optimize
