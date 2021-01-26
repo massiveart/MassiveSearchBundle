@@ -35,13 +35,13 @@ class OptimizeCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Optimize the search index.');
+        $this->setDescription('Optimize all search indices.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$this->adapter instanceof OptimizeableAdapterInterface) {
-            $output->writeln(\sprintf('Adapter "%s" does not support.', \get_class($this->adapter)));
+            $output->writeln(\sprintf('Adapter "%s" does not support index optimization.', \get_class($this->adapter)));
 
             return 0;
         }
