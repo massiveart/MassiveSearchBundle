@@ -90,9 +90,7 @@ Options:
 ``massive:search:optimize``
 ---------------------------
 
-Will optimize the index, this is recommended to be configured as a cronjob when
-using the ``zend_lucene`` adapter, for the other adapters this command does current
-do nothing.
+Optimize all search indices. Affects only indices that are managed with the ``zend_lucene`` adapter at the moment. It is recommended to configure this as cronjob when ``zend_lucene`` adapter.
 
 .. code-block:: bash
 
