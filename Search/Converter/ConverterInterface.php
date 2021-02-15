@@ -11,6 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Converter;
 
+use Massive\Bundle\SearchBundle\Search\Document;
+
 /**
  * Defines interface for value-converters.
  */
@@ -20,8 +22,9 @@ interface ConverterInterface
      * Converts value into indexable format.
      *
      * @param mixed $value
+     * @param Document $document
      *
      * @return mixed
      */
-    public function convert($value);
+    public function convert($value/*, Document $document = null*/);
 }

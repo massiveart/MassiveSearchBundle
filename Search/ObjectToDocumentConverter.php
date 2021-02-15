@@ -183,9 +183,10 @@ class ObjectToDocumentConverter
 
             $type = $mapping['type'];
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
+            $originalValue = $value;
 
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
-                $value = $this->converterManager->convert($value, $type);
+                $value = $this->converterManager->convert($value, $type, $document);
 
                 if (\is_null($value)) {
                     $type = Field::TYPE_NULL;
@@ -204,6 +205,32 @@ class ObjectToDocumentConverter
                         \gettype($value)
                     )
                 );
+            }
+
+            if (\is_array($value) && empty(
+                \array_filter($value, function($item) {
+                    return !($item instanceof Field);
+                })
+            )) {
+                $document->addField(
+                    $this->factory->createField(
+                        $prefix . $fieldName,
+                        $originalValue,
+                        $type,
+                        $mapping['stored'],
+                        $mapping['indexed'],
+                        $mapping['aggregate']
+                    )
+                );
+
+                /** @var Field $field */
+                foreach ($value as $field) {
+                    $field = clone $field;
+                    $field->setName($prefix . $fieldName . '#' . $field->getName());
+                    $document->addField($field);
+                }
+
+                continue;
             }
 
             if ('complex' !== $mapping['type']) {

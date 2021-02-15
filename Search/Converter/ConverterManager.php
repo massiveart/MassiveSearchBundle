@@ -11,6 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Converter;
 
+use Massive\Bundle\SearchBundle\Search\Document;
+
 /**
  * Implements basic converter manager.
  */
@@ -31,13 +33,24 @@ class ConverterManager implements ConverterManagerInterface
         $this->converter[$from] = $converter;
     }
 
-    public function convert($value, $from)
+    public function convert($value, $from/*, Document $document = null*/)
     {
+        $document = null;
+        if (\count(func_get_args()) > 2) {
+            $document = func_get_arg(2);
+        }
+
+        if (null !== $document && !($document instanceof Document)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Argument "$document" must be a "%s", "%s" given!', Document::class, \gettype($document))
+            );
+        }
+
         if (!$this->hasConverter($from)) {
             throw new ConverterNotFoundException($from);
         }
 
-        return $this->converter[$from]->convert($value);
+        return $this->converter[$from]->convert($value, $document);
     }
 
     public function hasConverter($from)
