@@ -24,7 +24,6 @@ interface ConverterManagerInterface
      *
      * @param mixed $value
      * @param string $from source format
-     * @param Document $document
      *
      * @return mixed
      */

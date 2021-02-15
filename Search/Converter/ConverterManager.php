@@ -36,8 +36,8 @@ class ConverterManager implements ConverterManagerInterface
     public function convert($value, $from/*, Document $document = null*/)
     {
         $document = null;
-        if (\count(func_get_args()) > 2) {
-            $document = func_get_arg(2);
+        if (\count(\func_get_args()) > 2) {
+            $document = \func_get_arg(2);
         }
 
         if (null !== $document && !($document instanceof Document)) {

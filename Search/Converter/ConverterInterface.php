@@ -22,7 +22,6 @@ interface ConverterInterface
      * Converts value into indexable format.
      *
      * @param mixed $value
-     * @param Document $document
      *
      * @return mixed
      */
