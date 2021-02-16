@@ -186,14 +186,7 @@ class ObjectToDocumentConverter
 
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 $value = $this->converterManager->convert($value, $type, $document);
-
-                if (\is_null($value)) {
-                    $type = Field::TYPE_NULL;
-                } elseif (\is_array($value)) {
-                    $type = Field::TYPE_ARRAY;
-                } else {
-                    $type = Field::TYPE_STRING;
-                }
+                $type = $this->getValueType($value);
             }
 
             if (null !== $value && false === \is_scalar($value) && false === \is_array($value)) {
@@ -212,7 +205,7 @@ class ObjectToDocumentConverter
                         $this->factory->createField(
                             $prefix . $fieldName,
                             $value['value'],
-                            $type,
+                            $this->getValueType($value['value']),
                             $mapping['stored'],
                             $mapping['indexed'],
                             $mapping['aggregate']
@@ -260,5 +253,21 @@ class ObjectToDocumentConverter
                 );
             }
         }
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function getValueType($value): string
+    {
+        if (\is_null($value)) {
+            return Field::TYPE_NULL;
+        }
+
+        if (\is_array($value)) {
+            return Field::TYPE_ARRAY;
+        }
+
+        return Field::TYPE_STRING;
     }
 }
