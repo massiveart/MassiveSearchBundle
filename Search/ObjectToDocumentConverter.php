@@ -183,7 +183,6 @@ class ObjectToDocumentConverter
 
             $type = $mapping['type'];
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
-            $originalValue = $value;
 
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 $value = $this->converterManager->convert($value, $type, $document);
@@ -207,27 +206,27 @@ class ObjectToDocumentConverter
                 );
             }
 
-            if (\is_array($value) && empty(
-                \array_filter($value, function($item) {
-                    return !($item instanceof Field);
-                })
-            )) {
-                $document->addField(
-                    $this->factory->createField(
-                        $prefix . $fieldName,
-                        $originalValue,
-                        $type,
-                        $mapping['stored'],
-                        $mapping['indexed'],
-                        $mapping['aggregate']
-                    )
-                );
+            if (\is_array($value) && (isset($value['value']) || isset($value['fields']))) {
+                if (isset($value['value'])) {
+                    $document->addField(
+                        $this->factory->createField(
+                            $prefix . $fieldName,
+                            $value['value'],
+                            $type,
+                            $mapping['stored'],
+                            $mapping['indexed'],
+                            $mapping['aggregate']
+                        )
+                    );
+                }
 
-                /** @var Field $field */
-                foreach ($value as $field) {
-                    $field = clone $field;
-                    $field->setName($prefix . $fieldName . '#' . $field->getName());
-                    $document->addField($field);
+                if (isset($value['fields'])) {
+                    /** @var Field $field */
+                    foreach ($value['fields'] as $field) {
+                        $field = clone $field;
+                        $field->setName($prefix . $fieldName . '#' . $field->getName());
+                        $document->addField($field);
+                    }
                 }
 
                 continue;
