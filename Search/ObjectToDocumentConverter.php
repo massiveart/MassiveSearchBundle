@@ -185,15 +185,8 @@ class ObjectToDocumentConverter
             $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
 
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
-                $value = $this->converterManager->convert($value, $type);
-
-                if (\is_null($value)) {
-                    $type = Field::TYPE_NULL;
-                } elseif (\is_array($value)) {
-                    $type = Field::TYPE_ARRAY;
-                } else {
-                    $type = Field::TYPE_STRING;
-                }
+                $value = $this->converterManager->convert($value, $type, $document);
+                $type = $this->getValueType($value);
             }
 
             if (null !== $value && false === \is_scalar($value) && false === \is_array($value)) {
@@ -204,6 +197,32 @@ class ObjectToDocumentConverter
                         \gettype($value)
                     )
                 );
+            }
+
+            if (\is_array($value) && (isset($value['value']) || isset($value['fields']))) {
+                if (isset($value['value'])) {
+                    $document->addField(
+                        $this->factory->createField(
+                            $prefix . $fieldName,
+                            $value['value'],
+                            $this->getValueType($value['value']),
+                            $mapping['stored'],
+                            $mapping['indexed'],
+                            $mapping['aggregate']
+                        )
+                    );
+                }
+
+                if (isset($value['fields'])) {
+                    /** @var Field $field */
+                    foreach ($value['fields'] as $field) {
+                        $field = clone $field;
+                        $field->setName($prefix . $fieldName . '#' . $field->getName());
+                        $document->addField($field);
+                    }
+                }
+
+                continue;
             }
 
             if ('complex' !== $mapping['type']) {
@@ -234,5 +253,21 @@ class ObjectToDocumentConverter
                 );
             }
         }
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function getValueType($value): string
+    {
+        if (\is_null($value)) {
+            return Field::TYPE_NULL;
+        }
+
+        if (\is_array($value)) {
+            return Field::TYPE_ARRAY;
+        }
+
+        return Field::TYPE_STRING;
     }
 }

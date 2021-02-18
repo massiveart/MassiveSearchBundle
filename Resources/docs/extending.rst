@@ -43,7 +43,7 @@ Massive Search allows you to implement the metadata `ProviderInterface`,
 instances of which can load metadata from both domain object and search
 document instances.
 
-.. note:: 
+.. note::
 
     The metadata system is based upon the `JMS Metadata`_ library, although it
     diverges in that we allow you to load metadata from object instances instead
@@ -94,6 +94,31 @@ the converter to the system you simply add a tag to your custom service.
     <service id="massive_search.converter.foo_converter" class="Vendor\\Search\\FooConverter">
         <tag name="massive_search.converter" from="foo" />
     </service>
+
+There is also a possibility to convert a value to multiple other fields. This can be useful to index objects.
+
+.. code-block:: php
+
+    public function convert($value)
+    {
+        $object = $this->repository->findOneBy(['id' => $value]);
+
+        return [
+            'value' => $value,
+            'fields' => [
+                new Field('id', $object->getId()),
+                new Field('name', $object->getName()),
+                new Field('description', $object->getDescription()),
+            ],
+        ];
+    }
+
+Assuming the property name of above value is `foo`, this example would result in the following fields:
+
+* ``foo``
+* ``foo#id``
+* ``foo#name``
+* ``foo#description``
 
 Reindex Providers
 -----------------

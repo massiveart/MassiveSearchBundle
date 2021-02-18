@@ -11,6 +11,8 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Converter;
 
+use Massive\Bundle\SearchBundle\Search\Document;
+
 /**
  * Interface for converter manager.
  */
@@ -25,7 +27,7 @@ interface ConverterManagerInterface
      *
      * @return mixed
      */
-    public function convert($value, $from);
+    public function convert($value, $from/*, Document $document = null*/);
 
     /**
      * Returns true if a converter exists which
