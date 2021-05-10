@@ -52,6 +52,9 @@ class DoctrineOrmProvider implements ReindexProviderInterface
         $classFqns = [];
 
         foreach ($metadataFactory->getAllMetadata() as $classMetadata) {
+            if ($classMetadata->isMappedSuperclass) {
+                continue;
+            }
             if (null === $this->searchMetadataFactory->getMetadataForClass($classMetadata->name)) {
                 continue;
             }
