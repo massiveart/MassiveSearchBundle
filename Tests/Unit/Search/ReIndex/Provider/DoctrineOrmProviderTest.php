@@ -112,6 +112,29 @@ class DoctrineOrmProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * It should return all the class fqns without the mapped superclass.
+     */
+    public function testClassFqnsMappedSuperClassNotReturned()
+    {
+        $this->ormMetadata->name = 'stdClass';
+        $mappedSuperClass = $this->prophesize(OrmClassMetadata::class);
+        $mappedSuperClass->name = 'stdClass2';
+        $mappedSuperClass->isMappedSuperclass = true;
+
+        $this->entityManager->getMetadataFactory()->willReturn($this->ormMetadataFactory->reveal());
+        $this->searchMetadataFactory->getMetadataForClass('stdClass')->willReturn($this->hierarchyMetadata->reveal());
+        $this->searchMetadataFactory->getMetadataForClass('stdClass2')->willReturn($mappedSuperClass->reveal());
+        $this->hierarchyMetadata->getOutsideClassMetadata()->willReturn($this->searchMetadata->reveal());
+        $this->ormMetadataFactory->getAllMetadata()->willReturn([
+            $this->ormMetadata->reveal(),
+            $mappedSuperClass->reveal(),
+        ]);
+
+        $classFqns = $this->provider->getClassFqns();
+        $this->assertEquals(['stdClass'], $classFqns);
+    }
+
+    /**
      * It should not return class FQNs NOT managed by the search manager.
      */
     public function testClassFqnsNotManaged()
