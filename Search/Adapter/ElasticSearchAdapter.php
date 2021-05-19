@@ -232,7 +232,9 @@ class ElasticSearchAdapter implements AdapterInterface
             $hits[] = $hit;
         }
 
-        return new SearchResult($hits, $res['hits']['total']);
+        $total = isset($res['hits']['total']['value']) ? $res['hits']['total']['value'] : $res['hits']['total'];
+
+        return new SearchResult($hits, (int) $total);
     }
 
     public function getStatus()
