@@ -37,6 +37,18 @@ jobs:
                       tools: 'composer:v2'
                       php-cs-fixer: true
 
+                    - php-version: '8.0'
+                      minimum-stability: 'dev'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
+                    - php-version: '8.1'
+                      minimum-stability: 'dev'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
         services:
             elasticsearch:
                 image: elasticsearch:2.4.6
