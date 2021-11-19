@@ -92,6 +92,16 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
         $this->indexMetadatas = \unserialize($indexMetadata);
     }
 
+    public function __serialize(): array
+    {
+        return [$this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data[0]);
+    }
+
     /**
      * If specified, the reindex repsoitory method will be used to indicate a method
      * which can be used to modify the query builder (e.g. to exclude certain objects
