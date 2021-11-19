@@ -8,8 +8,14 @@
             "email": "daniel.leech@massiveart.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/alexander-schranz/metadata.git"
+        }
+    ],
     "require": {
-        "jms/metadata": "^2.0",
+        "jms/metadata": "dev-patch-1 as 3.0.0",
         "symfony/config": "^4.3 || ^5.0",
         "symfony/console": "^4.3 || ^5.0",
         "symfony/event-dispatcher": "^4.3 || ^5.0",
