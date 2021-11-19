@@ -27,7 +27,7 @@
     "require-dev": {
         "handcraftedinthealps/zendsearch": "^2.0",
         "elasticsearch/elasticsearch": "^2.1 || ^5.0",
-        "symfony-cmf/testing": "^3.0@dev",
+        "symfony-cmf/testing": "^3.0 || ^4.0",
         "symfony/filesystem": "^4.3.2 || ^5.0",
         "symfony/finder": "^4.3 || ^5.0",
         "symfony/http-kernel": "^4.3 || ^5.0",
