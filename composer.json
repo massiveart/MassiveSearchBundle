@@ -44,7 +44,6 @@
         "webmozart/assert": "^1.7"
     },
     "suggest": {
-        "sensio/distribution-bundle": "Required if the SearchScriptHandler is used",
         "handcraftedinthealps/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "elasticsearch/elasticsearch": "To use Elasticsearch"
     },
