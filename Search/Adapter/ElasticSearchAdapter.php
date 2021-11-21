@@ -307,7 +307,7 @@ class ElasticSearchAdapter implements AdapterInterface
         $this->client->indices()->flush(
             [
                 'index' => \implode(', ', $indexNames),
-                'full' => true,
+                'force' => true,
             ]
         );
     }

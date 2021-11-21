@@ -9,37 +9,69 @@ on:
 
 jobs:
     test:
-        name: 'PHP ${{ matrix.php-version }} (${{ matrix.dependency-versions }})'
+        name: 'PHP ${{ matrix.php-version }} (${{ matrix.dependency-versions }}) (${{ matrix.minimum-stability }})'
         runs-on: ubuntu-latest
 
         env:
             SYMFONY_DEPRECATIONS_HELPER: weak
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            ELASTICSEARCH_VERSION: ${{ matrix.elasticsearch-version }}
 
         strategy:
             fail-fast: false
             matrix:
                 include:
                     - php-version: '7.2'
+                      elasticsearch-version: '2.4.6'
+                      elasticsearch-package-constraint: '^2.1'
                       minimum-stability: 'stable'
                       dependency-versions: 'lowest'
                       tools: 'composer:v1'
                       php-cs-fixer: false
 
                     - php-version: '7.3'
+                      elasticsearch-version: '2.4.6'
+                      elasticsearch-package-constraint: '^2.1'
                       minimum-stability: 'stable'
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
 
                     - php-version: '7.4'
-                      minimum-stability: 'dev'
+                      elasticsearch-version: '2.4.6'
+                      elasticsearch-package-constraint: '^2.1'
+                      minimum-stability: 'stable'
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: true
 
+                    - php-version: '8.0'
+                      elasticsearch-version: '7.11.1'
+                      elasticsearch-package-constraint: '~7.11.0'
+                      minimum-stability: 'stable'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
+                    - php-version: '8.1'
+                      elasticsearch-version: '7.11.1'
+                      elasticsearch-package-constraint: '~7.11.0'
+                      minimum-stability: 'stable'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
+                    - php-version: '8.1'
+                      elasticsearch-version: '7.11.1'
+                      elasticsearch-package-constraint: '~7.11.0'
+                      minimum-stability: 'dev'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
         services:
             elasticsearch:
-                image: elasticsearch:2.4.6
+                image: elasticsearch:${{ matrix.elasticsearch-version }}
                 ports:
                     - 9200:9200
                 env:
@@ -58,7 +90,7 @@ jobs:
                   tools: ${{ matrix.tools }}
 
             - name: Require elasticsearch dependency
-              run: composer require --dev elasticsearch/elasticsearch:^2.1 --no-interaction --no-update
+              run: composer require --dev elasticsearch/elasticsearch:${{ matrix.elasticsearch-package-constraint }} --no-interaction --no-update
 
             - name: Configure composer minimum-stability
               run: composer config minimum-stability ${{ matrix.minimum-stability }}
@@ -78,8 +110,12 @@ jobs:
             - name: Lint code
               run: composer validate --strict
 
-            - name: Execute test cases
-              run: |
-                  vendor/bin/simple-phpunit --coverage-text
-                  vendor/bin/behat --suite=zend_lucene
-                  vendor/bin/behat --suite=elastic
+            - name: Execute unit tests
+              run: vendor/bin/simple-phpunit
+
+            - name: Execute zend lucene behat tests
+              run: vendor/bin/behat --suite=zend_lucene
+
+            - name: Execute elastic behat tests
+              if: ${{ matrix.php-version < '8.0' }} # requires fixing elastic tests on 7.11 (sorting)
+              run: vendor/bin/behat --suite=elastic

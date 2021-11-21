@@ -12,11 +12,12 @@ massive_search:
     adapter: test
 
 parameters:
+    env(ELASTICSEARCH_VERSION): "2.4"
     massive_search.adapter.zend_lucene.basepath: "%kernel.project_dir%/cache/data"
     massive_search.adapter.zend_lucene.hide_index_exception: true
     massive_search.adapter.zend_lucene.encoding: ISO8859-1
     massive_search.adapter.elastic.hosts: ["localhost:9200"]
-    massive_search.adapter.elastic.version: "2.4"
+    massive_search.adapter.elastic.version: "%env(ELASTICSEARCH_VERSION)%"
 
 services:
     massive_search_test.metadata.provider.chain:
