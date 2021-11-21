@@ -10,16 +10,16 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+    <coverage includeUncoveredFiles="true">
+        <include>
             <directory>.</directory>
-            <exclude>
-                <directory>Resources/</directory>
-                <directory>Tests/</directory>
-                <directory>vendor/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory>Resources/</directory>
+            <directory>Tests/</directory>
+            <directory>vendor/</directory>
+        </exclude>
+    </coverage>
 
     <php>
         <env name="SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT" value="1"/>
