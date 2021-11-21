@@ -78,41 +78,18 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
         return $this->indexMetadatas[$contextName];
     }
 
-    public function __serialize(): array
-    {
-        $data = [
-            $this->name,
-            $this->methodMetadata,
-            $this->propertyMetadata,
-            $this->fileResources,
-            $this->createdAt,
-        ];
-
-        return [$data, $this->indexMetadatas, $this->repositoryMethod];
-    }
-
-    public function __unserialize(array $data): void
-    {
-        list($data, $indexMetadata, $this->repositoryMethod) = $data;
-        $this->indexMetadatas = $indexMetadata;
-
-        [
-            $this->name,
-            $this->methodMetadata,
-            $this->propertyMetadata,
-            $this->fileResources,
-            $this->createdAt,
-        ] = $data;
-    }
-
     public function serialize()
     {
-        return \serialize($this->__serialize());
+        $data = parent::serialize();
+
+        return \serialize([$data, $this->indexMetadatas, $this->repositoryMethod]);
     }
 
-    public function unserialize($str)
+    public function unserialize($data)
     {
-        $this->__unserialize(\unserialize($str));
+        list($data, $indexMetadata, $this->repositoryMethod) = \unserialize($data);
+        parent::unserialize($data);
+        $this->indexMetadatas = $indexMetadata;
     }
 
     /**
