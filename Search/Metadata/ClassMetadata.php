@@ -80,7 +80,13 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
 
     public function __serialize(): array
     {
-        $data = parent::__serialize();
+        $data = [
+            $this->name,
+            $this->methodMetadata,
+            $this->propertyMetadata,
+            $this->fileResources,
+            $this->createdAt,
+        ];
 
         return [$data, $this->indexMetadatas, $this->repositoryMethod];
     }
@@ -89,17 +95,24 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
     {
         list($data, $indexMetadata, $this->repositoryMethod) = $data;
         $this->indexMetadatas = $indexMetadata;
-        parent::__unserialize($data);
+
+        [
+            $this->name,
+            $this->methodMetadata,
+            $this->propertyMetadata,
+            $this->fileResources,
+            $this->createdAt,
+        ] = $data;
     }
 
     public function serialize()
     {
-        return serialize($this->__serialize());
+        return \serialize($this->__serialize());
     }
 
     public function unserialize($str)
     {
-        $this->__unserialize(unserialize($str));
+        $this->__unserialize(\unserialize($str));
     }
 
     /**
