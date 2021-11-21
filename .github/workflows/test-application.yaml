@@ -9,7 +9,7 @@ on:
 
 jobs:
     test:
-        name: 'PHP ${{ matrix.php-version }} (${{ matrix.dependency-versions }})'
+        name: 'PHP ${{ matrix.php-version }} (${{ matrix.dependency-versions }}) (${{ matrix.minimum-stability }})'
         runs-on: ubuntu-latest
 
         env:
@@ -33,13 +33,19 @@ jobs:
                       php-cs-fixer: false
 
                     - php-version: '7.4'
-                      minimum-stability: 'dev'
+                      minimum-stability: 'stable'
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: true
 
                     - php-version: '8.0'
-                      minimum-stability: 'dev'
+                      minimum-stability: 'stable'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
+                    - php-version: '8.1'
+                      minimum-stability: 'stable'
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
