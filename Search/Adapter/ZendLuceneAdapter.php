@@ -270,11 +270,7 @@ class ZendLuceneAdapter implements AdapterInterface, OptimizeableAdapterInterfac
         \usort(
             $hits,
             function(QueryHit $documentA, QueryHit $documentB) {
-                if ($documentA->getScore() < $documentB->getScore()) {
-                    return true;
-                }
-
-                return false;
+                return $documentA->getScore() <=> $documentB->getScore();
             }
         );
 
