@@ -97,8 +97,11 @@ jobs:
             - name: Lint code
               run: composer validate --strict
 
-            - name: Execute test cases
-              run: |
-                  vendor/bin/simple-phpunit
-                  vendor/bin/behat --suite=zend_lucene
-                  vendor/bin/behat --suite=elastic
+            - name: Execute unit tests
+              run: vendor/bin/simple-phpunit
+
+            - name: Execute zend lucene behat tests
+              run: vendor/bin/behat --suite=zend_lucene
+
+            - name: Execute elastic behat tests
+              run: vendor/bin/behat --suite=elastic
