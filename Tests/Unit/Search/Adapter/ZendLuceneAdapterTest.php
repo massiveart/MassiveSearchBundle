@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -159,7 +160,7 @@ class ZendLuceneAdapterTest extends TestCase
         );
 
         foreach (['field1', 'field2'] as $fieldName) {
-            $this->$fieldName->getName()->wilLReturn('hallo');
+            $this->$fieldName->getName()->willReturn('hallo');
             $this->$fieldName->getValue()->willReturn('goodbye');
             $this->$fieldName->getType()->willReturn(Field::TYPE_STRING);
             $this->$fieldName->isStored()->willReturn(true);
@@ -175,6 +176,86 @@ class ZendLuceneAdapterTest extends TestCase
             $aggregateField->value,
             'It should aggregate the two field values'
         );
+    }
+
+    public function testSorting()
+    {
+        $document1 = $this->prophesize(Document::class);
+        $document1->getId()->willReturn('1');
+        $document1->getUrl()->willReturn('http://foobar.com');
+        $document1->getTitle()->willReturn('Test');
+        $document1->getDescription()->willReturn('Test in description field test.');
+        $document1->getLocale()->willReturn('de');
+        $document1->getClass()->willReturn('Class');
+        $document1->getImageUrl()->willReturn('hallo.png');
+        $document1->getIndex()->willReturn('foo_sorting');
+        $field = $this->prophesize(Field::class);
+        $field->getName()->willReturn('title');
+        $field->getValue()->willReturn('Test');
+        $field->getType()->willReturn(Field::TYPE_STRING);
+        $field->isStored()->willReturn(true);
+        $field->isIndexed()->willReturn(true);
+        $field->isAggregate()->willReturn(true);
+        $field2 = $this->prophesize(Field::class);
+        $field2->getName()->willReturn('description');
+        $field2->getValue()->willReturn('Test in description field test.');
+        $field2->getType()->willReturn(Field::TYPE_STRING);
+        $field2->isStored()->willReturn(true);
+        $field2->isIndexed()->willReturn(true);
+        $field2->isAggregate()->willReturn(true);
+        $document1->getFields()->willReturn([
+            $field,
+            $field2,
+        ]);
+
+        $document2 = $this->prophesize(Document::class);
+        $document2->getId()->willReturn('2');
+        $document2->getUrl()->willReturn('http://foobar.com');
+        $document2->getTitle()->willReturn('Other');
+        $document2->getDescription()->willReturn('Test ony once.');
+        $document2->getLocale()->willReturn('de');
+        $document2->getClass()->willReturn('Class');
+        $document2->getImageUrl()->willReturn('hallo.png');
+        $document2->getIndex()->willReturn('foo_sorting_2');
+        $field = $this->prophesize(Field::class);
+        $field->getName()->willReturn('title');
+        $field->getValue()->willReturn('Other');
+        $field->getType()->willReturn(Field::TYPE_STRING);
+        $field->isStored()->willReturn(true);
+        $field->isIndexed()->willReturn(true);
+        $field->isAggregate()->willReturn(true);
+        $field2 = $this->prophesize(Field::class);
+        $field2->getName()->willReturn('description');
+        $field2->getValue()->willReturn('Test ony once.');
+        $field2->getType()->willReturn(Field::TYPE_STRING);
+        $field2->isStored()->willReturn(true);
+        $field2->isIndexed()->willReturn(true);
+        $field2->isAggregate()->willReturn(true);
+        $document2->getFields()->willReturn([
+            $field,
+            $field2,
+        ]);
+
+        $adapter = new ZendLuceneAdapter(
+            new Factory(),
+            $this->dataPath,
+            new Filesystem()
+        );
+
+        $adapter->index($document1->reveal(), 'foo_sorting');
+        $adapter->index($document2->reveal(), 'foo_sorting_2');
+
+        $query = new SearchQuery('Test');
+        $query->setIndexes(['foo_sorting', 'foo_sorting_2']);
+
+        $searchResult = $adapter->search($query);
+
+        $itemIds = [];
+        foreach ($searchResult as $document) {
+            $itemIds[] = $document->getId();
+        }
+
+        $this->assertSame(['1', '2'], $itemIds);
     }
 
     /**
@@ -193,7 +274,7 @@ class ZendLuceneAdapterTest extends TestCase
         );
 
         foreach (['field1', 'field2'] as $fieldName) {
-            $this->$fieldName->getName()->wilLReturn($fieldName);
+            $this->$fieldName->getName()->willReturn($fieldName);
             $this->$fieldName->getValue()->willReturn(null);
             $this->$fieldName->getType()->willReturn(Field::TYPE_NULL);
         }
