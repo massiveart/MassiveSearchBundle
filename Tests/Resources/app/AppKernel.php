@@ -94,12 +94,12 @@ class AppKernel extends TestKernel
         $loader->load(__DIR__ . '/../../../Resources/config/adapter_zendlucene.xml');
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return __DIR__ . '/cache';
     }
 
-    protected function getKernelParameters()
+    protected function getKernelParameters(): array
     {
         $parameters = parent::getKernelParameters();
         $parameters['kernel.root_dir'] = __DIR__;
