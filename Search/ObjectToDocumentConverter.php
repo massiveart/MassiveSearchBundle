@@ -120,7 +120,7 @@ class ObjectToDocumentConverter
 
         // Adds the merged data of each content-block (even nested-blocks) to the document.
         if (0 < count($this->blockValues)) {
-            $mapping = $this->addDefaultMappingOptions();
+            $mapping = $this->addMappingOptions();
             $blockValues = implode(' ', $this->blockValues);
             $this->addDocumentField($document, 'contentBlocks', $blockValues, $mapping, Field::TYPE_STRING);
         }
@@ -143,7 +143,7 @@ class ObjectToDocumentConverter
     {
         foreach ($fieldMapping as $fieldName => $mapping) {
             $this->hasRequiredMapping($document, $mapping);
-            $mapping = $this->addDefaultMappingOptions($mapping);
+            $mapping = $this->addMappingOptions($mapping);
 
             if ('complex' == $mapping['type']) {
                 if (!isset($mapping['mapping'])) {
@@ -226,7 +226,10 @@ class ObjectToDocumentConverter
         }
     }
 
-    private function addDefaultMappingOptions($mapping = []): array
+    /**
+     * Adds some default mapping options to the given array.
+     */
+    private function addMappingOptions($mapping = []): array
     {
         return \array_merge(
             [
@@ -239,6 +242,8 @@ class ObjectToDocumentConverter
     }
 
     /**
+     * Adds a search field to the Document.
+     *
      * @param Document $document
      * @param string $fieldName
      * @param mixed $value
@@ -264,6 +269,8 @@ class ObjectToDocumentConverter
     }
 
     /**
+     * Checks if all mandatory options are available in the given mapping.
+     *
      * @param Document $document
      * @param array $mapping
      */
