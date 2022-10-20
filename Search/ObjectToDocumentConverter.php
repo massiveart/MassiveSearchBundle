@@ -35,6 +35,11 @@ class ObjectToDocumentConverter
      */
     private $converterManager;
 
+    /**
+     * @var string[]
+     */
+    private $blockValues = [];
+
     public function __construct(
         Factory $factory,
         FieldEvaluator $fieldEvaluator,
@@ -110,7 +115,15 @@ class ObjectToDocumentConverter
             $document->setLocale($locale);
         }
 
+        $this->blockValues = [];
         $this->populateDocument($document, $object, $fieldMapping);
+
+        // Adds the merged data of each content-block (even nested-blocks) to the document.
+        if (0 < count($this->blockValues)) {
+            $mapping = $this->addDefaultMappingOptions();
+            $blockValues = implode(' ', $this->blockValues);
+            $this->addDocumentField($document, 'contentBlocks', $blockValues, $mapping, Field::TYPE_STRING);
+        }
 
         return $document;
     }
@@ -122,35 +135,15 @@ class ObjectToDocumentConverter
      * @param Document $document
      * @param mixed $object
      * @param array $fieldMapping
-     * @param string $prefix Prefix the document field name (used when called recursively)
+     * @param bool $isBlockScope
      *
      * @throws \InvalidArgumentException
      */
-    private function populateDocument($document, $object, $fieldMapping, $prefix = '')
+    private function populateDocument($document, $object, $fieldMapping, $isBlockScope = false)
     {
         foreach ($fieldMapping as $fieldName => $mapping) {
-            $requiredMappings = ['field', 'type'];
-
-            foreach ($requiredMappings as $requiredMapping) {
-                if (!isset($mapping[$requiredMapping])) {
-                    throw new \RuntimeException(
-                        \sprintf(
-                            'Mapping for "%s" does not have "%s" key',
-                            \get_class($document),
-                            $requiredMapping
-                        )
-                    );
-                }
-            }
-
-            $mapping = \array_merge(
-                [
-                    'stored' => true,
-                    'aggregate' => false,
-                    'indexed' => true,
-                ],
-                $mapping
-            );
+            $this->hasRequiredMapping($document, $mapping);
+            $mapping = $this->addDefaultMappingOptions($mapping);
 
             if ('complex' == $mapping['type']) {
                 if (!isset($mapping['mapping'])) {
@@ -174,7 +167,7 @@ class ObjectToDocumentConverter
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix . $fieldName . $i
+                        true
                     );
                 }
 
@@ -201,23 +194,15 @@ class ObjectToDocumentConverter
 
             if (\is_array($value) && (isset($value['value']) || isset($value['fields']))) {
                 if (isset($value['value'])) {
-                    $document->addField(
-                        $this->factory->createField(
-                            $prefix . $fieldName,
-                            $value['value'],
-                            $this->getValueType($value['value']),
-                            $mapping['stored'],
-                            $mapping['indexed'],
-                            $mapping['aggregate']
-                        )
-                    );
+                    $valueType = $this->getValueType($value['value']);
+                    $this->addDocumentField($document, $fieldName, $value['value'], $mapping, $valueType);
                 }
 
                 if (isset($value['fields'])) {
                     /** @var Field $field */
                     foreach ($value['fields'] as $field) {
                         $field = clone $field;
-                        $field->setName($prefix . $fieldName . '#' . $field->getName());
+                        $field->setName($fieldName . '#' . $field->getName());
                         $document->addField($field);
                     }
                 }
@@ -226,29 +211,73 @@ class ObjectToDocumentConverter
             }
 
             if ('complex' !== $mapping['type']) {
-                $document->addField(
-                    $this->factory->createField(
-                        $prefix . $fieldName,
-                        $value,
-                        $type,
-                        $mapping['stored'],
-                        $mapping['indexed'],
-                        $mapping['aggregate']
-                    )
-                );
+                if ($isBlockScope && $value && Field::TYPE_STRING === $type) {
+                    $this->blockValues[] = strip_tags($value);
+                } elseif ($value) {
+                    $this->addDocumentField($document, $fieldName, $value, $mapping, $type);
+                }
 
                 continue;
             }
 
             foreach ($value as $key => $itemValue) {
-                $document->addField(
-                    $this->factory->createField(
-                        $prefix . $fieldName . $key,
-                        $itemValue,
-                        $mapping['type'],
-                        $mapping['stored'],
-                        $mapping['indexed'],
-                        $mapping['aggregate']
+                $this->addDocumentField($document, $fieldName . $key, $itemValue, $mapping);
+            }
+        }
+    }
+
+    private function addDefaultMappingOptions($mapping = []): array
+    {
+        return \array_merge(
+            [
+                'stored' => true,
+                'aggregate' => false,
+                'indexed' => true,
+            ],
+            $mapping
+        );
+    }
+
+    /**
+     * @param Document $document
+     * @param string $fieldName
+     * @param mixed $value
+     * @param array $mapping
+     * @param string|null $type
+     */
+    private function addDocumentField($document, $fieldName, $value, $mapping, $type = null): void
+    {
+        if (null === $type && array_key_exists('type', $mapping)) {
+            $type = $mapping['type'];
+        }
+
+        $document->addField(
+            $this->factory->createField(
+                $fieldName,
+                $value,
+                $type ?: Field::TYPE_STRING,
+                $mapping['stored'],
+                $mapping['indexed'],
+                $mapping['aggregate']
+            )
+        );
+    }
+
+    /**
+     * @param Document $document
+     * @param array $mapping
+     */
+    private function hasRequiredMapping($document, $mapping): void
+    {
+        $requiredMappings = ['field', 'type'];
+
+        foreach ($requiredMappings as $requiredMapping) {
+            if (!isset($mapping[$requiredMapping])) {
+                throw new \RuntimeException(
+                    \sprintf(
+                        'Mapping for "%s" does not have "%s" key',
+                        \get_class($document),
+                        $requiredMapping
                     )
                 );
             }
