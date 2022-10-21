@@ -213,7 +213,7 @@ class ObjectToDocumentConverter
             if ('complex' !== $mapping['type']) {
                 if ($isBlockScope && $value && Field::TYPE_STRING === $type) {
                     $this->blockValues[] = strip_tags($value);
-                } elseif ($value) {
+                } elseif (!$isBlockScope) {
                     $this->addDocumentField($document, $fieldName, $value, $mapping, $type);
                 }
 
