@@ -119,9 +119,9 @@ class ObjectToDocumentConverter
         $this->populateDocument($document, $object, $fieldMapping);
 
         // Adds the merged data of each content-block (even nested-blocks) to the document.
-        if (0 < count($this->blockValues)) {
+        if (0 < \count($this->blockValues)) {
             $mapping = $this->addMappingOptions();
-            $blockValues = implode(' ', $this->blockValues);
+            $blockValues = \implode(' ', $this->blockValues);
             $this->addDocumentField($document, 'contentBlocks', $blockValues, $mapping, Field::TYPE_STRING);
         }
 
@@ -212,7 +212,7 @@ class ObjectToDocumentConverter
 
             if ('complex' !== $mapping['type']) {
                 if ($isBlockScope && $value && Field::TYPE_STRING === $type) {
-                    $this->blockValues[] = strip_tags($value);
+                    $this->blockValues[] = \strip_tags($value);
                 } elseif (!$isBlockScope) {
                     $this->addDocumentField($document, $fieldName, $value, $mapping, $type);
                 }
@@ -252,7 +252,7 @@ class ObjectToDocumentConverter
      */
     private function addDocumentField($document, $fieldName, $value, $mapping, $type = null): void
     {
-        if (null === $type && array_key_exists('type', $mapping)) {
+        if (null === $type && \array_key_exists('type', $mapping)) {
             $type = $mapping['type'];
         }
 
