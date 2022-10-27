@@ -25,11 +25,17 @@ class Property implements FieldInterface
     private $property;
 
     /**
+     * @var mixed|null
+     */
+    private $condition;
+
+    /**
      * @param mixed $property
      */
-    public function __construct($property)
+    public function __construct($property, $condition = null)
     {
         $this->property = $property;
+        $this->condition = $condition;
     }
 
     /**
@@ -40,5 +46,10 @@ class Property implements FieldInterface
     public function getProperty()
     {
         return $this->property;
+    }
+
+    public function getCondition()
+    {
+        return $this->condition;
     }
 }

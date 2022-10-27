@@ -70,6 +70,18 @@ class FieldEvaluator
         ));
     }
 
+    public function evaluateCondition($object, string $condition)
+    {
+        try {
+            return $this->expressionLanguage->evaluate($condition, $object);
+        } catch (\Exception $e) {
+            throw new \RuntimeException(\sprintf(
+                'Error encountered when evaluating expression "%s"',
+                $condition
+            ), null, $e);
+        }
+    }
+
     /**
      * Evaluate a property (using PropertyAccess).
      *

@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
 /**
@@ -34,11 +35,6 @@ class ObjectToDocumentConverter
      * @var ConverterManagerInterface
      */
     private $converterManager;
-
-    /**
-     * @var string[]
-     */
-    private $blockValues = [];
 
     public function __construct(
         Factory $factory,
@@ -115,14 +111,13 @@ class ObjectToDocumentConverter
             $document->setLocale($locale);
         }
 
-        $this->blockValues = [];
-        $this->populateDocument($document, $object, $fieldMapping);
+        $blockValues = [];
+        $this->populateDocument($document, $object, $fieldMapping, $blockValues);
 
-        // Adds the merged data of each content-block (even nested-blocks) to the document.
-        if (0 < \count($this->blockValues)) {
+        foreach ($blockValues as $name => $values) {
             $mapping = $this->addMappingOptions();
-            $blockValues = \implode(' ', $this->blockValues);
-            $this->addDocumentField($document, 'contentBlocks', $blockValues, $mapping, Field::TYPE_STRING);
+            $values = \implode(' ', $values);
+            $this->addDocumentField($document, $name, $values, $mapping, Field::TYPE_STRING);
         }
 
         return $document;
@@ -135,12 +130,20 @@ class ObjectToDocumentConverter
      * @param Document $document
      * @param mixed $object
      * @param array $fieldMapping
-     * @param bool $isBlockScope
+     * @param string[] $blockValues
+     * @param string $prefix
      *
      * @throws \InvalidArgumentException
      */
-    private function populateDocument($document, $object, $fieldMapping, $isBlockScope = false)
-    {
+    private function populateDocument(
+        $document,
+        $object,
+        $fieldMapping,
+        &$blockValues = [],
+        $prefix = ''
+    ) {
+        $isBlockScope = '' !== $prefix;
+
         foreach ($fieldMapping as $fieldName => $mapping) {
             $this->hasRequiredMapping($document, $mapping);
             $mapping = $this->addMappingOptions($mapping);
@@ -167,7 +170,8 @@ class ObjectToDocumentConverter
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        true
+                        $blockValues,
+                        $prefix . $fieldName . '_'
                     );
                 }
 
@@ -175,7 +179,16 @@ class ObjectToDocumentConverter
             }
 
             $type = $mapping['type'];
-            $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
+            /** @var FieldInterface $mappingField */
+            $mappingField = $mapping['field'];
+            $condition = method_exists($mappingField, 'getCondition') ? $mappingField->getCondition() : null;
+            $validField = $condition ? $this->fieldEvaluator->evaluateCondition($object, $condition) : false;
+
+            if (false === $validField) {
+                continue;
+            }
+
+            $value = $this->fieldEvaluator->getValue($object, $mappingField);
 
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 $value = $this->converterManager->convert($value, $type, $document);
@@ -192,7 +205,7 @@ class ObjectToDocumentConverter
                 );
             }
 
-            if (\is_array($value) && (isset($value['value']) || isset($value['fields']))) {
+            if (!$isBlockScope && \is_array($value) && (isset($value['value']) || isset($value['fields']))) {
                 if (isset($value['value'])) {
                     $valueType = $this->getValueType($value['value']);
                     $this->addDocumentField($document, $fieldName, $value['value'], $mapping, $valueType);
@@ -210,9 +223,9 @@ class ObjectToDocumentConverter
                 continue;
             }
 
-            if ('complex' !== $mapping['type']) {
+            if ('complex' !== $mapping['type'] && $value) {
                 if ($isBlockScope && $value && Field::TYPE_STRING === $type) {
-                    $this->blockValues[] = \strip_tags($value);
+                    $blockValues[$prefix . $fieldName][] = $value;
                 } elseif (!$isBlockScope) {
                     $this->addDocumentField($document, $fieldName, $value, $mapping, $type);
                 }
@@ -220,8 +233,16 @@ class ObjectToDocumentConverter
                 continue;
             }
 
-            foreach ($value as $key => $itemValue) {
-                $this->addDocumentField($document, $fieldName . $key, $itemValue, $mapping);
+            if ($value) {
+                foreach ($value as $key => $itemValue) {
+                    $itemType = $mapping['type'];
+
+                    if ($isBlockScope && $itemValue && Field::TYPE_STRING === $itemType) {
+                        $blockValues[$prefix . $fieldName . $key][] = $itemValue;
+                    } elseif (!$isBlockScope) {
+                        $this->addDocumentField($document, $fieldName . $key, $itemValue, $mapping, $itemType);
+                    }
+                }
             }
         }
     }
@@ -248,19 +269,15 @@ class ObjectToDocumentConverter
      * @param string $fieldName
      * @param mixed $value
      * @param array $mapping
-     * @param string|null $type
+     * @param string $type
      */
-    private function addDocumentField($document, $fieldName, $value, $mapping, $type = null): void
+    private function addDocumentField($document, $fieldName, $value, $mapping, $type): void
     {
-        if (null === $type && \array_key_exists('type', $mapping)) {
-            $type = $mapping['type'];
-        }
-
         $document->addField(
             $this->factory->createField(
                 $fieldName,
                 $value,
-                $type ?: Field::TYPE_STRING,
+                $type,
                 $mapping['stored'],
                 $mapping['indexed'],
                 $mapping['aggregate']

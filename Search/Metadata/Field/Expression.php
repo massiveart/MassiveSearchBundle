@@ -25,11 +25,17 @@ class Expression implements FieldInterface
     private $expression;
 
     /**
+     * @var string|null
+     */
+    private $condition;
+
+    /**
      * @param string $expression
      */
-    public function __construct($expression)
+    public function __construct($expression, $condition = null)
     {
         $this->expression = $expression;
+        $this->condition = $condition;
     }
 
     /**
@@ -40,5 +46,10 @@ class Expression implements FieldInterface
     public function getExpression()
     {
         return $this->expression;
+    }
+
+    public function getCondition()
+    {
+        return $this->condition;
     }
 }
