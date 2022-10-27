@@ -131,7 +131,7 @@ class ObjectToDocumentConverter
      * @param mixed $object
      * @param array $fieldMapping
      * @param string[] $blockValues
-     * @param string $prefix
+     * @param string $prefix Prefix the document field name (used when called recursively)
      *
      * @throws \InvalidArgumentException
      */
@@ -182,7 +182,7 @@ class ObjectToDocumentConverter
             /** @var FieldInterface $mappingField */
             $mappingField = $mapping['field'];
             $condition = method_exists($mappingField, 'getCondition') ? $mappingField->getCondition() : null;
-            $validField = $condition ? $this->fieldEvaluator->evaluateCondition($object, $condition) : false;
+            $validField = $condition ? $this->fieldEvaluator->evaluateCondition($object, $condition) : true;
 
             if (false === $validField) {
                 continue;
@@ -223,7 +223,7 @@ class ObjectToDocumentConverter
                 continue;
             }
 
-            if ('complex' !== $mapping['type'] && $value) {
+            if ('complex' !== $mapping['type']) {
                 if ($isBlockScope && $value && Field::TYPE_STRING === $type) {
                     $blockValues[$prefix . $fieldName][] = $value;
                 } elseif (!$isBlockScope) {
@@ -233,15 +233,13 @@ class ObjectToDocumentConverter
                 continue;
             }
 
-            if ($value) {
-                foreach ($value as $key => $itemValue) {
-                    $itemType = $mapping['type'];
+            foreach ($value as $key => $itemValue) {
+                $itemType = $mapping['type'];
 
-                    if ($isBlockScope && $itemValue && Field::TYPE_STRING === $itemType) {
-                        $blockValues[$prefix . $fieldName . $key][] = $itemValue;
-                    } elseif (!$isBlockScope) {
-                        $this->addDocumentField($document, $fieldName . $key, $itemValue, $mapping, $itemType);
-                    }
+                if ($isBlockScope && $itemValue && Field::TYPE_STRING === $itemType) {
+                    $blockValues[$prefix . $fieldName . $key][] = $itemValue;
+                } elseif (!$isBlockScope) {
+                    $this->addDocumentField($document, $fieldName . $key, $itemValue, $mapping, $itemType);
                 }
             }
         }
