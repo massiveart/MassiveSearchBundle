@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
+use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 
 /**
@@ -110,7 +111,14 @@ class ObjectToDocumentConverter
             $document->setLocale($locale);
         }
 
-        $this->populateDocument($document, $object, $fieldMapping);
+        $blockValues = [];
+        $this->populateDocument($document, $object, $fieldMapping, $blockValues);
+
+        foreach ($blockValues as $name => $values) {
+            $mapping = $this->addMappingOptions();
+            $values = \implode(' ', $values);
+            $this->addDocumentField($document, $name, $values, $mapping, Field::TYPE_STRING);
+        }
 
         return $document;
     }
@@ -122,35 +130,23 @@ class ObjectToDocumentConverter
      * @param Document $document
      * @param mixed $object
      * @param array $fieldMapping
+     * @param string[] $blockValues
      * @param string $prefix Prefix the document field name (used when called recursively)
      *
      * @throws \InvalidArgumentException
      */
-    private function populateDocument($document, $object, $fieldMapping, $prefix = '')
-    {
+    private function populateDocument(
+        $document,
+        $object,
+        $fieldMapping,
+        &$blockValues = [],
+        $prefix = ''
+    ) {
+        $isBlockScope = '' !== $prefix;
+
         foreach ($fieldMapping as $fieldName => $mapping) {
-            $requiredMappings = ['field', 'type'];
-
-            foreach ($requiredMappings as $requiredMapping) {
-                if (!isset($mapping[$requiredMapping])) {
-                    throw new \RuntimeException(
-                        \sprintf(
-                            'Mapping for "%s" does not have "%s" key',
-                            \get_class($document),
-                            $requiredMapping
-                        )
-                    );
-                }
-            }
-
-            $mapping = \array_merge(
-                [
-                    'stored' => true,
-                    'aggregate' => false,
-                    'indexed' => true,
-                ],
-                $mapping
-            );
+            $this->hasRequiredMapping($document, $mapping);
+            $mapping = $this->addMappingOptions($mapping);
 
             if ('complex' == $mapping['type']) {
                 if (!isset($mapping['mapping'])) {
@@ -174,7 +170,8 @@ class ObjectToDocumentConverter
                         $document,
                         $childObject,
                         $mapping['mapping']->getFieldMapping(),
-                        $prefix . $fieldName . $i
+                        $blockValues,
+                        $prefix . $fieldName . '_'
                     );
                 }
 
@@ -182,7 +179,16 @@ class ObjectToDocumentConverter
             }
 
             $type = $mapping['type'];
-            $value = $this->fieldEvaluator->getValue($object, $mapping['field']);
+            /** @var FieldInterface $mappingField */
+            $mappingField = $mapping['field'];
+            $condition = method_exists($mappingField, 'getCondition') ? $mappingField->getCondition() : null;
+            $validField = $condition ? $this->fieldEvaluator->evaluateCondition($object, $condition) : true;
+
+            if (false === $validField) {
+                continue;
+            }
+
+            $value = $this->fieldEvaluator->getValue($object, $mappingField);
 
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 $value = $this->converterManager->convert($value, $type, $document);
@@ -199,25 +205,17 @@ class ObjectToDocumentConverter
                 );
             }
 
-            if (\is_array($value) && (isset($value['value']) || isset($value['fields']))) {
+            if (!$isBlockScope && \is_array($value) && (isset($value['value']) || isset($value['fields']))) {
                 if (isset($value['value'])) {
-                    $document->addField(
-                        $this->factory->createField(
-                            $prefix . $fieldName,
-                            $value['value'],
-                            $this->getValueType($value['value']),
-                            $mapping['stored'],
-                            $mapping['indexed'],
-                            $mapping['aggregate']
-                        )
-                    );
+                    $valueType = $this->getValueType($value['value']);
+                    $this->addDocumentField($document, $fieldName, $value['value'], $mapping, $valueType);
                 }
 
                 if (isset($value['fields'])) {
                     /** @var Field $field */
                     foreach ($value['fields'] as $field) {
                         $field = clone $field;
-                        $field->setName($prefix . $fieldName . '#' . $field->getName());
+                        $field->setName($fieldName . '#' . $field->getName());
                         $document->addField($field);
                     }
                 }
@@ -226,29 +224,82 @@ class ObjectToDocumentConverter
             }
 
             if ('complex' !== $mapping['type']) {
-                $document->addField(
-                    $this->factory->createField(
-                        $prefix . $fieldName,
-                        $value,
-                        $type,
-                        $mapping['stored'],
-                        $mapping['indexed'],
-                        $mapping['aggregate']
-                    )
-                );
+                if ($isBlockScope && $value && Field::TYPE_STRING === $type) {
+                    $blockValues[$prefix . $fieldName][] = $value;
+                } elseif (!$isBlockScope) {
+                    $this->addDocumentField($document, $fieldName, $value, $mapping, $type);
+                }
 
                 continue;
             }
 
             foreach ($value as $key => $itemValue) {
-                $document->addField(
-                    $this->factory->createField(
-                        $prefix . $fieldName . $key,
-                        $itemValue,
-                        $mapping['type'],
-                        $mapping['stored'],
-                        $mapping['indexed'],
-                        $mapping['aggregate']
+                $itemType = $mapping['type'];
+
+                if ($isBlockScope && $itemValue && Field::TYPE_STRING === $itemType) {
+                    $blockValues[$prefix . $fieldName . $key][] = $itemValue;
+                } elseif (!$isBlockScope) {
+                    $this->addDocumentField($document, $fieldName . $key, $itemValue, $mapping, $itemType);
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds some default mapping options to the given array.
+     */
+    private function addMappingOptions($mapping = []): array
+    {
+        return \array_merge(
+            [
+                'stored' => true,
+                'aggregate' => false,
+                'indexed' => true,
+            ],
+            $mapping
+        );
+    }
+
+    /**
+     * Adds a search field to the Document.
+     *
+     * @param Document $document
+     * @param string $fieldName
+     * @param mixed $value
+     * @param array $mapping
+     * @param string $type
+     */
+    private function addDocumentField($document, $fieldName, $value, $mapping, $type): void
+    {
+        $document->addField(
+            $this->factory->createField(
+                $fieldName,
+                $value,
+                $type,
+                $mapping['stored'],
+                $mapping['indexed'],
+                $mapping['aggregate']
+            )
+        );
+    }
+
+    /**
+     * Checks if all mandatory options are available in the given mapping.
+     *
+     * @param Document $document
+     * @param array $mapping
+     */
+    private function hasRequiredMapping($document, $mapping): void
+    {
+        $requiredMappings = ['field', 'type'];
+
+        foreach ($requiredMappings as $requiredMapping) {
+            if (!isset($mapping[$requiredMapping])) {
+                throw new \RuntimeException(
+                    \sprintf(
+                        'Mapping for "%s" does not have "%s" key',
+                        \get_class($document),
+                        $requiredMapping
                     )
                 );
             }

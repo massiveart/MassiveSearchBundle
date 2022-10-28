@@ -79,9 +79,9 @@ class Factory
         return new MetadataField($name);
     }
 
-    public function createMetadataProperty($path)
+    public function createMetadataProperty($path, $condition = null)
     {
-        return new Property($path);
+        return new Property($path, $condition);
     }
 
     public function createMetadataValue($value)
@@ -89,8 +89,8 @@ class Factory
         return new Value($value);
     }
 
-    public function createMetadataExpression($expression)
+    public function createMetadataExpression($expression, $condition = null)
     {
-        return new Expression($expression);
+        return new Expression($expression, $condition);
     }
 }
