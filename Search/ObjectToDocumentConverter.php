@@ -181,7 +181,7 @@ class ObjectToDocumentConverter
             $type = $mapping['type'];
             /** @var FieldInterface $mappingField */
             $mappingField = $mapping['field'];
-            $condition = method_exists($mappingField, 'getCondition') ? $mappingField->getCondition() : null;
+            $condition = \method_exists($mappingField, 'getCondition') ? $mappingField->getCondition() : null;
             $validField = $condition ? $this->fieldEvaluator->evaluateCondition($object, $condition) : true;
 
             if (false === $validField) {

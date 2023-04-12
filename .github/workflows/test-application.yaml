@@ -64,6 +64,22 @@ jobs:
                     - php-version: '8.1'
                       elasticsearch-version: '7.11.1'
                       elasticsearch-package-constraint: '~7.11.0'
+                      minimum-stability: 'stable'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
+                    - php-version: '8.2'
+                      elasticsearch-version: '8.7.0'
+                      elasticsearch-package-constraint: '~7.11.0'
+                      minimum-stability: 'stable'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
+                    - php-version: '8.2'
+                      elasticsearch-version: '8.7.0'
+                      elasticsearch-package-constraint: '~7.11.0'
                       minimum-stability: 'dev'
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
@@ -117,5 +133,4 @@ jobs:
               run: vendor/bin/behat --suite=zend_lucene
 
             - name: Execute elastic behat tests
-              if: ${{ matrix.php-version < '8.0' }} # requires fixing elastic tests on 7.11 (sorting)
               run: vendor/bin/behat --suite=elastic
