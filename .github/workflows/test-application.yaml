@@ -61,6 +61,14 @@ jobs:
                       tools: 'composer:v2'
                       php-cs-fixer: false
 
+                    - php-version: '8.5'
+                      elasticsearch-version: '8.14.3'
+                      elasticsearch-package-constraint: '~7.17.0'
+                      minimum-stability: 'dev'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
         services:
             elasticsearch:
                 image: elasticsearch:${{ matrix.elasticsearch-version }}
@@ -91,6 +99,7 @@ jobs:
               uses: ramsey/composer-install@v1
               with:
                   dependency-versions: ${{matrix.dependency-versions}}
+                  composer-versions: ${{matrix.composer-options}}
 
             - name: Run php-cs-fixer
               if: ${{ matrix.php-cs-fixer }}
