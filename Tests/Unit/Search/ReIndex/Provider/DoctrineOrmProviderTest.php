@@ -23,9 +23,12 @@ use Massive\Bundle\SearchBundle\Search\Reindex\Provider\DoctrineOrmProvider;
 use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class DoctrineOrmProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var EntityManagerInterface
      */

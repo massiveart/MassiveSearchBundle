@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Massive\Bundle\SearchBundle\Unit\Search\EventSubscriber;
+namespace Massive\Bundle\SearchBundle\Unit\Search\ExpressionLanguage;
 
 use Massive\Bundle\SearchBundle\Search\ExpressionLanguage\MassiveSearchExpressionLanguage;
 use PHPUnit\Framework\TestCase;
@@ -36,15 +36,40 @@ class MassiveSearchExpressionLanguageTest extends TestCase
                 'map([{"foo": "one"}, {"foo":"two"}, {"foo": "three"}], "el[\'foo\']")',
                 ['one', 'two', 'three'],
             ],
+            [
+                'massive_search_value("three", null)',
+                null,
+                ['one' => 'X', 'two' => 'Y'],
+            ],
+            [
+                'massive_search_value("three", "default")',
+                'default',
+                ['one' => 'X', 'two' => 'Y'],
+            ],
+            [
+                'massive_search_value("three", null)',
+                'Z',
+                ['one' => 'X', 'two' => 'Y', 'three' => 'Z'],
+            ],
+            [
+                'massive_search_value("three", {"test": true})["test"]',
+                true,
+                ['one' => 'X', 'two' => 'Y'],
+            ],
+            [
+                'massive_search_value("three", {"test": true})["test"]',
+                false,
+                ['one' => 'X', 'two' => 'Y', 'three' => ['test' => false]],
+            ],
         ];
     }
 
     /**
      * @dataProvider provideExpression
      */
-    public function testExpression($expression, $expectedResult)
+    public function testExpression($expression, $expectedResult, $values = [])
     {
-        $result = $this->expressionLanguage->evaluate($expression);
+        $result = $this->expressionLanguage->evaluate($expression, $values);
         $this->assertEquals($expectedResult, $result);
     }
 }

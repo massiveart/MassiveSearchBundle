@@ -16,9 +16,12 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Provider\ChainProvider;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ChainProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ProviderInterface
      */

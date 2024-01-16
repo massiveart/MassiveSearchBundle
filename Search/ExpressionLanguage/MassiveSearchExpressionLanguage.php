@@ -25,6 +25,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
 
         $this->addFunction($this->createJoinFunction());
         $this->addFunction($this->createMapFunction());
+        $this->addFunction($this->createValueFunction());
     }
 
     /**
@@ -79,6 +80,32 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 }
 
                 return $result;
+            }
+        );
+    }
+
+    /**
+     * Value returns the value of the variable. If the variable does not exists a default will be returned.
+     *
+     * For example:
+     *
+     *   massive_search_value("expression", {"hidden": false}) = array('hidden' => true);
+     *
+     * @return ExpressionFunction
+     */
+    private function createValueFunction()
+    {
+        return new ExpressionFunction(
+            'massive_search_value',
+            function($elements, $expression) {
+                throw new \Exception('Value function does not support compilation');
+            },
+            function(array $values, $variable, $default) {
+                if (isset($values[$variable])) {
+                    return $values[$variable];
+                }
+
+                return $default;
             }
         );
     }

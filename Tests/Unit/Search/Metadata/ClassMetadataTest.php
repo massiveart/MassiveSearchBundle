@@ -14,9 +14,12 @@ namespace Unit\Search\Metadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ClassMetadataTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var IndexMetadata
      */

@@ -20,9 +20,12 @@ use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class FieldEvaluatorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectToDocumentConverter
      */

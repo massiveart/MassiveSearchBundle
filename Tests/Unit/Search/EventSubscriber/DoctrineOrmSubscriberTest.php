@@ -18,11 +18,14 @@ use Massive\Bundle\SearchBundle\Search\EventSubscriber\DoctrineOrmSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DoctrineOrmSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testMapping()
     {
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
