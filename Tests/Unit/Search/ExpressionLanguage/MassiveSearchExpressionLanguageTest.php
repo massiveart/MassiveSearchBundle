@@ -37,27 +37,27 @@ class MassiveSearchExpressionLanguageTest extends TestCase
                 ['one', 'two', 'three'],
             ],
             [
-                'value("three", null)',
+                'massive_search_value("three", null)',
                 null,
                 ['one' => 'X', 'two' => 'Y'],
             ],
             [
-                'value("three", "default")',
+                'massive_search_value("three", "default")',
                 'default',
                 ['one' => 'X', 'two' => 'Y'],
             ],
             [
-                'value("three", null)',
+                'massive_search_value("three", null)',
                 'Z',
                 ['one' => 'X', 'two' => 'Y', 'three' => 'Z'],
             ],
             [
-                'value("three", {"test": true})["test"]',
+                'massive_search_value("three", {"test": true})["test"]',
                 true,
                 ['one' => 'X', 'two' => 'Y'],
             ],
             [
-                'value("three", {"test": true})["test"]',
+                'massive_search_value("three", {"test": true})["test"]',
                 false,
                 ['one' => 'X', 'two' => 'Y', 'three' => ['test' => false]],
             ],

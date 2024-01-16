@@ -89,14 +89,14 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
      *
      * For example:
      *
-     *   map({'foo': 'one', 'foo': 'two'}, 'el["foo"]'}) = array('one', 'two');
+     *   massive_search_value("expression", {"hidden": false}) = array('hidden' => true);
      *
      * @return ExpressionFunction
      */
     private function createValueFunction()
     {
         return new ExpressionFunction(
-            'value',
+            'massive_search_value',
             function($elements, $expression) {
                 throw new \Exception('Value function does not support compilation');
             },
