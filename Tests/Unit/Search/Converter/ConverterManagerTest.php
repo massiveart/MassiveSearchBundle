@@ -17,9 +17,12 @@ use Massive\Bundle\SearchBundle\Search\Converter\ConverterNotFoundException;
 use Massive\Bundle\SearchBundle\Search\Document;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ConverterManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testConvert()
     {
         $document = $this->prophesize(Document::class);

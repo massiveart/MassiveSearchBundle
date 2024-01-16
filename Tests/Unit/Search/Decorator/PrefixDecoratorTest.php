@@ -15,9 +15,12 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class PrefixDecoratorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var IndexNameDecoratorInterface
      */

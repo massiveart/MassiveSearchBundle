@@ -17,8 +17,10 @@ use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
 use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +30,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ReindexCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ResumeManagerInterface
      */

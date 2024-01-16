@@ -20,9 +20,12 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\FileLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class XmlDriverTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var XmlDriver
      */

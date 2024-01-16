@@ -18,9 +18,12 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Metadata\ClassHierarchyMetadata;
 use Metadata\MetadataFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class DefaultProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ProviderInterface
      */

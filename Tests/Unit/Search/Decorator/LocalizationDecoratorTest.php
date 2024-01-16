@@ -15,9 +15,12 @@ use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class LocalizationDecoratorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var IndexNameDecorator
      */

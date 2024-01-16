@@ -25,10 +25,13 @@ use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SearchManagerTest extends TestCase
 {
+    use ProphecyTrait;
+    
     /**
      * @var AdapterInterface
      */

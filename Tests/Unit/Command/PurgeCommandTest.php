@@ -15,12 +15,15 @@ use Massive\Bundle\SearchBundle\Command\PurgeCommand;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class PurgeCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SearchManagerInterface
      */

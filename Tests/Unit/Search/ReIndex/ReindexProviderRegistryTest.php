@@ -14,9 +14,12 @@ namespace Massive\Bundle\SearchBundle\Tests\Unit\Search\Reindex;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ReindexProviderRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ReindexProviderRegistry
      */

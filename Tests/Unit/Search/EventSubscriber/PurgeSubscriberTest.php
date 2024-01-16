@@ -15,9 +15,12 @@ use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\EventSubscriber\PurgeSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class PurgeSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SearchManagerInterface
      */

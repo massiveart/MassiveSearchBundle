@@ -15,10 +15,13 @@ use Massive\Bundle\SearchBundle\Search\Event\DeindexEvent;
 use Massive\Bundle\SearchBundle\Search\EventListener\DeindexListener;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 
 class DeindexListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testOnDeindex()
     {
         $entity = new stdClass();

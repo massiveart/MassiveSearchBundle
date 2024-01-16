@@ -21,9 +21,12 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter;
 use Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Product;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ObjectToDocumentConverterTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var IndexMetadata
      */

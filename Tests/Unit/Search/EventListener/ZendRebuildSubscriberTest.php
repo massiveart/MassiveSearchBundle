@@ -16,10 +16,13 @@ use Massive\Bundle\SearchBundle\Search\Decorator\IndexNameDecoratorInterface;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\EventListener\ZendRebuildSubscriber;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ZendRebuildSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ZendLuceneAdapter
      */

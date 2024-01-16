@@ -15,10 +15,13 @@ use Massive\Bundle\SearchBundle\Search\Event\IndexEvent;
 use Massive\Bundle\SearchBundle\Search\EventListener\IndexListener;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 
 class IndexListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testOnIndex()
     {
         $entity = new stdClass();

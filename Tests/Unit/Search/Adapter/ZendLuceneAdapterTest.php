@@ -17,10 +17,13 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\SearchQuery;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ZendLuceneAdapterTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var string
      */
