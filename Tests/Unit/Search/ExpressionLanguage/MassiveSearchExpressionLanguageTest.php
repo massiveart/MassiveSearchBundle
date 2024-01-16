@@ -37,29 +37,44 @@ class MassiveSearchExpressionLanguageTest extends TestCase
                 ['one', 'two', 'three'],
             ],
             [
-                'massive_search_value("three", null)',
+                'massive_search_value("[three]")',
                 null,
                 ['one' => 'X', 'two' => 'Y'],
             ],
             [
-                'massive_search_value("three", "default")',
+                'massive_search_value("[three]", null)',
+                null,
+                ['one' => 'X', 'two' => 'Y'],
+            ],
+            [
+                'massive_search_value("[three]", "default")',
                 'default',
                 ['one' => 'X', 'two' => 'Y'],
             ],
             [
-                'massive_search_value("three", null)',
+                'massive_search_value("[three]", null)',
                 'Z',
                 ['one' => 'X', 'two' => 'Y', 'three' => 'Z'],
             ],
             [
-                'massive_search_value("three", {"test": true})["test"]',
+                'massive_search_value("[three]", {"test": true})["test"]',
                 true,
                 ['one' => 'X', 'two' => 'Y'],
             ],
             [
-                'massive_search_value("three", {"test": true})["test"]',
+                'massive_search_value("[three]", {"test": true})["test"]',
                 false,
                 ['one' => 'X', 'two' => 'Y', 'three' => ['test' => false]],
+            ],
+            [
+                'massive_search_value("[three][test]", true)',
+                true,
+                ['one' => 'X', 'two' => 'Y'],
+            ],
+            [
+                'massive_search_value("[XX][test]", true)',
+                false,
+                ['one' => 'X', 'two' => 'Y', 'XX' => ['test' => false]],
             ],
         ];
     }

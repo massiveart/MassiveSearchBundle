@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\ExpressionLanguage;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Expression language for massive search bundle.
@@ -95,14 +96,17 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
      */
     private function createValueFunction()
     {
+        $accessor = new PropertyAccessor();
+
         return new ExpressionFunction(
             'massive_search_value',
             function($elements, $expression) {
                 throw new \Exception('Value function does not support compilation');
             },
-            function(array $values, $variable, $default) {
-                if (isset($values[$variable])) {
-                    return $values[$variable];
+            function(array $values, $propertyPath, $default = null) use ($accessor) {
+                $value = $accessor->getValue($values, $propertyPath);
+                if (null !== $value) {
+                    return $value;
                 }
 
                 return $default;
