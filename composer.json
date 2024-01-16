@@ -41,7 +41,8 @@
 
         "webmozart/assert": "^1.7",
         "phpspec/prophecy": "^1.15",
-        "doctrine/annotations": "^1.14"
+        "doctrine/annotations": "^1.14",
+        "phpspec/prophecy-phpunit": "^2.1"
     },
     "suggest": {
         "sensio/distribution-bundle": "Required if the SearchScriptHandler is used",

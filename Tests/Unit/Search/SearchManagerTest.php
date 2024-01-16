@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class SearchManagerTest extends TestCase
 {
     use ProphecyTrait;
-    
+
     /**
      * @var AdapterInterface
      */
