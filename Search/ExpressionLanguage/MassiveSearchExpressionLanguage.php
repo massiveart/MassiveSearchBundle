@@ -11,6 +11,7 @@
 
 namespace Massive\Bundle\SearchBundle\Search\ExpressionLanguage;
 
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
@@ -25,6 +26,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
 
         $this->addFunction($this->createJoinFunction());
         $this->addFunction($this->createMapFunction());
+        $this->addFunction($this->createValueFunction());
     }
 
     /**
@@ -79,6 +81,32 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 }
 
                 return $result;
+            }
+        );
+    }
+
+    /**
+     * Value returns the value of the variable. If the variable does not exists a default will be returned.
+     *
+     * For example:
+     *
+     *   map({'foo': 'one', 'foo': 'two'}, 'el["foo"]'}) = array('one', 'two');
+     *
+     * @return ExpressionFunction
+     */
+    private function createValueFunction()
+    {
+        return new ExpressionFunction(
+            'value',
+            function($elements, $expression) {
+                throw new \Exception('Value function does not support compilation');
+            },
+            function(array $values, $variable, $default) {
+                if(isset($values[$variable])){
+                    return $values[$variable];
+                }
+
+                return $default;
             }
         );
     }
