@@ -11,7 +11,6 @@
 
 namespace Massive\Bundle\SearchBundle\Search\ExpressionLanguage;
 
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
@@ -102,7 +101,7 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 throw new \Exception('Value function does not support compilation');
             },
             function(array $values, $variable, $default) {
-                if(isset($values[$variable])){
+                if (isset($values[$variable])) {
                     return $values[$variable];
                 }
 

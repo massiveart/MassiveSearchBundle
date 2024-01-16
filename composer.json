@@ -40,7 +40,8 @@
         "behat/behat": "^3.4.2",
 
         "webmozart/assert": "^1.7",
-        "phpspec/prophecy": "^1.15"
+        "phpspec/prophecy": "^1.15",
+        "doctrine/annotations": "^1.14"
     },
     "suggest": {
         "sensio/distribution-bundle": "Required if the SearchScriptHandler is used",
