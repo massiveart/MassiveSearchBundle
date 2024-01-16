@@ -16,6 +16,7 @@ jobs:
             SYMFONY_DEPRECATIONS_HELPER: weak
             COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             ELASTICSEARCH_VERSION: ${{ matrix.elasticsearch-version }}
+            SYMFONY_MAX_PHPUNIT_VERSION: ${{ matrix.max-phpunit-version }}
 
         strategy:
             fail-fast: false
@@ -28,6 +29,7 @@ jobs:
                       dependency-versions: 'lowest'
                       tools: 'composer:v1'
                       php-cs-fixer: false
+                      matrix.max-phpunit-version: '7'
 
                     - php-version: '7.3'
                       elasticsearch-version: '2.4.6'
@@ -36,6 +38,7 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
+                      matrix.max-phpunit-version: '7'
 
                     - php-version: '7.4'
                       elasticsearch-version: '2.4.6'
@@ -44,6 +47,7 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: true
+                      matrix.max-phpunit-version: '7'
 
                     - php-version: '8.0'
                       elasticsearch-version: '7.11.1'
@@ -52,6 +56,7 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
+                      matrix.max-phpunit-version: '7'
 
                     - php-version: '8.1'
                       elasticsearch-version: '7.11.1'
@@ -60,6 +65,7 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
+                      matrix.max-phpunit-version: '8'
 
                     - php-version: '8.1'
                       elasticsearch-version: '7.11.1'
@@ -68,6 +74,7 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
+                      matrix.max-phpunit-version: '8'
 
         services:
             elasticsearch:

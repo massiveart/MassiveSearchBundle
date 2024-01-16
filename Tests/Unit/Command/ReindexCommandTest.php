@@ -99,7 +99,7 @@ class ReindexCommandTest extends TestCase
             Argument::type(OutputInterface::class),
             Argument::type(ConfirmationQuestion::class),
             true
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn(true);
         $this->execute('prod', []);
     }
 
