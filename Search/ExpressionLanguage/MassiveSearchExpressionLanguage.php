@@ -13,8 +13,8 @@ namespace Massive\Bundle\SearchBundle\Search\ExpressionLanguage;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Expression language for massive search bundle.
