@@ -13,6 +13,7 @@ namespace Massive\Bundle\SearchBundle\Search\ExpressionLanguage;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
@@ -104,9 +105,15 @@ class MassiveSearchExpressionLanguage extends ExpressionLanguage
                 throw new \Exception('Value function does not support compilation');
             },
             function(array $values, $propertyPath, $default = null) use ($accessor) {
-                $value = $accessor->getValue($values, $propertyPath);
-                if (null !== $value) {
-                    return $value;
+                try {
+                    $value = $accessor->getValue($values, $propertyPath);
+                    if (null !== $value) {
+                        return $value;
+                    }
+                } catch (NoSuchIndexException $e) {
+                    // settings can be stdClass as it needs to convert to {} instead of [] for frontend
+                    // currently NoSuchIndexException will be thrown which we need to catch here and
+                    // return the default value
                 }
 
                 return $default;
