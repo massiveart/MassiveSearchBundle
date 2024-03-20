@@ -29,7 +29,7 @@ class SearchEvent extends AbstractEvent
     }
 
     /**
-     * @return string
+     * @return SearchQuery
      */
     public function getSearchQuery()
     {
