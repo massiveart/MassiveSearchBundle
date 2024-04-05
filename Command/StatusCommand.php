@@ -21,6 +21,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * This command returns some vendor specific information about
  * the currently configured search implementation.
+ *
+ * @final
  */
 class StatusCommand extends Command
 {
@@ -48,7 +50,7 @@ EOT
         );
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $status = $this->searchManager->getStatus();
 

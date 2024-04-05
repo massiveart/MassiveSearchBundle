@@ -17,6 +17,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @final
+ */
 class OptimizeCommand extends Command
 {
     protected static $defaultName = 'massive:search:optimize';
@@ -38,7 +41,7 @@ class OptimizeCommand extends Command
         $this->setDescription('Optimize all search indices. Affects only indices that are managed with the zend_lucene adapter at the moment.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->adapter instanceof OptimizeableAdapterInterface) {
             $output->writeln(\sprintf('Adapter "%s" does not support index optimization.', \get_class($this->adapter)));

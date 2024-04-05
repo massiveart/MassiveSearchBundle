@@ -18,6 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Initializes the search adapter.
+ *
+ * @final
  */
 class InitCommand extends Command
 {
@@ -41,7 +43,7 @@ class InitCommand extends Command
         $this->setHelp('This command will simply call the initialize method of the currently active search adapter.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->adapter->initialize();
 

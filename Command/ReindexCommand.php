@@ -29,6 +29,8 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command to build (or rebuild) the search index.
+ *
+ * @final
  */
 class ReindexCommand extends Command
 {
@@ -89,7 +91,7 @@ EOT
         $this->addOption('provider', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Provider name');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $formatterHelper = new FormatterHelper();
 

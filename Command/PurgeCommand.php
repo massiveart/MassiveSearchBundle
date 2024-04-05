@@ -21,6 +21,8 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command to purge search indexes.
+ *
+ * @final
  */
 class PurgeCommand extends Command
 {
@@ -65,7 +67,7 @@ EOT
         $this->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confirmation.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $indexes = $input->getOption('index');
         $all = $input->getOption('all');

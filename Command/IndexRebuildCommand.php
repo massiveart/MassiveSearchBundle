@@ -29,7 +29,7 @@ class IndexRebuildCommand extends ReindexCommand
         $this->setName(self::$defaultName);
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $formatterHelper = new FormatterHelper();
         $output->writeln(

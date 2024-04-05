@@ -21,6 +21,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to execute a query on the configured search engine.
+ *
+ * @final
  */
 class QueryCommand extends Command
 {
@@ -54,7 +56,7 @@ EOT
         );
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $query = $input->getArgument('query');
         $indexes = $input->getOption('index');
