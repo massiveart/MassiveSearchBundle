@@ -16,7 +16,6 @@ use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
 use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManagerInterface;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -63,7 +62,7 @@ class ReindexCommand extends Command
 
     public function __construct(
         ResumeManagerInterface $resumeManager,
-        SearchManager $searchManager,
+        SearchManagerInterface $searchManager,
         ReindexProviderRegistry $providerRegistry,
         $env,
         QuestionHelper $questionHelper = null
