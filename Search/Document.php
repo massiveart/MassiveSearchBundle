@@ -245,6 +245,7 @@ class Document implements \JsonSerializable
         return isset($this->fields[$name]);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
