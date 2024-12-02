@@ -40,7 +40,7 @@ class IndexRebuildEvent extends AbstractEvent
      * @param mixed $purge If the indexes should be purged
      * @param OutputInterface $output
      */
-    public function __construct($filter, $purge, OutputInterface $output = null)
+    public function __construct($filter, $purge, ?OutputInterface $output = null)
     {
         $this->filter = $filter;
         $this->purge = $purge;

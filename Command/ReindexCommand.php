@@ -65,7 +65,7 @@ class ReindexCommand extends Command
         SearchManagerInterface $searchManager,
         ReindexProviderRegistry $providerRegistry,
         $env,
-        QuestionHelper $questionHelper = null
+        ?QuestionHelper $questionHelper = null
     ) {
         parent::__construct(self::$defaultName);
 

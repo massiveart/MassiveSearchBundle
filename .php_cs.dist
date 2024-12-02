@@ -29,5 +29,6 @@ return PhpCsFixer\Config::create()
         'phpdoc_align' => ['align' => 'left'],
         'phpdoc_types_order' => false,
         'single_line_throw' => false,
+        'nullable_type_declaration_for_default_null_value' => true,
     ])
     ->setFinder($finder);
