@@ -82,7 +82,14 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
-                      max-phpunit-version: '8'
+
+                    - php-version: '8.4'
+                      elasticsearch-version: '7.17.19'
+                      elasticsearch-package-constraint: '~7.17.0'
+                      minimum-stability: 'dev'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
 
         services:
             elasticsearch:

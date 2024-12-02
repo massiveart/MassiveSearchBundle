@@ -40,7 +40,7 @@ class PurgeCommand extends Command
 
     public function __construct(
         SearchManagerInterface $searchManager,
-        QuestionHelper $questionHelper = null
+        ?QuestionHelper $questionHelper = null
     ) {
         parent::__construct(self::$defaultName);
 
