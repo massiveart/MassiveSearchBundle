@@ -72,6 +72,10 @@ class FieldEvaluator
 
     public function evaluateCondition($object, string $condition)
     {
+        if (!\is_array($object)) {
+            return false;
+        }
+
         try {
             return $this->expressionLanguage->evaluate($condition, $object);
         } catch (\Exception $e) {
