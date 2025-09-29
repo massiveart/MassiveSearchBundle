@@ -97,7 +97,7 @@ class FieldEvaluator
      */
     private function getPropertyValue($object, Property $field)
     {
-        if (null === $object) {
+        if (!\is_object($object) && !\is_array($object)) {
             return null;
         }
 
