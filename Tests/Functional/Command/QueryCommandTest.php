@@ -15,7 +15,7 @@ use Massive\Bundle\SearchBundle\Tests\Functional\BaseTestCase;
 
 class QueryCommandTest extends BaseTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->generateIndex(10);

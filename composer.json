@@ -32,15 +32,16 @@
         "symfony/security-bundle": "^4.3 || ^5.0 || ^6.0 || ^7.0",
         "symfony/twig-bundle": "^4.3 || ^5.0 || ^6.0 || ^7.0",
         "symfony/validator": "^4.3 || ^5.0 || ^6.0 || ^7.0",
-        "symfony/phpunit-bridge": "^5.0.4 || ^6.0 || ^7.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.0 || ^5.0",
+        "symfony/phpunit-bridge": "^5.0.4 || ^6.0 || ^7.0 ",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.0 || ^5.0 || 6.0",
         "doctrine/doctrine-bundle": "^1.10 || ^2.0",
         "doctrine/orm": "^2.5",
 
         "behat/behat": "^3.4.2",
 
         "webmozart/assert": "^1.7",
-        "doctrine/annotations": "^1.14"
+        "doctrine/annotations": "^1.14",
+        "phpspec/prophecy-phpunit": "^2.4"
     },
     "suggest": {
         "sensio/distribution-bundle": "Required if the SearchScriptHandler is used",

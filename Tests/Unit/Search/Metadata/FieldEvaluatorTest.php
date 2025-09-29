@@ -37,7 +37,7 @@ class FieldEvaluatorTest extends TestCase
      */
     private $expressionLanguage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->expressionLanguage = $this->prophesize('Symfony\Component\ExpressionLanguage\ExpressionLanguage');
@@ -46,7 +46,7 @@ class FieldEvaluatorTest extends TestCase
         $this->fieldEvaluator = new FieldEvaluator($this->expressionLanguage->reveal());
     }
 
-    public function provideGetValue()
+    public static function provideGetValue()
     {
         return [
             'Field with string value' => [
@@ -174,7 +174,7 @@ class FieldEvaluatorTest extends TestCase
         $this->fieldEvaluator->getValue($product, $field);
     }
 
-    public function provideEvaluateCondition()
+    public static function provideEvaluateCondition()
     {
         return [
             'True condition' => [
@@ -191,6 +191,11 @@ class FieldEvaluatorTest extends TestCase
                 ['price' => 100, 'discount' => 20, 'stock' => 5],
                 'price > 50 and (discount > 10 or stock > 10)',
                 true,
+            ],
+            'Not existing variable' => [
+                [],
+                'price > 50',
+                false,
             ],
         ];
     }
@@ -224,5 +229,149 @@ class FieldEvaluatorTest extends TestCase
             ->willThrow(new \Exception('Expression error'));
 
         $this->fieldEvaluator->evaluateCondition(['test' => true], 'invalid_syntax');
+    }
+
+    /**
+     * Test getPropertyValue method specifically.
+     */
+    public function testGetPropertyValueWithNullObject()
+    {
+        $field = new Property('someProperty');
+        $result = $this->fieldEvaluator->getValue(null, $field);
+
+        $this->assertNull($result);
+    }
+
+    public function testGetPropertyValueWithValidObject()
+    {
+        $product = new Product();
+        $product->title = 'Test Product';
+
+        $field = new Property('title');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame('Test Product', $result);
+    }
+
+    public function testGetPropertyValueWithArrayAccess()
+    {
+        $data = ['name' => 'Test Name', 'value' => 123];
+
+        $field = new Property('[name]');
+        $result = $this->fieldEvaluator->getValue($data, $field);
+
+        $this->assertSame('Test Name', $result);
+    }
+
+    public function testGetPropertyValueWithNestedProperty()
+    {
+        $product = new Product();
+        $category = new \stdClass();
+        $category->name = 'Electronics';
+        $product->category = $category;
+
+        $field = new Property('category.name');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame('Electronics', $result);
+    }
+
+    public function testGetPropertyValueWithNullProperty()
+    {
+        $product = new Product();
+        $product->description = null;
+
+        $field = new Property('description');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertNull($result);
+    }
+
+    public function testGetPropertyValueWithBooleanProperty()
+    {
+        $product = new Product();
+        $product->isActive = false;
+
+        $field = new Property('isActive');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertFalse($result);
+    }
+
+    public function testGetPropertyValueWithIntegerProperty()
+    {
+        $product = new Product();
+        $product->quantity = 0;
+
+        $field = new Property('quantity');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame(0, $result);
+    }
+
+    public function testGetPropertyValueWithFloatProperty()
+    {
+        $product = new Product();
+        $product->price = 19.99;
+
+        $field = new Property('price');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame(19.99, $result);
+    }
+
+    public function testGetPropertyValueWithArrayProperty()
+    {
+        $product = new Product();
+        $product->tags = ['tag1', 'tag2', 'tag3'];
+
+        $field = new Property('tags');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame(['tag1', 'tag2', 'tag3'], $result);
+    }
+
+    public function testGetPropertyValueWithEmptyArrayProperty()
+    {
+        $product = new Product();
+        $product->tags = [];
+
+        $field = new Property('tags');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame([], $result);
+    }
+
+    public function testGetPropertyValueWithEmptyStringProperty()
+    {
+        $product = new Product();
+        $product->title = '';
+
+        $field = new Property('title');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame('', $result);
+    }
+
+    public function testGetPropertyValueWithMethodAccess()
+    {
+        $product = new Product();
+        $product->setTitle('Method Value');
+
+        $field = new Property('title');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame('Method Value', $result);
+    }
+
+    public function testGetPropertyValueWithGetterAccess()
+    {
+        $product = new Product();
+        $product->setBody('Body Content');
+
+        $field = new Property('body');
+        $result = $this->fieldEvaluator->getValue($product, $field);
+
+        $this->assertSame('Body Content', $result);
     }
 }

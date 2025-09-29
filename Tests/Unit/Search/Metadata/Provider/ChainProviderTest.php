@@ -47,7 +47,7 @@ class ChainProviderTest extends TestCase
      */
     private $chainProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->provider1 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface');
         $this->provider2 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface');

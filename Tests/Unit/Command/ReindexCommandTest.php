@@ -62,7 +62,7 @@ class ReindexCommandTest extends TestCase
      */
     private $localizedProvider1;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->resumeManager = $this->prophesize(ResumeManagerInterface::class);
         $this->searchManager = $this->prophesize(SearchManager::class);

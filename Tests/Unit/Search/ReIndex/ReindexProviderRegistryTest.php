@@ -35,7 +35,7 @@ class ReindexProviderRegistryTest extends TestCase
      */
     private $provider2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry = new ReindexProviderRegistry();
 

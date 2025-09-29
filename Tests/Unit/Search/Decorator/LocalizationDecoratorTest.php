@@ -31,14 +31,14 @@ class LocalizationDecoratorTest extends TestCase
      */
     private $localizationDecorator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->otherDecorator = $this->prophesize(IndexNameDecorator::class);
 
         $this->localizationDecorator = new LocalizationDecorator($this->otherDecorator->reveal());
     }
 
-    public function provideDecorate()
+    public static function provideDecorate()
     {
         return [
             ['hello', 'de', 'hello-de-i18n'],
@@ -67,7 +67,7 @@ class LocalizationDecoratorTest extends TestCase
         );
     }
 
-    public function provideUndecorate()
+    public static function provideUndecorate()
     {
         return [
             ['hello-en-i18n', 'hello'],
@@ -85,7 +85,7 @@ class LocalizationDecoratorTest extends TestCase
         $this->assertEquals($expectedResult, $this->localizationDecorator->undecorate($decoratedIndexName));
     }
 
-    public function provideIsVariant()
+    public static function provideIsVariant()
     {
         return [
             [

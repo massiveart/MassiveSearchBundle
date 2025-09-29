@@ -51,7 +51,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->assertNotNull($this->container->get('massive_search.adapter.zend_lucene'));
     }
 
-    public function provideAdapterConfig()
+    public static function provideAdapterConfig()
     {
         return [
             [
@@ -126,7 +126,7 @@ class MassiveSearchExtensionTest extends AbstractExtensionTestCase
         $this->assertNotNull($this->container->get($serviceId));
     }
 
-    public function providePersistence()
+    public static function providePersistence()
     {
         return [
             [

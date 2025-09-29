@@ -34,7 +34,7 @@ class PurgeCommandTest extends TestCase
      */
     private $questionHelper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->questionHelper = $this->prophesize(QuestionHelper::class);

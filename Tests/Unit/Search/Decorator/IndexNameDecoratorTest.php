@@ -32,7 +32,7 @@ class IndexNameDecoratorTest extends TestCase
      */
     private $indexNameDecorator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fieldEvaluator = $this->prophesize(FieldEvaluator::class);
 
@@ -62,7 +62,7 @@ class IndexNameDecoratorTest extends TestCase
         $this->assertEquals('my_index', $this->indexNameDecorator->undecorate('my_index'));
     }
 
-    public function provideIsVariant()
+    public static function provideIsVariant()
     {
         return [
             [

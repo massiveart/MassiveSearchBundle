@@ -57,7 +57,7 @@ class ObjectToDocumentConverterTest extends TestCase
      */
     private $converterManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->factory = new Factory();
@@ -73,7 +73,7 @@ class ObjectToDocumentConverterTest extends TestCase
         );
     }
 
-    public function provideConversion()
+    public static function provideConversion()
     {
         return [
             [
@@ -154,7 +154,7 @@ class ObjectToDocumentConverterTest extends TestCase
         $this->assertEquals($aggregate, $field->isAggregate());
     }
 
-    public function provideIndexStoredAndAggregate()
+    public static function provideIndexStoredAndAggregate()
     {
         return [
             [true, true, true],

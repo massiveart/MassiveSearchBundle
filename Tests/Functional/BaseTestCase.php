@@ -22,13 +22,13 @@ abstract class BaseTestCase extends TestCase
 {
     private $kernels = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         AppKernel::resetEnvironment();
         AppKernel::installDistEnvironment();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         AppKernel::resetEnvironment();
     }

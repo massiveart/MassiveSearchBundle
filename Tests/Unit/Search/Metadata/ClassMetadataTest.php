@@ -30,7 +30,7 @@ class ClassMetadataTest extends TestCase
      */
     private $classMetadata;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->indexMetadata = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata');
         $this->classMetadata = new ClassMetadata('\stdClass');

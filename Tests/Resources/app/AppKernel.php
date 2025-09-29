@@ -73,7 +73,7 @@ class AppKernel extends TestKernel
         $fs->mirror(self::getEntityDir() . 'Dist', self::getEntityDir());
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->requireBundleSets([
             'default',
