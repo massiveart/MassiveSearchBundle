@@ -22,12 +22,12 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '7.2'
+                    - php-version: '7.3'
                       elasticsearch-version: '2.4.6'
                       elasticsearch-package-constraint: '^2.1'
                       minimum-stability: 'stable'
                       dependency-versions: 'lowest'
-                      tools: 'composer:v1'
+                      tools: 'composer:v2'
                       php-cs-fixer: false
                       max-phpunit-version: '7'
 
@@ -133,7 +133,7 @@ jobs:
               run: composer validate --strict
 
             - name: Execute unit tests
-              run: vendor/bin/simple-phpunit
+              run: vendor/bin/phpunit
 
             - name: Execute zend lucene behat tests
               run: vendor/bin/behat --suite=zend_lucene

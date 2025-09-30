@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\ExpressionLanguage\SyntaxError;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -78,11 +79,14 @@ class FieldEvaluator
 
         try {
             return $this->expressionLanguage->evaluate($condition, $object);
+        } catch (SyntaxError $e) {
+            return false;
         } catch (\Exception $e) {
-            throw new \RuntimeException(\sprintf(
-                'Error encountered when evaluating expression "%s"',
-                $condition
-            ), null, $e);
+            throw new \RuntimeException(
+                \sprintf(
+                    'Error encountered when evaluating expression "%s"',
+                    $condition
+                ), null, $e);
         }
     }
 
@@ -93,6 +97,10 @@ class FieldEvaluator
      */
     private function getPropertyValue($object, Property $field)
     {
+        if (!\is_object($object) && !\is_array($object)) {
+            return null;
+        }
+
         return $this->accessor->getValue($object, $field->getProperty());
     }
 

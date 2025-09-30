@@ -46,7 +46,7 @@ class XmlDriverTest extends TestCase
      */
     private $reflectionClass;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = $this->prophesize(Factory::class);
         $this->fileLocator = $this->prophesize(FileLocatorInterface::class);

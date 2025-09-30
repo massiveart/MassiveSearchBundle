@@ -54,7 +54,7 @@ class ZendLuceneAdapterTest extends TestCase
      */
     private $filesystem;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = $this->prophesize(Factory::class);
         $this->document = $this->prophesize(Document::class);
@@ -121,7 +121,7 @@ class ZendLuceneAdapterTest extends TestCase
         $this->assertEquals($index, $luceneField->isIndexed);
     }
 
-    public function provideIndexWithFieldType()
+    public static function provideIndexWithFieldType()
     {
         return [
             [

@@ -31,7 +31,7 @@ class PurgeSubscriberTest extends TestCase
      */
     private $purgeSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->purgeSubscriber = new PurgeSubscriber($this->searchManager->reveal());

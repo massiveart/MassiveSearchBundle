@@ -30,7 +30,7 @@ class DocumentTest extends TestCase
      */
     private $document;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->field1 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Field');

@@ -79,7 +79,7 @@ class DoctrineOrmProviderTest extends TestCase
      */
     private $query;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->searchMetadataFactory = $this->prophesize(MetadataFactory::class);

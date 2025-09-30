@@ -87,7 +87,7 @@ class SearchManagerTest extends TestCase
      */
     private $product;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->adapter = $this->prophesize(AdapterInterface::class);
         $this->provider = $this->prophesize(ProviderInterface::class);

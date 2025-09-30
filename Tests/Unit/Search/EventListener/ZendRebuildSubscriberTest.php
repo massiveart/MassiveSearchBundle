@@ -48,7 +48,7 @@ class ZendRebuildSubscriberTest extends TestCase
      */
     private $zendRebuildSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->adapter = $this->prophesize(ZendLuceneAdapter::class);
         $this->indexNameDecorator = $this->prophesize(IndexNameDecoratorInterface::class);
@@ -63,7 +63,7 @@ class ZendRebuildSubscriberTest extends TestCase
         );
     }
 
-    public function provideIndexRebuild()
+    public static function provideIndexRebuild()
     {
         return [
             [[['my_index', true], ['my_other_index', false]]],

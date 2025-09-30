@@ -59,7 +59,7 @@ class DefaultProviderTest extends TestCase
      */
     private $document;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadataFactory = $this->prophesize('Metadata\MetadataFactory');
         $this->metadata1 = $this->prophesize('Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata');

@@ -22,13 +22,13 @@ class ResumeManagerTest extends TestCase
      */
     private $manager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->manager = new ResumeManager();
         $this->cleanUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->cleanUp();
     }

@@ -31,7 +31,7 @@ class PrefixDecoratorTest extends TestCase
      */
     private $prefixDecorator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->otherDecorator = $this->prophesize(IndexNameDecoratorInterface::class);
 

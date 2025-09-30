@@ -37,7 +37,7 @@ class FieldEvaluatorTest extends TestCase
      */
     private $expressionLanguage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->expressionLanguage = $this->prophesize('Symfony\Component\ExpressionLanguage\ExpressionLanguage');
@@ -46,7 +46,7 @@ class FieldEvaluatorTest extends TestCase
         $this->fieldEvaluator = new FieldEvaluator($this->expressionLanguage->reveal());
     }
 
-    public function provideGetValue()
+    public static function provideGetValue()
     {
         return [
             'Field with string value' => [
@@ -174,7 +174,7 @@ class FieldEvaluatorTest extends TestCase
         $this->fieldEvaluator->getValue($product, $field);
     }
 
-    public function provideEvaluateCondition()
+    public static function provideEvaluateCondition()
     {
         return [
             'True condition' => [
@@ -191,6 +191,11 @@ class FieldEvaluatorTest extends TestCase
                 ['price' => 100, 'discount' => 20, 'stock' => 5],
                 'price > 50 and (discount > 10 or stock > 10)',
                 true,
+            ],
+            'Not existing variable' => [
+                [],
+                'price > 50',
+                false,
             ],
         ];
     }
@@ -224,5 +229,186 @@ class FieldEvaluatorTest extends TestCase
             ->willThrow(new \Exception('Expression error'));
 
         $this->fieldEvaluator->evaluateCondition(['test' => true], 'invalid_syntax');
+    }
+
+    public function testEvaluateConditionWithSyntaxError()
+    {
+        // Test the new SyntaxError handling - should return false instead of throwing
+        $expressionLanguage = $this->prophesize('Symfony\Component\ExpressionLanguage\ExpressionLanguage');
+        $expressionLanguage->evaluate(Argument::any(), Argument::any())
+            ->willThrow(new \Symfony\Component\ExpressionLanguage\SyntaxError('Syntax error'));
+
+        $fieldEvaluator = new FieldEvaluator($expressionLanguage->reveal());
+        $result = $fieldEvaluator->evaluateCondition(['test' => true], 'invalid syntax');
+
+        $this->assertFalse($result);
+    }
+
+    public static function provideGetPropertyValue()
+    {
+        return [
+            // Test null check - should return null for non-objects/non-arrays
+            'Null object' => [
+                null,
+                'someProperty',
+                null,
+            ],
+            'String value (non-object)' => [
+                'string_value',
+                'someProperty',
+                null,
+            ],
+            'Integer value (non-object)' => [
+                123,
+                'someProperty',
+                null,
+            ],
+            'Boolean value (non-object)' => [
+                true,
+                'someProperty',
+                null,
+            ],
+
+            // Test valid object property access
+            'Object with string property' => [
+                function() {
+                    $product = new Product();
+                    $product->title = 'Test Product';
+
+                    return $product;
+                },
+                'title',
+                'Test Product',
+            ],
+            'Object with null property' => [
+                function() {
+                    $product = new Product();
+                    $product->description = null;
+
+                    return $product;
+                },
+                'description',
+                null,
+            ],
+            'Object with false boolean property' => [
+                function() {
+                    $product = new Product();
+                    $product->isActive = false;
+
+                    return $product;
+                },
+                'isActive',
+                false,
+            ],
+            'Object with zero integer property' => [
+                function() {
+                    $product = new Product();
+                    $product->quantity = 0;
+
+                    return $product;
+                },
+                'quantity',
+                0,
+            ],
+            'Object with float property' => [
+                function() {
+                    $product = new Product();
+                    $product->price = 19.99;
+
+                    return $product;
+                },
+                'price',
+                19.99,
+            ],
+            'Object with array property' => [
+                function() {
+                    $product = new Product();
+                    $product->tags = ['tag1', 'tag2', 'tag3'];
+
+                    return $product;
+                },
+                'tags',
+                ['tag1', 'tag2', 'tag3'],
+            ],
+            'Object with empty array property' => [
+                function() {
+                    $product = new Product();
+                    $product->tags = [];
+
+                    return $product;
+                },
+                'tags',
+                [],
+            ],
+            'Object with empty string property' => [
+                function() {
+                    $product = new Product();
+                    $product->title = '';
+
+                    return $product;
+                },
+                'title',
+                '',
+            ],
+
+            // Test method access through PropertyAccessor
+            'Object with getter method access' => [
+                function() {
+                    $product = new Product();
+                    $product->setTitle('Method Value');
+
+                    return $product;
+                },
+                'title',
+                'Method Value',
+            ],
+            'Object with different getter method' => [
+                function() {
+                    $product = new Product();
+                    $product->setBody('Body Content');
+
+                    return $product;
+                },
+                'body',
+                'Body Content',
+            ],
+
+            // Test nested property access
+            'Object with nested property' => [
+                function() {
+                    $product = new Product();
+                    $category = new \stdClass();
+                    $category->name = 'Electronics';
+                    $product->category = $category;
+
+                    return $product;
+                },
+                'category.name',
+                'Electronics',
+            ],
+
+            // Test array access
+            'Array access with bracket notation' => [
+                ['name' => 'Test Name', 'value' => 123],
+                '[name]',
+                'Test Name',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGetPropertyValue
+     */
+    public function testGetPropertyValue($object, string $property, $expectedValue)
+    {
+        // Handle callable objects (for lazy initialization)
+        if (\is_callable($object)) {
+            $object = $object();
+        }
+
+        $field = new Property($property);
+        $result = $this->fieldEvaluator->getValue($object, $field);
+
+        $this->assertSame($expectedValue, $result);
     }
 }

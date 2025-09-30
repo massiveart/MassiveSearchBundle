@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class TestAdapterTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = new Factory();
         $this->adapter = new TestAdapter($this->factory);
