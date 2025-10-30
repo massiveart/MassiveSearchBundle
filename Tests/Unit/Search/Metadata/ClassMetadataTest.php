@@ -74,4 +74,15 @@ class ClassMetadataTest extends TestCase
 
         $this->assertEquals($this->classMetadata, \unserialize(\serialize($this->classMetadata)));
     }
+
+    public function testSerializeUnserializeWithIndexMetadata()
+    {
+        $classMetadata = new ClassMetadata('\stdClass');
+        $classMetadata->addIndexMetadata(
+            'foo_context',
+            new IndexMetadata()
+        );
+
+        $this->assertEquals($classMetadata, \unserialize(\serialize($classMetadata)));
+    }
 }

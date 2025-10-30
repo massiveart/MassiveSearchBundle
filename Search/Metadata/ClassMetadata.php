@@ -90,6 +90,9 @@ class ClassMetadata extends BaseClassMetadata implements \Serializable
         list($data, $indexMetadata, $this->repositoryMethod) = $data;
         parent::unserializeFromArray($data);
         $this->indexMetadatas = $indexMetadata;
+        foreach ($this->indexMetadatas as $indexMetadata) {
+            $indexMetadata->setClassMetadata($this);
+        }
     }
 
     /**
