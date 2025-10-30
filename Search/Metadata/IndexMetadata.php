@@ -11,11 +11,15 @@
 
 namespace Massive\Bundle\SearchBundle\Search\Metadata;
 
+use Metadata\SerializationHelper;
+
 /**
  * Metadata for searchable objects.
  */
-class IndexMetadata implements IndexMetadataInterface
+class IndexMetadata implements IndexMetadataInterface, \Serializable
 {
+    use SerializationHelper;
+
     /**
      * @var string
      */
@@ -169,5 +173,35 @@ class IndexMetadata implements IndexMetadataInterface
     public function setClassMetadata(ClassMetadata $classMetadata)
     {
         $this->classMetadata = $classMetadata;
+    }
+
+    public function serializeToArray(): array
+    {
+        return [
+            $this->name,
+            $this->indexName,
+            $this->fieldMapping,
+            $this->idField,
+            $this->urlField,
+            $this->titleField,
+            $this->descriptionField,
+            $this->imageUrlField,
+            $this->localeField,
+        ];
+    }
+
+    public function unserializeFromArray(array $data): void
+    {
+        list(
+            $this->name,
+            $this->indexName,
+            $this->fieldMapping,
+            $this->idField,
+            $this->urlField,
+            $this->titleField,
+            $this->descriptionField,
+            $this->imageUrlField,
+            $this->localeField
+        ) = $data;
     }
 }
