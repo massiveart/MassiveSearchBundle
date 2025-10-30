@@ -201,7 +201,7 @@ class IndexMetadata implements IndexMetadataInterface, \Serializable
             $this->titleField,
             $this->descriptionField,
             $this->imageUrlField,
-            $this->localeField,
+            $this->localeField
         ) = $data;
     }
 }
