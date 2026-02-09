@@ -139,7 +139,6 @@ class SearchManager implements SearchManagerInterface
                 $indexName = $this->fieldEvaluator->getValue($object, $indexMetadata->getIndexName());
             }
 
-            $this->markIndexToFlush($indexName);
             $indexNames = $this->getDecoratedIndexNames($indexName, $locale);
 
             if ($object instanceof Document) {
@@ -153,6 +152,8 @@ class SearchManager implements SearchManagerInterface
                     new PreDeindexEvent($subject, $document, $indexMetadata),
                     SearchEvents::PRE_DEINDEX
                 );
+
+                $this->markIndexToFlush($indexName);
 
                 $this->adapter->deindex($document, $indexName);
             }
