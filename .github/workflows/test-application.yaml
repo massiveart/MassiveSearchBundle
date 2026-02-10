@@ -16,62 +16,16 @@ jobs:
             SYMFONY_DEPRECATIONS_HELPER: weak
             COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             ELASTICSEARCH_VERSION: ${{ matrix.elasticsearch-version }}
-            SYMFONY_MAX_PHPUNIT_VERSION: ${{ matrix.max-phpunit-version }}
 
         strategy:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '7.3'
-                      elasticsearch-version: '2.4.6'
-                      elasticsearch-package-constraint: '^2.1'
-                      minimum-stability: 'stable'
-                      dependency-versions: 'lowest'
-                      tools: 'composer:v2'
-                      php-cs-fixer: false
-                      max-phpunit-version: '7'
-
-                    - php-version: '7.3'
-                      elasticsearch-version: '2.4.6'
-                      elasticsearch-package-constraint: '^2.1'
-                      minimum-stability: 'stable'
-                      dependency-versions: 'highest'
-                      tools: 'composer:v2'
-                      php-cs-fixer: false
-                      max-phpunit-version: '7'
-
-                    - php-version: '7.4'
-                      elasticsearch-version: '2.4.6'
-                      elasticsearch-package-constraint: '^2.1'
-                      minimum-stability: 'stable'
-                      dependency-versions: 'highest'
-                      tools: 'composer:v2'
-                      php-cs-fixer: true
-                      max-phpunit-version: '7'
-
-                    - php-version: '8.0'
-                      elasticsearch-version: '7.11.1'
-                      elasticsearch-package-constraint: '~7.11.0'
-                      minimum-stability: 'stable'
-                      dependency-versions: 'highest'
-                      tools: 'composer:v2'
-                      php-cs-fixer: false
-                      max-phpunit-version: '8'
-
-                    - php-version: '8.1'
-                      elasticsearch-version: '7.11.1'
-                      elasticsearch-package-constraint: '~7.11.0'
-                      minimum-stability: 'stable'
-                      dependency-versions: 'highest'
-                      tools: 'composer:v2'
-                      php-cs-fixer: false
-                      max-phpunit-version: '8'
-
                     - php-version: '8.2'
                       elasticsearch-version: '7.11.1'
                       elasticsearch-package-constraint: '~7.11.0'
                       minimum-stability: 'stable'
-                      dependency-versions: 'highest'
+                      dependency-versions: 'lowest'
                       tools: 'composer:v2'
                       php-cs-fixer: false
 
@@ -92,6 +46,14 @@ jobs:
                       php-cs-fixer: false
 
                     - php-version: '8.4'
+                      elasticsearch-version: '7.17.19'
+                      elasticsearch-package-constraint: '~7.17.0'
+                      minimum-stability: 'stable'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      php-cs-fixer: false
+
+                    - php-version: '8.5'
                       elasticsearch-version: '7.17.19'
                       elasticsearch-package-constraint: '~7.17.0'
                       minimum-stability: 'dev'
