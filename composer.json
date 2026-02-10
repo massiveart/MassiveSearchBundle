@@ -15,7 +15,7 @@
         "symfony/event-dispatcher": "^5.4 || ^6.0 || ^7.0",
         "symfony/expression-language": "^5.4 || ^6.0 || ^7.0",
         "symfony/dependency-injection": "^5.4 || ^6.0 || ^7.0",
-        "symfony/property-access": "^5.4 || ^6.0 || ^7.0",
+        "symfony/property-access": "^5.4.2 || ^6.0 || ^7.0",
         "php": "^8.2"
     },
     "require-dev": {
