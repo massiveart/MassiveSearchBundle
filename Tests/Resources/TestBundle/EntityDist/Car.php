@@ -19,6 +19,8 @@ class Car
 
     public $body;
 
+    public $url;
+
     public $numberOfWheels;
 
     public $cost;

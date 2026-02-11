@@ -15,6 +15,7 @@ Feature: Search Manager
             public $id;
             public $title;
             public $body;
+            public $url;
             public $numberOfWheels;
             public $cost;
             public $date;

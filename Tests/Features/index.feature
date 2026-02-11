@@ -14,6 +14,7 @@ Feature: Indexing
             public $id;
             public $title;
             public $body;
+            public $url;
             public $numberOfWheels;
             public $cost;
             public $date;
@@ -100,4 +101,3 @@ Feature: Indexing
         ]
         """
         Then an exception with message 'No converter found to convert value from type "foobar"' should be thrown
-
