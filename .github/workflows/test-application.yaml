@@ -99,7 +99,6 @@ jobs:
               uses: ramsey/composer-install@v1
               with:
                   dependency-versions: ${{matrix.dependency-versions}}
-                  composer-versions: ${{matrix.composer-options}}
 
             - name: Run php-cs-fixer
               if: ${{ matrix.php-cs-fixer }}
