@@ -12,6 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldEvaluator;
 use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
@@ -87,18 +88,37 @@ class ObjectToDocumentConverter
             }
         }
 
-        if ($titleField) {
-            $title = $this->fieldEvaluator->getValue($object, $titleField);
-            if ($title) {
-                $document->setTitle($title);
+        $isTitleHtml = false;
+        $isDescriptionHtml = false;
+
+        if ($titleField || $descriptionField) {
+            foreach ($fieldMapping as $fieldName => $mapping) {
+                $this->hasRequiredMapping($document, $mapping);
+                $field = $mapping['field'];
+                $isHtml = $mapping['html'] ?? false;
+
+                if (!$field instanceof Expression) {
+                    continue;
+                }
+
+                if ($titleField instanceof Expression && $field->getExpression() === $titleField->getExpression()) {
+                    $isTitleHtml = $isHtml;
+                }
+
+                if ($descriptionField instanceof Expression && $field->getExpression() === $descriptionField->getExpression()) {
+                    $isDescriptionHtml = $isHtml;
+                }
             }
         }
 
+        if ($titleField) {
+            $titleValue = $this->fieldEvaluator->getValue($object, $titleField);
+            $document->setTitle(($isTitleHtml && $titleValue) ? \strip_tags($titleValue) : $titleValue);
+        }
+
         if ($descriptionField) {
-            $description = $this->fieldEvaluator->getValue($object, $descriptionField);
-            if ($description) {
-                $document->setDescription($description);
-            }
+            $descriptionValue = $this->fieldEvaluator->getValue($object, $descriptionField);
+            $document->setDescription(($isDescriptionHtml && $descriptionValue) ? \strip_tags($descriptionValue) : $descriptionValue);
         }
 
         if ($imageUrlField) {
@@ -189,6 +209,10 @@ class ObjectToDocumentConverter
             }
 
             $value = $this->fieldEvaluator->getValue($object, $mappingField);
+
+            if ($mapping['html'] ?? false) {
+                $value = $value ? \strip_tags($value) : $value;
+            }
 
             if (Field::TYPE_STRING !== $type && Field::TYPE_ARRAY !== $type) {
                 $value = $this->converterManager->convert($value, $type, $document);

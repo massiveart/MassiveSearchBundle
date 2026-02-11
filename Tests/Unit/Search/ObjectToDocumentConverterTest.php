@@ -13,6 +13,7 @@ namespace Unit\Search;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Property;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
@@ -197,5 +198,43 @@ class ObjectToDocumentConverterTest extends TestCase
             ],
         ]);
         $this->converter->objectToDocument($this->indexMetadata, $this->product);
+    }
+
+    public function testStripHtml()
+    {
+        $idField = new Field('id');
+        $indexField = new Value('product');
+        $this->indexMetadata->setIdField($idField);
+        $this->indexMetadata->setIndexName($indexField);
+        $titleExpression = 'object.getStructure().testTitle.getValue()';
+        $descriptionExpression = 'object.getStructure().testDescription.getValue()';
+        $titleField = new Expression($titleExpression);
+        $descriptionField = new Expression($descriptionExpression);
+        $this->indexMetadata->setTitleField($titleField);
+        $this->indexMetadata->setDescriptionField($descriptionField);
+        $this->indexMetadata->setFieldMapping([
+            'testTitle' => [
+                'field' => new Expression($titleExpression),
+                'type' => 'string',
+                'indexed' => false,
+                'aggregate' => true,
+                'html' => true,
+            ],
+            'testDescription' => [
+                'field' => new Expression($descriptionExpression),
+                'type' => 'string',
+                'indexed' => false,
+                'aggregate' => true,
+                'html' => true,
+            ],
+        ]);
+        $this->fieldEvaluator->getValue($this->product, $titleField)->willReturn('<p>Title</p>');
+        $this->fieldEvaluator->getValue($this->product, $descriptionField)->willReturn('<p>Description</p>');
+        $this->fieldEvaluator->getValue($this->product, $indexField)->willReturn('index');
+        $this->fieldEvaluator->getValue($this->product, $idField)->willReturn('product');
+        $document = $this->converter->objectToDocument($this->indexMetadata, $this->product);
+
+        $this->assertSame('Title', $document->getTitle());
+        $this->assertSame('Description', $document->getDescription());
     }
 }
