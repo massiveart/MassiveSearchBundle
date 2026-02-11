@@ -28,6 +28,22 @@ class ClientFactory
      */
     public static function create($config)
     {
-        return ClientBuilder::create()->setHosts($config['hosts'])->build();
+        $clientBuilder = ClientBuilder::create()->setHosts($config['hosts']);
+
+        $elasticSearchVersion = defined(Client::class . '::VERSION') ? Client::VERSION : '5.0';
+        $version = $config['version'] ?? $elasticSearchVersion;
+
+        if (\version_compare($version, '7.11.0', '>=')) {
+            $clientBuilder->setConnectionParams([
+                'client' => [
+                    'headers' => [
+                        'Accept' => ['application/vnd.elasticsearch+json;compatible-with=7'],
+                        'Content-Type' => ['application/vnd.elasticsearch+json;compatible-with=7'],
+                    ],
+                ],
+            ]);
+        }
+
+        return $clientBuilder->build();
     }
 }

@@ -85,17 +85,6 @@ class ElasticSearchAdapter implements AdapterInterface
         $this->client = $client;
         $this->version = $version;
         $this->refresh = $refresh;
-
-        if (\version_compare($this->version, '7.11.0', '>=')) {
-            $client->setConnectionParams([
-                'client' => [
-                    'headers' => [
-                        'Accept' => ['application/vnd.elasticsearch+json;compatible-with=7'],
-                        'Content-Type' => ['application/vnd.elasticsearch+json;compatible-with=7'],
-                    ],
-                ],
-            ]);
-        }
     }
 
     public function index(Document $document, $indexName)
