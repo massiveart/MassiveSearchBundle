@@ -11,10 +11,11 @@ Feature: Search Manager
 
         namespace Massive\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
-        class Car { 
+        class Car {
             public $id;
             public $title;
             public $body;
+            public $url;
             public $numberOfWheels;
             public $cost;
             public $date;
