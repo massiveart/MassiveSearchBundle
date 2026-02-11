@@ -71,13 +71,20 @@ class ElasticSearchAdapter implements AdapterInterface
     private $version;
 
     /**
-     * @param string $version
+     * @var string|null
      */
-    public function __construct(Factory $factory, ElasticSearchClient $client, $version)
+    private $refresh;
+
+    /**
+     * @param string $version
+     * @param string|null $refresh
+     */
+    public function __construct(Factory $factory, ElasticSearchClient $client, $version, $refresh = null)
     {
         $this->factory = $factory;
         $this->client = $client;
         $this->version = $version;
+        $this->refresh = $refresh;
     }
 
     public function index(Document $document, $indexName)
@@ -132,6 +139,10 @@ class ElasticSearchAdapter implements AdapterInterface
         // can be removed when min requirement of elasticsearch >= 6.0
         if (\version_compare($this->version, '6.0', '<')) {
             $params['type'] = $documentType;
+        }
+
+        if ($this->refresh) {
+            $params['refresh'] = $this->refresh;
         }
 
         $this->client->index($params);

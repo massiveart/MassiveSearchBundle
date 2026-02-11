@@ -76,6 +76,7 @@ class MassiveSearchExtension extends Extension
     {
         $container->setParameter('massive_search.adapter.elastic.hosts', $config['hosts']);
         $container->setParameter('massive_search.adapter.elastic.version', $config['version']);
+        $container->setParameter('massive_search.adapter.elastic.refresh', $config['refresh']);
         $loader->load('adapter_elastic.xml');
 
         if (!\class_exists($container->getParameter('massive_search.search.adapter.elastic.client.class'))) {

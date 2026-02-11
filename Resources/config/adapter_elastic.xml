@@ -21,6 +21,7 @@
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="massive_search.adapter.elastic.client" />
             <argument type="string">%massive_search.adapter.elastic.version%</argument>
+            <argument type="string">%massive_search.adapter.elastic.refresh%</argument>
         </service>
     </services>
 </container>

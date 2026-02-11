@@ -48,6 +48,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsifNotSet()
                             ->children()
                                 ->scalarNode('version')->defaultValue('2.2')->end()
+                                ->scalarNode('refresh')->defaultValue(null)->end()
                                 ->arrayNode('hosts')
                                     ->defaultValue(['localhost:9200'])
                                     ->prototype('scalar')->end()
