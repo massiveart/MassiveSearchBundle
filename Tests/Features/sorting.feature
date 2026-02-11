@@ -1,4 +1,4 @@
-@elastic
+@zend_lucene @test
 Feature: Search Manager
   In order to manage the search indexing of objects
   As a developer
