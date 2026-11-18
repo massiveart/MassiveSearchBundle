@@ -143,11 +143,7 @@ EOT
             $output->write(\PHP_EOL);
 
             foreach ($provider->getClassFqns() as $classFqn) {
-                $return = $this->reindexClass($output, $provider, $providerName, $classFqn, $batchSize);
-
-                if (false === $return) {
-                    break;
-                }
+                $this->reindexClass($output, $provider, $providerName, $classFqn, $batchSize);
             }
 
             $this->resumeManager->removeCheckpoints($providerName);
@@ -212,22 +208,25 @@ EOT
                     $locales = $provider->getLocalesForObject($object);
                 }
 
-                try {
-                    foreach ($locales as $locale) {
-                        $translatedObject = $object;
+                foreach ($locales as $locale) {
+                    $translatedObject = $object;
 
-                        if (null !== $locale) {
-                            $translatedObject = $provider->translateObject($object, $locale);
-                        }
-
-                        $this->searchManager->index($translatedObject, $locale);
+                    if (null !== $locale) {
+                        $translatedObject = $provider->translateObject($object, $locale);
                     }
-                    $progress->advance();
-                } catch (MetadataNotFoundException $e) {
-                    $output->write(' No search mapping for this object');
 
-                    return false;
+                    try {
+                        $this->searchManager->index($translatedObject, $locale);
+                    } catch (MetadataNotFoundException $e) {
+                        $output->writeln(\sprintf(
+                            '%s<comment>WARNING: %s%s, skipping.</comment>',
+                            \PHP_EOL,
+                            $e->getMessage(),
+                            null !== $locale ? \sprintf(' (locale "%s")', $locale) : ''
+                        ));
+                    }
                 }
+                $progress->advance();
             }
 
             $offset += $batchSize;

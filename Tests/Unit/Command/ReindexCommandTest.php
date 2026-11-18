@@ -12,6 +12,7 @@
 namespace Massive\Bundle\SearchBundle\Tests\Unit\Command;
 
 use Massive\Bundle\SearchBundle\Command\ReindexCommand;
+use Massive\Bundle\SearchBundle\Search\Exception\MetadataNotFoundException;
 use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderInterface;
 use Massive\Bundle\SearchBundle\Search\Reindex\ReindexProviderRegistry;
@@ -211,6 +212,44 @@ class ReindexCommandTest extends TestCase
         $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
 
         $this->execute('prod', []);
+    }
+
+    /**
+     * It should skip objects without search metadata and continue indexing.
+     */
+    public function testSkipObjectsWithoutMetadata()
+    {
+        $classFqn = 'stdClass';
+        $providerName = 'provider';
+        $objects = [new \stdClass(), new \stdClass(), new \stdClass()];
+
+        $this->resumeManager->getUnfinishedProviders()->willReturn([]);
+        $this->providerRegistry->getProviders()->willReturn([
+            $providerName => $this->provider1->reveal(),
+        ]);
+        $this->provider1->getClassFqns()->willReturn([$classFqn]);
+        $this->provider1->getCount('stdClass')->willReturn(3);
+        $this->provider1->provide('stdClass', 0, 50)->willReturn($objects);
+        $this->provider1->provide('stdClass', 50, 50)->willReturn([]);
+        $this->provider1->cleanUp('stdClass')->shouldBeCalled();
+
+        $this->searchManager->index($objects[0], null)->shouldBeCalled();
+        $this->searchManager->index($objects[1], null)
+            ->shouldBeCalled()
+            ->willThrow(new MetadataNotFoundException('There is no search mapping for object with class "stdClass"'));
+        $this->searchManager->index($objects[2], null)->shouldBeCalled();
+
+        $this->resumeManager->getCheckpoint($providerName, $classFqn)->willReturn(null);
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 50)->shouldBeCalled();
+        $this->resumeManager->setCheckpoint($providerName, $classFqn, 3)->shouldBeCalled();
+        $this->resumeManager->removeCheckpoints($providerName)->shouldBeCalled();
+
+        $tester = $this->execute('prod', []);
+
+        $this->assertStringContainsString(
+            'WARNING: There is no search mapping for object with class "stdClass", skipping.',
+            $tester->getDisplay()
+        );
     }
 
     private function execute($env, $args = [])
